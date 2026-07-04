@@ -1,0 +1,188 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Maquette v2 — Transmission Bibby sur la carte facturation (DELIV'IA)</title>
+<style>
+  :root{ --bg:#f6f7f9; --ink:#1c2433; --mut:#5b6575; --card:#ffffff; --line:#e3e6eb; --acc:#4f46e5; }
+  body{ background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        margin:0; padding:32px 20px 64px; line-height:1.55; }
+  .wrap{ max-width:1080px; margin:0 auto; display:flex; flex-direction:column; gap:26px; }
+  .eyebrow{ text-transform:uppercase; letter-spacing:.08em; font-size:11px; font-weight:700; color:var(--acc); display:block; margin-bottom:6px; }
+  .intro h1{ font-size:22px; margin:0 0 6px; letter-spacing:-.01em; }
+  .intro p{ margin:0; color:var(--mut); font-size:14.5px; max-width:70ch; }
+  .pin{ flex:none; display:inline-flex; width:20px; height:20px; border-radius:50%; background:var(--acc); color:#fff;
+        font-size:11.5px; font-weight:700; align-items:center; justify-content:center; vertical-align:-3px; }
+
+  .cols{ display:grid; grid-template-columns: 1fr 340px; gap:18px; align-items:start; }
+  @media (max-width:900px){ .cols{ grid-template-columns:1fr; } }
+
+  /* ------- modale carte (monde DELIV'IA, clair) ------- */
+  .modal{ background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 14px 40px rgba(15,23,42,.14); overflow:hidden; color:#0f172a; }
+  .mhead{ padding:16px 20px 14px; border-bottom:1px solid #eef1f5; display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+  .mhead .t{ font-size:15.5px; font-weight:700; }
+  .mhead .s{ font-size:12px; color:#64748b; margin-top:2px; font-variant-numeric:tabular-nums; }
+  .badges{ display:flex; gap:5px; flex-wrap:wrap; }
+  .bdg{ font-size:9.5px; font-weight:700; padding:2px 7px; border-radius:999px; letter-spacing:.02em; white-space:nowrap; }
+  .bdg.prof{ background:#f1f5f9; color:#475569; }
+  .bdg.col{ background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; }
+  .mbody{ padding:16px 20px 20px; display:flex; flex-direction:column; gap:14px; }
+  .sect{ border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; }
+  .sect-h{ background:#f8fafc; padding:9px 14px; font-size:12px; font-weight:700; color:#334155; display:flex; align-items:center; gap:8px; }
+  .sect-h .right{ margin-left:auto; font-weight:500; color:#94a3b8; font-size:11px; }
+  .rows{ padding:4px 0; }
+  .prow{ display:flex; align-items:center; gap:10px; padding:8px 14px; font-size:12.5px; border-bottom:1px solid #f1f5f9; }
+  .prow:last-child{ border-bottom:none; }
+  .pic{ flex:none; width:22px; height:22px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; }
+  .pic.ok{ background:#ecfdf5; color:#047857; }
+  .pic.wait{ background:#fffbeb; color:#b45309; }
+  .prow .nm{ flex:1; min-width:0; }
+  .prow .nm small{ display:block; color:#94a3b8; font-size:10.5px; }
+  .lnk{ font-size:11px; color:#4f46e5; font-weight:600; white-space:nowrap; }
+  .auto{ font-size:10px; color:#047857; background:#ecfdf5; border-radius:999px; padding:2px 7px; font-weight:700; }
+
+  .dz{ margin:10px 14px 12px; border:1.5px dashed #c7d2fe; background:#f8faff; border-radius:10px; padding:16px; text-align:center; font-size:12.5px; color:#475569; }
+  .dz b{ color:#4f46e5; }
+  .dz small{ display:block; color:#94a3b8; margin-top:3px; font-size:11px; }
+
+  .ctabar{ display:flex; align-items:center; gap:14px; background:#eef2ff; border:1px solid #c7d2fe; border-radius:12px; padding:13px 16px; }
+  .ctabar .t{ font-size:12px; color:#3730a3; }
+  .ctabar .t b{ display:block; font-size:12.5px; color:#312e81; }
+  .bigbtn{ flex:none; margin-left:auto; background:#4f46e5; color:#fff; border:none; border-radius:10px; padding:11px 16px; font-size:13px; font-weight:700; cursor:pointer; text-align:center; }
+  .bigbtn small{ display:block; font-weight:500; font-size:10px; opacity:.85; margin-top:1px; }
+  .bigbtn.off{ background:#c7d2fe; cursor:not-allowed; }
+
+  .tl{ padding:6px 14px 10px; }
+  .tlr{ display:flex; gap:10px; font-size:11.5px; color:#475569; padding:5px 0; align-items:baseline; }
+  .tlr .dot{ flex:none; width:8px; height:8px; border-radius:50%; background:#10b981; transform:translateY(-1px); }
+  .tlr .dot.pend{ background:#e2e8f0; }
+  .tlr time{ flex:none; width:88px; color:#94a3b8; font-variant-numeric:tabular-nums; font-size:10.5px; }
+
+  /* ------- colonne droite : automatisations + kanban ------- */
+  .side{ display:flex; flex-direction:column; gap:16px; }
+  .panel{ background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden; color:#0f172a; }
+  .panel .ph{ padding:11px 14px; border-bottom:1px solid #eef1f5; font-size:12.5px; font-weight:700; display:flex; gap:8px; align-items:center; }
+  .panel .pb{ padding:12px 14px; font-size:12px; color:#475569; }
+  .logrow{ display:flex; gap:8px; padding:6px 0; border-bottom:1px solid #f8fafc; font-size:11px; align-items:baseline; }
+  .logrow time{ flex:none; color:#94a3b8; width:76px; font-variant-numeric:tabular-nums; }
+  .lok{ color:#047857; font-weight:700; } .lko{ color:#be123c; font-weight:700; }
+  .kcard{ background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:10px 12px; font-size:12px; box-shadow:0 2px 8px rgba(15,23,42,.06); }
+  .kcard .nm{ font-weight:600; } .kcard .fx{ color:#64748b; font-size:11px; margin-top:1px; }
+  .bdg.bibby{ background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; }
+  .bdg.cdc{ background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+  .bdg.envoye{ background:#eef2ff; color:#4338ca; border:1px solid #c7d2fe; }
+
+  .legend{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; font-size:13.5px; }
+  .legend h2{ font-size:15px; margin:0 0 10px; }
+  .legend ol{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; }
+  .legend li{ display:flex; gap:10px; align-items:baseline; color:var(--mut); }
+  .legend b{ color:var(--ink); }
+</style></head><body><div style='background:#fef3c7;color:#92400e;font:13px/1.4 -apple-system,sans-serif;padding:8px 16px;text-align:center'>Maquette de démonstration — noms d'apprenants fictifs (données anonymisées)</div>
+<div class="wrap">
+  <header class="intro">
+    <span class="eyebrow">Maquette v2 · flux dossier par dossier · 04/07/2026</span>
+    <h1>La transmission Bibby vit sur la carte facturation</h1>
+    <p>Plus de batch : dès que la CDC valide le service fait, chaque dossier se prépare tout seul.
+    La carte devient le poste de travail — il ne reste qu'à y déposer l'export EDOF, vérifier, cliquer.
+    À droite : où vivent les logs et ce que voit le kanban.</p>
+  </header>
+
+  <div class="cols">
+    <!-- ===== Modale de carte ===== -->
+    <div class="modal">
+      <div class="mhead">
+        <div>
+          <div class="t">Camille Durand — F-2026-0349</div>
+          <div class="s">CPF · 1 650 € TTC · session 08-09/06 · dossier EDOF 380000000012</div>
+        </div>
+        <div class="badges"><span class="bdg prof">CPF</span><span class="bdg col">Envoyer</span></div>
+      </div>
+      <div class="mbody">
+
+        <div class="sect">
+          <div class="sect-h"><span class="pin">1</span> Transmission Bibby — preuves du dossier
+            <span class="right">sous-dossier Drive créé automatiquement</span></div>
+          <div class="rows">
+            <div class="prow"><span class="pic ok">✓</span>
+              <span class="nm">Facture tamponnée (subrogation)<small>F-2026-0349  380000000012 - Camille DURAND.pdf · cache fondu au fond</small></span>
+              <span class="auto">auto</span>&nbsp;<span class="lnk">Ouvrir dans le Drive ↗</span></div>
+            <div class="prow"><span class="pic ok">✓</span>
+              <span class="nm">Émargement signé — 08/06<small>feuille-emargement-signée-2026-06-08.pdf</small></span>
+              <span class="auto">auto</span>&nbsp;<span class="lnk">Ouvrir ↗</span></div>
+            <div class="prow"><span class="pic ok">✓</span>
+              <span class="nm">Émargement signé — 09/06<small>feuille-emargement-signée-2026-06-09.pdf</small></span>
+              <span class="auto">auto</span>&nbsp;<span class="lnk">Ouvrir ↗</span></div>
+            <div class="prow"><span class="pic wait">⬆</span>
+              <span class="nm">Export du dossier CPF (EDOF)<small>la seule pièce manuelle — captcha EDOF</small></span>
+              <span class="lnk" style="color:#b45309">manquant</span></div>
+          </div>
+          <div class="dz"><span class="pin">2</span>&nbsp; Glisse ici l'export EDOF (PDF) ou <b>choisis un fichier</b>
+            <small>vérifié par le numéro de dossier dans le fichier, ajouté au Drive, la ligne ci-dessus passe au vert</small></div>
+        </div>
+
+        <div class="ctabar">
+          <div class="t"><b><span class="pin">3</span> Valider &amp; envoyer à Bibby</b>
+            mail direct depuis tanguy@ (lien Drive en lecture) + remise saisie sur le portail — vérifiée après coup</div>
+          <button class="bigbtn off">Valider &amp; envoyer<small>actif quand les 4 preuves sont là</small></button>
+        </div>
+
+        <div class="sect">
+          <div class="sect-h"><span class="pin">4</span> Timeline Bibby de la carte</div>
+          <div class="tl">
+            <div class="tlr"><span class="dot"></span><time>26/06 · 23:40</time> CDC valide le service fait → préparation lancée</div>
+            <div class="tlr"><span class="dot"></span><time>26/06 · 23:41</time> Facture tamponnée + 2 émargements déposés dans le Drive</div>
+            <div class="tlr"><span class="dot pend"></span><time>—</time> Export EDOF (en attente de dépôt — Olivier)</div>
+            <div class="tlr"><span class="dot pend"></span><time>—</time> Mail envoyé à Bibby · remise saisie sur le portail · vérif portail</div>
+            <div class="tlr"><span class="dot pend"></span><time>—</time> Paiement Bibby reçu (badge) · CDC rembourse Bibby (badge)</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== Colonne droite ===== -->
+    <div class="side">
+      <div class="panel">
+        <div class="ph"><span class="pin">5</span> Page Automatisations → « Facturation BIBBY »</div>
+        <div class="pb">
+          Réglages (boîte d'envoi : <b>tanguy@franceia.com ▾</b>, toggle) et <b>journal de toutes les exécutions</b> :
+          <div style="margin-top:8px">
+            <div class="logrow"><time>04/07 18:22</time><span class="lok">OK</span> F-2026-0332 · mail envoyé + remise nº R-4381 vérifiée</div>
+            <div class="logrow"><time>04/07 18:21</time><span class="lok">OK</span> F-2026-0332 · export EDOF déposé (Olivier)</div>
+            <div class="logrow"><time>04/07 11:03</time><span class="lko">ÉCHEC</span> F-2026-0330 · portail Bibby injoignable → bouton Relancer sur la carte</div>
+            <div class="logrow"><time>03/07 23:41</time><span class="lok">OK</span> F-2026-0349 · préparation auto (facture + 2 émargements)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph">Ce que voit le kanban</div>
+        <div class="pb" style="display:flex;flex-direction:column;gap:8px">
+          <div class="kcard"><div class="nm">Camille Durand</div><div class="fx">F-2026-0349 · 1 650 €</div>
+            <div class="badges" style="margin-top:7px"><span class="bdg prof">CPF</span><span class="bdg col">Attend EDOF</span></div></div>
+          <div class="kcard"><div class="nm">Julie Bernard</div><div class="fx">F-2026-0332 · 1 650 €</div>
+            <div class="badges" style="margin-top:7px"><span class="bdg prof">CPF</span><span class="bdg envoye">TRANSMIS BIBBY</span></div></div>
+          <div class="kcard"><div class="nm">Marc Lefevre</div><div class="fx">F-2026-0455 · 1 650 €</div>
+            <div class="badges" style="margin-top:7px"><span class="bdg prof">CPF</span><span class="bdg bibby">PAYÉ BIBBY</span><span class="bdg cdc">CDC ✓</span></div></div>
+          <div style="font-size:11px;color:#94a3b8">+ filtre global « à transmettre / transmis / payé Bibby / CDC ✓ »</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="legend">
+    <h2>Le flux, dans l'ordre des pastilles</h2>
+    <ol>
+      <li><span class="pin">1</span><span><b>Préparation automatique au webhook CDC.</b> Dès `serviceDoneValidated` :
+        facture téléchargée et tamponnée (cache fondu), toutes les feuilles d'émargement signées récupérées,
+        sous-dossier Drive créé. Les preuves s'affichent sur la carte avec leur lien.</span></li>
+      <li><span class="pin">2</span><span><b>Le seul geste humain : l'export EDOF, déposé sur la carte.</b>
+        Glisser-déposer ou sélecteur ; contrôle du numéro de dossier dans le PDF ; ajout au Drive ; la preuve passe au vert.</span></li>
+      <li><span class="pin">3</span><span><b>Un clic, trois actions.</b> « Valider &amp; envoyer » (actif seulement dossier complet) :
+        partage du sous-dossier en « toute personne disposant du lien : lecteur », mail direct à bibbyremises@ + Edson
+        (Côme &amp; Olivier en copie) avec le lien Drive, et saisie de la remise sur le portail Bibby — relue après coup
+        pour vérifier qu'elle a bien pris. Échec = erreur visible + bouton Relancer, jamais de retry silencieux.</span></li>
+      <li><span class="pin">4</span><span><b>La carte garde sa timeline.</b> Chaque étape horodatée, du webhook CDC au paiement Bibby.</span></li>
+      <li><span class="pin">5</span><span><b>La page Automatisations garde le journal global</b> et les réglages
+        (boîte d'envoi réglable — tanguy@ aujourd'hui, olivier@ demain).</span></li>
+    </ol>
+  </section>
+</div>
+</body></html>
