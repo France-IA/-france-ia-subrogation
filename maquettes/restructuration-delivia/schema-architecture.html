@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Restructuration DELIV'IA : schéma d'architecture</title>
+<style>
+  :root{
+    --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --border:rgba(11,11,11,.12);
+    --c-peda:#2a78d6; --c-vente:#008300; --c-ligne:#e87ba4; --c-facture:#eda100;
+    --c-paiement:#1baf7a; --c-morte:#c3c2b7; --c-alerte:#ec835a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--ink);
+       font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:1240px;margin:0 auto;padding:28px 20px 60px}
+  header h1{font-size:26px;line-height:1.25;margin:0 0 6px}
+  header p{margin:0;color:var(--ink2);font-size:14.5px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px}
+  @media(max-width:980px){.cols{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 18px 14px}
+  .card h2{font-size:17px;margin:0 0 2px}
+  .card .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;
+             text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-bottom:8px}
+  .tag-now{background:#f4e9e4;color:#9c3f1c}
+  .tag-target{background:#e3efe3;color:#0a5c0a}
+  .diagram{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:4px -4px 0;padding:0 4px}
+  .diagram svg{min-width:640px;width:100%;height:auto;display:block}
+  .legend{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-top:12px;font-size:12.5px;color:var(--ink2)}
+  @media(max-width:560px){.legend{grid-template-columns:1fr}}
+  .legend div{display:flex;gap:8px;align-items:flex-start}
+  .sw{flex:0 0 12px;width:12px;height:12px;border-radius:3px;margin-top:3px}
+  .legend b{color:var(--ink);font-weight:600}
+  .notes{margin:14px 0 0;padding:0 0 0 18px;font-size:13px;color:var(--ink2)}
+  .notes li{margin:5px 0}
+  .notes b{color:var(--ink);font-weight:600}
+  .families{margin-top:30px}
+  .families h2{font-size:19px;margin:0 0 4px}
+  .families .sub{color:var(--ink2);font-size:14px;margin:0 0 14px}
+  .fbar{display:flex;height:38px;border-radius:8px;overflow:hidden;gap:2px;background:var(--page)}
+  .fbar div{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;min-width:0}
+  .fbar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 6px}
+  .fcards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+  @media(max-width:980px){.fcards{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.fcards{grid-template-columns:1fr}}
+  .fcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px}
+  .fcard h3{font-size:14.5px;margin:0 0 2px}
+  .fcard .n{font-size:22px;font-weight:700;margin:0 0 6px}
+  .fcard p{margin:0;font-size:12.5px;color:var(--ink2)}
+  .fcard.core{border:2px solid var(--c-peda)}
+  footer{margin-top:34px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--grid);padding-top:14px}
+  svg text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+</style>
+</head>
+<body data-palette="#2a78d6,#008300,#e87ba4,#eda100,#1baf7a">
+<div class="wrap">
+
+<header>
+  <h1>Restructuration DELIV'IA : l'architecture actuelle et l'architecture cible</h1>
+  <p>Schéma de référence du jalon 2 · chiffres relevés en base le 15/07/2026 · aucune donnée nominative.
+     Le principe de la cible : des chaînes simples, client, vente, lignes, facturation.</p>
+</header>
+
+<div class="cols">
+
+  <!-- ============ AUJOURD'HUI ============ -->
+  <section class="card">
+    <span class="tag tag-now">Aujourd'hui</span>
+    <h2>L'inscription porte tout</h2>
+    <div class="diagram">
+    <svg viewBox="0 0 720 500" role="img" aria-label="Architecture actuelle : session_apprenants au centre avec 59 colonnes, clients optionnel, coachings en silo, cartes et documents financiers satellites">
+      <defs>
+        <marker id="ar1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#898781"/>
+        </marker>
+        <clipPath id="barclip"><rect x="44" y="178" width="632" height="36" rx="8"/></clipPath>
+      </defs>
+
+      <!-- ligne silo apprenants -> coachings -->
+      <path d="M 24 46 H 12 V 434 H 20" fill="none" stroke="#898781" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#ar1)"/>
+
+      <!-- rangée du haut -->
+      <rect x="24" y="14" width="178" height="58" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <text x="113" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#0b0b0b">apprenants · 633</text>
+      <text x="113" y="57" text-anchor="middle" font-size="11" fill="#52514e">la personne qui suit</text>
+
+      <rect x="222" y="14" width="140" height="58" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <text x="292" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#0b0b0b">sessions · 99</text>
+      <text x="292" y="57" text-anchor="middle" font-size="11" fill="#52514e">le planning</text>
+
+      <rect x="382" y="14" width="314" height="58" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.35)" stroke-dasharray="5 4"/>
+      <text x="539" y="36" text-anchor="middle" font-size="14" font-weight="700" fill="#0b0b0b">clients · 135 (optionnel)</text>
+      <text x="539" y="56" text-anchor="middle" font-size="11" fill="#52514e">497 inscriptions sur 636 n'ont aucun client</text>
+
+      <line x1="113" y1="72" x2="113" y2="110" stroke="#898781" stroke-width="1.3" marker-end="url(#ar1)"/>
+      <line x1="292" y1="72" x2="292" y2="110" stroke="#898781" stroke-width="1.3" marker-end="url(#ar1)"/>
+      <line x1="539" y1="72" x2="539" y2="110" stroke="#898781" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#ar1)"/>
+
+      <!-- session_apprenants -->
+      <rect x="24" y="116" width="672" height="140" rx="12" fill="#ffffff" stroke="rgba(11,11,11,.28)" stroke-width="1.5"/>
+      <text x="44" y="142" font-size="16" font-weight="700" fill="#0b0b0b">session_apprenants
+        <tspan font-size="13" font-weight="400" fill="#52514e"> · 636 inscriptions · 59 colonnes</tspan></text>
+      <text x="44" y="162" font-size="12" font-style="italic" fill="#52514e">une seule table porte la pédagogie, la vente, la facture, le paiement et le mandat</text>
+
+      <g clip-path="url(#barclip)">
+        <rect x="44"  y="178" width="148" height="36" fill="#2a78d6"/>
+        <rect x="194" y="178" width="137" height="36" fill="#008300"/>
+        <rect x="333" y="178" width="84"  height="36" fill="#e87ba4"/>
+        <rect x="419" y="178" width="126" height="36" fill="#eda100"/>
+        <rect x="547" y="178" width="74"  height="36" fill="#1baf7a"/>
+        <rect x="623" y="178" width="53"  height="36" fill="#c3c2b7"/>
+      </g>
+      <text x="118" y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">14</text>
+      <text x="262" y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">13</text>
+      <text x="375" y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#0b0b0b">8</text>
+      <text x="482" y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#0b0b0b">12</text>
+      <text x="584" y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#0b0b0b">7</text>
+      <text x="649" y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#0b0b0b">5</text>
+      <text x="44" y="240" font-size="11.5" fill="#52514e">colonnes par domaine (légende sous le schéma) : seules les 14 pédagogiques concernent la livraison</text>
+
+      <line x1="124" y1="256" x2="124" y2="290" stroke="#898781" stroke-width="1.3" marker-end="url(#ar1)"/>
+      <line x1="360" y1="256" x2="360" y2="290" stroke="#898781" stroke-width="1.3" marker-end="url(#ar1)"/>
+      <line x1="596" y1="256" x2="596" y2="290" stroke="#898781" stroke-width="1.3" marker-end="url(#ar1)"/>
+
+      <!-- satellites -->
+      <rect x="24" y="296" width="200" height="64" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <text x="124" y="320" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0b0b0b">paiements · 463</text>
+      <text x="124" y="340" text-anchor="middle" font-size="11" fill="#52514e">échéances et encaissements</text>
+
+      <rect x="244" y="296" width="232" height="64" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <text x="360" y="317" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0b0b0b">facturation_cards · 602</text>
+      <text x="360" y="334" text-anchor="middle" font-size="10.5" fill="#52514e">kanban : pointe l'inscription OU</text>
+      <text x="360" y="348" text-anchor="middle" font-size="10.5" fill="#52514e">le couple client + session</text>
+
+      <rect x="496" y="296" width="200" height="64" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <text x="596" y="317" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0b0b0b">documents_financiers · 409</text>
+      <text x="596" y="340" text-anchor="middle" font-size="11" fill="#52514e">factures et devis Qonto</text>
+
+      <!-- rangée du bas -->
+      <rect x="24" y="396" width="316" height="76" rx="10" fill="#ffffff" stroke="#ec835a" stroke-width="1.6"/>
+      <text x="40" y="420" font-size="13.5" font-weight="700" fill="#0b0b0b">coachings · 45
+        <tspan font-size="10" font-weight="700" fill="#ec835a">  SILO</tspan></text>
+      <text x="40" y="438" font-size="10.5" fill="#52514e">recopie toute la machinerie facture, Stripe et mandat</text>
+      <text x="40" y="454" font-size="10.5" fill="#52514e">0 facture émise sur 45 · pend de l'apprenant, hors session</text>
+
+      <rect x="364" y="396" width="332" height="76" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.35)" stroke-dasharray="5 4"/>
+      <text x="380" y="420" font-size="13.5" font-weight="700" fill="#0b0b0b">offres · 7 · le catalogue</text>
+      <text x="380" y="438" font-size="10.5" fill="#52514e">quasi mort : les 636 inscriptions pointent toutes</text>
+      <text x="380" y="454" font-size="10.5" fill="#52514e">sur la même offre Niveau 1 (les 6 autres : 0 usage)</text>
+    </svg>
+    </div>
+
+    <div class="legend">
+      <div><span class="sw" style="background:#2a78d6"></span><span><b>Pédagogique · 14</b> : session, apprenant, dates, réservations, questionnaire. Restent sur l'inscription.</span></div>
+      <div><span class="sw" style="background:#008300"></span><span><b>Vente · 13</b> : closer, setter, conventions, contrat, source du lead. Partent vers la vente.</span></div>
+      <div><span class="sw" style="background:#e87ba4"></span><span><b>Ligne · 8</b> : financement, mode de paiement, montant, lost. Partent vers la ligne de vente.</span></div>
+      <div><span class="sw" style="background:#eda100"></span><span><b>Facture · 12</b> : facture Qonto, statuts, dates, PDF. Partent vers documents financiers et carte.</span></div>
+      <div><span class="sw" style="background:#1baf7a"></span><span><b>Paiement et mandat · 7</b> : Stripe, mandat SEPA, IBAN. Partent vers paiements et mandats.</span></div>
+      <div><span class="sw" style="background:#c3c2b7"></span><span><b>Mortes · 5</b> : jamais ou quasi jamais remplies. Supprimées.</span></div>
+    </div>
+
+    <ul class="notes">
+      <li><b>486 dossiers CPF sur 487 sans fiche client</b> : la contrainte en base impose déjà le client partout, sauf pour le CPF.</li>
+      <li><b>Le montant vit en 5 endroits</b> : inscription, paiements, documents financiers, cartes (override), coachings.</li>
+      <li><b>3 machines à états se recouvrent</b> : statut_pipeline, statut_cpf, statut_hors_cpf.</li>
+      <li><b>Le mode de paiement vit à 2 niveaux</b> (client et inscription), avec 15 divergences réelles en base.</li>
+      <li><b>Pas d'objet groupe</b> : le couple client + session sert de proxy, un retrait individuel peut emporter tout le groupe (cascade Lost).</li>
+    </ul>
+  </section>
+
+  <!-- ============ CIBLE ============ -->
+  <section class="card">
+    <span class="tag tag-target">Cible</span>
+    <h2>Client, vente, lignes, facturation</h2>
+    <div class="diagram">
+    <svg viewBox="0 0 720 530" role="img" aria-label="Architecture cible : client obligatoire, vente centrale, lignes de vente portant produit, montant, financement et mode, factures et paiements, inscription réduite au pédagogique">
+      <defs>
+        <marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#898781"/>
+        </marker>
+      </defs>
+
+      <!-- apprenant / client -->
+      <rect x="24" y="14" width="224" height="72" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <rect x="24" y="14" width="5" height="72" rx="2.5" fill="#2a78d6"/>
+      <text x="44" y="40" font-size="14" font-weight="700" fill="#0b0b0b">apprenant</text>
+      <text x="44" y="58" font-size="10.5" fill="#52514e">contact + suivi pédagogique</text>
+      <text x="44" y="72" font-size="10.5" fill="#52514e">(Qualiobee, émargements)</text>
+
+      <rect x="320" y="14" width="376" height="72" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.45)" stroke-width="1.6"/>
+      <text x="340" y="38" font-size="14" font-weight="700" fill="#0b0b0b">client · obligatoire pour toute vente</text>
+      <text x="340" y="56" font-size="11" fill="#52514e">identité de facturation ; l'apprenant qui se paie lui-même</text>
+      <text x="340" y="71" font-size="11" fill="#52514e">a sa propre fiche client, reliée à sa fiche apprenant</text>
+
+      <text x="284" y="40" text-anchor="middle" font-size="9.5" fill="#898781">lien explicite</text>
+      <line x1="252" y1="50" x2="316" y2="50" stroke="#898781" stroke-width="1.3" stroke-dasharray="4 4" marker-start="url(#ar2)" marker-end="url(#ar2)"/>
+
+      <line x1="508" y1="86" x2="508" y2="104" stroke="#898781" stroke-width="1.3" marker-end="url(#ar2)"/>
+
+      <!-- vente + carte -->
+      <rect x="320" y="110" width="376" height="64" rx="10" fill="#ffffff" stroke="#008300" stroke-width="1.8"/>
+      <text x="340" y="136" font-size="14.5" font-weight="700" fill="#0b0b0b">vente · la brique centrale</text>
+      <text x="340" y="156" font-size="11" fill="#52514e">1 client · 1..n lignes · closer, statut, documents</text>
+
+      <rect x="24" y="110" width="224" height="64" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <rect x="24" y="110" width="5" height="64" rx="2.5" fill="#eda100"/>
+      <text x="44" y="132" font-size="13.5" font-weight="700" fill="#0b0b0b">carte de facturation</text>
+      <text x="44" y="150" font-size="10.5" fill="#52514e">la vue workflow de la vente</text>
+      <text x="44" y="164" font-size="10.5" fill="#52514e">kanban : 6 colonnes conservées</text>
+      <line x1="252" y1="142" x2="316" y2="142" stroke="#898781" stroke-width="1.3" stroke-dasharray="4 4"/>
+
+      <line x1="508" y1="174" x2="508" y2="192" stroke="#898781" stroke-width="1.3" marker-end="url(#ar2)"/>
+
+      <!-- lignes + catalogue -->
+      <rect x="320" y="198" width="376" height="100" rx="10" fill="#ffffff" stroke="#e87ba4" stroke-width="1.8"/>
+      <text x="340" y="220" font-size="14" font-weight="700" fill="#0b0b0b">lignes de vente · 1..n par vente</text>
+      <g font-size="10" fill="#0b0b0b">
+        <rect x="340" y="230" width="70" height="20" rx="10" fill="#fcfcfb" stroke="rgba(11,11,11,.2)"/>
+        <text x="375" y="243.5" text-anchor="middle">produit</text>
+        <rect x="418" y="230" width="74" height="20" rx="10" fill="#fcfcfb" stroke="rgba(11,11,11,.2)"/>
+        <text x="455" y="243.5" text-anchor="middle">montant</text>
+        <rect x="340" y="256" width="158" height="20" rx="10" fill="#fcfcfb" stroke="rgba(11,11,11,.2)"/>
+        <text x="419" y="269.5" text-anchor="middle">financement · qui paie</text>
+        <rect x="506" y="256" width="174" height="20" rx="10" fill="#fcfcfb" stroke="rgba(11,11,11,.2)"/>
+        <text x="593" y="269.5" text-anchor="middle">encaissement · comment</text>
+      </g>
+      <text x="340" y="290" font-size="10.2" fill="#52514e">le lost vit sur la ligne : un retrait n'emporte plus le groupe</text>
+
+      <rect x="24" y="198" width="224" height="76" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <text x="44" y="220" font-size="13.5" font-weight="700" fill="#0b0b0b">catalogue produits unifié</text>
+      <text x="44" y="238" font-size="10.5" fill="#52514e">formation, coaching, e-learning,</text>
+      <text x="44" y="252" font-size="10.5" fill="#52514e">certification · prix et TVA par produit</text>
+      <line x1="248" y1="236" x2="316" y2="236" stroke="#898781" stroke-width="1.3" marker-end="url(#ar2)"/>
+
+      <!-- factures / paiements -->
+      <line x1="410" y1="298" x2="410" y2="324" stroke="#898781" stroke-width="1.3" marker-end="url(#ar2)"/>
+      <line x1="606" y1="298" x2="606" y2="324" stroke="#898781" stroke-width="1.3" marker-end="url(#ar2)"/>
+
+      <rect x="320" y="330" width="180" height="68" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <rect x="320" y="330" width="5" height="68" rx="2.5" fill="#eda100"/>
+      <text x="340" y="352" font-size="13.5" font-weight="700" fill="#0b0b0b">factures</text>
+      <text x="340" y="369" font-size="10.5" fill="#52514e">documents financiers</text>
+      <text x="340" y="383" font-size="10.5" fill="#52514e">une facture par payeur</text>
+
+      <rect x="516" y="330" width="180" height="68" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <rect x="516" y="330" width="5" height="68" rx="2.5" fill="#1baf7a"/>
+      <text x="536" y="352" font-size="13.5" font-weight="700" fill="#0b0b0b">paiements</text>
+      <text x="536" y="369" font-size="10.5" fill="#52514e">échéances et encaissements</text>
+      <text x="536" y="383" font-size="10.5" fill="#52514e">mandat SEPA côté client</text>
+
+      <!-- livraisons -->
+      <text x="24" y="318" font-size="10.5" font-weight="700" letter-spacing=".08em" fill="#898781">LES LIVRAISONS · UNE PAR LIGNE</text>
+      <path d="M 320 280 H 296 V 366 H 252" fill="none" stroke="#898781" stroke-width="1.3" marker-end="url(#ar2)"/>
+      <path d="M 296 366 V 468 H 252" fill="none" stroke="#898781" stroke-width="1.3" marker-end="url(#ar2)"/>
+
+      <rect x="24" y="330" width="224" height="88" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <rect x="24" y="330" width="5" height="88" rx="2.5" fill="#2a78d6"/>
+      <text x="44" y="352" font-size="13.5" font-weight="700" fill="#0b0b0b">inscription</text>
+      <text x="44" y="370" font-size="10.5" fill="#52514e">session_apprenants réduite au</text>
+      <text x="44" y="384" font-size="10.5" fill="#52514e">pédagogique : la livraison d'une</text>
+      <text x="44" y="398" font-size="10.5" fill="#52514e">ligne formation (14 colonnes)</text>
+
+      <rect x="24" y="436" width="224" height="76" rx="10" fill="#ffffff" stroke="rgba(11,11,11,.14)"/>
+      <rect x="24" y="436" width="5" height="76" rx="2.5" fill="#2a78d6"/>
+      <text x="44" y="458" font-size="13.5" font-weight="700" fill="#0b0b0b">coaching (livraison)</text>
+      <text x="44" y="476" font-size="10.5" fill="#52514e">séances, formateur, WhatsApp ;</text>
+      <text x="44" y="490" font-size="10.5" fill="#52514e">le financier part dans la ligne</text>
+    </svg>
+    </div>
+
+    <ul class="notes">
+      <li><b>Les outils externes pratiquent déjà ce modèle</b> : Qualiobee crée un customer payeur pour chaque apprenant B2C (511 identifiants en base) ; Qonto exige un client par facture.</li>
+      <li><b>Un embryon de ligne de vente existe déjà dans le code</b> (assembleLignesCommande) : il assemble les lignes au moment d'émettre la facture, sans jamais les persister.</li>
+      <li><b>Le cas type devient trivial</b> : un pack formation 1 650 &euro; CPF + coaching 1 200 &euro; SEPA devient une vente à deux lignes, avec une facture par payeur.</li>
+      <li><b>Un paiement partagé</b> (par exemple une partie en direct, une partie OPCO) devient deux lignes de la même vente, sans session en doublon.</li>
+    </ul>
+  </section>
+</div>
+
+<!-- ============ LES 68 TABLES ============ -->
+<section class="families">
+  <h2>Les ~68 tables de la base, en 4 familles</h2>
+  <p class="sub">Le nombre de tables n'est pas le problème : seul le cœur change. Les modules périphériques sont sains et restent en place. Répartition indicative, comptes approximatifs.</p>
+  <div class="fbar" aria-label="Répartition approximative des 68 tables">
+    <div style="flex:12;background:#2a78d6;color:#fff"><span>Cœur ~12</span></div>
+    <div style="flex:6;background:#a8a69e;color:#fff"><span>Réf. ~6</span></div>
+    <div style="flex:35;background:#d8d6cf;color:#0b0b0b"><span>Modules périphériques ~35</span></div>
+    <div style="flex:10;background:#c3c2b7;color:#0b0b0b"><span>Plomberie ~10</span></div>
+  </div>
+  <div class="fcards">
+    <div class="fcard core">
+      <h3>Le cœur</h3>
+      <p class="n">~12 tables</p>
+      <p>À restructurer. Notamment : session_apprenants, clients, apprenants, coachings, paiements, documents_financiers, facturation_cards (+ checks et documents), virement_rapprochements, facturation_bibby, offres.</p>
+    </div>
+    <div class="fcard">
+      <h3>Les référentiels</h3>
+      <p class="n">~6 tables</p>
+      <p>Stables. Notamment : sessions, lieux, salles, formateurs, closers, setters.</p>
+    </div>
+    <div class="fcard">
+      <h3>Les modules périphériques</h3>
+      <p class="n">~35 tables</p>
+      <p>Sains, hors périmètre : preuves, retours qualité (fb_*), dispos et demandes formateurs (Book My Sessions), tickets, closing, emails.</p>
+    </div>
+    <div class="fcard">
+      <h3>La plomberie</h3>
+      <p class="n">~10 tables</p>
+      <p>Technique, inchangée. Notamment : webhook_events, app_logs, rappels, pending_actions, actions_log.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Schéma rédigé par Atlas le 15/07/2026 à partir des six analyses du jalon 2 du projet de restructuration DELIV'IA.
+  Chiffres agrégés relevés en base le 15/07/2026 ; aucune donnée nominative. À valider par Côme et Tanguy.
+</footer>
+
+</div>
+</body>
+</html>
