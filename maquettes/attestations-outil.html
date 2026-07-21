@@ -383,27 +383,11 @@
 
   .logo-france-ia { text-align: right; }
 
-  .wordmark {
-    font-size: clamp(14px, 1.6vw, 19px);
-    font-weight: 800;
-    color: var(--ink);
-    letter-spacing: 0.01em;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  .logo-img {
+    height: clamp(26px, 3vw, 36px);
+    width: auto;
+    display: inline-block;
   }
-
-  .wordmark .ia { color: #0055a4; }
-
-  .bar {
-    display: flex;
-    height: 3px;
-    width: 76px;
-    margin: 5px 0 0 auto;
-  }
-
-  .bar span { flex: 1; }
-  .bar .bleu { background: #0055a4; }
-  .bar .blanc { background: #ffffff; border-top: 1px solid #d8d8d8; border-bottom: 1px solid #d8d8d8; }
-  .bar .rouge { background: #ef4135; }
 
   [contenteditable]:focus {
     background: var(--accent-soft);
@@ -511,8 +495,7 @@
                 <div class="date-label">DATE</div>
               </div>
               <div class="logo-france-ia">
-                <div class="wordmark">France <span class="ia">IA</span></div>
-                <div class="bar"><span class="bleu"></span><span class="blanc"></span><span class="rouge"></span></div>
+                <img class="logo-img" src="data:image/png;base64,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" alt="France IA" />
               </div>
             </div>
           </div>
