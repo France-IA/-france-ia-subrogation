@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Générateur de convention de formation — France IA</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+</head>
+<body>
+<style>
+  :root{
+    --accent:#1e4fd6; --accent-ink:#143a9e; --highlight:#fff3c4;
+    --ink:#16223a; --muted:#5b6b86; --line:#dde3ee;
+    --bg:#eef1f7; --panel:#ffffff; --field:#ffffff; --field-line:#d7deea; --field-focus:#bcd0ff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --accent:#6a90ff; --accent-ink:#9db6ff; --highlight:#5b4f1a;
+      --ink:#e7ecf6; --muted:#9aa8c2; --line:#2b3752;
+      --bg:#0d1421; --panel:#131c2e; --field:#1a2540; --field-line:#33415f; --field-focus:#3d5688; }
+  }
+  :root[data-theme="light"]{
+    --accent:#1e4fd6; --accent-ink:#143a9e; --highlight:#fff3c4;
+    --ink:#16223a; --muted:#5b6b86; --line:#dde3ee;
+    --bg:#eef1f7; --panel:#ffffff; --field:#ffffff; --field-line:#d7deea; --field-focus:#bcd0ff;
+  }
+  :root[data-theme="dark"]{
+    --accent:#6a90ff; --accent-ink:#9db6ff; --highlight:#5b4f1a;
+    --ink:#e7ecf6; --muted:#9aa8c2; --line:#2b3752;
+    --bg:#0d1421; --panel:#131c2e; --field:#1a2540; --field-line:#33415f; --field-focus:#3d5688;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink);background:var(--bg);line-height:1.5}
+  .app{display:flex;min-height:100vh}
+
+  .controls{width:400px;min-width:360px;background:var(--panel);border-right:1px solid var(--line);
+            padding:22px 20px;overflow-y:auto;max-height:100vh;position:sticky;top:0}
+  .controls h1{font-size:17px;margin:0 0 2px;letter-spacing:-.01em}
+  .controls .sub{font-size:12.5px;color:var(--muted);margin:0 0 16px}
+  .actions{display:flex;gap:8px;margin:4px 0 16px}
+  .btn{border:0;border-radius:9px;padding:11px 14px;font-size:13px;font-weight:650;cursor:pointer;font-family:inherit}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn-print{background:var(--accent);color:#fff;flex:1}
+  .btn-print:hover{background:var(--accent-ink)}
+  .btn-reset{background:var(--field);color:var(--muted);border:1px solid var(--field-line)}
+  fieldset{border:1px solid var(--line);border-radius:11px;margin:0 0 14px;padding:12px 12px 4px}
+  legend{font-size:10.5px;font-weight:750;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);padding:0 6px}
+  label{display:block;font-size:11px;font-weight:650;color:var(--muted);margin:9px 0 3px;letter-spacing:.01em}
+  input{width:100%;border:1px solid var(--field-line);border-radius:8px;padding:9px 10px;font-size:13px;
+        font-family:inherit;color:var(--ink);background:var(--field)}
+  input:focus{outline:2px solid var(--field-focus);border-color:var(--accent)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .rowc{border:1px solid var(--line);border-radius:9px;padding:9px;margin:9px 0;position:relative;background:color-mix(in srgb, var(--accent) 5%, var(--panel))}
+  .rowc .del{position:absolute;top:6px;right:7px;border:0;background:transparent;color:var(--muted);opacity:.6;font-size:17px;cursor:pointer;line-height:1}
+  .rowc .del:hover{opacity:1;color:#e11d48}
+  .add{background:transparent;border:1px dashed color-mix(in srgb, var(--accent) 45%, var(--line));color:var(--accent);
+       border-radius:9px;padding:8px;width:100%;font-size:12.5px;font-weight:650;cursor:pointer;margin:2px 0 8px;font-family:inherit}
+  .add:hover{background:color-mix(in srgb, var(--accent) 8%, transparent)}
+  .hint{font-size:11px;color:var(--muted);background:color-mix(in srgb, var(--accent) 6%, var(--panel));
+        border-left:3px solid var(--accent);padding:9px 11px;border-radius:0 7px 7px 0;margin:0 0 14px}
+
+  .preview-wrap{flex:1;padding:30px;display:flex;justify-content:center;background:var(--bg)}
+  /* Le "papier" reste blanc dans les deux thèmes : c'est ce qui sera imprimé. */
+  .document{background:#ffffff;color:#111827;width:210mm;min-height:297mm;padding:20mm 18mm;
+            box-shadow:0 8px 30px rgba(8,15,30,.22);font-size:11px;line-height:1.5;border-radius:2px}
+  .document:focus{outline:2px dashed var(--accent);outline-offset:6px}
+  .document h2{text-align:center;font-size:15px;margin:0 0 3px;color:#0f172a}
+  .document .legal{text-align:center;font-size:10px;color:#475569;margin:0 0 16px}
+  .document h3{font-size:12px;margin:16px 0 5px;border-bottom:1px solid #e2e8f0;padding-bottom:2px;color:#0f172a}
+  .document h4{font-size:11px;margin:9px 0 3px;color:#1e293b}
+  .document p{margin:0 0 6px;text-align:justify}
+  .document ul{margin:0 0 6px;padding-left:18px}
+  .document li{margin:0 0 2px}
+  .document table{width:100%;border-collapse:collapse;margin:6px 0}
+  .document th,.document td{border:1px solid #cbd5e1;padding:4px 6px;text-align:left;font-size:10px}
+  .document th{background:#f1f5f9}
+  .var{background:var(--highlight);border-radius:2px;padding:0 2px}
+  .sign{display:flex;justify-content:space-between;margin-top:26px;gap:30px}
+  .sign .box{width:46%}
+  .sign .line{border-top:1px solid #94a3b8;margin-top:34px;padding-top:4px;font-size:10px;color:#64748b}
+
+  @media (max-width:900px){ .app{flex-direction:column} .controls{width:100%;max-height:none;position:static;border-right:0;border-bottom:1px solid var(--line)} .document{width:100%;padding:16px} }
+</style>
+
+<div class="app">
+  <aside class="controls">
+    <h1>Convention de formation</h1>
+    <p class="sub">Remplissez les champs, le document se construit à droite. France IA.</p>
+    <div class="actions">
+      <button class="btn btn-print" onclick="printDoc()">🖨️ Imprimer / PDF</button>
+      <button class="btn btn-reset" onclick="resetAll()">Réinitialiser</button>
+    </div>
+    <div class="hint">Après avoir rempli le formulaire, vous pouvez aussi <b>éditer directement le document</b> à droite (cliquez dedans). Puis « Imprimer / PDF » &rarr; « Enregistrer en PDF » pour l'envoyer à l'OPCO.</div>
+
+    <fieldset>
+      <legend>Bénéficiaire (l'entreprise)</legend>
+      <label>Raison sociale</label><input id="f_raison" placeholder="Ex : IGIENAIR">
+      <label>Représentant (signataire)</label><input id="f_rep" placeholder="Ex : Thomas Monti">
+      <label>Adresse</label><input id="f_adresse" placeholder="Rue et numéro">
+      <div class="grid2"><div><label>Code postal</label><input id="f_cp" placeholder="78260"></div>
+      <div><label>Ville</label><input id="f_ville" placeholder="ACHERES"></div></div>
+      <label>SIRET (14 chiffres)</label><input id="f_siret" inputmode="numeric" maxlength="14" placeholder="44997713100032">
+    </fieldset>
+
+    <fieldset><legend>Formation</legend>
+      <label>Intitulé de l'action de formation</label><input id="f_intitule">
+    </fieldset>
+
+    <fieldset><legend>Participant(s)</legend>
+      <div id="participants"></div>
+      <button class="add" onclick="addParticipant()">+ Ajouter un participant</button>
+    </fieldset>
+
+    <fieldset><legend>Séances</legend>
+      <div id="seances"></div>
+      <button class="add" onclick="addSeance()">+ Ajouter une séance</button>
+    </fieldset>
+
+    <fieldset><legend>Dispositions financières</legend>
+      <div class="grid2"><div><label>Prix HT = TTC (€)</label><input id="f_prix" inputmode="decimal" placeholder="1650"></div>
+      <div><label>Nombre de journées</label><input id="f_nbj" inputmode="numeric" placeholder="2"></div></div>
+    </fieldset>
+
+    <fieldset><legend>Divers</legend>
+      <label>Formateur</label><input id="f_formateur" placeholder="Nom du formateur">
+      <label>Date de réalisation / signature</label><input id="f_date" placeholder="JJ/MM/AAAA">
+      <div class="grid2"><div><label>Taux de satisfaction (%)</label><input id="f_sat" inputmode="numeric" value="88"></div>
+      <div><label>Taux de recommandation (%)</label><input id="f_reco" inputmode="numeric" value="97"></div></div>
+    </fieldset>
+  </aside>
+
+  <main class="preview-wrap">
+    <article class="document" id="doc" contenteditable="true" spellcheck="false"></article>
+  </main>
+</div>
+
+<script>
+const ORG={raison:"France IA",adresse:"38 RUE DES MATHURINS 75008 PARIS",siret:"93439228300032",nda:"11757121375",qualiopi:"FRCM25066",iban:"FR76 1695 8000 0173 9821 1184 164"};
+const REF={contact:"contact@franceia.com",relNom:"Tanguy Lepage",relTel:"+33781042847",relMail:"tanguy@franceia.com",hcpNom:"Olivier Cabridain",hcpMail:"olivier@franceia.com"};
+const OBJECTIFS=[
+ "Comprendre le fonctionnement, le potentiel et les limites des outils d'IA générative",
+ "Savoir prompter efficacement pour améliorer et fiabiliser les résultats des outils d'IA générative",
+ "Connaître les meilleurs outils d'IA en fonction de ses besoins",
+ "Savoir utiliser plusieurs outils d'IA pour produire du contenu professionnel varié"];
+const TESTPOS=[
+ "Un échange avec une personne de l'équipe de France IA",
+ "Un questionnaire qui permet d'évaluer le positionnement de l'apprenant, son besoin, et son respect des pré-requis, ainsi que les demandes d'adaptation éventuelles (site d'inscription de France IA)",
+ "Une validation de l'entrée si les pré-requis et le besoin de l'apprenant correspondent à la formation proposée par France IA"];
+const MODULES=[
+ ["1 : Comprenez le fonctionnement, le potentiel et les limites des outils d'IA générative (1h)","Vous comprendrez comment l'IA change nos métiers, ce qu'on peut en attendre, quelles sont ses limites et défauts, et comment intégrer cette technologie dans votre quotidien."],
+ ["2 : Promptez correctement et efficacement (1h)","Apprenez à structurer vos demandes pour obtenir des résultats fiables et complets dès le premier essai, et maîtrisez les techniques de prompting qui font la différence."],
+ ["3 : Découvrez les meilleurs outils d'IA en fonction de votre besoin (1h)","Vous saurez quels sont les meilleurs outils d'IA à utiliser, quelles tâches vous pouvez leur déléguer dès maintenant, et comment."],
+ ["4 : Utilisez l'IA pour produire du contenu professionnel et automatiser vos tâches (12h)","Lors d'ateliers, utilisez des outils d'IA variés pour gagner du temps dans votre quotidien professionnel, améliorer vos recherches et décisions, générer des visuels, documents et autres livrables, et créer vos propres agents IA."]];
+const ARTICLES=[
+ [6,"SANCTION DE LA FORMATION","En application de l'article L.6313-1 du Code du Travail, un certificat de réalisation mentionnant les objectifs, la nature et la durée de l'action et les résultats de l'évaluation des acquis de la formation sera remis aux apprenant(e)s et à l'employeur financeur à l'issue de la formation."],
+ [7,"PROPRIÉTÉ INTELLECTUELLE","Les supports pédagogiques fournis lors des formations sont protégés par le droit de la propriété intellectuelle. Toute reproduction, diffusion ou utilisation sans l'accord préalable de France IA est interdite."],
+ [8,"PROTECTION DES DONNÉES À CARACTÈRE PERSONNEL (RGPD)","Finalités et base légale : les données des participants sont traitées sur la base de l'exécution de la présente convention de formation, des obligations légales de l'organisme de formation (Art. R6113-15 du Code du travail), et de l'intérêt légitime de France IA pour assurer la gestion pédagogique, le suivi administratif, le suivi de la relation client et l'amélioration des services. Durée de conservation : 3 ans à compter du dernier contact ou de la fin de la relation commerciale. Destinataires : les données sont utilisées exclusivement par France IA et ses prestataires, ou transmises aux organismes officiels (France Compétences, financeurs) dans le cadre des contrôles obligatoires. Droits : les participants disposent d'un droit d'accès, de rectification, de suppression, de portabilité et d'opposition via l'adresse contact@franceia.com, ainsi que du droit d'introduire une réclamation auprès de la CNIL."],
+ [9,"ENGAGEMENT QUALITÉ","L'organisme prestataire d'actions de développement des compétences satisfait aux exigences du Décret n° 2019-564 du 6 juin 2019 relatif à la qualité des actions de la formation professionnelle. L'organisme de formation certifié Qualiopi (certificat n°"+ORG.qualiopi+") est enregistré sous le numéro de déclaration d'activité n°"+ORG.nda+". Toutes les actions de formation dispensées par France IA font l'objet d'une convention de formation signée des deux parties qui comporte les conditions de vente. Tout document contractuel est accompagné du parcours de formation et de la convention détaillée, suivi du règlement intérieur de la formation."],
+ [10,"TRAITEMENT DES RÉCLAMATIONS","Une feuille d'appréciation individuelle sur la session de formation est renseignée par chaque participant à l'issue de l'action. Afin de répondre individuellement à une éventuelle réclamation, l'entreprise ou le participant veillera à indiquer son nom et son entreprise sur la convention de formation. Toute réclamation doit être adressée par mail à olivier@franceia.com. Une réponse sera adressée à l'entreprise ou au participant dans un délai d'un mois maximum. En cas d'anonymat de la personne participant, la réponse sera adressée directement à son entreprise."],
+ [11,"EN CAS DE NON RÉALISATION DE LA PRESTATION DE FORMATION","En application de l'article L.6354-1 du Code du travail, faute de réalisation totale ou partielle de la prestation de formation, l'organisme de formation rembourse au co-contractant les sommes indûment perçues."],
+ [12,"DÉDOMMAGEMENT, RÉPARATION OU DÉDIT","En cas de renoncement par le bénéficiaire avant le début du programme de formation, ou d'abandon de la formation par le participant pour un autre motif que la force majeure dûment reconnue, le présent contrat est résilié selon les modalités suivantes : renoncement dans un délai supérieur à 2 semaines avant le début de la formation : 0 % du coût de la formation est dû ; renoncement 2 semaines avant le début de la formation : 30 % du coût de la formation est dû. Les montants versés à ce titre ne sont pas imputables sur l'obligation des employeurs et ne permettent pas de faire l'objet d'une demande de prise en charge par un OPCO ou un FAF, le cas échéant."],
+ [13,"EN CAS DE DIFFÉRENDS POTENTIELS","Si une contestation ou un différend ne peuvent être réglés à l'amiable, le Tribunal de Commerce de Paris sera seul compétent pour régler ce litige commercial."],
+ [14,"DOCUMENTS REMIS, INFORMATIONS COMPLÉMENTAIRES ET RÉFÉRENTS","En signant la présente convention, le bénéficiaire reconnaît avoir reçu et pris connaissance des documents suivants : le programme de formation ; le règlement intérieur de l'organisme de formation ; le livret d'accueil ; les conditions générales de vente (CGV). L'ensemble des informations relatives au déroulé de la formation, aux modalités de suivi et d'évaluation, aux méthodes et ressources pédagogiques, aux travaux incombant aux participants, aux taux de satisfaction et à l'accessibilité aux personnes en situation de handicap sont détaillées dans ces documents. Les coordonnées des référents pédagogique, administratif et handicap sont indiquées dans le livret d'accueil. Ces documents sont disponibles sur demande à l'adresse contact@franceia.com."],
+ [15,"SIGNATURE ET ENGAGEMENT","En signant la présente convention, le bénéficiaire reconnaît en avoir pris connaissance, ainsi que des documents mentionnés à l'article 14."]];
+
+function today(){const d=new Date();return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
+const DEFAULT_CAT="Salarié d'employeurs privés hors apprentis";
+const DEFAULT_INTITULE="Maîtriser l'IA générative dans son quotidien professionnel";
+let state={raison:"",rep:"",adresse:"",cp:"",ville:"",siret:"",intitule:DEFAULT_INTITULE,
+ participants:[{nom:"",cat:DEFAULT_CAT}],
+ seances:[{date:"",horaires:"09h00 – 12h30",module:"Modules 1 à 4",lieu:"à venir"},{date:"",horaires:"14h00 – 18h00",module:"Module 4",lieu:"à venir"}],
+ prix:"1650",nbj:"2",formateur:"",date:today(),sat:"88",reco:"97"};
+
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function vv(s,ph){const val=(s==null?"":String(s)).trim();return val?esc(val):'<span class="var">'+esc(ph)+'</span>';}
+function euro(n){const x=parseFloat(String(n).replace(',','.'));if(isNaN(x))return '<span class="var">[prix]</span>';
+ return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(x).replace(/[\u202f\u00a0\u2009]/g,' ');}
+function journees(n){const x=parseInt(n,10);if(isNaN(x))return '<span class="var">[n]</span> journées';return x+' '+(x<=1?'journée':'journées');}
+
+function renderParticipants(){const c=document.getElementById('participants');c.innerHTML='';
+ state.participants.forEach((p,i)=>{const d=document.createElement('div');d.className='rowc';
+  d.innerHTML=(state.participants.length>1?'<button class="del" title="Supprimer" onclick="delParticipant('+i+')">×</button>':'')+
+   '<label>Nom</label><input value="'+esc(p.nom)+'" oninput="setP('+i+',\'nom\',this.value)">'+
+   '<label>Catégorie</label><input value="'+esc(p.cat)+'" oninput="setP('+i+',\'cat\',this.value)">';c.appendChild(d);});}
+function renderSeances(){const c=document.getElementById('seances');c.innerHTML='';
+ state.seances.forEach((s,i)=>{const d=document.createElement('div');d.className='rowc';
+  d.innerHTML=(state.seances.length>1?'<button class="del" title="Supprimer" onclick="delSeance('+i+')">×</button>':'')+
+   '<div class="grid2"><div><label>Date</label><input value="'+esc(s.date)+'" placeholder="22/09/2026" oninput="setS('+i+',\'date\',this.value)"></div>'+
+   '<div><label>Horaires</label><input value="'+esc(s.horaires)+'" oninput="setS('+i+',\'horaires\',this.value)"></div></div>'+
+   '<div class="grid2"><div><label>Module</label><input value="'+esc(s.module)+'" oninput="setS('+i+',\'module\',this.value)"></div>'+
+   '<div><label>Lieu / outil</label><input value="'+esc(s.lieu)+'" oninput="setS('+i+',\'lieu\',this.value)"></div></div>';c.appendChild(d);});}
+function setP(i,k,v){state.participants[i][k]=v;renderDoc();}
+function setS(i,k,v){state.seances[i][k]=v;renderDoc();}
+function addParticipant(){state.participants.push({nom:"",cat:DEFAULT_CAT});renderParticipants();renderDoc();}
+function delParticipant(i){state.participants.splice(i,1);renderParticipants();renderDoc();}
+function addSeance(){state.seances.push({date:"",horaires:"",module:"",lieu:""});renderSeances();renderDoc();}
+function delSeance(i){state.seances.splice(i,1);renderSeances();renderDoc();}
+
+function buildDoc(){const s=state;let h='';
+ h+='<h2>Convention de formation professionnelle</h2><p class="legal">(Articles L.6353-1 et L.6353-2 du Code du travail)</p>';
+ h+='<p>Entre les soussignés :</p>';
+ h+='<p>L\'organisme de formation '+ORG.raison+' situé '+ORG.adresse+' - SIRET '+ORG.siret+' - Déclaration d\'activité enregistrée sous le N°'+ORG.nda+' auprès du Préfet de Région d\'Île-de-France, ci-après dénommé « l\'organisme de formation ». Cet enregistrement ne vaut pas agrément de l\'État.</p>';
+ h+='<p>Et entre :</p>';
+ h+='<p>La société '+vv(s.raison,'[Raison sociale]')+' située '+vv(s.adresse,'[adresse]')+' - '+vv(s.cp,'[CP]')+' '+vv(s.ville,'[ville]')+' - SIRET '+vv(s.siret,'[SIRET]')+', représentée par '+vv(s.rep,'[représentant]')+', ci-après dénommée « le bénéficiaire ».</p>';
+ h+='<h3>Article 1 : OBJET DE LA CONVENTION</h3><p>L\'action de formation entre dans la catégorie prévue à l\'article L.6313-1 de la sixième partie du Code du travail, à savoir les « actions de développement des compétences ».</p>';
+ h+='<p><b>Intitulé de l\'action de formation :</b> '+vv(s.intitule,'[intitulé]')+'</p>';
+ h+='<h4>Public visé et pré-requis</h4><p>Toute personne souhaitant améliorer son efficacité professionnelle grâce à des outils d\'IA générative. Cette personne doit respecter les conditions d\'éligibilité fixées par les articles L. 5151-2 et L. 5421-4 du Code du travail (être une personne active occupant un emploi ou en recherche d\'emploi). Aucun pré-requis technique n\'est requis. Il suffit de disposer d\'un ordinateur ou d\'une tablette.</p>';
+ h+='<h4>Objectifs professionnels visés</h4><ul>'+OBJECTIFS.map((o,i)=>'<li>'+(i+1)+'. '+o+'</li>').join('')+'</ul>';
+ h+='<h4>Accès</h4><p>Les inscriptions peuvent être effectuées par téléphone ou par email auprès de notre service dédié. Coordonnées France IA : '+ORG.adresse+'. Contact : '+REF.relNom+', '+REF.relTel+', '+REF.relMail+'. Inscriptions : '+REF.contact+'. Le délai d\'accès à la formation est de deux semaines.</p>';
+ h+='<h4>Test de positionnement</h4><ul>'+TESTPOS.map((t,i)=>'<li>'+(i+1)+'. '+t+'</li>').join('')+'</ul>';
+ h+='<h3>Article 2 : NATURE, LOGISTIQUE ET CONDITIONS DE DÉROULEMENT DE L\'ACTION</h3><h4>Modules et déroulé</h4>'+MODULES.map(m=>'<p><b>'+m[0]+'</b><br>'+m[1]+'</p>').join('');
+ h+='<h4>Séances</h4><table><thead><tr><th>Date</th><th>Horaires / durée</th><th>Module</th><th>Lieu / outil</th></tr></thead><tbody>'+
+   s.seances.map(se=>'<tr><td>'+vv(se.date,'[date]')+'</td><td>'+vv(se.horaires,'[horaires]')+'</td><td>'+vv(se.module,'[module]')+'</td><td>'+vv(se.lieu,'[lieu]')+'</td></tr>').join('')+'</tbody></table>';
+ h+='<h4>Méthode et outils pédagogiques</h4><p>Nos formations reposent sur une approche active, immersive et concrète, visant à rendre les participants rapidement opérationnels dans l\'usage des outils d\'intelligence artificielle générative. Elles mobilisent : alternance théorie/pratique (démonstrations en direct, exercices guidés, manipulations individuelles) ; études de cas et mises en situation professionnelles inspirées de problématiques réelles ; ateliers interactifs en petit groupe favorisant le partage d\'expérience ; supports numériques accessibles à tout moment (fiches pratiques, tutoriels, modèles de prompt) y compris après la formation ; quiz de progression réguliers pour ancrer les apprentissages.</p>';
+ h+='<h4>Modalités de suivi et d\'évaluation</h4><p>Méthode de suivi : pour les modules en présentiel, une feuille d\'émargement est signée par les apprenants et le formateur par demi-journée de formation. Un certificat de réalisation individuel de la formation sera produit. Méthode d\'évaluation : un quiz en fin des modules en présentiel pour valider les acquis ; mises en situation et exercices pratiques (cas d\'usage réels) ; auto-évaluation des participants (questionnaire de satisfaction) ; échanges et retours d\'expérience en fin de formation.</p>';
+ h+='<h4>Accessibilité aux personnes handicapées</h4><p>Toute situation de handicap peut être signalée à l\'adresse '+REF.contact+' afin qu\'une étude d\'adaptation des moyens pédagogiques soit réalisée. France IA s\'engage à mettre en œuvre toutes les adaptations nécessaires, dans la mesure du possible, après étude individuelle de la situation.</p>';
+ h+='<h4>Assistance technique et pédagogique</h4><p>En cas de difficulté technique, d\'incompréhension, ou de tout autre besoin d\'assistance, l\'apprenant peut contacter le responsable de la formation. Une réponse sera communiquée le plus rapidement possible dans la limite du raisonnable.</p>';
+ h+='<p><b>Taux de satisfaction :</b> '+vv(s.sat,'[..]')+' %. <b>Taux de recommandation :</b> '+vv(s.reco,'[..]')+' %.</p>';
+ h+='<h3>Article 3 : FORMATEURS</h3><p>Formateur : '+vv(s.formateur,'[formateur]')+'.</p>';
+ h+='<h3>Article 4 : ENGAGEMENTS DE PARTICIPATION</h3><p>Le bénéficiaire s\'engage à assurer la présence des participants aux dates, lieux et heures prévus. Les participants à cette session de formation sont désignés par la direction de la société. Il s\'agit de :</p><ul>'+
+   s.participants.map(p=>'<li>'+vv(p.nom,'[nom du participant]')+' ('+vv(p.cat,'catégorie')+')</li>').join('')+'</ul>';
+ h+='<p>Notre organisme peut vous offrir des possibilités d\'adaptation et/ou de compensations spécifiques si elles sont nécessaires à l\'amélioration de vos apprentissages. Si vous êtes en situation de handicap même temporaire et partiel, merci de contacter directement '+REF.hcpNom+' à l\'adresse '+REF.hcpMail+' avant l\'arrivée en formation.</p>';
+ h+='<h3>Article 5 : DISPOSITIONS FINANCIÈRES ET PRIX DE LA FORMATION</h3><p>Le coût de la formation, objet de la présente, s\'élève à <b>'+euro(s.prix)+' HT et TTC</b> (TVA non applicable - Article 261 4.4° du CGI - Enseignement et formation professionnelle) pour '+journees(s.nbj)+' de formation en face à face.</p>';
+ h+='<p>Le règlement de la formation s\'effectue par virement bancaire à réception de la facture. Toute somme non réglée à l\'échéance pourra donner lieu à l\'application de pénalités de retard conformément aux dispositions légales en vigueur.</p>';
+ h+='<p>Les coordonnées bancaires pour le règlement sont les suivantes : IBAN '+ORG.iban+'.</p>';
+ h+=ARTICLES.map(a=>'<h3>Article '+a[0]+' : '+a[1]+'</h3><p>'+a[2]+'</p>').join('');
+ h+='<p>Document réalisé et signé le '+vv(s.date,'[date]')+'.</p>';
+ h+='<div class="sign"><div class="box"><b>Pour France IA</b><div class="line">Signature — le '+vv(s.date,'[date]')+'</div></div><div class="box"><b>Pour le bénéficiaire</b><div class="line">'+vv(s.rep,'[représentant]')+' — Signature</div></div></div>';
+ return h;}
+function renderDoc(){document.getElementById('doc').innerHTML=buildDoc();}
+
+const PRINT_CSS='@page{size:A4;margin:16mm 15mm}body{font-family:Arial,Helvetica,sans-serif;color:#111;font-size:10.5px;line-height:1.5}h2{text-align:center;font-size:15px;margin:0 0 3px}.legal{text-align:center;font-size:10px;color:#475569;margin:0 0 16px}h3{font-size:12px;margin:15px 0 5px;border-bottom:1px solid #e2e8f0;padding-bottom:2px}h4{font-size:11px;margin:9px 0 3px}p{margin:0 0 6px;text-align:justify}ul{margin:0 0 6px;padding-left:18px}li{margin:0 0 2px}table{width:100%;border-collapse:collapse;margin:6px 0}th,td{border:1px solid #cbd5e1;padding:4px 6px;font-size:10px;text-align:left}th{background:#f1f5f9}.var{background:transparent}.sign{display:flex;justify-content:space-between;margin-top:26px;gap:30px}.sign .box{width:46%}.sign .line{border-top:1px solid #94a3b8;margin-top:34px;padding-top:4px;font-size:10px;color:#64748b}';
+function printDoc(){
+  const html='<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><title>Convention de formation</title><style>'+PRINT_CSS+'</style></head><body>'+document.getElementById('doc').innerHTML+'</body></html>';
+  const w=window.open('','_blank');
+  if(w){ w.document.open(); w.document.write(html); w.document.close(); w.focus(); setTimeout(function(){try{w.print();}catch(e){}},350); }
+  else { window.print(); } // repli si les pop-ups sont bloqués
+}
+
+const MAP={f_raison:'raison',f_rep:'rep',f_adresse:'adresse',f_cp:'cp',f_ville:'ville',f_siret:'siret',f_intitule:'intitule',f_prix:'prix',f_nbj:'nbj',f_formateur:'formateur',f_date:'date',f_sat:'sat',f_reco:'reco'};
+function bind(){Object.keys(MAP).forEach(id=>{const el=document.getElementById(id);el.value=state[MAP[id]]||'';el.addEventListener('input',()=>{state[MAP[id]]=el.value;renderDoc();});});}
+function resetAll(){if(!confirm('Vider tous les champs saisis ? (le contenu légal fixe est conservé)'))return;
+ state={raison:"",rep:"",adresse:"",cp:"",ville:"",siret:"",intitule:DEFAULT_INTITULE,participants:[{nom:"",cat:DEFAULT_CAT}],
+  seances:[{date:"",horaires:"09h00 – 12h30",module:"Modules 1 à 4",lieu:"à venir"},{date:"",horaires:"14h00 – 18h00",module:"Module 4",lieu:"à venir"}],
+  prix:"1650",nbj:"2",formateur:"",date:today(),sat:"88",reco:"97"};
+ bind();renderParticipants();renderSeances();renderDoc();}
+bind();renderParticipants();renderSeances();renderDoc();
+</script>
+</body>
+</html>
