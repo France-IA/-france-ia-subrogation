@@ -78,7 +78,7 @@
   .sign{display:flex;justify-content:space-between;margin-top:26px;gap:30px}
   .sign .box{width:46%}
   .sign .line{border-top:1px solid #94a3b8;margin-top:34px;padding-top:4px;font-size:10px;color:#64748b}
-  .sign .cachet{display:block;max-width:190px;height:auto;margin:8px 0 2px}
+  .sign .cachet{display:block;width:190px;height:auto;margin:8px 0 2px;pointer-events:none;user-select:none}
 
   @media (max-width:900px){ .app{flex-direction:column} .controls{width:100%;max-height:none;position:static;border-right:0;border-bottom:1px solid var(--line)} .document{width:100%;padding:16px} }
 </style>
@@ -226,7 +226,7 @@ function buildDoc(){const s=state;let h='';
  h+='<p>Les coordonnées bancaires pour le règlement sont les suivantes : IBAN '+ORG.iban+'.</p>';
  h+=ARTICLES.map(a=>'<h3>Article '+a[0]+' : '+a[1]+'</h3><p>'+a[2]+'</p>').join('');
  h+='<p>Document réalisé et signé le '+vv(s.date,'[date]')+'.</p>';
- h+='<div class="sign"><div class="box"><b>Pour France IA</b><img class="cachet" src="'+CACHET+'" alt="Cachet et signature France IA"><div class="line">Signature — le '+vv(s.date,'[date]')+'</div></div><div class="box"><b>Pour le bénéficiaire</b><div class="line">'+vv(s.rep,'[représentant]')+' — Signature</div></div></div>';
+ h+='<div class="sign" contenteditable="false"><div class="box"><b>Pour France IA</b><img class="cachet" width="190" draggable="false" src="'+CACHET+'" alt="Cachet et signature France IA"><div class="line">Signature — le '+vv(s.date,'[date]')+'</div></div><div class="box"><b>Pour le bénéficiaire</b><div class="line">'+vv(s.rep,'[représentant]')+' — Signature</div></div></div>';
  return h;}
 function renderDoc(){document.getElementById('doc').innerHTML=buildDoc();}
 
@@ -244,7 +244,7 @@ function resetAll(){if(!confirm('Vider tous les champs saisis ? (le contenu lég
  state={raison:"",rep:"",adresse:"",cp:"",ville:"",siret:"",intitule:DEFAULT_INTITULE,participants:[{nom:"",cat:DEFAULT_CAT}],
   seances:[{date:"",horaires:"09h00 – 12h30",module:"Modules 1 à 4",lieu:"à venir"},{date:"",horaires:"14h00 – 18h00",module:"Module 4",lieu:"à venir"}],
   prix:"1650",nbj:"2",formateur:"",date:today(),sat:"88",reco:"97"};
- bind();renderParticipants();renderSeances();renderDoc();}
+ bind();renderParticipants();renderSeances();renderDoc();try{document.execCommand('enableObjectResizing',false,false);document.execCommand('enableAbsolutePositionEditor',false,false);}catch(e){}}
 bind();renderParticipants();renderSeances();renderDoc();
 </script>
 
