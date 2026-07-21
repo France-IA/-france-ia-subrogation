@@ -1,0 +1,601 @@
+<title>Attestations — France IA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {
+    --ink: #201e1b;
+    --ink-soft: #6b6357;
+    --paper: #faf7f1;
+    --paper-line: #ddd4bf;
+    --paper-shadow: rgba(32, 30, 27, 0.12);
+
+    --panel: #eef1f6;
+    --panel-raised: #ffffff;
+    --panel-line: #ccd3df;
+    --panel-ink: #1c2430;
+    --panel-ink-soft: #5b6472;
+    --panel-ink-faint: #8891a0;
+
+    --accent: #0055a4;
+    --accent-ink: #ffffff;
+    --accent-soft: #e0ebf9;
+    --accent-soft-ink: #003d78;
+
+    --focus: #0055a4;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #f1ede4;
+      --ink-soft: #bdb5a4;
+      --paper: #221f1a;
+      --paper-line: #453f31;
+      --paper-shadow: rgba(0, 0, 0, 0.5);
+
+      --panel: #14171d;
+      --panel-raised: #1b1f27;
+      --panel-line: #2c3441;
+      --panel-ink: #e8ecf3;
+      --panel-ink-soft: #939bab;
+      --panel-ink-faint: #626b7b;
+
+      --accent: #7bb1e8;
+      --accent-ink: #0b1520;
+      --accent-soft: #1b2c40;
+      --accent-soft-ink: #bcdafc;
+
+      --focus: #7bb1e8;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ink: #f1ede4;
+    --ink-soft: #bdb5a4;
+    --paper: #221f1a;
+    --paper-line: #453f31;
+    --paper-shadow: rgba(0, 0, 0, 0.5);
+    --panel: #14171d;
+    --panel-raised: #1b1f27;
+    --panel-line: #2c3441;
+    --panel-ink: #e8ecf3;
+    --panel-ink-soft: #939bab;
+    --panel-ink-faint: #626b7b;
+    --accent: #7bb1e8;
+    --accent-ink: #0b1520;
+    --accent-soft: #1b2c40;
+    --accent-soft-ink: #bcdafc;
+    --focus: #7bb1e8;
+    color-scheme: dark;
+  }
+
+  :root[data-theme="light"] {
+    --ink: #201e1b;
+    --ink-soft: #6b6357;
+    --paper: #faf7f1;
+    --paper-line: #ddd4bf;
+    --paper-shadow: rgba(32, 30, 27, 0.12);
+    --panel: #eef1f6;
+    --panel-raised: #ffffff;
+    --panel-line: #ccd3df;
+    --panel-ink: #1c2430;
+    --panel-ink-soft: #5b6472;
+    --panel-ink-faint: #8891a0;
+    --accent: #0055a4;
+    --accent-ink: #ffffff;
+    --accent-soft: #e0ebf9;
+    --accent-soft-ink: #003d78;
+    --focus: #0055a4;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--panel);
+    color: var(--panel-ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  body {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ---------- Sidebar (saisie manuelle) ---------- */
+
+  .sidebar {
+    background: var(--panel);
+    border-right: 1px solid var(--panel-line);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow-y: auto;
+  }
+
+  .sidebar-head {
+    padding: 20px 18px 4px 18px;
+  }
+
+  .sidebar-head h1 {
+    margin: 0 0 2px 0;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: var(--panel-ink);
+  }
+
+  .sidebar-head p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--panel-ink-faint);
+    line-height: 1.5;
+  }
+
+  .notice {
+    margin: 14px 18px 0 18px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--accent-soft-ink);
+    font-size: 11.5px;
+    line-height: 1.5;
+  }
+
+  form { padding: 16px 18px 20px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--panel-ink-faint);
+    margin-bottom: 6px;
+  }
+
+  .field input,
+  .field select {
+    width: 100%;
+    padding: 9px 11px;
+    border-radius: 8px;
+    border: 1px solid var(--panel-line);
+    background: var(--panel-raised);
+    color: var(--panel-ink);
+    font-size: 13.5px;
+    font-family: inherit;
+  }
+
+  .field input:focus,
+  .field select:focus {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+  }
+
+  .field-row { display: flex; gap: 10px; }
+  .field-row .field { flex: 1; min-width: 0; }
+
+  .sidebar-foot {
+    margin-top: auto;
+    padding: 14px 18px 18px 18px;
+    border-top: 1px solid var(--panel-line);
+  }
+
+  .sidebar-foot button {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--panel-line);
+    background: var(--panel-raised);
+    color: var(--panel-ink-soft);
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .sidebar-foot button:hover { border-color: var(--accent); color: var(--accent); }
+
+  .sidebar-foot .meta {
+    margin: 10px 0 0 0;
+    font-size: 10.5px;
+    color: var(--panel-ink-faint);
+    line-height: 1.5;
+  }
+
+  /* ---------- Main / toolbar ---------- */
+
+  main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 26px;
+    border-bottom: 1px solid var(--panel-line);
+  }
+
+  .toolbar .status {
+    font-size: 12.5px;
+    color: var(--panel-ink-soft);
+  }
+
+  .toolbar .status strong { color: var(--panel-ink); font-weight: 700; }
+
+  .toolbar .actions { display: flex; gap: 8px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 7px;
+    border: 1px solid var(--panel-line);
+    background: var(--panel-raised);
+    color: var(--panel-ink);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .btn:hover { border-color: var(--panel-ink-faint); }
+
+  .btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .btn.primary:hover { filter: brightness(1.06); }
+
+  .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
+
+  /* ---------- Certificate stage ---------- */
+
+  .stage {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 36px;
+  }
+
+  .certificate {
+    width: 900px;
+    max-width: 100%;
+    aspect-ratio: 1.5 / 1;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 1px 2px var(--paper-shadow), 0 20px 44px -18px var(--paper-shadow);
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .cadre {
+    position: absolute;
+    inset: 26px;
+    border: 2px solid var(--ink);
+    padding: 6.5% 8%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .titre {
+    text-align: center;
+    font-size: clamp(22px, 3.4vw, 34px);
+    letter-spacing: 0.32em;
+    font-weight: 400;
+    margin: 0;
+    text-indent: 0.32em;
+  }
+
+  .sous-titre {
+    text-align: center;
+    font-size: clamp(11px, 1.35vw, 14.5px);
+    letter-spacing: 0.24em;
+    text-indent: 0.24em;
+    margin: 7px 0 0 0;
+    color: var(--ink-soft);
+  }
+
+  .corps { text-align: center; margin-top: auto; padding-top: 4%; }
+
+  .corps .intro {
+    font-size: clamp(9.5px, 1.1vw, 11.5px);
+    letter-spacing: 0.16em;
+    text-indent: 0.16em;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .nom-cible {
+    display: inline-block;
+    margin: 16px auto 4px auto;
+    padding: 0 22px 6px 22px;
+    border-bottom: 1px solid var(--ink);
+    font-size: clamp(17px, 2.1vw, 23px);
+    font-weight: 700;
+    min-width: 46%;
+    outline: none;
+  }
+
+  .nom-cible:empty::before {
+    content: attr(data-placeholder);
+    color: var(--ink-soft);
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .corps .formation {
+    margin: 22px 0 0 0;
+    font-size: clamp(9.5px, 1.05vw, 11px);
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    line-height: 1.9;
+  }
+
+  .titre-formation {
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+    outline: none;
+  }
+
+  .titre-formation:empty::before {
+    content: attr(data-placeholder);
+    color: var(--ink-soft);
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .pied {
+    margin-top: auto;
+    padding-top: 4%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .date-bloc { text-align: left; }
+
+  .date-valeur {
+    display: inline-block;
+    min-width: 150px;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 4px;
+    font-size: clamp(11px, 1.2vw, 14px);
+    font-variant-numeric: tabular-nums;
+    outline: none;
+  }
+
+  .date-valeur:empty::before {
+    content: attr(data-placeholder);
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  .date-label {
+    margin-top: 4px;
+    font-size: clamp(8px, 0.85vw, 9.5px);
+    letter-spacing: 0.18em;
+    text-indent: 0.18em;
+    color: var(--ink-soft);
+  }
+
+  .logo-france-ia { text-align: right; }
+
+  .wordmark {
+    font-size: clamp(14px, 1.6vw, 19px);
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .wordmark .ia { color: #0055a4; }
+
+  .bar {
+    display: flex;
+    height: 3px;
+    width: 76px;
+    margin: 5px 0 0 auto;
+  }
+
+  .bar span { flex: 1; }
+  .bar .bleu { background: #0055a4; }
+  .bar .blanc { background: #ffffff; border-top: 1px solid #d8d8d8; border-bottom: 1px solid #d8d8d8; }
+  .bar .rouge { background: #ef4135; }
+
+  [contenteditable]:focus {
+    background: var(--accent-soft);
+    border-radius: 2px;
+  }
+
+  .stage-caption {
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--panel-ink-faint);
+    margin-top: 14px;
+    max-width: 620px;
+  }
+
+  .stage-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ---------- Print ---------- */
+
+  @media print {
+    body { display: block; height: auto; background: var(--paper); }
+    .sidebar, .toolbar, .stage-caption { display: none !important; }
+    .stage { padding: 0; display: block; }
+    .certificate {
+      box-shadow: none;
+      width: 100%;
+      aspect-ratio: auto;
+      height: 100vh;
+    }
+    @page { size: landscape; margin: 0; }
+  }
+</style>
+
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <h1>Attestations de fin de formation</h1>
+      <p>France IA — saisie manuelle</p>
+    </div>
+
+    <p class="notice">Page publique, aucune base de données connectée : rien n'est envoyé ni stocké, tout reste dans votre navigateur.</p>
+
+    <form id="form" autocomplete="off">
+      <div class="field-row">
+        <div class="field">
+          <label for="in-prenom">Prénom</label>
+          <input id="in-prenom" type="text" placeholder="Franck" />
+        </div>
+        <div class="field">
+          <label for="in-nom">Nom</label>
+          <input id="in-nom" type="text" placeholder="PERCHERON" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="in-niveau">Formation</label>
+        <select id="in-niveau">
+          <option value="">— Choisir —</option>
+          <option value="niveau_1">Niveau 1 — Maîtrise de l'IA avec ChatGPT</option>
+          <option value="niveau_2">Niveau 2 — Maîtriser les automatisations</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="in-date">Date de fin de formation</label>
+        <input id="in-date" type="date" />
+      </div>
+    </form>
+
+    <div class="sidebar-foot">
+      <button id="btn-clear" type="button">Vider le formulaire</button>
+      <p class="meta">Tous les champs de l'attestation restent aussi modifiables directement au clic, dans l'aperçu à droite.</p>
+    </div>
+  </aside>
+
+  <main>
+    <div class="toolbar">
+      <div class="status" id="status">Renseignez les champs à gauche</div>
+      <div class="actions">
+        <button class="btn primary" id="btn-print" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          Imprimer / PDF
+        </button>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-wrap">
+        <div class="certificate" id="certificate">
+          <div class="cadre">
+            <div>
+              <p class="titre">ATTESTATION</p>
+              <p class="sous-titre">COMPLÉTION DE FORMATION</p>
+            </div>
+            <div class="corps">
+              <p class="intro">CETTE ATTESTATION EST DÉLIVRÉE À</p>
+              <div class="nom-cible" id="champ-nom" contenteditable="true" data-placeholder="Nom de l'apprenant"></div>
+              <p class="formation">POUR SA COMPLÉTION DE LA FORMATION<br />
+                « <span class="titre-formation" id="champ-formation" contenteditable="true" data-placeholder="Titre de la formation"></span> »</p>
+            </div>
+            <div class="pied">
+              <div class="date-bloc">
+                <div class="date-valeur" id="champ-date" contenteditable="true" data-placeholder="Date"></div>
+                <div class="date-label">DATE</div>
+              </div>
+              <div class="logo-france-ia">
+                <div class="wordmark">France <span class="ia">IA</span></div>
+                <div class="bar"><span class="bleu"></span><span class="blanc"></span><span class="rouge"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="stage-caption">
+          Tous les champs sont modifiables directement (clic dedans) en plus du formulaire.
+          Outil de dépannage — la génération automatique par session dans DELIV'IA reste la voie normale une fois débloquée.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const TITRES_FORMATION = {
+      niveau_1: "Maîtrise de l'IA avec ChatGPT",
+      niveau_2: "Maîtriser les automatisations",
+    };
+
+    const MOIS_FR = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+
+    function formatDateFR(iso) {
+      if (!iso) return "";
+      const [y, m, d] = iso.split("-").map((n) => parseInt(n, 10));
+      return `${d} ${MOIS_FR[m - 1]} ${y}`;
+    }
+
+    const inPrenom = document.getElementById("in-prenom");
+    const inNom = document.getElementById("in-nom");
+    const inNiveau = document.getElementById("in-niveau");
+    const inDate = document.getElementById("in-date");
+
+    const champNom = document.getElementById("champ-nom");
+    const champFormation = document.getElementById("champ-formation");
+    const champDate = document.getElementById("champ-date");
+    const statusEl = document.getElementById("status");
+
+    function sync() {
+      const prenom = inPrenom.value.trim();
+      const nom = inNom.value.trim();
+      champNom.textContent = prenom || nom ? `${prenom} ${nom}`.trim() : "";
+      champFormation.textContent = TITRES_FORMATION[inNiveau.value] || "";
+      champDate.textContent = formatDateFR(inDate.value);
+
+      if (prenom || nom) {
+        statusEl.innerHTML = `Attestation pour <strong>${escapeHtml(prenom)} ${escapeHtml(nom)}</strong>`;
+      } else {
+        statusEl.textContent = "Renseignez les champs à gauche";
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    [inPrenom, inNom, inNiveau, inDate].forEach((el) => el.addEventListener("input", sync));
+
+    document.getElementById("btn-clear").addEventListener("click", () => {
+      inPrenom.value = "";
+      inNom.value = "";
+      inNiveau.value = "";
+      inDate.value = "";
+      sync();
+    });
+
+    document.getElementById("btn-print").addEventListener("click", () => window.print());
+
+    // Date du jour par défaut.
+    const today = new Date();
+    inDate.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    sync();
+  </script>
+</body>
