@@ -2,10 +2,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   :root {
+    /* Le papier de l'attestation reste fixe (blanc), quel que soit le thème
+       de l'interface : un certificat imprimé ne change pas de couleur. */
     --ink: #201e1b;
     --ink-soft: #6b6357;
-    --paper: #faf7f1;
-    --paper-line: #ddd4bf;
+    --paper: #ffffff;
+    --paper-line: #d9d2c4;
     --paper-shadow: rgba(32, 30, 27, 0.12);
 
     --panel: #eef1f6;
@@ -26,12 +28,6 @@
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --ink: #f1ede4;
-      --ink-soft: #bdb5a4;
-      --paper: #221f1a;
-      --paper-line: #453f31;
-      --paper-shadow: rgba(0, 0, 0, 0.5);
-
       --panel: #14171d;
       --panel-raised: #1b1f27;
       --panel-line: #2c3441;
@@ -50,11 +46,6 @@
   }
 
   :root[data-theme="dark"] {
-    --ink: #f1ede4;
-    --ink-soft: #bdb5a4;
-    --paper: #221f1a;
-    --paper-line: #453f31;
-    --paper-shadow: rgba(0, 0, 0, 0.5);
     --panel: #14171d;
     --panel-raised: #1b1f27;
     --panel-line: #2c3441;
@@ -70,11 +61,6 @@
   }
 
   :root[data-theme="light"] {
-    --ink: #201e1b;
-    --ink-soft: #6b6357;
-    --paper: #faf7f1;
-    --paper-line: #ddd4bf;
-    --paper-shadow: rgba(32, 30, 27, 0.12);
     --panel: #eef1f6;
     --panel-raised: #ffffff;
     --panel-line: #ccd3df;
