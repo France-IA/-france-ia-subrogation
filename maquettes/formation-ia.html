@@ -279,6 +279,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   --ink: #16161a;
   --muted: #54545e;
   --dark: #222831;
+  --red: #e5484d;
   --line: #e6e6ee;
   --radius: 18px;
 
@@ -464,7 +465,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 .fia-page .fia-summary__body { padding: var(--sp3); }
 .fia-page .fia-summary__list { list-style: none; margin: 0 0 var(--sp2); padding: 0; display: flex; flex-direction: column; gap: var(--sp2); }
 .fia-page .fia-summary__list li { display: flex; gap: 14px; align-items: flex-start; }
-.fia-page .fia-summary__list svg { flex: 0 0 auto; width: 20px; height: 20px; margin-top: 2px; color: var(--blue); }
+.fia-page .fia-summary__list svg { flex: 0 0 auto; width: 20px; height: 20px; margin-top: 2px; color: var(--red); }
 .fia-page .fia-summary__list p { margin: 0; color: var(--ink); font-size: var(--t0); }
 .fia-page .fia-summary__price { text-align: center; font-size: 40px; font-weight: 800; color: var(--blue); margin: 0; padding-top: var(--sp2); border-top: 1px solid var(--line); }
 
@@ -565,8 +566,6 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   @media (max-width: 860px) { .fia-page .fia-niveaux { grid-template-columns: 1fr; } }
   .fia-page .fia-niveaux .fia-summary__card { max-width: none; width: 100%; display: flex; flex-direction: column; }
   .fia-page .fia-niveaux .fia-summary__body { display: flex; flex-direction: column; flex: 1; }
-  .fia-page .fia-niveaux .fia-summary__head { background: var(--dark); }
-  .fia-page .fia-niveaux--secondary .fia-summary__head { background: #4a4f57; }
   .fia-page .fia-niveau-badge { display: inline-block; font-size: 13px; font-weight: 700; color: #fff; background: rgba(255,255,255,.15); border-radius: 999px; padding: 4px 12px; margin-bottom: 10px; }
   .fia-page .fia-niveau-pitch { font-size: var(--t0); color: var(--ink); margin: 0 0 var(--sp2); padding-bottom: var(--sp2); border-bottom: 1px solid var(--line); }
   .fia-page .fia-niveau-note { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
@@ -598,7 +597,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
      harmonisant avec /formation-ia-paris) — les stats s'affichaient en texte brut, sans
      carte ni gros chiffre. */
   .fia-page .fia-satisfaction { display: flex; gap: var(--sp3); justify-content: center; flex-wrap: wrap; margin: var(--sp3) 0 var(--sp2); }
-  .fia-page .fia-satisfaction__stat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp2) var(--sp3); text-align: center; min-width: 200px; }
+  .fia-page .fia-satisfaction__stat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp3); text-align: center; min-width: 200px; }
   .fia-page .fia-satisfaction__num { font-size: 40px; font-weight: 800; color: var(--blue); line-height: 1; }
   .fia-page .fia-satisfaction__label { font-size: 13px; color: var(--muted); margin-top: 6px; }
   .fia-page .fia-satisfaction__source { font-size: 13px; color: var(--muted); margin-top: var(--sp1); }
@@ -609,14 +608,14 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   .fia-page .fia-ville-main__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: var(--sp2); flex-wrap: wrap; }
   .fia-page .fia-ville-main__name { font-size: 22px; font-weight: 700; color: var(--ink); text-decoration: none; }
   .fia-page a.fia-ville-main__name:hover { color: var(--blue); }
-  .fia-page .fia-session-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 8px; flex-wrap: wrap; }
+  .fia-page .fia-session-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; margin-bottom: 8px; flex-wrap: wrap; }
   .fia-page .fia-session-row:last-child { margin-bottom: 0; }
   .fia-page .fia-session-row__date { font-weight: 700; font-size: 16px; }
   .fia-page .fia-session-row__meta { font-size: 13px; color: var(--muted); margin-left: 8px; }
   .fia-page .fia-session-row .fia-btn { padding: 8px 18px; height: auto; font-size: 14px; }
 
   .fia-page .fia-villes { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--sp2); margin-top: var(--sp3); }
-  .fia-page .fia-ville { border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp2) var(--sp2); display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; text-decoration: none; }
+  .fia-page .fia-ville { border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp2); display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; text-decoration: none; }
   .fia-page .fia-ville__name { font-weight: 700; color: var(--ink); font-size: var(--t0); }
   .fia-page a.fia-ville:hover .fia-ville__name { color: var(--blue); }
   .fia-page .fia-ville--soon { cursor: default; opacity: .65; }
@@ -706,10 +705,10 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
             <div class="fia-summary__body">
               <p class="fia-niveau-pitch">Vous partez de zéro ou presque : en 2 jours vous devenez capable de produire, rechercher et automatiser avec l'IA sur vos vrais dossiers, pas des cas d'école. C'est la formation qui porte la certification.</p>
               <ul class="fia-summary__list">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><p>2 jours consécutifs en présentiel (9h30–18h30)</p></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8a5 5 0 0 0-10 0"/><circle cx="12" cy="14" r="4"/><path d="M12 2v2M4 14H2M22 14h-2"/></svg><p>Prépare à la certification RS6891 (Certifopac)</p></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg><p>Aucune connaissance préalable en IA requise</p></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.4 8.5 8.5 0 0 1-4-1L3 20l1.1-3.5a8.4 8.4 0 0 1-1-4A8.38 8.38 0 0 1 11.5 4a8.5 8.5 0 0 1 9.5 7.5Z"/></svg><p>Accompagnement coaching 4h en option après la formation (détail en FAQ)</p></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><p>2 jours consécutifs en présentiel (9h30–18h30)</p></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><p>Prépare à la certification RS6891 (Certifopac)</p></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><p>Aucune connaissance préalable en IA requise</p></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><p>Accompagnement coaching 4h en option après la formation (détail en FAQ)</p></li>
               </ul>
               <p class="fia-summary__price">1 650 €<span style="font-size:13px;font-weight:600;color:var(--muted);display:block;margin-top:4px">1 950 € à partir du 1ᵉʳ octobre 2026</span></p>
               <p class="fia-niveau-note">Fonds propres (CB ou 3× SEPA) ou prise en charge entreprise.</p>
@@ -721,7 +720,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
           </div>
 
           <!-- Niveau 2 -->
-          <div class="fia-niveaux--secondary fia-summary__card">
+          <div class="fia-summary__card">
             <div class="fia-summary__head">
               <span class="fia-niveau-badge">Non certifiante · pour aller plus loin</span>
               <h3>Niveau 2 : Automatiser ses tâches grâce à l'IA générative</h3>
@@ -729,10 +728,10 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
             <div class="fia-summary__body">
               <p class="fia-niveau-pitch">En Niveau 1 vous produisez avec l'IA. En Niveau 2, vous la faites travailler pour vous : mise en place d'automatisations qui tournent sans vous, au-delà de l'usage ponctuel.</p>
               <ul class="fia-summary__list">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><p>Même format : 2 jours consécutifs en présentiel</p></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 6l6 6-6 6M5 12h14"/></svg><p>Pensée pour aller plus loin après le Niveau 1, accessible aussi en direct</p></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg><p>Financement direct (fonds propres) ou pris en charge par votre entreprise</p></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><p>Non éligible CPF : une certification RS6891 ne peut être adossée qu'à une seule formation, déjà portée par le Niveau 1</p></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><p>Même format : 2 jours consécutifs en présentiel</p></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><p>Pensée pour aller plus loin après le Niveau 1, accessible aussi en direct</p></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><p>Financement direct (fonds propres) ou pris en charge par votre entreprise</p></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><p>Non éligible CPF : une certification RS6891 ne peut être adossée qu'à une seule formation, déjà portée par le Niveau 1</p></li>
               </ul>
               <p class="fia-summary__price">1 990 €</p>
               <p class="fia-niveau-note">Formation non certifiante.</p>
