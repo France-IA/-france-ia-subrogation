@@ -580,8 +580,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   .fia-page .fia-qualif__opts label { display: flex; align-items: center; gap: 6px; font-size: var(--t0); cursor: pointer; }
   .fia-page .fia-qualif__result { display: none; margin-top: var(--sp2); padding-top: var(--sp2); border-top: 1px solid var(--line); text-align: center; }
   .fia-page .fia-qualif__result.is-visible { display: block; }
-  .fia-page .fia-qualif__result p { color: var(--muted); font-size: var(--t0); margin: 0 0 var(--sp1); }
-  .fia-page .fia-qualif__result #fia-qualif-result-reco { margin: 0 0 var(--sp2); }
+  .fia-page .fia-qualif__result p { color: var(--muted); font-size: var(--t0); margin: 0 0 var(--sp2); }
   .fia-page .fia-qualif__result strong { color: var(--ink); font-weight: 700; }
 
   /* Salles — vignettes */
@@ -748,10 +747,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
             <button type="button" class="fia-btn" id="fia-qualif-submit">Recevoir ma recommandation</button>
           </div>
           <div class="fia-qualif__result" id="fia-qualif-result">
-            <p id="fia-qualif-result-l1"></p>
-            <p id="fia-qualif-result-l2"></p>
-            <p id="fia-qualif-result-l3"></p>
-            <p id="fia-qualif-result-reco"></p>
+            <p id="fia-qualif-result-text"></p>
             <a class="fia-btn" href="/demande-contact-b2c">Échanger avec un conseiller</a>
           </div>
         </div>
@@ -946,25 +942,21 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
         var checked = document.querySelector('input[name="' + name + '"]:checked');
         if (checked) score += parseInt(checked.value, 10);
       });
-      var l1 = document.getElementById('fia-qualif-result-l1');
-      var l2 = document.getElementById('fia-qualif-result-l2');
-      var l3 = document.getElementById('fia-qualif-result-l3');
-      var reco = document.getElementById('fia-qualif-result-reco');
+      var text = document.getElementById('fia-qualif-result-text');
       if (score <= 1) {
-        l1.textContent = 'Grâce à notre formation, vous gagnerez en moyenne 3 à 6h par semaine pour rédiger vos emails, comptes-rendus et présentations.';
-        l2.textContent = 'Nos apprenants nous disent gagner ce temps dès les premières semaines, simplement en changeant leurs habitudes de travail avec l\'IA.';
-        l3.textContent = 'Vous repartirez en plus avec une certification reconnue (RS6891), valorisable auprès des recruteurs et de votre entreprise.';
-        reco.innerHTML = '<strong>Notre recommandation</strong> : la formation Maîtriser l\'IA générative, niveau 1.';
+        text.innerHTML = 'Grâce à notre formation, vous gagnerez en moyenne 3 à 6h par semaine pour rédiger vos emails, comptes-rendus et présentations. ' +
+          'Nos apprenants nous disent gagner ce temps dès les premières semaines, simplement en changeant leurs habitudes de travail avec l\'IA. ' +
+          'Vous repartirez en plus avec une certification reconnue (RS6891), valorisable auprès des recruteurs et de votre entreprise. ' +
+          '<strong>Notre recommandation</strong> : la formation Maîtriser l\'IA générative, niveau 1.';
       } else if (score === 2) {
-        l1.textContent = 'Grâce à nos formations, vous gagnerez en moyenne 3 à 6h par semaine pour gérer vos emails, comptes-rendus et tâches administratives.';
-        l2.textContent = 'Nos apprenants nous disent aller encore plus loin en automatisant leurs tâches répétitives une fois les bases bien acquises.';
-        l3.textContent = 'Rejoignez la formation IA la plus suivie de la capitale, avec 88% de taux de satisfaction sur ce parcours complet.';
-        reco.innerHTML = '<strong>Notre recommandation</strong> : la formation Maîtriser l\'IA générative, niveau 1, puis Automatiser ses tâches, niveau 2.';
+        text.innerHTML = 'Grâce à nos formations, vous gagnerez en moyenne 3 à 6h par semaine pour gérer vos emails, comptes-rendus et tâches administratives. ' +
+          'Nos apprenants nous disent aller encore plus loin en automatisant leurs tâches répétitives une fois les bases bien acquises. ' +
+          '<strong>Notre recommandation</strong> : la formation Maîtriser l\'IA générative, niveau 1, puis Automatiser ses tâches, niveau 2.';
       } else {
-        l1.textContent = 'Grâce à notre formation Niveau 2, vous gagnerez plusieurs heures supplémentaires chaque semaine en automatisant vos tâches répétitives.';
-        l2.textContent = 'Nos apprenants nous disent gagner un temps considérable grâce aux automatisations mises en place pendant la formation, qui tournent ensuite sans eux.';
-        l3.textContent = 'Rejoignez les professionnels qui ont déjà transformé leur quotidien à Station F, avec 88% de taux de satisfaction.';
-        reco.innerHTML = '<strong>Notre recommandation</strong> : la formation Automatiser ses tâches, niveau 2.';
+        text.innerHTML = 'Grâce à notre formation Niveau 2, vous gagnerez plusieurs heures supplémentaires chaque semaine en automatisant vos tâches répétitives. ' +
+          'Nos apprenants nous disent gagner un temps considérable grâce aux automatisations mises en place pendant la formation, qui tournent ensuite sans eux. ' +
+          'Rejoignez les professionnels qui ont déjà transformé leur quotidien à Station F, avec 88% de taux de satisfaction. ' +
+          '<strong>Notre recommandation</strong> : la formation Automatiser ses tâches, niveau 2.';
       }
       document.getElementById('fia-qualif-result').classList.add('is-visible');
     });
