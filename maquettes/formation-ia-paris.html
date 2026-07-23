@@ -345,7 +345,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 .fia-page .fia-btn--ghost:hover { background: var(--blue); color: #fff; }
 .fia-page .fia-btn--outline { background: #fff; color: var(--ink); border: 1.5px solid var(--line); padding: var(--sp0) calc(var(--sp3) - var(--sp0)); }
 .fia-page .fia-btn--outline:hover { background: #fff; color: var(--blue); border-color: var(--blue); }
-.fia-page .fia-cta-row { margin-top: var(--sp4); }
+.fia-page .fia-cta-row { display: flex; margin-top: var(--sp4); }
 
 /* ---- header ----
    backdrop-filter sur un élément sticky force le navigateur à recomposer le
@@ -580,8 +580,8 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   .fia-page .fia-qualif__opts label { display: flex; align-items: center; gap: 6px; font-size: var(--t0); cursor: pointer; }
   .fia-page .fia-qualif__result { display: none; margin-top: var(--sp2); padding-top: var(--sp2); border-top: 1px solid var(--line); text-align: center; }
   .fia-page .fia-qualif__result.is-visible { display: block; }
-  .fia-page .fia-qualif__result h4 { font-size: 22px; margin: 0 0 8px; color: var(--blue); }
-  .fia-page .fia-qualif__result p { color: var(--muted); margin: 0 0 var(--sp2); }
+  .fia-page .fia-qualif__result p { color: var(--muted); margin: 0 0 var(--sp1); }
+  .fia-page .fia-qualif__result #fia-qualif-result-reco { color: var(--ink); font-weight: 700; font-size: var(--t1); margin: 0 0 var(--sp2); }
 
   /* Salles — vignettes */
   .fia-page .fia-salles { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp3); margin-top: var(--sp3); }
@@ -747,8 +747,8 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
             <button type="button" class="fia-btn" id="fia-qualif-submit">Recevoir ma recommandation</button>
           </div>
           <div class="fia-qualif__result" id="fia-qualif-result">
-            <h4 id="fia-qualif-result-title"></h4>
-            <p id="fia-qualif-result-sub"></p>
+            <p id="fia-qualif-result-time"></p>
+            <p id="fia-qualif-result-reco"></p>
             <a class="fia-btn" href="/demande-contact-b2c">Échanger avec un conseiller</a>
           </div>
         </div>
@@ -943,17 +943,17 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
         var checked = document.querySelector('input[name="' + name + '"]:checked');
         if (checked) score += parseInt(checked.value, 10);
       });
-      var title = document.getElementById('fia-qualif-result-title');
-      var sub = document.getElementById('fia-qualif-result-sub');
+      var time = document.getElementById('fia-qualif-result-time');
+      var reco = document.getElementById('fia-qualif-result-reco');
       if (score <= 1) {
-        title.textContent = 'Niveau 1';
-        sub.textContent = "Vous partez d'une base débutante à intermédiaire : le Niveau 1 vous rend autonome et vous prépare à la certification RS6891.";
+        time.textContent = 'Avec le Niveau 1, nos apprenants gagnent en moyenne 3 à 6h par semaine dès les premières semaines d\'utilisation de l\'IA générative.';
+        reco.textContent = 'La formation qu\'on vous conseille : Niveau 1 — Maîtriser l\'IA générative';
       } else if (score === 2) {
-        title.textContent = 'Entre les deux';
-        sub.textContent = 'Commencez par le Niveau 1 pour consolider les fondamentaux, le Niveau 2 sera pertinent juste après.';
+        time.textContent = 'En consolidant vos bases avant d\'automatiser, vous sécurisez le temps que vous allez gagner sur la durée.';
+        reco.textContent = 'La formation qu\'on vous conseille : Niveau 1, puis Niveau 2';
       } else {
-        title.textContent = 'Niveau 2';
-        sub.textContent = 'Vous êtes déjà à l\'aise avec l\'IA générative au quotidien : le Niveau 2 vous fait passer à l\'automatisation.';
+        time.textContent = 'En automatisant vos tâches répétitives, vous pouvez libérer plusieurs heures supplémentaires chaque semaine.';
+        reco.textContent = 'La formation qu\'on vous conseille : Niveau 2 — Automatiser ses tâches';
       }
       document.getElementById('fia-qualif-result').classList.add('is-visible');
     });
