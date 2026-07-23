@@ -544,9 +544,6 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   .fia-page .fia-nav__links a.fia-home-navbtn--outline { background: #fff; color: rgb(67,121,242) !important; }
   .fia-page .fia-nav__links a.fia-home-navbtn--solid { background: rgb(67,121,242); color: #fff !important; }
   @media (max-width: 560px) { .fia-page .fia-nav__links a.fia-home-navbtn--outline { display: none !important; } }
-  @media (min-width: 961px) {
-    .fia-page .fia-hero__grid.fia-home-hero-grid { grid-template-columns: 640px 400px !important; gap: 64px !important; align-items: start; justify-content: center; padding: 0 !important; }
-  }
   .fia-page .fia-form-card.fia-home-formcard { border: 2px solid var(--blue) !important; }
   /* H1 réduit : notre accroche est ~50% plus longue que celle du home ("Formez-vous
      enfin à l'IA et créez vos agents"), le même clamp(40px, 5.6vw, 72px) la fait
@@ -597,31 +594,25 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
      harmonisant avec /formation-ia-paris) — les stats s'affichaient en texte brut, sans
      carte ni gros chiffre. */
   .fia-page .fia-satisfaction { display: flex; gap: var(--sp3); justify-content: center; flex-wrap: wrap; margin: var(--sp3) 0 var(--sp2); }
-  .fia-page .fia-satisfaction__stat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp3); text-align: center; min-width: 200px; }
+  .fia-page .fia-satisfaction__stat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp2); text-align: center; min-width: 200px; }
   .fia-page .fia-satisfaction__num { font-size: 40px; font-weight: 800; color: var(--blue); line-height: 1; }
   .fia-page .fia-satisfaction__label { font-size: 13px; color: var(--muted); margin-top: 6px; }
   .fia-page .fia-satisfaction__source { font-size: 13px; color: var(--muted); margin-top: var(--sp1); }
   .fia-page .fia-satisfaction__source a { color: var(--blue); }
 
-  /* Bloc villes : purement navigationnel, distinct visuellement des cartes de vente. */
-  .fia-page .fia-ville-main { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp3); text-align: left; margin-bottom: var(--sp2); }
-  .fia-page .fia-ville-main__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: var(--sp2); flex-wrap: wrap; }
-  .fia-page .fia-ville-main__name { font-size: 22px; font-weight: 700; color: var(--ink); text-decoration: none; }
-  .fia-page a.fia-ville-main__name:hover { color: var(--blue); }
-  .fia-page .fia-session-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; margin-bottom: 8px; flex-wrap: wrap; }
+  /* Hub villes : un onglet par ville, mêmes classes que /formation-ia-paris (fia-tabs). */
+  .fia-page .fia-tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: var(--sp3); }
+  .fia-page .fia-tab { font-size: var(--t0); font-weight: 600; border: 1.5px solid var(--blue); border-radius: 999px; padding: 8px 18px; background: #fff; color: var(--blue); cursor: pointer; }
+  .fia-page .fia-tab[aria-selected="true"] { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .fia-page .fia-tab-panel { display: none; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp3); text-align: left; max-width: 720px; margin: 0 auto; }
+  .fia-page .fia-tab-panel.is-active { display: block; }
+  .fia-page .fia-tab-panel h3 { margin: 0 0 8px; font-size: 22px; }
+  .fia-page .fia-tab-panel p { color: var(--muted); margin: 0 0 var(--sp2); font-size: var(--t0); }
+  .fia-page .fia-session-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; margin-bottom: 8px; flex-wrap: wrap; }
   .fia-page .fia-session-row:last-child { margin-bottom: 0; }
   .fia-page .fia-session-row__date { font-weight: 700; font-size: 16px; }
   .fia-page .fia-session-row__meta { font-size: 13px; color: var(--muted); margin-left: 8px; }
   .fia-page .fia-session-row .fia-btn { padding: 8px 18px; height: auto; font-size: 14px; }
-
-  .fia-page .fia-villes { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--sp2); margin-top: var(--sp3); }
-  .fia-page .fia-ville { border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp2); display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; text-decoration: none; }
-  .fia-page .fia-ville__name { font-weight: 700; color: var(--ink); font-size: var(--t0); }
-  .fia-page a.fia-ville:hover .fia-ville__name { color: var(--blue); }
-  .fia-page .fia-ville--soon { cursor: default; opacity: .65; }
-  .fia-page .fia-ville__tag { font-size: 12px; font-weight: 700; border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
-  .fia-page .fia-ville__tag--live { background: rgba(67,121,242,.12); color: var(--blue); }
-  .fia-page .fia-ville__tag--soon { background: var(--blue-soft); color: var(--muted); }
   
 
 .fia-mock-form { display:flex; flex-direction:column; gap:12px; padding:24px; width:100%; box-sizing:border-box; }
@@ -661,7 +652,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
              10 heures par semaine*" avec renvoi vers une étude Harvard/BCG —à harmoniser ou
              sourcer séparément pour éviter deux chiffres différents sur le même sujet. -->
     <section class="fia-hero" id="hero" style="padding-top:20px">
-      <div class="fia-wrap fia-hero__grid fia-home-hero-grid">
+      <div class="fia-wrap fia-hero__grid">
         <div style="display:flex;flex-direction:column;gap:18px">
           <span class="fia-badge" style="align-self:flex-start">Formation certifiée Qualiopi</span>
           <h1 style="margin:0">Arrêtez de prompter à la main, créez vos propres <span>agents IA</span> autonomes.</h1>
@@ -835,39 +826,50 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
         <h2 class="fia-h2">Choisissez votre <em>ville</em></h2>
         <p class="fia-lead">France IA forme aujourd'hui à Paris. D'autres villes ouvrent progressivement.</p>
 
-        <!-- Dates réelles (Qualiobee, vérifiées le 21/07) — liste à rendre vivante via un appel
-             à l'API de disponibilité (celle que l'ARD utilise déjà), jamais figée en HTML statique
-             en production : ces 3 dates seront fausses dans quelques semaines. -->
-        <div class="fia-ville-main">
-          <div class="fia-ville-main__head">
-            <a class="fia-ville-main__name" href="/formation-ia-paris">Paris</a>
-          </div>
+        <!-- Un onglet par ville (data-tab). Paris ouvert par défaut ; un paramètre
+             d'URL ?ville=<data-tab> (ex. depuis une campagne géociblée) présélectionne
+             l'onglet correspondant au chargement — voir le script fia-villes-tabs plus bas.
+             Dates Paris réelles (Qualiobee, vérifiées le 21/07) — à rendre vivantes via
+             l'API de disponibilité (celle que l'ARD utilise déjà) en production. -->
+        <div class="fia-tabs" role="tablist">
+          <button class="fia-tab" role="tab" aria-selected="true" data-tab="paris">Paris</button>
+          <button class="fia-tab" role="tab" aria-selected="false" data-tab="lyon">Lyon</button>
+          <button class="fia-tab" role="tab" aria-selected="false" data-tab="marseille">Marseille</button>
+          <button class="fia-tab" role="tab" aria-selected="false" data-tab="montpellier">Montpellier</button>
+          <button class="fia-tab" role="tab" aria-selected="false" data-tab="lille">Lille</button>
+          <button class="fia-tab" role="tab" aria-selected="false" data-tab="rennes">Rennes</button>
+        </div>
+
+        <div class="fia-tab-panel is-active" data-panel="paris">
           <div class="fia-session-row"><span><span class="fia-session-row__date">5–6 octobre 2026</span><span class="fia-session-row__meta">Niveau 1</span></span><a class="fia-btn" href="/demande-contact-b2c">Réservez votre place</a></div>
           <div class="fia-session-row"><span><span class="fia-session-row__date">7–8 octobre 2026</span><span class="fia-session-row__meta">Niveau 1</span></span><a class="fia-btn" href="/demande-contact-b2c">Réservez votre place</a></div>
           <div class="fia-session-row"><span><span class="fia-session-row__date">9–10 octobre 2026</span><span class="fia-session-row__meta">Niveau 1</span></span><a class="fia-btn" href="/demande-contact-b2c">Réservez votre place</a></div>
+          <p style="margin:var(--sp2) 0 0"><a class="fia-card__link" href="/formation-ia-paris">Voir la page dédiée à Paris (salles, formateurs, avis) →</a></p>
         </div>
-
-        <div class="fia-villes">
-          <span class="fia-ville fia-ville--soon">
-            <span class="fia-ville__name">Lyon</span>
-            <span class="fia-ville__tag fia-ville__tag--soon">Bientôt</span>
-          </span>
-          <span class="fia-ville fia-ville--soon">
-            <span class="fia-ville__name">Rennes</span>
-            <span class="fia-ville__tag fia-ville__tag--soon">À venir</span>
-          </span>
-          <span class="fia-ville fia-ville--soon">
-            <span class="fia-ville__name">Montpellier</span>
-            <span class="fia-ville__tag fia-ville__tag--soon">À venir</span>
-          </span>
-          <span class="fia-ville fia-ville--soon">
-            <span class="fia-ville__name">Lille</span>
-            <span class="fia-ville__tag fia-ville__tag--soon">À venir</span>
-          </span>
-          <span class="fia-ville fia-ville--soon">
-            <span class="fia-ville__name">Marseille</span>
-            <span class="fia-ville__tag fia-ville__tag--soon">À venir</span>
-          </span>
+        <div class="fia-tab-panel" data-panel="lyon">
+          <h3>Lyon</h3>
+          <p>Ouverture en préparation. Laissez-nous vos coordonnées pour être informé en priorité des premières sessions.</p>
+          <a class="fia-btn" href="/demande-contact-b2c">Être informé de l'ouverture</a>
+        </div>
+        <div class="fia-tab-panel" data-panel="marseille">
+          <h3>Marseille</h3>
+          <p>Ouverture en préparation. Laissez-nous vos coordonnées pour être informé en priorité des premières sessions.</p>
+          <a class="fia-btn" href="/demande-contact-b2c">Être informé de l'ouverture</a>
+        </div>
+        <div class="fia-tab-panel" data-panel="montpellier">
+          <h3>Montpellier</h3>
+          <p>Ouverture en préparation. Laissez-nous vos coordonnées pour être informé en priorité des premières sessions.</p>
+          <a class="fia-btn" href="/demande-contact-b2c">Être informé de l'ouverture</a>
+        </div>
+        <div class="fia-tab-panel" data-panel="lille">
+          <h3>Lille</h3>
+          <p>À venir. Laissez-nous vos coordonnées pour être informé en priorité des premières sessions.</p>
+          <a class="fia-btn" href="/demande-contact-b2c">Être informé de l'ouverture</a>
+        </div>
+        <div class="fia-tab-panel" data-panel="rennes">
+          <h3>Rennes</h3>
+          <p>À venir. Laissez-nous vos coordonnées pour être informé en priorité des premières sessions.</p>
+          <a class="fia-btn" href="/demande-contact-b2c">Être informé de l'ouverture</a>
         </div>
       </div>
     </section>
@@ -973,6 +975,28 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
       }
       document.getElementById('fia-qualif-result').classList.add('is-visible');
     });
+  })();
+  </script>
+  <script>
+  (function () {
+    var tabs = document.querySelectorAll('#villes .fia-tab');
+    if (!tabs.length) return;
+    function select(name) {
+      var tab = document.querySelector('#villes .fia-tab[data-tab="' + name + '"]');
+      if (!tab) return;
+      tabs.forEach(function (t) { t.setAttribute('aria-selected', 'false'); });
+      document.querySelectorAll('#villes .fia-tab-panel').forEach(function (p) { p.classList.remove('is-active'); });
+      tab.setAttribute('aria-selected', 'true');
+      document.querySelector('#villes .fia-tab-panel[data-panel="' + name + '"]').classList.add('is-active');
+    }
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () { select(tab.dataset.tab); });
+    });
+    /* Présélection depuis une donnée déjà récoltée en amont (ex. campagne géociblée
+       ?ville=lyon, ou lien envoyé par l'équipe commerciale) — pas de géolocalisation
+       navigateur (permission intrusive), juste un paramètre déjà présent dans l'URL. */
+    var ville = new URLSearchParams(location.search).get('ville');
+    if (ville) select(ville.toLowerCase());
   })();
   </script>
 

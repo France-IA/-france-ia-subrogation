@@ -544,9 +544,6 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   .fia-page .fia-nav__links a.fia-home-navbtn--outline { background: #fff; color: rgb(67,121,242) !important; }
   .fia-page .fia-nav__links a.fia-home-navbtn--solid { background: rgb(67,121,242); color: #fff !important; }
   @media (max-width: 560px) { .fia-page .fia-nav__links a.fia-home-navbtn--outline { display: none !important; } }
-  @media (min-width: 961px) {
-    .fia-page .fia-hero__grid.fia-home-hero-grid { grid-template-columns: 640px 400px !important; gap: 64px !important; align-items: start; justify-content: center; padding: 0 !important; }
-  }
   .fia-page .fia-form-card.fia-home-formcard { border: 2px solid var(--blue) !important; }
   /* H1 réduit : même raison que sur /formation-ia (accroche plus longue que le home) —
      échelle harmonisée entre les deux pages. */
@@ -561,7 +558,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   .fia-page .fia-hero-chip-sub { font-size: 13px; color: var(--muted); margin: -8px 0 18px 2px; }
 
   /* Sessions Paris */
-  .fia-page .fia-session-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; margin-bottom: 8px; flex-wrap: wrap; background: #fff; }
+  .fia-page .fia-session-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; margin-bottom: 8px; flex-wrap: wrap; background: #fff; }
   .fia-page .fia-session-row:last-child { margin-bottom: 0; }
   .fia-page .fia-session-row__date { font-weight: 700; font-size: 16px; }
   .fia-page .fia-session-row__meta { font-size: 13px; color: var(--muted); margin-left: 8px; }
@@ -569,7 +566,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 
   /* Onglets "ce que nous proposons" */
   .fia-page .fia-tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: var(--sp3); }
-  .fia-page .fia-tab { font-size: var(--t0); font-weight: 600; border: 1px solid var(--line); border-radius: 999px; padding: 8px 18px; background: #fff; color: var(--muted); cursor: pointer; }
+  .fia-page .fia-tab { font-size: var(--t0); font-weight: 600; border: 1.5px solid var(--blue); border-radius: 999px; padding: 8px 18px; background: #fff; color: var(--blue); cursor: pointer; }
   .fia-page .fia-tab[aria-selected="true"] { background: var(--blue); color: #fff; border-color: var(--blue); }
   .fia-page .fia-tab-panel { display: none; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp3); text-align: left; max-width: 720px; margin: 0 auto; }
   .fia-page .fia-tab-panel.is-active { display: block; }
@@ -594,7 +591,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   .fia-page .fia-salle--primary { border: 2px solid var(--blue); }
   .fia-page .fia-salle__img { height: 180px; background: var(--blue-soft); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 14px; }
   .fia-page .fia-salle__body { padding: var(--sp3); }
-  .fia-page .fia-salle__badge { display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; background: var(--muted); color: #fff; border-radius: 100px; padding: 3px 12px; margin-bottom: 10px; }
+  .fia-page .fia-salle__badge { display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; background: var(--blue); color: #fff; border-radius: 100px; padding: 3px 12px; margin-bottom: 10px; }
   .fia-page .fia-salle--primary .fia-salle__badge { background: var(--blue); }
   .fia-page .fia-salle__name { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
   .fia-page .fia-salle__addr { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
@@ -605,7 +602,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 
   /* Satisfaction : identique à /formation-ia (mêmes classes, même style). */
   .fia-page .fia-satisfaction { display: flex; gap: var(--sp3); justify-content: center; flex-wrap: wrap; margin: var(--sp3) 0 var(--sp2); }
-  .fia-page .fia-satisfaction__stat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp3); text-align: center; min-width: 200px; }
+  .fia-page .fia-satisfaction__stat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp2); text-align: center; min-width: 200px; }
   .fia-page .fia-satisfaction__num { font-size: 40px; font-weight: 800; color: var(--blue); line-height: 1; }
   .fia-page .fia-satisfaction__label { font-size: 13px; color: var(--muted); margin-top: 6px; }
   .fia-page .fia-satisfaction__source { font-size: 13px; color: var(--muted); margin-top: var(--sp1); }
@@ -642,7 +639,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 
     <!-- ═══ HERO — orienté local, formulaire à droite ═══ -->
     <section class="fia-hero" id="hero" style="padding-top:20px">
-      <div class="fia-wrap fia-hero__grid fia-home-hero-grid">
+      <div class="fia-wrap fia-hero__grid">
         <div style="display:flex;flex-direction:column;gap:18px">
           <span class="fia-badge" style="align-self:flex-start">Formation certifiée Qualiopi · Station F, Paris</span>
           <h1 style="margin:0">Arrêtez de prompter à la main, créez vos propres <span>agents IA</span> autonomes, à Paris.</h1>
