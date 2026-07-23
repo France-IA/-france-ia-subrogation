@@ -118,7 +118,7 @@
     </fieldset>
 
     <fieldset><legend>Dispositions financières</legend>
-      <div class="grid2"><div><label>Prix HT = TTC (€)</label><input id="f_prix" inputmode="decimal" placeholder="1650"></div>
+      <div class="grid2"><div><label>Prix (€)</label><input id="f_prix" inputmode="decimal" placeholder="7900"></div>
       <div><label>Nombre de journées</label><input id="f_nbj" inputmode="numeric" placeholder="2"></div></div>
     </fieldset>
 
@@ -173,7 +173,7 @@ const DEFAULT_INTITULE="Maîtriser l'IA générative dans son quotidien professi
 let state={raison:"",rep:"",adresse:"",cp:"",ville:"",siret:"",intitule:DEFAULT_INTITULE,
  participants:[{nom:"",cat:DEFAULT_CAT}],
  seances:[{date:"",horaires:"09h00 – 12h30",module:"Modules 1 à 4",lieu:"à venir"},{date:"",horaires:"14h00 – 18h00",module:"Module 4",lieu:"à venir"}],
- prix:"1650",nbj:"2",formateur:"",date:today(),sat:"88",reco:"97"};
+ prix:"7900",nbj:"2",formateur:"",date:today(),sat:"88",reco:"97"};
 
 function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function vv(s,ph){const val=(s==null?"":String(s)).trim();return val?esc(val):'<span class="var">'+esc(ph)+'</span>';}
@@ -247,7 +247,7 @@ function bind(){Object.keys(MAP).forEach(id=>{const el=document.getElementById(i
 function resetAll(){if(!confirm('Vider tous les champs saisis ? (le contenu légal fixe est conservé)'))return;
  state={raison:"",rep:"",adresse:"",cp:"",ville:"",siret:"",intitule:DEFAULT_INTITULE,participants:[{nom:"",cat:DEFAULT_CAT}],
   seances:[{date:"",horaires:"09h00 – 12h30",module:"Modules 1 à 4",lieu:"à venir"},{date:"",horaires:"14h00 – 18h00",module:"Module 4",lieu:"à venir"}],
-  prix:"1650",nbj:"2",formateur:"",date:today(),sat:"88",reco:"97"};
+  prix:"7900",nbj:"2",formateur:"",date:today(),sat:"88",reco:"97"};
  bind();renderParticipants();renderSeances();renderDoc();try{document.execCommand('enableObjectResizing',false,false);document.execCommand('enableAbsolutePositionEditor',false,false);}catch(e){}}
 bind();renderParticipants();renderSeances();renderDoc();
 </script>
