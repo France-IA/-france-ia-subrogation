@@ -773,7 +773,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
           <div class="fia-qualif__result" id="fia-qualif-result">
             <p id="fia-qualif-result-time"></p>
             <p id="fia-qualif-result-reco"></p>
-            <p>Rejoignez les plus de 2 700 professionnels déjà formés, avec 88% de taux de satisfaction.</p>
+            <p id="fia-qualif-result-proof"></p>
             <a class="fia-btn" href="/demande-contact-b2c">Échanger avec un conseiller</a>
           </div>
         </div>
@@ -964,15 +964,19 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
       });
       var time = document.getElementById('fia-qualif-result-time');
       var reco = document.getElementById('fia-qualif-result-reco');
+      var proof = document.getElementById('fia-qualif-result-proof');
       if (score <= 1) {
         time.textContent = 'Avec le Niveau 1, nos apprenants gagnent en moyenne 3 à 6h par semaine dès les premières semaines d\'utilisation de l\'IA générative.';
         reco.innerHTML = '<strong>Notre recommandation</strong> : la formation Maîtriser l\'IA générative, niveau 1.';
+        proof.textContent = 'Rejoignez les plus de 2 700 professionnels déjà formés, et repartez avec une certification reconnue (RS6891).';
       } else if (score === 2) {
         time.textContent = 'En consolidant vos bases avant d\'automatiser, vous sécurisez le temps que vous allez gagner sur la durée.';
         reco.innerHTML = '<strong>Notre recommandation</strong> : la formation Maîtriser l\'IA générative, niveau 1, puis Automatiser ses tâches, niveau 2.';
+        proof.textContent = 'Rejoignez les plus de 2 700 professionnels déjà formés sur ce parcours complet, avec 88% de taux de satisfaction.';
       } else {
         time.textContent = 'En automatisant vos tâches répétitives, vous pouvez libérer plusieurs heures supplémentaires chaque semaine.';
         reco.innerHTML = '<strong>Notre recommandation</strong> : la formation Automatiser ses tâches, niveau 2.';
+        proof.textContent = 'Rejoignez les professionnels qui ont déjà automatisé leur quotidien grâce à cette formation, avec 88% de taux de satisfaction.';
       }
       document.getElementById('fia-qualif-result').classList.add('is-visible');
     });
