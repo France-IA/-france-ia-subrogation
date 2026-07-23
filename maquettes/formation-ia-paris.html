@@ -748,9 +748,10 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
             <button type="button" class="fia-btn" id="fia-qualif-submit">Recevoir ma recommandation</button>
           </div>
           <div class="fia-qualif__result" id="fia-qualif-result">
-            <p id="fia-qualif-result-time"></p>
+            <p id="fia-qualif-result-l1"></p>
+            <p id="fia-qualif-result-l2"></p>
+            <p id="fia-qualif-result-l3"></p>
             <p id="fia-qualif-result-reco"></p>
-            <p id="fia-qualif-result-proof"></p>
             <a class="fia-btn" href="/demande-contact-b2c">Échanger avec un conseiller</a>
           </div>
         </div>
@@ -945,21 +946,25 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
         var checked = document.querySelector('input[name="' + name + '"]:checked');
         if (checked) score += parseInt(checked.value, 10);
       });
-      var time = document.getElementById('fia-qualif-result-time');
+      var l1 = document.getElementById('fia-qualif-result-l1');
+      var l2 = document.getElementById('fia-qualif-result-l2');
+      var l3 = document.getElementById('fia-qualif-result-l3');
       var reco = document.getElementById('fia-qualif-result-reco');
-      var proof = document.getElementById('fia-qualif-result-proof');
       if (score <= 1) {
-        time.textContent = 'Avec le Niveau 1, nos apprenants gagnent en moyenne 3 à 6h par semaine dès les premières semaines d\'utilisation de l\'IA générative.';
+        l1.textContent = 'Grâce à notre formation, vous gagnerez en moyenne 3 à 6h par semaine pour rédiger vos emails, comptes-rendus et présentations.';
+        l2.textContent = 'Nos apprenants nous disent gagner ce temps dès les premières semaines, simplement en changeant leurs habitudes de travail avec l\'IA.';
+        l3.textContent = 'Vous repartirez en plus avec une certification reconnue (RS6891), valorisable auprès des recruteurs et de votre entreprise.';
         reco.innerHTML = '<strong>Notre recommandation</strong> : la formation Maîtriser l\'IA générative, niveau 1.';
-        proof.textContent = 'Rejoignez la formation IA la plus suivie de la capitale, et repartez avec une certification reconnue (RS6891).';
       } else if (score === 2) {
-        time.textContent = 'En consolidant vos bases avant d\'automatiser, vous sécurisez le temps que vous allez gagner sur la durée.';
+        l1.textContent = 'Grâce à nos formations, vous gagnerez en moyenne 3 à 6h par semaine pour gérer vos emails, comptes-rendus et tâches administratives.';
+        l2.textContent = 'Nos apprenants nous disent aller encore plus loin en automatisant leurs tâches répétitives une fois les bases bien acquises.';
+        l3.textContent = 'Rejoignez la formation IA la plus suivie de la capitale, avec 88% de taux de satisfaction sur ce parcours complet.';
         reco.innerHTML = '<strong>Notre recommandation</strong> : la formation Maîtriser l\'IA générative, niveau 1, puis Automatiser ses tâches, niveau 2.';
-        proof.textContent = 'Rejoignez la formation IA la plus suivie de la capitale sur ce parcours complet, avec 88% de taux de satisfaction.';
       } else {
-        time.textContent = 'En automatisant vos tâches répétitives, vous pouvez libérer plusieurs heures supplémentaires chaque semaine.';
+        l1.textContent = 'Grâce à notre formation Niveau 2, vous gagnerez plusieurs heures supplémentaires chaque semaine en automatisant vos tâches répétitives.';
+        l2.textContent = 'Nos apprenants nous disent gagner un temps considérable grâce aux automatisations mises en place pendant la formation, qui tournent ensuite sans eux.';
+        l3.textContent = 'Rejoignez les professionnels qui ont déjà transformé leur quotidien à Station F, avec 88% de taux de satisfaction.';
         reco.innerHTML = '<strong>Notre recommandation</strong> : la formation Automatiser ses tâches, niveau 2.';
-        proof.textContent = 'Rejoignez les professionnels qui ont déjà automatisé leur quotidien à Station F, avec 88% de taux de satisfaction.';
       }
       document.getElementById('fia-qualif-result').classList.add('is-visible');
     });
