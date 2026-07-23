@@ -330,7 +330,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 }
 .fia-page h2.fia-h2 { font-size: clamp(28px, 3.4vw, var(--t4)); line-height: 1.1; font-weight: 700; margin: 0 0 var(--sp1); letter-spacing: -.02em; }
 .fia-page .fia-h2 em { font-style: normal; color: var(--blue); }
-.fia-page .fia-lead { font-size: var(--t1); line-height: 1.2; font-weight: 500; color: var(--muted); max-width: 900px; margin: 0 0 var(--sp4); }
+.fia-page .fia-lead { font-size: var(--t1); line-height: 1.2; font-weight: 500; color: var(--muted); max-width: 900px; margin: 0 0 var(--sp5); }
 .fia-page .fia-center { text-align: center; }
 .fia-page .fia-center .fia-lead { margin-left: auto; margin-right: auto; }
 
@@ -345,7 +345,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 .fia-page .fia-btn--ghost:hover { background: var(--blue); color: #fff; }
 .fia-page .fia-btn--outline { background: #fff; color: var(--ink); border: 1.5px solid var(--line); padding: var(--sp0) calc(var(--sp3) - var(--sp0)); }
 .fia-page .fia-btn--outline:hover { background: #fff; color: var(--blue); border-color: var(--blue); }
-.fia-page .fia-cta-row { display: flex; margin-top: var(--sp4); }
+.fia-page .fia-cta-row { display: flex; margin-top: var(--sp5); }
 
 /* ---- header ----
    backdrop-filter sur un élément sticky force le navigateur à recomposer le
@@ -407,12 +407,12 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 .fia-page .fia-acc__plus::after { content: "+"; }
 .fia-page .fia-acc details[open] .fia-acc__plus::after { content: "–"; }
 .fia-page .fia-acc details p { margin: 0 0 var(--sp1) 46px; color: var(--muted); font-size: var(--t0); }
-.fia-page .fia-acc-tools { display: grid; grid-template-columns: repeat(3, auto); gap: 18px 32px; margin-top: var(--sp4); }
+.fia-page .fia-acc-tools { display: grid; grid-template-columns: repeat(3, auto); gap: 18px 32px; margin-top: var(--sp5); }
 .fia-page .fia-acc-tools img { height: 28px; width: 140px; object-fit: contain; object-position: left center; }
 @media (max-width: 560px) { .fia-page .fia-acc-tools { grid-template-columns: repeat(2, auto); } }
 
 /* ---- étapes (pratique et personnalisée) ---- */
-.fia-page .fia-steps { display: flex; flex-direction: column; gap: var(--sp5); margin-top: var(--sp4); }
+.fia-page .fia-steps { display: flex; flex-direction: column; gap: var(--sp5); margin-top: var(--sp5); }
 .fia-page .fia-step { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp5); align-items: center; }
 .fia-page .fia-step--rev .fia-step__media { order: 2; }
 .fia-page .fia-step__media img { width: 100%; border-radius: var(--radius); aspect-ratio: 446/295; object-fit: cover; }
@@ -421,7 +421,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 .fia-page .fia-step p { margin: 0; color: var(--muted); font-size: var(--t0); }
 
 /* ---- cartes 3 (faite pour vous si) ---- */
-.fia-page .fia-cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp2); margin-top: var(--sp4); }
+.fia-page .fia-cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp2); margin-top: var(--sp5); }
 .fia-page .fia-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp3); }
 .fia-page .fia-card h3 { font-size: var(--t3); line-height: 1.2; font-weight: 700; margin: 0 0 var(--sp0); }
 .fia-page .fia-card p { margin: 0 0 var(--sp1); color: var(--muted); font-size: var(--t0); }
@@ -429,7 +429,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 .fia-page .fia-card__link:hover { text-decoration: underline; }
 
 /* ---- bénéfices (vous repartirez avec) ---- */
-.fia-page .fia-benefits { display: flex; flex-direction: column; margin-top: var(--sp4); }
+.fia-page .fia-benefits { display: flex; flex-direction: column; margin-top: var(--sp5); }
 .fia-page .fia-benefit { border-bottom: 1px solid var(--line); padding: var(--sp3) 0; }
 .fia-page .fia-benefit__head { display: flex; align-items: center; gap: var(--sp0); padding: var(--sp1) var(--sp3); border-bottom: 1px solid var(--line); }
 .fia-page .fia-benefit__num { font-family: 'Fragment Mono', monospace; color: var(--blue); font-size: var(--t-1); }
@@ -440,7 +440,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
 .fia-page .fia-benefit__body img { width: 100%; aspect-ratio: 504/260; object-fit: cover; border: 1px solid var(--line); border-radius: 12px; }
 
 /* ---- formateurs (carrousel) ---- */
-.fia-page .fia-carousel { position: relative; margin-top: var(--sp4); }
+.fia-page .fia-carousel { position: relative; margin-top: var(--sp5); }
 .fia-page .fia-trainers { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 8px; scrollbar-width: none; }
 .fia-page .fia-trainers::-webkit-scrollbar { display: none; }
 .fia-page .fia-trainer { position: relative; flex: 0 0 260px; aspect-ratio: 340/420; border-radius: var(--radius); overflow: hidden; scroll-snap-align: start; display: block; }
@@ -558,7 +558,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   .fia-page .fia-hero-chip-sub { font-size: 13px; color: var(--muted); margin: -8px 0 18px 2px; }
 
   /* Cartes Niveau 1 / Niveau 2 : grille 2 colonnes (fia-cards3 est en 3 colonnes). */
-  .fia-page .fia-niveaux { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp3); align-items: stretch; margin-top: var(--sp4); }
+  .fia-page .fia-niveaux { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp3); align-items: stretch; margin-top: var(--sp5); }
   @media (max-width: 860px) { .fia-page .fia-niveaux { grid-template-columns: 1fr; } }
   .fia-page .fia-niveaux .fia-summary__card { max-width: none; width: 100%; display: flex; flex-direction: column; }
   .fia-page .fia-niveaux .fia-summary__body { display: flex; flex-direction: column; flex: 1; }
@@ -570,7 +570,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   .fia-page .fia-niveaux .fia-btn--ghost[aria-disabled="true"]:hover { background: none; color: var(--muted); }
 
   /* Programme : repère avant/pendant/après */
-  .fia-page .fia-prog-phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp2); margin-bottom: var(--sp3); }
+  .fia-page .fia-prog-phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp2); margin-bottom: var(--sp4); }
   @media (max-width: 780px) { .fia-page .fia-prog-phases { grid-template-columns: 1fr; } }
   .fia-page .fia-prog-phase { border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp2); background: #fff; }
   .fia-page .fia-prog-phase__tag { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--blue); margin-bottom: 6px; }
@@ -579,7 +579,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   .fia-page .fia-acc__dur { font-family: inherit; font-weight: 500; color: var(--muted); font-size: 13px; margin-left: 8px; }
 
   /* Outil de qualification */
-  .fia-page .fia-qualif { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp3); max-width: 720px; margin: var(--sp3) auto 0; text-align: left; }
+  .fia-page .fia-qualif { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp3); max-width: 720px; margin: var(--sp4) auto 0; text-align: left; }
   .fia-page .fia-qualif__q { margin-bottom: var(--sp2); }
   .fia-page .fia-qualif__q p { font-weight: 600; margin: 0 0 8px; }
   .fia-page .fia-qualif__opts { display: flex; gap: 20px; }
@@ -594,7 +594,7 @@ html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
   /* Satisfaction : ces classes n'avaient aucune règle CSS nulle part (bug trouvé en
      harmonisant avec /formation-ia-paris) — les stats s'affichaient en texte brut, sans
      carte ni gros chiffre. */
-  .fia-page .fia-satisfaction { display: flex; gap: var(--sp3); justify-content: center; flex-wrap: wrap; margin: var(--sp3) 0 var(--sp2); }
+  .fia-page .fia-satisfaction { display: flex; gap: var(--sp3); justify-content: center; flex-wrap: wrap; margin: var(--sp4) 0 var(--sp3); }
   .fia-page .fia-satisfaction__stat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp2); text-align: center; min-width: 200px; }
   .fia-page .fia-satisfaction__num { font-size: 40px; font-weight: 800; color: var(--blue); line-height: 1; }
   .fia-page .fia-satisfaction__label { font-size: 13px; color: var(--muted); margin-top: 6px; }
