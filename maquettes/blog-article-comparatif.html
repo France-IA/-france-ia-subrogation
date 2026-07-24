@@ -79,16 +79,14 @@
   .breadcrumb .sep{margin:0 6px;}
   .breadcrumb .current{color:var(--gray-text);}
 
-  /* Conteneur aligné le 24/07 sur clamp(1080px, 82vw, 1320px), identique aux pages marketing
-     (formation-ia, home-fia-clean-rewrite) — au lieu du 1112px fixe propre à cet article. Au
-     plancher (1080), il ne reste que 1032px après les 48px de padding : le sommaire passe donc
-     de 280 à 248px (colonne de lecture et gap inchangés, 720 + 64 + 248 = 1032, zéro débordement).
-     Au-delà du plancher, le conteneur s'élargit avec la page (jusqu'à 1320px) mais la grille de
-     lecture reste fixe — une marge droite se creuse après le sommaire sur très grand écran,
-     volontaire : une colonne de prose justifiée ne doit pas s'étirer au-delà de ~66 caractères/
-     ligne, contrairement aux sections d'une page marketing. */
-  .editorial{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:var(--s-3) 24px var(--s-6); display:grid; grid-template-columns:720px 248px; gap:64px;}
-  @media (max-width:1024px){ .editorial{grid-template-columns:1fr; max-width:720px;} .toc{display:none;} }
+  /* Conteneur aligné sur clamp(1080px, 82vw, 1320px), identique aux pages marketing. Au plancher
+     (1080 → 1032px après padding), colonne de lecture 760 + gap 56 + sommaire 216 = 1032, zéro
+     débordement. Au-delà du plancher, le retour du 24/07 ("grosse marge vide après le sommaire
+     sur grand écran") est traité en laissant le SOMMAIRE (minmax(216px,1fr)) absorber l'espace
+     disponible plutôt que la colonne de lecture, qui reste à 760px — une prose justifiée ne doit
+     pas s'étirer au-delà d'une ligne confortable, contrairement à une sidebar de navigation. */
+  .editorial{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:var(--s-3) 24px var(--s-6); display:grid; grid-template-columns:760px minmax(216px, 1fr); gap:56px;}
+  @media (max-width:1024px){ .editorial{grid-template-columns:1fr; max-width:760px;} .toc{display:none;} }
 
   .main-col{min-width:0;}
   h1.article-h1{font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:40px; line-height:1.2; max-width:60ch;}
@@ -135,10 +133,10 @@
   .toc a.active{color:var(--blue-text); border-left-color:var(--blue); font-weight:700;}
   @media (prefers-reduced-motion:no-preference){ .toc ul::before{transition:height .2s ease-out;} }
 
-  .main-col p{font-size:17px; line-height:1.65; margin:0 0 20px; max-width:66ch;}
+  .main-col p{font-size:17px; line-height:1.65; margin:0 0 20px; max-width:70ch;}
   .main-col h2{font-size:28px; line-height:1.25; margin-top:var(--s-5); margin-bottom:20px;}
   .main-col h3{font-size:21px; line-height:1.3; margin-top:var(--s-4); margin-bottom:14px;}
-  .main-col ul, .main-col ol{font-size:17px; line-height:1.65; padding-left:22px; max-width:66ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+  .main-col ul, .main-col ol{font-size:17px; line-height:1.65; padding-left:22px; max-width:70ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
   .main-col li{margin-bottom:6px;}
   .inline-link{text-decoration:underline;}
 
@@ -191,6 +189,12 @@
 
   .video-note{font-size:14px; color:var(--muted); margin-top:var(--s-2); padding-top:var(--s-2); border-top:1px dashed var(--border);}
 
+  /* Bug mobile trouvé le 24/07 : des cellules avec un token collé par "/" (5x/20x, Pro/Ultra,
+     Free/Plus/Pro, Team/Enterprise) ne peuvent pas se couper — le tableau forçait 48px de
+     débordement horizontal sur toute la page à 390px. Conteneur scrollable en dernier recours
+     (comme dans Pipeline_Master_Prompts.html), le tableau lui-même reste intact. */
+  .table-wrap{overflow-x:auto; margin:var(--s-4) 0; -webkit-overflow-scrolling:touch;}
+  .table-wrap table.compare{margin:0;}
   table.compare{width:100%; border-collapse:separate; border-spacing:0; margin:var(--s-4) 0; font-size:15px; background:#fff; border-radius:var(--r-m); overflow:hidden; box-shadow:var(--shadow-blue-2);}
   table.compare th{background:var(--blue); color:#fff; text-align:left; padding:14px; font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.02em;}
   table.compare td{padding:14px; background:#fff; color:var(--ink); border-bottom:1px solid var(--blue-soft);}
@@ -255,15 +259,16 @@
   .hub-encart .tertiary-btn:hover svg{transform:translateX(3px);}
   .hub-encart .tertiary-btn:hover{text-decoration:underline;}
 
-  /* Aligné sur la largeur réelle de la colonne éditoriale (720px, main-col) plutôt que sur les
-     1064px du conteneur de page — sinon la bannière colorée déborde visuellement à droite du
+  /* Aligné sur la largeur réelle de la colonne de lecture (760px, main-col) plutôt que sur la
+     pleine largeur du conteneur — sinon la bannière colorée déborde visuellement à droite du
      texte qu'elle conclut (l'écart saute aux yeux car c'est le seul bloc plein-largeur du
      conteneur, tout le reste n'a pas de fond visible à cette largeur). Le wrapper reprend le
-     même modèle de boîte que .editorial (max-width 1064 + padding 24px) pour que le bord gauche
+     même modèle de boîte que .editorial (même max-width + padding 24px) pour que le bord gauche
      de la bannière tombe exactement sur le bord gauche de main-col, plutôt qu'un centrage
-     indépendant qui la décalerait. */
+     indépendant qui la décalerait. Fixe (pas minmax comme le sommaire) : la colonne de lecture
+     ne s'étire pas sur grand écran, la bannière qui la conclut ne doit pas s'étirer non plus. */
   .pre-footer-cta-wrap{max-width:clamp(1080px, 82vw, 1320px); margin:var(--s-6) auto 0; padding:0 24px;}
-  .pre-footer-cta{background:var(--blue); border-radius:var(--r-l); max-width:720px; padding:var(--s-5) var(--s-4); text-align:center;}
+  .pre-footer-cta{background:var(--blue); border-radius:var(--r-l); max-width:760px; padding:var(--s-5) var(--s-4); text-align:center;}
   .pre-footer-cta h2{color:#fff; font-size:28px; margin-bottom:12px;}
   .pre-footer-cta p{color:rgba(255,255,255,.95); font-size:16px; margin-bottom:var(--s-3);}
   .pre-footer-cta .btn-inverse{background:#fff; color:var(--blue-text); font-family:"DM Sans",Arial,sans-serif; font-weight:700; font-size:15px; padding:12px 22px; border-radius:var(--r-s); text-decoration:none; display:inline-block;}
@@ -382,7 +387,7 @@
         </div>
 
         <div class="tab-panel panel-indiv">
-          <table class="compare">
+          <div class="table-wrap"><table class="compare">
             <thead><tr><th>Formule</th><th>Gemini (Google)</th><th>Claude (Anthropic)</th></tr></thead>
             <tbody>
               <tr><td>Gratuit</td><td class="price">0 €, Gemini 3.5 Flash, accès quotidien à Gemini Pro</td><td class="price">0 €, web, iOS, Android, desktop</td></tr>
@@ -390,17 +395,17 @@
               <tr><td>Intermédiaire</td><td class="price">21,99 €/mois (AI Pro), 5 To de stockage</td><td class="price">à partir de 90 €/mois (Max)</td></tr>
               <tr><td>Haut de gamme</td><td class="price">99,99 € à 219,99 €/mois (AI Ultra 5x/20x), 20 à 30 To de stockage</td><td class="price">Max 20x (prix affiché à la souscription)</td></tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         <div class="tab-panel panel-team">
-          <table class="compare">
+          <div class="table-wrap"><table class="compare">
             <thead><tr><th>Formule</th><th>Gemini (Google)</th><th>Claude (Anthropic)</th></tr></thead>
             <tbody>
               <tr><td>Équipe</td><td class="price">via Google Workspace</td><td class="price">18 €/siège annuel (21,04 € mensuel) Standard, ou 90 €/siège annuel (105,23 € mensuel) Premium</td></tr>
               <tr><td>Entreprise</td><td class="price">sur devis</td><td class="price">sur devis</td></tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
       </div>
 
@@ -461,7 +466,7 @@
 
       <h2 id="multimodal">Gemini ou Claude : lequel gère le mieux image, voix et vidéo ?</h2>
       <p>Gemini gère nativement l'image, la vidéo et la voix ; Claude n'a aucune de ces trois capacités et reste concentré sur le texte et le code.</p>
-      <table class="compare">
+      <div class="table-wrap"><table class="compare">
         <thead><tr><th>Capacité</th><th>Gemini</th><th>Claude</th></tr></thead>
         <tbody>
           <tr><td>Génération d'images</td><td class="price">Oui, intégrée</td><td class="price">Non native</td></tr>
@@ -469,7 +474,7 @@
           <tr><td>Mode vocal</td><td class="price">Oui (Gemini Live)</td><td class="price">Non</td></tr>
           <tr><td>Analyse de fichiers longs</td><td class="price">Oui, jusqu'à 1M tokens</td><td class="price">Oui, plus limité en contexte</td></tr>
         </tbody>
-      </table>
+      </table></div>
       <p>Pour une équipe qui produit régulièrement des visuels ou des vidéos courtes (communication interne, réseaux sociaux, supports de formation), Gemini couvre plus de terrain à lui seul.</p>
       <p>Claude reste en retrait sur le multimodal génératif : sa force est ailleurs, sur la qualité du texte et du code produits.</p>
 
@@ -479,7 +484,7 @@
       <p>Anthropic applique une politique similaire de non-entraînement pour les comptes Team et Enterprise.</p>
       <p>Dans les deux cas, la vérification contractuelle prime sur la communication marketing, que vous soyez seul, en petite équipe ou dans une structure plus large.</p>
 
-      <table class="compare">
+      <div class="table-wrap"><table class="compare">
         <thead><tr><th>Critère</th><th>Gemini</th><th>Claude</th></tr></thead>
         <tbody>
           <tr><td>Formules couvertes par la garantie non-entraînement</td><td class="price">Toutes les formules Google Workspace</td><td class="price">Team et Enterprise uniquement</td></tr>
@@ -487,7 +492,7 @@
           <tr><td>Hébergement</td><td class="price">Infrastructure Google</td><td class="price">Infrastructure Anthropic</td></tr>
           <tr><td>Vérification recommandée</td><td class="price">Contrat Workspace</td><td class="price">Contrat Team/Enterprise</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <div class="fi-insight">
         <span class="fi-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>Le regard France IA</span>
