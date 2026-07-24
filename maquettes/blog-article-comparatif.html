@@ -104,22 +104,16 @@
 
   .hero-answer{margin-top:var(--s-3);}
 
-  /* Préface "L'avis France IA" : volontairement SANS boîte ni fond coloré (le bleu est réservé
-     au TL;DR neutre juste en dessous ; un fond gris/noir est exclu par la charte couleur stricte
-     blanc/bleu/rouge). La distinction avec le TL;DR se fait par la typographie seule : citation
-     de tête, plus grande, en retrait — pas par une couleur de bloc. Fixe une incohérence relevée
-     dans Pipeline_Master_Prompts.html (§ "bordure encre" y contredisait la charte couleur stricte
-     du même document) en tranchant pour la règle la plus explicite : jamais de bloc décoratif
-     gris/noir. */
-  .hero-answer .preface{margin:0; padding-left:var(--s-2); border-left:3px solid var(--border);}
-  .preface .label{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.03em; color:var(--blue-text); margin-bottom:8px; display:flex; align-items:center; gap:7px;}
+  /* Préface "L'avis France IA" — étiquette inclinée en débord de coin (voir .blk-tag plus bas),
+     étendue ici sur retour direct du 24/07. Rouge (famille "voix France IA", comme fi-teaser/
+     proof/fi-insight) pour la distinguer du TL;DR neutre juste en dessous, qui reste bleu. */
+  .hero-answer .preface{position:relative; margin:0; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); box-shadow:var(--shadow-red-2);}
   .preface p{margin:0; font-size:21px; line-height:1.5; color:var(--ink); font-weight:500; font-style:italic;}
   .preface strong{font-weight:600; font-style:normal;}
   .preface a{color:var(--blue-text); text-decoration:underline; font-weight:700;}
 
   .hero-answer .tldr{margin-top:var(--s-3);}
-  .tldr{background:var(--blue-soft); border-left:4px solid var(--blue); border-radius:0 var(--r-m) var(--r-m) 0; padding:var(--s-4) var(--s-3); box-shadow:var(--shadow-blue-2);}
-  .tldr .label{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.03em; color:var(--blue-text); margin-bottom:6px;}
+  .tldr{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); box-shadow:var(--shadow-blue-2);}
   .tldr p{margin:0; font-size:17px; line-height:1.65; color:var(--ink);}
   .tldr ul{margin:0; padding-left:20px; font-size:16px; line-height:1.6; color:var(--ink); max-width:62ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
   .tldr li{margin-bottom:4px;}
@@ -179,8 +173,7 @@
   .eco-result.claude{background:var(--red); box-shadow:0 6px 16px -4px rgba(214,54,43,.5);}
   p.eco-caption{font-size:14px; color:var(--muted); text-align:center; margin:0 0 var(--s-3); max-width:none; font-style:italic;}
 
-  .fi-teaser{background:var(--red-soft); border-left:4px solid var(--red); border-radius:0 var(--r-m) var(--r-m) 0; padding:18px var(--s-3); margin:var(--s-4) 0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
-  .fi-teaser .label{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.03em; color:var(--red-text); margin-bottom:6px; display:flex; align-items:center; gap:7px;}
+  .fi-teaser{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:26px var(--s-3) 18px; margin:var(--s-4) 0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
   .fi-teaser p{margin:0; font-size:15px; max-width:62ch;}
   .fi-teaser a{color:var(--red-text); text-decoration:underline; font-weight:700;}
 
@@ -210,8 +203,7 @@
   table.compare tbody tr:hover td{background:var(--blue-soft);}
   table.compare .price{color:var(--ink); font-family:"Manrope",Arial,sans-serif; font-weight:700;}
 
-  .verdict{background:var(--blue-soft); border-radius:var(--r-l); padding:var(--s-4) var(--s-3); margin:var(--s-4) 0; box-shadow:var(--shadow-blue-1);}
-  .verdict .label{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.03em; color:var(--blue-text); margin-bottom:var(--s-3); display:flex; align-items:center; gap:7px;}
+  .verdict{position:relative; background:var(--blue-soft); border-radius:var(--r-l); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-blue-1);}
   .verdict-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-3); margin-bottom:var(--s-3);}
   @media (max-width:600px){ .verdict-grid{grid-template-columns:1fr;} }
   .verdict-card{background:#fff; border-radius:var(--r-m); padding:var(--s-3) var(--s-2) 20px; box-shadow:0 6px 18px -10px rgba(34,40,49,.18);}
@@ -224,8 +216,7 @@
   .verdict-card p{font-size:14px; line-height:1.55; color:var(--ink); margin:0;}
   .verdict-note{font-size:14px; color:var(--blue-text); font-style:italic; margin:0;}
 
-  .proof{background:var(--red-soft); border-radius:var(--r-m); padding:var(--s-4) var(--s-3); margin:var(--s-4) 0; box-shadow:var(--shadow-red-1);}
-  .proof .label{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.03em; color:var(--red-text); margin-bottom:8px; display:flex; align-items:center; gap:7px;}
+  .proof{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-red-1);}
   .proof p{margin:0 0 10px; font-size:16px; max-width:62ch;}
   .proof p:last-child{margin-bottom:0;}
   .proof .fill-in{background:#fff; border:1px dashed var(--red); padding:4px 8px; border-radius:4px; color:var(--red-text); font-style:italic;}
@@ -238,19 +229,21 @@
   .expert-attrib .who b{display:block; color:var(--ink);}
   .fill-in{background:#fff; border:1px dashed var(--red); padding:4px 8px; border-radius:4px; color:var(--red-text); font-style:italic;}
 
-  /* "Le regard France IA" (.fi-insight) — bloc manquant côté design : le pipeline éditorial
-     (Agent Approfondissement, ajouté 24/07) le rend obligatoire sur gabarit complet mais aucun
-     squelette visuel n'existait encore. Traitement distinct des 3 autres prises de parole "FI"
-     (préface/teaser/proof, toutes badge + libellé en tête de bloc) : une étiquette légèrement
-     inclinée en débord du coin, façon note glissée dans la marge — un seul bloc par article,
-     un seul moment où le gabarit s'autorise ce petit relief. */
+  /* Étiquette inclinée en débord de coin — introduite pour "Le regard France IA" (.fi-insight,
+     seul bloc encore sans squelette visuel côté charte), étendue le 24/07 à tous les blocs à
+     libellé de l'article sur retour direct ("très bien comme présentation, à réutiliser") :
+     remplace l'ancien libellé inline en tête de boîte (préface, tldr, teaser, proof, verdict,
+     conformité). Un seul composant partagé (.blk-tag + variante couleur), une icône par bloc pour
+     rester repérable au scan malgré la répétition du procédé. */
+  .blk-tag{position:absolute; top:-14px; left:22px; transform:rotate(-2deg); color:#fff; font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; padding:7px 14px; border-radius:6px; display:inline-flex; align-items:center; gap:6px;}
+  .blk-tag svg{flex-shrink:0;}
+  .blk-tag--red{background:var(--red); box-shadow:0 8px 16px -6px rgba(214,54,43,.55);}
+  .blk-tag--blue{background:var(--blue); box-shadow:0 8px 16px -6px rgba(67,121,242,.55);}
+
   .fi-insight{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-5) 0 var(--s-4); box-shadow:var(--shadow-red-2);}
-  .fi-insight .fi-tag{position:absolute; top:-14px; left:22px; transform:rotate(-2deg); background:var(--red); color:#fff; font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; padding:7px 14px; border-radius:6px; box-shadow:0 8px 16px -6px rgba(214,54,43,.55); display:inline-flex; align-items:center; gap:6px;}
-  .fi-insight .fi-tag svg{flex-shrink:0;}
   .fi-insight p{margin:0; font-size:16px; max-width:62ch;}
 
-  .sovereign-note{background:var(--red-soft); border-radius:var(--r-m); padding:var(--s-4) var(--s-3); margin:var(--s-4) 0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
-  .sovereign-note .label{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.03em; color:var(--red-text); margin-bottom:6px; display:flex; align-items:center; gap:7px;}
+  .sovereign-note{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
 
   .faq{margin-top:var(--s-3);}
   .faq details{border-bottom:1px solid var(--border); padding:14px 0;}
@@ -367,12 +360,12 @@
 
       <div class="hero-answer">
         <div class="preface">
-          <div class="label"><span class="fi-badge">FI</span>L'avis France IA</div>
+          <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>L'avis France IA</span>
           <p>Chez France IA, on tranche : Gemini pour une entreprise déjà sur Google Workspace, Claude pour Microsoft 365 ou pour la rédaction et le code. Mais le prix que vous avez comparé il y a trois mois est probablement déjà faux : les deux éditeurs ont changé leurs grilles tarifaires plusieurs fois depuis janvier. On détaille tout, formule par formule, dans notre <a href="/guide/comparatifs-ia">comparatif des IA génératives</a>.</p>
         </div>
 
         <div class="tldr">
-          <div class="label">L'essentiel</div>
+          <span class="blk-tag blk-tag--blue">L'essentiel</span>
           <ul>
             <li><strong>Gemini</strong> : 1M tokens de contexte, dès 4,99 €/mois (AI Plus)</li>
             <li><strong>Claude</strong> : Claude Code inclus, dès 15 €/mois (Pro, facturé annuellement)</li>
@@ -434,7 +427,7 @@
       <p>Vous hésitez aussi avec ChatGPT ? Notre <a class="inline-link" href="/guide/outils-ia/chatgpt/prix-chatgpt">comparatif des prix ChatGPT</a> détaille les six formules d'OpenAI selon la même logique.</p>
 
       <div class="fi-teaser">
-        <span class="label"><span class="fi-badge red">FI</span>Chez France IA</span>
+        <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Chez France IA</span>
         <p>Nos formateurs ne se contentent pas de lire les grilles tarifaires : ils testent Gemini et Claude en conditions réelles avec les stagiaires. Le détail chiffré est un peu plus bas, dans la <a href="#preuve">preuve terrain</a>.</p>
       </div>
 
@@ -502,7 +495,7 @@
       </table></div>
 
       <div class="fi-insight">
-        <span class="fi-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>Le regard France IA</span>
+        <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>Le regard France IA</span>
         <p>Le point le plus souvent ignoré : la garantie de non-entraînement de Claude ne couvre <strong>pas</strong> les comptes individuels Free et Pro, seulement Team et Enterprise. Une équipe qui démarre sur un compte personnel avant de passer en structure croit parfois hériter d'une protection qu'elle n'a pas encore.</p>
       </div>
 
@@ -514,7 +507,7 @@
       </ul>
 
       <div class="sovereign-note">
-        <span class="label"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Z"/></svg>Point conformité</span>
+        <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Z"/></svg>Point conformité</span>
         Gemini (Google) et Claude (Anthropic) sont deux services américains&nbsp;: les données peuvent transiter hors Union européenne selon la configuration. Avant un déploiement en entreprise, la <a class="inline-link" href="https://www.cnil.fr/fr/ia-et-rgpd-la-cnil-publie-ses-nouvelles-recommandations-pour-accompagner-une-innovation-responsable" target="_blank" rel="nofollow noopener">CNIL recommande de vérifier la base légale et l'hébergement des données</a> avant tout traitement de données personnelles. Pour les structures qui doivent garantir un hébergement européen, <strong>Mistral AI (Le Chat)</strong> reste l'alternative souveraine à évaluer en parallèle.
       </div>
 
@@ -532,7 +525,7 @@
       <p>Un prix vu en janvier n'a aucune garantie de validité en septembre. Le bon réflexe, si vous décidez pour votre entreprise, est de revérifier les tarifs officiels au moment de la décision, pas de se fier à un article, même à jour à sa publication.</p>
 
       <div class="proof" id="preuve">
-        <span class="label"><span class="fi-badge red">FI</span>Testé chez France IA</span>
+        <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a1.2 1.2 0 0 0 1 1.8h12a1.2 1.2 0 0 0 1-1.8l-5-9V3"/></svg>Testé chez France IA</span>
         <div class="proof-photo fill-in" role="img" aria-label="Photo réelle à ajouter : un formateur France IA testant Gemini ou Claude en session avec un stagiaire, format 16:9. Jamais une photo stock ni générée.">[Photo réelle à ajouter, un formateur France IA testant Gemini ou Claude en session avec un stagiaire, format 16:9. Jamais une photo stock ni générée.]</div>
         <p><span class="fill-in">[Résultat chiffré d'un test interne réel avec Gemini, ex. : "Sur X supports de formation générés avec Gemini, Y ont nécessité moins de retouches" ou "Temps de préparation d'un module réduit de X % avec Gemini". Donnée réelle de l'équipe, jamais un chiffre inventé.]</span></p>
         <p><span class="fill-in">[Même exercice avec Claude, un résultat chiffré distinct, pas une reformulation du précédent. Si un seul des deux outils a été testé en interne à ce stade, ne garder qu'un seul item plutôt que d'en inventer un second.]</span></p>
@@ -540,7 +533,7 @@
       </div>
 
       <div class="verdict">
-        <span class="label"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Verdict selon votre contexte</span>
+        <span class="blk-tag blk-tag--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Verdict selon votre contexte</span>
         <div class="verdict-grid">
           <div class="verdict-card gemini">
             <div class="vc-check">
