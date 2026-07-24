@@ -87,7 +87,7 @@
      trop en marges égales de chaque côté, plutôt qu'un vide asymétrique après le sommaire — choix
      du 24/07 après retour direct. Contrepartie assumée : au-delà de 1317px de large, le bord
      gauche du texte n'est plus exactement sur celui du fil d'Ariane/CTA (inchangé en-deçà). */
-  .editorial{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:var(--s-3) 24px var(--s-6); display:grid; grid-template-columns:760px 216px; gap:56px; justify-content:center;}
+  .editorial{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:var(--s-3) 24px var(--s-4); display:grid; grid-template-columns:760px 216px; gap:56px; justify-content:center;}
   /* Seuil à 1079 (pas 1024) : bug trouvé le 24/07 en auditant les débordements — la grille 2
      colonnes a besoin d'un plancher de 1080px (760+56+216+48 padding) pour tenir sans déborder.
      Un seuil à 1024 laissait une zone morte de 1025 à 1079px où le mode mobile n'était plus actif
@@ -104,11 +104,16 @@
 
   .hero-answer{margin-top:var(--s-3);}
 
-  /* Préface "L'avis France IA" — étiquette inclinée en débord de coin (voir .blk-tag plus bas),
-     étendue ici sur retour direct du 24/07. Rouge (famille "voix France IA", comme fi-teaser/
-     proof/fi-insight) pour la distinguer du TL;DR neutre juste en dessous, qui reste bleu. */
-  .hero-answer .preface{position:relative; margin:0; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); box-shadow:var(--shadow-red-2);}
-  .preface p{margin:0; font-size:21px; line-height:1.5; color:var(--ink); font-weight:500; font-style:italic;}
+  /* Chapô "L'avis France IA" — retour du 24/07 : doit avoir une présentation PARTICULIÈRE, pas
+     se fondre dans le lot des encarts à étiquette inclinée (.blk-tag) utilisés partout ailleurs
+     pour les mentions courtes/utilitaires. Traitement propre au chapô, jamais réutilisé ailleurs :
+     pas de boîte ni de fond, juste un guillemet géant (même famille que blockquote.expert, en
+     rouge) et un kicker plat au-dessus — c'est le seul chapô de la page, il n'a pas besoin d'un
+     badge pour se faire repérer. */
+  .hero-answer .preface{position:relative; margin:0; padding:0 0 0 34px;}
+  .preface::before{content:"\201C"; position:absolute; left:-6px; top:-18px; font-family:Georgia,"Times New Roman",serif; font-style:normal; font-weight:800; font-size:64px; line-height:1; color:var(--red); opacity:.24;}
+  .preface .eyebrow{display:block; font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:12.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--red-text); margin-bottom:10px;}
+  .preface p{margin:0; font-size:23px; line-height:1.55; color:var(--ink); font-weight:500; font-style:italic;}
   .preface strong{font-weight:600; font-style:normal;}
   .preface a{color:var(--blue-text); text-decoration:underline; font-weight:700;}
 
@@ -253,7 +258,7 @@
   .faq details[open] summary::after{content:"\2013"; background:var(--blue); color:#fff;}
   .faq p{margin-top:10px; font-size:16px;}
 
-  .hub-encart{background:var(--blue-soft); border-radius:var(--r-m); padding:var(--s-4) var(--s-3); margin-top:var(--s-5); display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; box-shadow:var(--shadow-blue-2);}
+  .hub-encart{background:var(--blue-soft); border-radius:var(--r-m); padding:var(--s-4) var(--s-3); margin-top:var(--s-4); display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; box-shadow:var(--shadow-blue-2);}
   .hub-encart p{margin:0; font-size:16px; color:var(--ink); max-width:480px;}
   .hub-encart .tertiary-btn{color:var(--blue-text); font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:15px; text-decoration:none; white-space:nowrap; display:inline-flex; align-items:center; gap:6px;}
   .hub-encart .tertiary-btn svg{transition:transform .15s;}
@@ -266,7 +271,7 @@
      indépendant (760px centré seul dans le même conteneur ne tombe PAS au même endroit qu'une
      grille 760+56+216 centrée : les deux formules doivent être identiques, pas juste les mêmes
      valeurs). */
-  .pre-footer-cta-wrap{max-width:clamp(1080px, 82vw, 1320px); margin:var(--s-6) auto 0; padding:0 24px; display:grid; grid-template-columns:760px 216px; gap:56px; justify-content:center;}
+  .pre-footer-cta-wrap{max-width:clamp(1080px, 82vw, 1320px); margin:var(--s-4) auto 0; padding:0 24px; display:grid; grid-template-columns:760px 216px; gap:56px; justify-content:center;}
   .pre-footer-cta{grid-column:1; background:var(--blue); border-radius:var(--r-l); padding:var(--s-5) var(--s-4); text-align:center;}
   @media (max-width:1079px){ .pre-footer-cta-wrap{grid-template-columns:1fr; max-width:760px;} }
   .pre-footer-cta h2{color:#fff; font-size:28px; margin-bottom:12px;}
@@ -360,7 +365,7 @@
 
       <div class="hero-answer">
         <div class="preface">
-          <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"/></svg>L'avis France IA</span>
+          <span class="eyebrow">L'avis France IA</span>
           <p>Chez France IA, on tranche : Gemini pour une entreprise déjà sur Google Workspace, Claude pour Microsoft 365 ou pour la rédaction et le code. Mais le prix que vous avez comparé il y a trois mois est probablement déjà faux : les deux éditeurs ont changé leurs grilles tarifaires plusieurs fois depuis janvier. On détaille tout, formule par formule, dans notre <a href="/guide/comparatifs-ia">comparatif des IA génératives</a>.</p>
         </div>
 
