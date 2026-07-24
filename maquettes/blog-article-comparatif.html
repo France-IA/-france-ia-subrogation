@@ -57,7 +57,7 @@
      écran : avant, le sommaire n'apparaissait qu'APRÈS l'article entier sur mobile (media query
      position:static), donc aucune aide à la navigation pendant la lecture. ═══ */
   .mobile-toc{display:none;}
-  @media (max-width:1024px){
+  @media (max-width:1079px){
     .mobile-toc{
       display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;
       padding:12px 24px; position:sticky; top:0; z-index:20;
@@ -86,7 +86,13 @@
      disponible plutôt que la colonne de lecture, qui reste à 760px — une prose justifiée ne doit
      pas s'étirer au-delà d'une ligne confortable, contrairement à une sidebar de navigation. */
   .editorial{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:var(--s-3) 24px var(--s-6); display:grid; grid-template-columns:760px minmax(216px, 1fr); gap:56px;}
-  @media (max-width:1024px){ .editorial{grid-template-columns:1fr; max-width:760px;} .toc{display:none;} }
+  /* Seuil à 1079 (pas 1024) : bug trouvé le 24/07 en auditant les débordements — la grille 2
+     colonnes a besoin d'un plancher de 1080px (760+56+216+48 padding) pour tenir sans déborder.
+     Un seuil à 1024 laissait une zone morte de 1025 à 1079px où le mode mobile n'était plus actif
+     mais la grille desktop n'avait pas encore la place de tenir (31px de débordement mesuré à
+     1025px). Le sommaire mobile à pastilles (plus haut) doit basculer au même seuil, sinon ni la
+     grille desktop ni la nav mobile ne sont visibles dans cette même zone. */
+  @media (max-width:1079px){ .editorial{grid-template-columns:1fr; max-width:760px;} .toc{display:none;} }
 
   .main-col{min-width:0;}
   h1.article-h1{font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:40px; line-height:1.2; max-width:60ch;}
@@ -152,8 +158,8 @@
   .price-tabs table.compare{margin-top:0;}
 
   .bar-chart{display:flex; gap:var(--s-4); padding:var(--s-4) var(--s-3); background:#fff; border-radius:var(--r-m); margin:var(--s-4) 0; box-sizing:border-box; box-shadow:var(--shadow-blue-2);}
-  .bar-group{display:flex; gap:14px; flex:1;}
-  .bar-col{display:flex; flex-direction:column; align-items:center; flex:1;}
+  .bar-group{display:flex; gap:14px; flex:1; min-width:0;}
+  .bar-col{display:flex; flex-direction:column; align-items:center; flex:1; min-width:0;}
   .bar-track{height:120px; width:100%; display:flex; align-items:flex-end; justify-content:center;}
   .bar-col .bar{width:100%; max-width:40px; border-radius:4px 4px 0 0; transition:height .3s; min-height:3px;}
   .bar-col .bar-val{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:12px; color:var(--ink); margin-top:8px;}
