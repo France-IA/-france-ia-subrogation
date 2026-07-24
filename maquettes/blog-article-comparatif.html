@@ -45,7 +45,7 @@
   /* ═══ EN-TÊTE SITE (repris du template réel franceia.com, pas de la charte article seule —
      un article vit dans le site, pas dans un fragment isolé) ═══ */
   .site-header{border-bottom:1px solid var(--border);}
-  .site-nav{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:18px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .site-nav{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:var(--s-3) 24px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
   .site-nav__logo img{display:block; height:36px; width:auto;}
   .site-nav__links{display:flex; align-items:center; gap:10px;}
   .btn{font-family:"DM Sans",Arial,sans-serif; font-weight:700; font-size:14px; padding:10px 18px; border-radius:var(--r-s); text-decoration:none; display:inline-block; background:var(--blue); color:#fff;}
@@ -60,7 +60,7 @@
   @media (max-width:1079px){
     .mobile-toc{
       display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;
-      padding:12px 24px; position:sticky; top:0; z-index:20;
+      padding:var(--s-2) 24px; position:sticky; top:0; z-index:20;
       background:rgba(255,255,255,.94); backdrop-filter:blur(6px);
       border-bottom:1px solid var(--border); scrollbar-width:none;
     }
