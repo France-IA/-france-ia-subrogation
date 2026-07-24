@@ -38,7 +38,7 @@
 
   /* Paragraphes de contenu : justifié + césure, cf. charte. Seuls les libellés et cellules de
      tableau restent non justifiés. */
-  .main-col p, .preface p, .proof p, .sovereign-note, blockquote.expert, .price-warning, .faq p, .fi-insight p{
+  .main-col p, .preface p, .proof p, .sovereign-note, blockquote.expert, .faq p, .fi-insight p{
     text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;
   }
 
@@ -119,13 +119,13 @@
   .tldr li{margin-bottom:4px;}
   .tldr li:last-child{margin-bottom:0;}
 
-  /* Taxonomie des blocs (24/07, retour direct) : rouge = avis France IA / point important
-     (garde le style à étiquette inclinée déjà en place — fi-teaser, proof, fi-insight, sovereign-
-     note, et maintenant price-warning) ; bleu = mention / pour aller plus loin, MÊME style que
-     les blocs rouges (fi-mention, hub-encart) ; tout le reste (données, tableaux, citation
-     attribuée) garde sa présentation propre, déjà distincte. */
-  .price-warning{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; font-size:14px; line-height:1.6; box-shadow:var(--shadow-red-3);}
-  .price-warning a{color:var(--red-text); text-decoration:underline; font-weight:700;}
+  /* Taxonomie des blocs (24/07, retour direct) : rouge = avis France IA / point important (garde
+     le style à étiquette inclinée déjà en place — fi-teaser, proof, fi-insight, sovereign-note) ;
+     bleu = mention / pour aller plus loin, MÊME style que les blocs rouges (fi-mention, hub-
+     encart) ; tout le reste (données, tableaux, citation attribuée) garde sa présentation propre.
+     price-warning retiré de cette liste le 24/07 : 4 médias différents pour peu de texte dans la
+     1re section rendait la page "démo de composants" plutôt qu'un article — repassé en paragraphe
+     normal, le gras sur les chiffres clés suffit à le rendre repérable. */
 
   /* Sommaire + rail de progression (signature V1 lab) : le filet gauche existant du sommaire
      se remplit en bleu au fil du défilement dans l'article. Visualise littéralement la promesse
@@ -375,9 +375,7 @@
       </div>
 
       <h2 id="tableau">Gemini vs Claude : le comparatif prix et formules</h2>
-      <div class="price-warning">
-        <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>Point important</span>
-        Les deux éditeurs facturent réellement en euros en France, mais le prix affiché dépend de l'engagement choisi. Chez Claude, le forfait Pro passe de <strong>15 €/mois</strong> facturé annuellement (180 € en une fois) à <strong>18 €/mois</strong> si vous payez chaque mois, un écart de 20 %, confirmé sur les <a href="https://claude.com/pricing" target="_blank" rel="nofollow noopener">tarifs officiels</a>. Gemini applique la même logique sur ses forfaits Google AI, détaillés sur <a href="https://one.google.com/about/google-ai-plans/" target="_blank" rel="nofollow noopener">one.google.com</a>. Vérifiez toujours le mode de facturation avant de comparer deux prix.</div>
+      <p>Les deux éditeurs facturent réellement en euros en France, mais le prix affiché dépend de l'engagement choisi. Chez Claude, le forfait Pro passe de <strong>15 €/mois</strong> facturé annuellement (180 € en une fois) à <strong>18 €/mois</strong> si vous payez chaque mois, un écart de 20 %, confirmé sur les <a class="inline-link" href="https://claude.com/pricing" target="_blank" rel="nofollow noopener">tarifs officiels</a>. Gemini applique la même logique sur ses forfaits Google AI, détaillés sur <a class="inline-link" href="https://one.google.com/about/google-ai-plans/" target="_blank" rel="nofollow noopener">one.google.com</a>. Vérifiez toujours le mode de facturation avant de comparer deux prix.</p>
 
       <div class="price-tabs">
         <input type="radio" name="price-tab" id="tab-indiv" checked>
