@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bibliothèque de blocs — articles de blog France IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#4379F2; --blue-text:#2E56C4; --blue-soft:#EAF0FE;
+    --red:#D6362B; --red-text:#A8241B; --red-soft:#FBEAE8;
+    --ink:#222831; --gray-text:#3D3D47; --muted:#5B6170; --white:#FFFFFF;
+    --border:#E2E4E9;
+    --s-1:8px; --s-2:16px; --s-3:24px; --s-4:40px; --s-5:64px; --s-6:96px;
+    --r-s:6px; --r-m:12px; --r-l:20px;
+    --shadow-blue-1:0 14px 32px -16px rgba(67,121,242,.5);
+    --shadow-blue-2:0 10px 24px -14px rgba(67,121,242,.36);
+    --shadow-blue-3:0 6px 14px -9px rgba(67,121,242,.26);
+    --shadow-red-1:0 14px 32px -16px rgba(214,54,43,.45);
+    --shadow-red-2:0 10px 24px -14px rgba(214,54,43,.32);
+    --shadow-red-3:0 6px 14px -9px rgba(214,54,43,.24);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--white); color:var(--gray-text); font-family:"DM Sans",Arial,sans-serif;}
+  h1,h2,h3,h4{font-family:"Manrope",Arial,sans-serif; color:var(--ink); margin:0;}
+  a{color:var(--blue);}
+  strong{font-weight:700; color:inherit;}
+  :focus-visible{outline:2.5px solid var(--blue); outline-offset:2px;}
+
+  /* ═══ Mise en page de CETTE page de référence uniquement (pas du gabarit article) ═══ */
+  .lab-shell{display:grid; grid-template-columns:240px 1fr; max-width:1280px; margin:0 auto; gap:48px; padding:40px 24px 120px;}
+  .lab-nav{position:sticky; top:24px; align-self:start; font-size:13.5px; max-height:calc(100vh - 48px); overflow-y:auto;}
+  .lab-nav h3{font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin:20px 0 8px;}
+  .lab-nav h3:first-child{margin-top:0;}
+  .lab-nav ul{list-style:none; margin:0; padding:0;}
+  .lab-nav a{display:block; padding:4px 0; color:var(--muted); text-decoration:none;}
+  .lab-nav a:hover{color:var(--blue-text);}
+  .lab-main{min-width:0; max-width:800px;}
+  .lab-intro h1{font-size:32px; margin-bottom:14px; max-width:20ch;}
+  .lab-intro p{font-size:16px; line-height:1.6; color:var(--gray-text); max-width:70ch;}
+  .lab-intro .lab-note{background:var(--blue-soft); border-radius:var(--r-m); padding:20px 24px; font-size:14.5px; line-height:1.6; margin-top:24px;}
+  .lab-intro .lab-note code{font-family:ui-monospace,monospace; background:#fff; padding:1px 5px; border-radius:4px;}
+  .block{padding-top:56px; margin-top:56px; border-top:1px solid var(--border);}
+  .lab-intro + .block{margin-top:64px;}
+  .block-eyebrow{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--blue-text); margin:0 0 8px;}
+  .block-eyebrow.is-red{color:var(--red-text);}
+  .block-title{font-size:22px; margin-bottom:10px;}
+  .block-title code{font-family:ui-monospace,monospace; font-size:14.5px; font-weight:500; color:var(--muted);}
+  .block-usage{font-size:15px; line-height:1.6; color:var(--gray-text); max-width:68ch; margin-bottom:24px;}
+  .demo-frame{background:#F7F8FA; border:1px solid var(--border); border-radius:var(--r-m); padding:32px; margin-bottom:16px; overflow-x:auto;}
+  .demo{max-width:760px;}
+  .snippet-group{display:grid; gap:12px;}
+  .snippet{border:1px solid var(--border); border-radius:var(--r-s); overflow:hidden;}
+  .snippet-head{display:flex; justify-content:space-between; align-items:center; background:#F1F2F5; padding:8px 14px; font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted);}
+  .copy-btn{font-family:"DM Sans",Arial,sans-serif; font-weight:700; font-size:12px; color:var(--blue-text); background:#fff; border:1px solid var(--blue); border-radius:5px; padding:4px 10px; cursor:pointer;}
+  .copy-btn:hover{background:var(--blue-soft);}
+  .snippet pre{margin:0; padding:16px; overflow-x:auto; background:#20232A;}
+  .snippet code{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12.5px; line-height:1.6; color:#E4E6EB; white-space:pre;}
+  .fondations-demo{display:flex; gap:32px; flex-wrap:wrap; align-items:center;}
+  .fondations-demo .tag-sample{position:relative; padding-top:20px;}
+  @media (max-width:900px){ .lab-shell{grid-template-columns:1fr;} .lab-nav{position:static; max-height:none;} }
+
+  /* ═══════════════════════════════════════════════════════════════════════════════════════
+     À PARTIR D'ICI : CSS des blocs eux-mêmes, identique à ce qui vit dans un article réel.
+     Chaque règle est aussi montrée dans son panneau CSS ci-dessous, prête à copier telle
+     quelle dans le <style> d'un article construit sur template.html. ═══════════════════════ */
+
+  .main-col p{max-width:70ch;}
+
+  .fill-in{background:#fff; border:1px dashed var(--red); padding:4px 8px; border-radius:4px; color:var(--red-text); font-style:italic;}
+
+  .blk-tag{position:absolute; top:-14px; left:22px; transform:rotate(-2deg); color:#fff; font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; padding:7px 14px; border-radius:6px; display:inline-flex; align-items:center; gap:6px;}
+  .blk-tag svg{flex-shrink:0;}
+  .blk-tag--red{background:var(--red); box-shadow:0 8px 16px -6px rgba(214,54,43,.55);}
+  .blk-tag--blue{background:var(--blue); box-shadow:0 8px 16px -6px rgba(67,121,242,.55);}
+
+  h1.article-h1{font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:40px; line-height:1.2; max-width:60ch;}
+  .article-meta{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:13px; color:var(--muted); margin-top:var(--s-2);}
+  .article-meta a{color:var(--blue-text); text-decoration:underline;}
+
+  .preface p{margin:0; font-size:17px; line-height:1.65; color:var(--gray-text); font-style:italic; max-width:70ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+  .preface strong{font-weight:700; font-style:italic;}
+  .preface a{color:var(--blue-text); text-decoration:underline; font-weight:700;}
+
+  .tldr{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); box-shadow:var(--shadow-blue-2);}
+  .tldr ul{margin:0; padding-left:20px; font-size:16px; line-height:1.6; color:var(--ink); max-width:62ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+  .tldr li{margin-bottom:4px;}
+  .tldr li:last-child{margin-bottom:0;}
+
+  .fi-teaser{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:26px var(--s-3) 18px; margin:0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
+  .fi-teaser p{margin:0; font-size:15px; max-width:62ch;}
+  .fi-teaser a{color:var(--red-text); text-decoration:underline; font-weight:700;}
+
+  .fi-mention{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:0; box-shadow:var(--shadow-blue-2);}
+  .fi-mention p{margin:0; font-size:15px; max-width:62ch;}
+
+  .fi-insight{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:0; box-shadow:var(--shadow-red-2);}
+  .fi-insight p{margin:0; font-size:16px; max-width:62ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+
+  .sovereign-note{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:0; font-size:15px; line-height:1.6; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+
+  .table-wrap{overflow-x:auto; margin:0; -webkit-overflow-scrolling:touch;}
+  .table-wrap table.compare{margin:0;}
+  table.compare{width:100%; border-collapse:separate; border-spacing:0; margin:0; font-size:15px; background:#fff; border-radius:var(--r-m); overflow:hidden; box-shadow:var(--shadow-blue-2);}
+  table.compare th{background:var(--blue); color:#fff; text-align:left; padding:14px; font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.02em;}
+  table.compare td{padding:14px; background:#fff; color:var(--ink); border-bottom:1px solid var(--blue-soft);}
+  table.compare tbody tr:last-child td{border-bottom:none;}
+  table.compare tbody tr:hover td{background:var(--blue-soft);}
+  table.compare .price{color:var(--ink); font-family:"Manrope",Arial,sans-serif; font-weight:700;}
+
+  .price-tabs{margin:0;}
+  .price-tabs input[type="radio"]{position:absolute; opacity:0; pointer-events:none;}
+  .price-tabs .tab-nav{display:flex; gap:8px; border-bottom:2px solid var(--border); margin-bottom:var(--s-2);}
+  .price-tabs .tab-nav label{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:14px; color:var(--muted); padding:10px 16px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px;}
+  .price-tabs .tab-panel{display:none;}
+  #tab-indiv:checked ~ .tab-nav label[for="tab-indiv"],
+  #tab-team:checked ~ .tab-nav label[for="tab-team"]{color:var(--blue-text); border-bottom-color:var(--blue);}
+  #tab-indiv:checked ~ .panel-indiv{display:block;}
+  #tab-team:checked ~ .panel-team{display:block;}
+  .price-tabs table.compare{margin-top:0;}
+
+  .bar-chart{display:flex; gap:var(--s-4); padding:var(--s-4) var(--s-3); background:#fff; border-radius:var(--r-m); margin:0; box-sizing:border-box; box-shadow:var(--shadow-blue-2);}
+  .bar-group{display:flex; gap:14px; flex:1; min-width:0;}
+  .bar-col{display:flex; flex-direction:column; align-items:center; flex:1; min-width:0;}
+  .bar-track{height:120px; width:100%; display:flex; align-items:flex-end; justify-content:center;}
+  .bar-col .bar{width:100%; max-width:40px; border-radius:4px 4px 0 0; transition:height .3s; min-height:3px;}
+  .bar-col .bar-val{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:12px; color:var(--ink); margin-top:8px;}
+  .bar-col .bar-lbl{font-size:11px; color:var(--muted); margin-top:2px;}
+  .bar-chart-legend{font-size:13px; color:var(--muted); margin:var(--s-2) 0 0; display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-style:italic;}
+  .bar-chart-legend span{display:inline-flex; align-items:center; gap:6px; font-style:normal;}
+  .bar-chart-legend i{width:10px; height:10px; border-radius:2px; display:inline-block;}
+
+  .eco-diagram{display:flex; gap:var(--s-3); margin:0; flex-wrap:wrap;}
+  .eco-col{flex:1; min-width:200px; background:#fff; border-radius:var(--r-m); padding:var(--s-4) var(--s-3); text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; box-shadow:var(--shadow-blue-2);}
+  .eco-badge{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:14px; padding:8px 14px; border-radius:20px; background:var(--blue-soft); color:var(--blue-text);}
+  .eco-arrow{font-size:20px; color:var(--muted); line-height:1;}
+  .eco-result{font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:18px; padding:8px 18px; border-radius:8px; color:#fff;}
+  .eco-result.gemini{background:var(--blue); box-shadow:0 6px 16px -4px rgba(67,121,242,.5);}
+  .eco-result.claude{background:var(--red); box-shadow:0 6px 16px -4px rgba(214,54,43,.5);}
+  p.eco-caption{font-size:14px; color:var(--muted); text-align:center; margin:var(--s-2) 0 0; max-width:none; font-style:italic;}
+
+  .proof-photo{aspect-ratio:16/9; max-width:100%; border-radius:var(--r-s); background:repeating-linear-gradient(45deg,var(--red-soft),var(--red-soft) 10px,#F5D5D2 10px,#F5D5D2 20px); display:flex; align-items:center; justify-content:center; margin-bottom:var(--s-2); padding:var(--s-2); font-size:13px; color:var(--red-text); font-style:italic; text-align:center;}
+  .video-note{font-size:14px; color:var(--muted); margin-top:var(--s-2); padding-top:var(--s-2); border-top:1px dashed var(--border);}
+  .proof{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:0; box-shadow:var(--shadow-red-1);}
+  .proof p{margin:0 0 10px; font-size:16px; max-width:62ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+  .proof p:last-child{margin-bottom:0;}
+
+  .verdict{position:relative; background:var(--blue-soft); border-radius:var(--r-l); padding:32px var(--s-3) var(--s-4); margin:0; box-shadow:var(--shadow-blue-1);}
+  .verdict-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-3); margin-bottom:var(--s-3);}
+  @media (max-width:600px){ .verdict-grid{grid-template-columns:1fr;} }
+  .verdict-card{background:#fff; border-radius:var(--r-m); padding:var(--s-3) var(--s-2) 20px; box-shadow:0 6px 18px -10px rgba(34,40,49,.18);}
+  .verdict-card .vc-check{display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+  .verdict-card .vc-outcome{font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:17px;}
+  .verdict-card.gemini .vc-check svg{color:var(--blue);}
+  .verdict-card.gemini .vc-outcome{color:var(--blue-text);}
+  .verdict-card.claude .vc-check svg{color:var(--red);}
+  .verdict-card.claude .vc-outcome{color:var(--red-text);}
+  .verdict-card p{font-size:14px; line-height:1.55; color:var(--ink); margin:0;}
+  .verdict-note{font-size:14px; color:var(--blue-text); font-style:italic; margin:0;}
+
+  blockquote.expert{position:relative; font-family:"DM Sans",Arial,sans-serif; font-weight:500; font-style:italic; font-size:19px; line-height:1.5; background:var(--blue-soft); border-left:4px solid var(--blue); border-radius:0 var(--r-m) var(--r-m) 0; padding:var(--s-4) var(--s-3) var(--s-4) 56px; margin:0; color:var(--ink); max-width:62ch; box-shadow:var(--shadow-blue-1); overflow:hidden; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+  blockquote.expert::before{content:"\201C"; position:absolute; left:10px; top:-6px; font-family:Georgia,"Times New Roman",serif; font-style:normal; font-weight:800; font-size:74px; line-height:1; color:var(--blue); opacity:.22;}
+  .expert-attrib{display:flex; align-items:center; gap:10px; margin-top:14px; font-style:normal;}
+  .expert-attrib .avatar{width:48px; height:48px; border-radius:50%; background:#fff; border:2px solid var(--blue); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--blue-text); flex-shrink:0; box-shadow:0 4px 10px -2px rgba(67,121,242,.4);}
+  .expert-attrib .who{font-size:14px; line-height:1.4;}
+  .expert-attrib .who b{display:block; color:var(--ink);}
+
+  .faq details{border-bottom:1px solid var(--border); padding:14px 0;}
+  .faq details:first-child{padding-top:0;}
+  .faq summary{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:17px; color:var(--ink); cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary::after{content:"+"; flex-shrink:0; width:26px; height:26px; border-radius:50%; border:1.5px solid var(--blue); color:var(--blue); font-weight:700; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s,color .15s;}
+  .faq details[open] summary::after{content:"\2013"; background:var(--blue); color:#fff;}
+  .faq p{margin-top:10px; font-size:16px; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+
+  .hub-encart{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:0; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; box-shadow:var(--shadow-blue-2);}
+  .hub-encart p{margin:0; font-size:16px; color:var(--ink); max-width:480px;}
+  .hub-encart .tertiary-btn{color:var(--blue-text); font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:15px; text-decoration:none; white-space:nowrap; display:inline-flex; align-items:center; gap:6px;}
+  .hub-encart .tertiary-btn svg{transition:transform .15s;}
+  .hub-encart .tertiary-btn:hover svg{transform:translateX(3px);}
+  .hub-encart .tertiary-btn:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<!--
+  BIBLIOTHÈQUE DE BLOCS — articles de blog France IA (V1, 24/07/2026)
+  Catalogue de référence, à consulter au moment d'écrire un nouvel article sur template.html.
+  Chaque bloc ci-dessous est démontré avec son rendu réel, sa règle d'usage, et son code
+  HTML + CSS prêt à copier-coller (bouton "Copier" sur chaque panneau).
+
+  .blk-tag et .fill-in sont déjà inclus dans template.html (utilitaires partagés par plusieurs
+  blocs ci-dessous) — pas besoin de les recopier, ils sont juste montrés en Fondations pour
+  référence. Tout le reste doit être copié : le CSS dans le <style> de l'article, le HTML au bon
+  endroit dans le <article>.
+
+  Convention [[texte entre double crochets]] : contenu à écrire pour l'article. Les
+  <span class="fill-in">[texte]</span> entre simple crochet sont un FAIT RÉEL requis (chiffre,
+  citation, photo), jamais un contenu à générer.
+-->
+
+<div class="lab-shell">
+  <aside class="lab-nav">
+    <h3>Fondations</h3>
+    <ul><li><a href="#fondations">Étiquette &amp; fait réel</a></li></ul>
+    <h3>Quasi systématique</h3>
+    <ul>
+      <li><a href="#titre-meta">Titre + méta</a></li>
+      <li><a href="#chapo">Chapô</a></li>
+      <li><a href="#tldr">TL;DR</a></li>
+    </ul>
+    <h3>Avis France IA — rouge</h3>
+    <ul>
+      <li><a href="#fi-teaser">Teaser France IA</a></li>
+      <li><a href="#fi-insight">Regard France IA</a></li>
+      <li><a href="#sovereign-note">Point conformité</a></li>
+    </ul>
+    <h3>Mention — bleu</h3>
+    <ul><li><a href="#fi-mention">Mention France IA</a></li></ul>
+    <h3>Données &amp; médias</h3>
+    <ul>
+      <li><a href="#tableau">Tableau comparatif</a></li>
+      <li><a href="#price-tabs">Onglets de prix</a></li>
+      <li><a href="#bar-chart">Bar chart</a></li>
+      <li><a href="#eco-diagram">Schéma</a></li>
+    </ul>
+    <h3>Séquence gabarit complet</h3>
+    <ul>
+      <li><a href="#proof">Preuve terrain</a></li>
+      <li><a href="#verdict">Verdict</a></li>
+      <li><a href="#citation">Citation experte</a></li>
+    </ul>
+    <h3>Clôture</h3>
+    <ul>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#hub-encart">Hub — pour aller plus loin</a></li>
+    </ul>
+  </aside>
+
+  <main class="lab-main">
+    <header class="lab-intro">
+      <h1>Bibliothèque de blocs</h1>
+      <p>Chaque bloc a un nom, un usage, et son code prêt à coller dans un article construit sur <code>template.html</code> (qui ne fournit que l'en-tête, la navigation et le pied de page du site). Piochez librement selon le plan de l'intention détectée — un article n'a pas besoin de tous les blocs.</p>
+      <div class="lab-note">
+        <strong>Rouge</strong> = avis France IA / point important. <strong>Bleu</strong> = mention / pour aller plus loin, même style que le rouge. Tout le reste (tableaux, prix, graphiques, citation) garde sa présentation propre — jamais d'étiquette <code>.blk-tag</code> dessus.
+      </div>
+    </header>
+
+    <section class="block" id="fondations">
+      <p class="block-eyebrow">Fondations partagées — déjà dans template.html</p>
+      <h2 class="block-title">Étiquette de bloc &amp; fait réel <code>.blk-tag</code> · <code>.fill-in</code></h2>
+      <p class="block-usage">L'étiquette inclinée en débord de coin identifie la famille d'un bloc (rouge/bleu) ; le marqueur pointillé signale un fait réel à compléter, jamais à inventer. Les deux voyagent avec le template — inutile de les recopier, montrés ici pour mémoire.</p>
+      <div class="demo-frame">
+        <div class="fondations-demo">
+          <div class="tag-sample"><span class="blk-tag blk-tag--red">Point important</span></div>
+          <div class="tag-sample"><span class="blk-tag blk-tag--blue">Pour aller plus loin</span></div>
+          <p style="margin:0; font-size:15px;">Résultat mesuré : <span class="fill-in">[donnée réelle à ajouter]</span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="titre-meta">
+      <p class="block-eyebrow">Quasi systématique</p>
+      <h2 class="block-title">Titre + méta <code>.article-h1</code> · <code>.article-meta</code></h2>
+      <p class="block-usage">Un seul H1 par article, question ou promesse, mot-clé principal inclus, jamais d'année ni de millésime. La ligne méta suit immédiatement.</p>
+      <div class="demo-frame"><div class="demo">
+        <h1 class="article-h1">[[H1 — question ou promesse, mot-clé principal inclus]]</h1>
+        <div class="article-meta">
+          <span>Par <a href="[[URL LinkedIn de l'auteur]]" target="_blank" rel="nofollow noopener">[[Nom de l'auteur]]</a>, [[Fonction]]</span>
+          <span>·</span><span>Publié le [[JJ/MM/AAAA]]</span>
+          <span>·</span><span>Mis à jour le [[JJ/MM/AAAA]]</span>
+          <span>·</span><span>[[N]] min de lecture</span>
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>h1.article-h1{font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:40px; line-height:1.2; max-width:60ch;}
+.article-meta{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:13px; color:var(--muted); margin-top:var(--s-2);}
+.article-meta a{color:var(--blue-text); text-decoration:underline;}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="chapo">
+      <p class="block-eyebrow">Quasi systématique</p>
+      <h2 class="block-title">Chapô <code>.preface</code></h2>
+      <p class="block-usage">Un style CSS, juste un paragraphe en italique — pas de boîte, pas de fond, pas de guillemet décoratif, pas de kicker. Répond DIRECTEMENT à la question de l'article dès la première phrase.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="preface" style="margin-top:0;">
+          <p>[[Chapô — 2 à 5 phrases à la première personne du pluriel ("Chez France IA, ..."), répond directement à la question de l'article. Mot-clé principal en gras. Lien contextualisé vers le hub du cocon : <a href="/guide/[[slug-cocon]]">[[texte du lien]]</a>.]]</p>
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.preface p{margin:0; font-size:17px; line-height:1.65; color:var(--gray-text); font-style:italic; max-width:70ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+.preface strong{font-weight:700; font-style:italic;}
+.preface a{color:var(--blue-text); text-decoration:underline; font-weight:700;}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="tldr">
+      <p class="block-eyebrow">Quasi systématique</p>
+      <h2 class="block-title">TL;DR / L'essentiel <code>.tldr</code></h2>
+      <p class="block-usage">Synthèse neutre juste après le chapô, en liste à puces. Le premier item porte le mot-clé principal.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="tldr" style="position:relative;">
+          <span class="blk-tag blk-tag--blue">L'essentiel</span>
+          <ul>
+            <li>[[Item 1 — donnée ou conclusion autonome, mot-clé en gras]]</li>
+            <li>[[Item 2]]</li>
+            <li>[[Item 3]]</li>
+          </ul>
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.tldr{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-blue-2);}
+.tldr ul{margin:0; padding-left:20px; font-size:16px; line-height:1.6; color:var(--ink); max-width:62ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+.tldr li{margin-bottom:4px;}
+.tldr li:last-child{margin-bottom:0;}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="fi-teaser">
+      <p class="block-eyebrow is-red">Avis France IA — rouge</p>
+      <h2 class="block-title">Teaser France IA <code>.fi-teaser</code></h2>
+      <p class="block-usage">Encart COURT en milieu d'article qui renvoie par ancre vers le bloc Preuve terrain plus bas — jamais dupliquer son contenu.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="fi-teaser">
+          <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Chez France IA</span>
+          <p>[[Phrase courte qui renvoie vers <a href="#preuve">[[texte du lien]]</a> plus bas, sans dupliquer son contenu.]]</p>
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.fi-teaser{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:26px var(--s-3) 18px; margin:var(--s-4) 0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
+.fi-teaser p{margin:0; font-size:15px; max-width:62ch;}
+.fi-teaser a{color:var(--red-text); text-decoration:underline; font-weight:700;}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="fi-insight">
+      <p class="block-eyebrow is-red">Avis France IA — rouge</p>
+      <h2 class="block-title">Regard France IA <code>.fi-insight</code></h2>
+      <p class="block-usage">UN SEUL par article sur gabarit complet. Porte la nuance la plus contre-intuitive, jamais une opinion non étayée. Placé au point du corps où elle apporte le plus de valeur, jamais systématiquement en fin d'article.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="fi-insight">
+          <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>Le regard France IA</span>
+          <p>[[La nuance la plus contre-intuitive de l'article, sourcée ou vécue — jamais une opinion non étayée.]]</p>
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.fi-insight{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-red-2);}
+.fi-insight p{margin:0; font-size:16px; max-width:62ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="sovereign-note">
+      <p class="block-eyebrow is-red">Avis France IA — rouge</p>
+      <h2 class="block-title">Point conformité <code>.sovereign-note</code></h2>
+      <p class="block-usage">Obligatoire dès qu'un outil américain est mentionné (prisme souverain) : hébergement hors UE possible, lien CNIL, Mistral AI comme alternative si pertinent.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="sovereign-note">
+          <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Z"/></svg>Point conformité</span>
+          [[Texte : les données peuvent transiter hors UE selon la configuration ; lien CNIL ; Mistral AI comme alternative souveraine si pertinent.]]
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.sovereign-note{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; font-size:15px; line-height:1.6; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="fi-mention">
+      <p class="block-eyebrow">Mention — bleu</p>
+      <h2 class="block-title">Mention France IA <code>.fi-mention</code></h2>
+      <p class="block-usage">Réflexe ou nuance courte à la voix France IA, mais de nature neutre (pas un avis tranché ni une alerte) : pour aller plus loin, un rappel méthodologique, une précision utile.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="fi-mention">
+          <span class="blk-tag blk-tag--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>Mention France IA</span>
+          <p>[[Nuance ou réflexe utile, une phrase.]]</p>
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.fi-mention{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-blue-2);}
+.fi-mention p{margin:0; font-size:15px; max-width:62ch;}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="tableau">
+      <p class="block-eyebrow">Données &amp; médias</p>
+      <h2 class="block-title">Tableau comparatif <code>table.compare</code></h2>
+      <p class="block-usage">Requis dès 3 éléments comparés. Toujours enveloppé dans <code>.table-wrap</code> : une cellule avec un token collé par "/" (ex. "Team/Enterprise") ne peut pas se couper et force un débordement horizontal sur mobile si le tableau n'est pas contenu.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="table-wrap"><table class="compare">
+          <thead><tr><th>[[Critère]]</th><th>[[Option 1]]</th><th>[[Option 2]]</th></tr></thead>
+          <tbody>
+            <tr><td>[[Ligne 1]]</td><td class="price">[[Valeur]]</td><td class="price">[[Valeur]]</td></tr>
+            <tr><td>[[Ligne 2]]</td><td class="price">[[Valeur]]</td><td class="price">[[Valeur]]</td></tr>
+          </tbody>
+        </table></div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.table-wrap{overflow-x:auto; margin:var(--s-4) 0; -webkit-overflow-scrolling:touch;}
+.table-wrap table.compare{margin:0;}
+table.compare{width:100%; border-collapse:separate; border-spacing:0; margin:var(--s-4) 0; font-size:15px; background:#fff; border-radius:var(--r-m); overflow:hidden; box-shadow:var(--shadow-blue-2);}
+table.compare th{background:var(--blue); color:#fff; text-align:left; padding:14px; font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.02em;}
+table.compare td{padding:14px; background:#fff; color:var(--ink); border-bottom:1px solid var(--blue-soft);}
+table.compare tbody tr:last-child td{border-bottom:none;}
+table.compare tbody tr:hover td{background:var(--blue-soft);}
+table.compare .price{color:var(--ink); font-family:"Manrope",Arial,sans-serif; font-weight:700;}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="price-tabs">
+      <p class="block-eyebrow">Données &amp; médias</p>
+      <h2 class="block-title">Onglets de prix <code>.price-tabs</code></h2>
+      <p class="block-usage">Dès 2 contextes de prix distincts (individuel vs équipe), pour éviter un tableau à 6+ lignes. CSS-only (radio caché), contenu toujours dans le DOM — jamais chargé en JS — pour rester crawlable.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="price-tabs">
+          <input type="radio" name="price-tab-demo" id="tab-indiv" checked>
+          <input type="radio" name="price-tab-demo" id="tab-team">
+          <div class="tab-nav">
+            <label for="tab-indiv">[[Libellé onglet 1]]</label>
+            <label for="tab-team">[[Libellé onglet 2]]</label>
+          </div>
+          <div class="tab-panel panel-indiv">
+            <div class="table-wrap"><table class="compare">
+              <thead><tr><th>[[Colonne 1]]</th><th>[[Colonne 2]]</th><th>[[Colonne 3]]</th></tr></thead>
+              <tbody><tr><td>[[Ligne]]</td><td class="price">[[Valeur]]</td><td class="price">[[Valeur]]</td></tr></tbody>
+            </table></div>
+          </div>
+          <div class="tab-panel panel-team">
+            <div class="table-wrap"><table class="compare">
+              <thead><tr><th>[[Colonne 1]]</th><th>[[Colonne 2]]</th><th>[[Colonne 3]]</th></tr></thead>
+              <tbody><tr><td>[[Ligne]]</td><td class="price">[[Valeur]]</td><td class="price">[[Valeur]]</td></tr></tbody>
+            </table></div>
+          </div>
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.price-tabs{margin:var(--s-4) 0;}
+.price-tabs input[type="radio"]{position:absolute; opacity:0; pointer-events:none;}
+.price-tabs .tab-nav{display:flex; gap:8px; border-bottom:2px solid var(--border); margin-bottom:var(--s-2);}
+.price-tabs .tab-nav label{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:14px; color:var(--muted); padding:10px 16px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px;}
+.price-tabs .tab-panel{display:none;}
+#tab-indiv:checked ~ .tab-nav label[for="tab-indiv"],
+#tab-team:checked ~ .tab-nav label[for="tab-team"]{color:var(--blue-text); border-bottom-color:var(--blue);}
+#tab-indiv:checked ~ .panel-indiv{display:block;}
+#tab-team:checked ~ .panel-team{display:block;}
+.price-tabs table.compare{margin-top:0;}</code></pre>
+          <div style="padding:0 16px 12px; font-size:12px; color:var(--muted); background:#20232A;">Réutilise aussi le CSS du bloc Tableau comparatif ci-dessus.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="bar-chart">
+      <p class="block-eyebrow">Données &amp; médias</p>
+      <h2 class="block-title">Bar chart <code>.bar-chart</code></h2>
+      <p class="block-usage">Comparaison visuelle de valeurs numériques, décoratif/pédagogique uniquement. Jamais seul : toujours accompagné du tableau équivalent (source machine-lisible). L'<code>aria-label</code> doit reprendre exactement les valeurs visibles des barres.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="bar-chart" role="img" aria-label="[[Description complète : quelles valeurs, pour quelles formules]]">
+          <div class="bar-group">
+            <div class="bar-col"><div class="bar-track"><div class="bar" style="height:20%; background:#4379F2;"></div></div><span class="bar-val">[[valeur]]</span><span class="bar-lbl">[[libellé]]</span></div>
+            <div class="bar-col"><div class="bar-track"><div class="bar" style="height:100%; background:#4379F2;"></div></div><span class="bar-val">[[valeur]]</span><span class="bar-lbl">[[libellé]]</span></div>
+          </div>
+        </div>
+        <div class="bar-chart-legend"><span><i style="background:#4379F2;"></i> [[Légende 1]]</span><span><i style="background:#D6362B;"></i> [[Légende 2]]</span></div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.bar-chart{display:flex; gap:var(--s-4); padding:var(--s-4) var(--s-3); background:#fff; border-radius:var(--r-m); margin:var(--s-4) 0; box-sizing:border-box; box-shadow:var(--shadow-blue-2);}
+.bar-group{display:flex; gap:14px; flex:1; min-width:0;}
+.bar-col{display:flex; flex-direction:column; align-items:center; flex:1; min-width:0;}
+.bar-track{height:120px; width:100%; display:flex; align-items:flex-end; justify-content:center;}
+.bar-col .bar{width:100%; max-width:40px; border-radius:4px 4px 0 0; transition:height .3s; min-height:3px;}
+.bar-col .bar-val{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:12px; color:var(--ink); margin-top:8px;}
+.bar-col .bar-lbl{font-size:11px; color:var(--muted); margin-top:2px;}
+.bar-chart-legend{font-size:13px; color:var(--muted); margin:var(--s-2) 0 var(--s-3); display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-style:italic;}
+.bar-chart-legend span{display:inline-flex; align-items:center; gap:6px; font-style:normal;}
+.bar-chart-legend i{width:10px; height:10px; border-radius:2px; display:inline-block;}</code></pre>
+          <div style="padding:0 16px 12px; font-size:12px; color:var(--muted); background:#20232A;"><code style="background:none;">min-width:0</code> sur .bar-group/.bar-col est nécessaire : sans lui, un libellé de prix ("99,99 €") force un débordement mobile (bug trouvé le 24/07).</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="eco-diagram">
+      <p class="block-eyebrow">Données &amp; médias</p>
+      <h2 class="block-title">Schéma <code>.eco-diagram</code></h2>
+      <p class="block-usage">Schéma explicatif SANS données chiffrées à comparer (ex. arbre de décision). Toujours accompagné d'une légende texte (<code>role="img"</code> + <code>aria-label</code> + une phrase de synthèse visible juste après).</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="eco-diagram" role="img" aria-label="[[Description du schéma]]">
+          <div class="eco-col">
+            <div class="eco-badge">[[Point de départ]]</div>
+            <div class="eco-arrow">↓</div>
+            <div class="eco-result gemini">[[Résultat]]</div>
+          </div>
+        </div>
+        <p class="eco-caption">[[Phrase de synthèse visible — porte la même info que l'aria-label]]</p>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.eco-diagram{display:flex; gap:var(--s-3); margin:var(--s-4) 0; flex-wrap:wrap;}
+.eco-col{flex:1; min-width:200px; background:#fff; border-radius:var(--r-m); padding:var(--s-4) var(--s-3); text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; box-shadow:var(--shadow-blue-2);}
+.eco-badge{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:14px; padding:8px 14px; border-radius:20px; background:var(--blue-soft); color:var(--blue-text);}
+.eco-arrow{font-size:20px; color:var(--muted); line-height:1;}
+.eco-result{font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:18px; padding:8px 18px; border-radius:8px; color:#fff;}
+.eco-result.gemini{background:var(--blue); box-shadow:0 6px 16px -4px rgba(67,121,242,.5);}
+.eco-result.claude{background:var(--red); box-shadow:0 6px 16px -4px rgba(214,54,43,.5);}
+p.eco-caption{font-size:14px; color:var(--muted); text-align:center; margin:0 0 var(--s-3); max-width:none; font-style:italic;}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="proof">
+      <p class="block-eyebrow is-red">Séquence gabarit complet — 1/3</p>
+      <h2 class="block-title">Preuve terrain <code>.proof</code></h2>
+      <p class="block-usage">Obligatoire sur gabarit complet, dans l'ordre : preuve → verdict → citation. Chaque <code>.fill-in</code> est un fait réel requis (chiffre interne, photo) — jamais inventé.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="proof" id="preuve-demo">
+          <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a1.2 1.2 0 0 0 1 1.8h12a1.2 1.2 0 0 0 1-1.8l-5-9V3"/></svg>Testé chez France IA</span>
+          <div class="proof-photo fill-in" role="img" aria-label="Photo réelle à ajouter — jamais une photo stock ni générée.">[Photo réelle à ajouter : contexte précis. Jamais une photo stock ni générée.]</div>
+          <p><span class="fill-in">[Résultat chiffré d'un test interne réel, donnée réelle de l'équipe, jamais un chiffre inventé.]</span></p>
+          <div class="video-note">[[Note vidéo roadmap si pertinent, sinon retirer ce div entièrement]]</div>
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.proof{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-red-1);}
+.proof p{margin:0 0 10px; font-size:16px; max-width:62ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+.proof p:last-child{margin-bottom:0;}
+.proof-photo{aspect-ratio:16/9; max-width:100%; border-radius:var(--r-s); background:repeating-linear-gradient(45deg,var(--red-soft),var(--red-soft) 10px,#F5D5D2 10px,#F5D5D2 20px); display:flex; align-items:center; justify-content:center; margin-bottom:var(--s-2); padding:var(--s-2); font-size:13px; color:var(--red-text); font-style:italic; text-align:center;}
+.video-note{font-size:14px; color:var(--muted); margin-top:var(--s-2); padding-top:var(--s-2); border-top:1px dashed var(--border);}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="verdict">
+      <p class="block-eyebrow">Séquence gabarit complet — 2/3</p>
+      <h2 class="block-title">Verdict <code>.verdict</code></h2>
+      <p class="block-usage">Synthèse à deux options, jamais un vainqueur universel artificiel s'il n'y en a pas — la condition qui fait pencher la balance prime sur une préférence générale.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="verdict">
+          <span class="blk-tag blk-tag--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Verdict selon votre contexte</span>
+          <div class="verdict-grid">
+            <div class="verdict-card gemini">
+              <div class="vc-check"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span class="vc-outcome">[[Option 1]]</span></div>
+              <p><strong>[[Condition]]</strong> → [[conséquence]].</p>
+            </div>
+            <div class="verdict-card claude">
+              <div class="vc-check"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span class="vc-outcome">[[Option 2]]</span></div>
+              <p><strong>[[Condition]]</strong> → [[conséquence]].</p>
+            </div>
+          </div>
+          <p class="verdict-note">[[Phrase de synthèse — jamais un vainqueur universel artificiel s'il n'y en a pas.]]</p>
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.verdict{position:relative; background:var(--blue-soft); border-radius:var(--r-l); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-blue-1);}
+.verdict-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-3); margin-bottom:var(--s-3);}
+@media (max-width:600px){ .verdict-grid{grid-template-columns:1fr;} }
+.verdict-card{background:#fff; border-radius:var(--r-m); padding:var(--s-3) var(--s-2) 20px; box-shadow:0 6px 18px -10px rgba(34,40,49,.18);}
+.verdict-card .vc-check{display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+.verdict-card .vc-outcome{font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:17px;}
+.verdict-card.gemini .vc-check svg{color:var(--blue);}
+.verdict-card.gemini .vc-outcome{color:var(--blue-text);}
+.verdict-card.claude .vc-check svg{color:var(--red);}
+.verdict-card.claude .vc-outcome{color:var(--red-text);}
+.verdict-card p{font-size:14px; line-height:1.55; color:var(--ink); margin:0;}
+.verdict-note{font-size:14px; color:var(--blue-text); font-style:italic; margin:0;}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="citation">
+      <p class="block-eyebrow">Séquence gabarit complet — 3/3</p>
+      <h2 class="block-title">Citation experte <code>blockquote.expert</code></h2>
+      <p class="block-usage">Citation réelle et nommée, 1-2 phrases, un avis tranché et concret — obligatoire sur gabarit complet, jamais inventée.</p>
+      <div class="demo-frame"><div class="demo">
+        <blockquote class="expert">
+          « <span class="fill-in">[Citation réelle et nommée, 1-2 phrases, un avis tranché et concret, jamais inventée]</span> »
+          <div class="expert-attrib">
+            <div class="avatar">[[Initiales]]</div>
+            <div class="who"><b>[[Nom]]</b>[[Fonction]]</div>
+          </div>
+        </blockquote>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>blockquote.expert{position:relative; font-family:"DM Sans",Arial,sans-serif; font-weight:500; font-style:italic; font-size:19px; line-height:1.5; background:var(--blue-soft); border-left:4px solid var(--blue); border-radius:0 var(--r-m) var(--r-m) 0; padding:var(--s-4) var(--s-3) var(--s-4) 56px; margin:var(--s-4) 0; color:var(--ink); max-width:62ch; box-shadow:var(--shadow-blue-1); overflow:hidden; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+blockquote.expert::before{content:"\201C"; position:absolute; left:10px; top:-6px; font-family:Georgia,"Times New Roman",serif; font-style:normal; font-weight:800; font-size:74px; line-height:1; color:var(--blue); opacity:.22;}
+.expert-attrib{display:flex; align-items:center; gap:10px; margin-top:14px; font-style:normal;}
+.expert-attrib .avatar{width:48px; height:48px; border-radius:50%; background:#fff; border:2px solid var(--blue); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--blue-text); flex-shrink:0; box-shadow:0 4px 10px -2px rgba(67,121,242,.4);}
+.expert-attrib .who{font-size:14px; line-height:1.4;}
+.expert-attrib .who b{display:block; color:var(--ink);}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="faq">
+      <p class="block-eyebrow">Clôture</p>
+      <h2 class="block-title">FAQ <code>.faq</code></h2>
+      <p class="block-usage">Questions PAA réelles, jamais génériques. Parité STRICTE avec le JSON-LD FAQPage du template, question par question, au caractère près.</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="faq">
+          <details open>
+            <summary>[[Question PAA réelle 1]]</summary>
+            <p>[[Réponse]]</p>
+          </details>
+          <details>
+            <summary>[[Question PAA réelle 2]]</summary>
+            <p>[[Réponse]]</p>
+          </details>
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.faq{margin-top:var(--s-4);}
+.faq details{border-bottom:1px solid var(--border); padding:14px 0;}
+.faq summary{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:17px; color:var(--ink); cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary::after{content:"+"; flex-shrink:0; width:26px; height:26px; border-radius:50%; border:1.5px solid var(--blue); color:var(--blue); font-weight:700; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s,color .15s;}
+.faq details[open] summary::after{content:"\2013"; background:var(--blue); color:#fff;}
+.faq p{margin-top:10px; font-size:16px;}</code></pre></div>
+      </div>
+    </section>
+
+    <section class="block" id="hub-encart">
+      <p class="block-eyebrow">Clôture</p>
+      <h2 class="block-title">Hub — pour aller plus loin <code>.hub-encart</code></h2>
+      <p class="block-usage">Lien montant navigationnel UNIQUEMENT, jamais transactionnel dans le corps de l'article (la conversion appartient au CTA site-wide du template).</p>
+      <div class="demo-frame"><div class="demo">
+        <div class="hub-encart">
+          <span class="blk-tag blk-tag--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Pour aller plus loin</span>
+          <p>[[Question d'accroche vers le hub du cocon]]</p>
+          <a class="tertiary-btn" href="/guide/[[slug-cocon]]">[[Texte du lien vers le hub]] <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div></div>
+      <div class="snippet-group">
+        <div class="snippet"><div class="snippet-head"><span>HTML</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code></code></pre></div>
+        <div class="snippet"><div class="snippet-head"><span>CSS</span><button class="copy-btn" onclick="copyCode(this)">Copier</button></div><pre><code>.hub-encart{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin-top:var(--s-4); display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; box-shadow:var(--shadow-blue-2);}
+.hub-encart p{margin:0; font-size:16px; color:var(--ink); max-width:480px;}
+.hub-encart .tertiary-btn{color:var(--blue-text); font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:15px; text-decoration:none; white-space:nowrap; display:inline-flex; align-items:center; gap:6px;}
+.hub-encart .tertiary-btn svg{transition:transform .15s;}
+.hub-encart .tertiary-btn:hover svg{transform:translateX(3px);}
+.hub-encart .tertiary-btn:hover{text-decoration:underline;}</code></pre></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  document.querySelectorAll('.demo').forEach(demo => {
+    const block = demo.closest('.block');
+    const htmlCode = block && block.querySelector('.snippet:first-of-type code');
+    if(htmlCode){
+      htmlCode.textContent = demo.innerHTML.trim().replace(/\n\s*\n/g, '\n');
+    }
+  });
+  function copyCode(btn){
+    const code = btn.closest('.snippet').querySelector('code');
+    navigator.clipboard.writeText(code.textContent).then(() => {
+      const old = btn.textContent;
+      btn.textContent = 'Copié !';
+      setTimeout(() => { btn.textContent = old; }, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>
