@@ -46,7 +46,7 @@
      un article vit dans le site, pas dans un fragment isolé) ═══ */
   .site-header{border-bottom:1px solid var(--border);}
   .site-nav{max-width:1064px; margin:0 auto; padding:18px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
-  .site-nav__logo img{display:block; width:44px; height:44px;}
+  .site-nav__logo img{display:block; height:36px; width:auto;}
   .site-nav__links{display:flex; align-items:center; gap:10px;}
   .btn{font-family:"DM Sans",Arial,sans-serif; font-weight:700; font-size:14px; padding:10px 18px; border-radius:var(--r-s); text-decoration:none; display:inline-block; background:var(--blue); color:#fff;}
   .btn--outline{background:#fff; color:var(--blue-text); border:1.5px solid var(--blue);}
@@ -247,7 +247,15 @@
   .hub-encart .tertiary-btn:hover svg{transform:translateX(3px);}
   .hub-encart .tertiary-btn:hover{text-decoration:underline;}
 
-  .pre-footer-cta{background:var(--blue); border-radius:var(--r-l); margin:var(--s-6) 24px 0; max-width:1064px; margin-left:auto; margin-right:auto; padding:var(--s-5) var(--s-4); text-align:center;}
+  /* Aligné sur la largeur réelle de la colonne éditoriale (720px, main-col) plutôt que sur les
+     1064px du conteneur de page — sinon la bannière colorée déborde visuellement à droite du
+     texte qu'elle conclut (l'écart saute aux yeux car c'est le seul bloc plein-largeur du
+     conteneur, tout le reste n'a pas de fond visible à cette largeur). Le wrapper reprend le
+     même modèle de boîte que .editorial (max-width 1064 + padding 24px) pour que le bord gauche
+     de la bannière tombe exactement sur le bord gauche de main-col, plutôt qu'un centrage
+     indépendant qui la décalerait. */
+  .pre-footer-cta-wrap{max-width:1064px; margin:var(--s-6) auto 0; padding:0 24px;}
+  .pre-footer-cta{background:var(--blue); border-radius:var(--r-l); max-width:720px; padding:var(--s-5) var(--s-4); text-align:center;}
   .pre-footer-cta h2{color:#fff; font-size:28px; margin-bottom:12px;}
   .pre-footer-cta p{color:rgba(255,255,255,.95); font-size:16px; margin-bottom:var(--s-3);}
   .pre-footer-cta .btn-inverse{background:#fff; color:var(--blue-text); font-family:"DM Sans",Arial,sans-serif; font-weight:700; font-size:15px; padding:12px 22px; border-radius:var(--r-s); text-decoration:none; display:inline-block;}
@@ -258,7 +266,7 @@
   .site-footer .wrap{max-width:1064px; margin:0 auto; padding:var(--s-4) 24px var(--s-5);}
   .site-footer__top{display:flex; justify-content:space-between; gap:var(--s-4); flex-wrap:wrap;}
   .site-footer__brand p{font-size:14px; color:var(--muted); margin:10px 0 var(--s-2);}
-  .site-footer__brand img{width:44px; height:44px;}
+  .site-footer__brand img{height:40px; width:auto;}
   .site-footer__qualiopi{max-width:280px;}
   .site-footer__qualiopi img{height:40px; margin-bottom:8px;}
   .site-footer__qualiopi small{display:block; font-size:11.5px; color:var(--muted); line-height:1.5; margin-bottom:6px;}
@@ -591,10 +599,12 @@
   </aside>
 </div>
 
-<div class="pre-footer-cta">
-  <h2>Envie de passer à l'action, sans attendre ?</h2>
-  <p>Formation en présentiel, seul ou avec votre équipe, décision rapide, CPF possible mais pas nécessaire pour démarrer.</p>
-  <a class="btn-inverse" href="/contact">Discutons de vos besoins</a>
+<div class="pre-footer-cta-wrap">
+  <div class="pre-footer-cta">
+    <h2>Envie de passer à l'action, sans attendre ?</h2>
+    <p>Formation en présentiel, seul ou avec votre équipe, décision rapide, CPF possible mais pas nécessaire pour démarrer.</p>
+    <a class="btn-inverse" href="/contact">Discutons de vos besoins</a>
+  </div>
 </div>
 
 <footer class="site-footer">
