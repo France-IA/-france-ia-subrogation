@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[[Titre SEO ≤60 caractères, mot-clé principal + bénéfice, jamais d'année ni de millésime]] | France IA</title>
+<meta name="description" content="[[Meta description ≤155 caractères, appel à l'action implicite, jamais d'année]]">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#4379F2; --blue-text:#2E56C4; --blue-soft:#EAF0FE;
+    --red:#D6362B; --red-text:#A8241B; --red-soft:#FBEAE8;
+    --ink:#222831; --gray-text:#3D3D47; --muted:#5B6170; --white:#FFFFFF;
+    --border:#E2E4E9;
+    --s-1:8px; --s-2:16px; --s-3:24px; --s-4:40px; --s-5:64px; --s-6:96px;
+    --r-s:6px; --r-m:12px; --r-l:20px;
+
+    /* Hiérarchie d'élévation à 3 paliers : jamais une ombre uniforme sur tous les blocs colorés.
+       Palier 1 = les 3 moments de bascule d'un gabarit complet (verdict, preuve, citation) ;
+       palier 2 = blocs de référence (tldr, tableaux, médias) ; palier 3 = mentions courtes/inline
+       (teaser). Respecte la règle "jamais de bordure plate seule" : toujours une ombre, son
+       intensité seule porte la hiérarchie. */
+    --shadow-blue-1:0 14px 32px -16px rgba(67,121,242,.5);
+    --shadow-blue-2:0 10px 24px -14px rgba(67,121,242,.36);
+    --shadow-blue-3:0 6px 14px -9px rgba(67,121,242,.26);
+    --shadow-red-1:0 14px 32px -16px rgba(214,54,43,.45);
+    --shadow-red-2:0 10px 24px -14px rgba(214,54,43,.32);
+    --shadow-red-3:0 6px 14px -9px rgba(214,54,43,.24);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--white); color:var(--gray-text); font-family:"DM Sans",Arial,sans-serif;}
+  h1,h2,h3,h4{font-family:"Manrope",Arial,sans-serif; color:var(--ink); margin:0;}
+  a{color:var(--blue);}
+  strong{font-weight:700; color:inherit;}
+  :focus-visible{outline:2.5px solid var(--blue); outline-offset:2px;}
+
+  /* Paragraphes de contenu : justifié + césure. Seuls les libellés et cellules de tableau
+     restent non justifiés. */
+  .main-col p, .preface p, .proof p, .sovereign-note, blockquote.expert, .faq p, .fi-insight p{
+    text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;
+  }
+
+  /* ═══ EN-TÊTE SITE (identique sur toutes les pages du site — logo + 2 CTA) ═══ */
+  .site-header{border-bottom:1px solid var(--border);}
+  .site-nav{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:var(--s-3) 24px; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .site-nav__logo img{display:block; height:36px; width:auto;}
+  .site-nav__links{display:flex; align-items:center; gap:10px;}
+  .btn{font-family:"DM Sans",Arial,sans-serif; font-weight:700; font-size:14px; padding:10px 18px; border-radius:var(--r-s); text-decoration:none; display:inline-block; background:var(--blue); color:#fff;}
+  .btn--outline{background:#fff; color:var(--blue-text); border:1.5px solid var(--blue);}
+  @media (max-width:640px){ .site-nav__links{gap:6px;} .btn{padding:9px 12px; font-size:13px; white-space:nowrap;} }
+  @media (max-width:480px){ .btn--outline{display:none;} }
+
+  /* ═══ NAV MOBILE — pastilles de section, sticky, remplace le sommaire sur petit écran (le
+     sommaire desktop est masqué sous 1080px). Contenu généré depuis les H2 réels de l'article,
+     un <a href="#ancre">Libellé court</a> par section — voir le sommaire en fin de page, mêmes
+     ancres, libellés éventuellement raccourcis pour tenir en pastille. ═══ */
+  .mobile-toc{display:none;}
+  @media (max-width:1079px){
+    .mobile-toc{
+      display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+      padding:var(--s-2) 24px; position:sticky; top:0; z-index:20;
+      background:rgba(255,255,255,.94); backdrop-filter:blur(6px);
+      border-bottom:1px solid var(--border); scrollbar-width:none;
+    }
+    .mobile-toc::-webkit-scrollbar{display:none;}
+    .mobile-toc a{
+      flex:0 0 auto; font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:12.5px;
+      color:var(--muted); background:#fff; border:1.5px solid var(--border);
+      padding:7px 14px; border-radius:999px; text-decoration:none; white-space:nowrap; transition:border-color .15s,color .15s;
+    }
+    .mobile-toc a.active{ color:var(--blue-text); border-color:var(--blue); background:var(--blue-soft); }
+  }
+
+  .breadcrumb{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:24px 24px 0; font-size:13px; color:var(--muted);}
+  .breadcrumb a{color:var(--muted); text-decoration:none;}
+  .breadcrumb a:hover{color:var(--blue-text);}
+  .breadcrumb .sep{margin:0 6px;}
+  .breadcrumb .current{color:var(--gray-text);}
+
+  /* Conteneur aligné sur clamp(1080px, 82vw, 1320px), identique aux pages marketing. Au plancher
+     (1080 → 1032px après padding), colonne de lecture 760 + gap 56 + sommaire 216 = 1032, zéro
+     débordement. Au-delà du plancher, le sommaire reste fixe (le faire grandir en 1fr déplace le
+     vide plutôt que de le résorber). justify-content:center répartit l'espace en trop en marges
+     égales de chaque côté. Contrepartie assumée : au-delà de 1317px de large, le bord gauche du
+     texte n'est plus exactement sur celui du fil d'Ariane/CTA (inchangé en-deçà — la quasi-
+     totalité des usages réels). */
+  .editorial{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:var(--s-4) 24px var(--s-4); display:grid; grid-template-columns:760px 216px; gap:56px; justify-content:center;}
+  /* Seuil à 1079 (pas 1024) : la grille 2 colonnes a besoin d'un plancher de 1080px
+     (760+56+216+48 padding) pour tenir sans déborder. La nav mobile à pastilles doit basculer au
+     même seuil, sinon ni la grille desktop ni la nav mobile ne sont visibles entre 1025-1079px. */
+  @media (max-width:1079px){ .editorial{grid-template-columns:1fr; max-width:760px;} .toc{display:none;} }
+
+  .main-col{min-width:0;}
+  h1.article-h1{font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:40px; line-height:1.2; max-width:60ch;}
+
+  .article-meta{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:13px; color:var(--muted); margin-top:var(--s-2);}
+  .article-meta a{color:var(--blue-text); text-decoration:underline;}
+
+  .hero-answer{margin-top:var(--s-4);}
+
+  /* Chapô "L'avis France IA" : un paragraphe du corps, SEUL le style italique le distingue —
+     pas de boîte, pas de fond, pas de guillemet décoratif, pas de kicker/label. S'applique à
+     tous les gabarits (standard inclus). Répond directement à la question de l'article (verdict
+     direct si comparatif, définition directe si pédagogique, etc.) — jamais un cadrage méta.
+     Mot-clé principal en gras dans la réponse elle-même, lien contextualisé vers le hub du cocon
+     en clause secondaire. */
+  .hero-answer .preface{margin:0;}
+  .preface p{margin:0; font-size:17px; line-height:1.65; color:var(--gray-text); font-style:italic; max-width:70ch;}
+  .preface strong{font-weight:700; font-style:italic;}
+  .preface a{color:var(--blue-text); text-decoration:underline; font-weight:700;}
+
+  .hero-answer .tldr{margin-top:var(--s-4);}
+  .tldr{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); box-shadow:var(--shadow-blue-2);}
+  .tldr p{margin:0; font-size:17px; line-height:1.65; color:var(--ink);}
+  .tldr ul{margin:0; padding-left:20px; font-size:16px; line-height:1.6; color:var(--ink); max-width:62ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+  .tldr li{margin-bottom:4px;}
+  .tldr li:last-child{margin-bottom:0;}
+
+  /* Taxonomie des blocs à étiquette inclinée (.blk-tag) : ROUGE = avis France IA / point important
+     (fi-teaser, proof, fi-insight, sovereign-note) ; BLEU = mention / pour aller plus loin, MÊME
+     style que le rouge (fi-mention, hub-encart, tldr, verdict — synthèse neutre). Ne pas créer de
+     nouvelle variante de couleur : tout ce qui n'est ni "voix France IA / important" ni "mention /
+     aller plus loin" garde sa présentation propre (tableaux, graphiques, citation attribuée) —
+     jamais un .blk-tag dessus. Un point important recevant peu de texte de liaison autour de lui
+     (ex. un seul chiffre à commenter) peut rester en simple paragraphe, gras sur les chiffres clés
+     — un bloc n'est pas obligatoire juste parce qu'un fait est notable, cf. price-warning retiré
+     le 24/07 (4 médias différents pour peu de texte rendait une section "démo de composants"). */
+  .blk-tag{position:absolute; top:-14px; left:22px; transform:rotate(-2deg); color:#fff; font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; padding:7px 14px; border-radius:6px; display:inline-flex; align-items:center; gap:6px;}
+  .blk-tag svg{flex-shrink:0;}
+  .blk-tag--red{background:var(--red); box-shadow:0 8px 16px -6px rgba(214,54,43,.55);}
+  .blk-tag--blue{background:var(--blue); box-shadow:0 8px 16px -6px rgba(67,121,242,.55);}
+
+  /* Sommaire + rail de progression : le filet gauche du sommaire se remplit en bleu au fil du
+     défilement dans l'article — visualise "combien reste-t-il de la réponse", sans nouvel
+     élément de chrome ni de couleur. */
+  .toc{position:sticky; top:24px; align-self:start; font-size:14px;}
+  .toc .toc-label{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin-bottom:var(--s-2);}
+  .toc ul{position:relative; list-style:none; margin:0; padding:0; border-left:2px solid var(--border);}
+  .toc ul::before{content:""; position:absolute; left:-2px; top:0; width:2px; height:calc(var(--progress,0) * 100%); background:var(--blue); border-radius:2px;}
+  .toc a{display:block; padding:7px 0 7px 16px; color:var(--muted); text-decoration:none; border-left:2px solid transparent; margin-left:-2px;}
+  .toc a:hover{color:var(--blue-text);}
+  .toc a.active{color:var(--blue-text); border-left-color:var(--blue); font-weight:700;}
+  @media (prefers-reduced-motion:no-preference){ .toc ul::before{transition:height .2s ease-out;} }
+
+  .main-col p{font-size:17px; line-height:1.65; margin:0 0 20px; max-width:70ch;}
+  .main-col h2{font-size:28px; line-height:1.25; margin-top:var(--s-4); margin-bottom:20px;}
+  .main-col h3{font-size:21px; line-height:1.3; margin-top:var(--s-4); margin-bottom:14px;}
+  .main-col ul, .main-col ol{font-size:17px; line-height:1.65; padding-left:22px; max-width:70ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
+  .main-col li{margin-bottom:6px;}
+  .inline-link{text-decoration:underline;}
+
+  /* ── Bloc optionnel : price-tabs (onglets CSS-only) — dès 2 contextes de prix distincts
+     (individuel vs équipe) pour éviter un tableau à 6+ lignes. Contenu toujours dans le DOM,
+     jamais chargé en JS, pour rester crawlable. ── */
+  .price-tabs{margin:var(--s-4) 0;}
+  .price-tabs input[type="radio"]{position:absolute; opacity:0; pointer-events:none;}
+  .price-tabs .tab-nav{display:flex; gap:8px; border-bottom:2px solid var(--border); margin-bottom:var(--s-2);}
+  .price-tabs .tab-nav label{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:14px; color:var(--muted); padding:10px 16px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px;}
+  .price-tabs .tab-panel{display:none;}
+  #tab-indiv:checked ~ .tab-nav label[for="tab-indiv"],
+  #tab-team:checked ~ .tab-nav label[for="tab-team"]{color:var(--blue-text); border-bottom-color:var(--blue);}
+  #tab-indiv:checked ~ .panel-indiv{display:block;}
+  #tab-team:checked ~ .panel-team{display:block;}
+  .price-tabs table.compare{margin-top:0;}
+
+  /* ── Bloc optionnel : bar-chart — comparaison visuelle de valeurs numériques, décoratif/
+     pédagogique uniquement. Jamais seul : toujours accompagné du tableau équivalent (source
+     machine-lisible). L'aria-label DOIT reprendre exactement les valeurs visibles des barres. ── */
+  .bar-chart{display:flex; gap:var(--s-4); padding:var(--s-4) var(--s-3); background:#fff; border-radius:var(--r-m); margin:var(--s-4) 0; box-sizing:border-box; box-shadow:var(--shadow-blue-2);}
+  .bar-group{display:flex; gap:14px; flex:1; min-width:0;}
+  .bar-col{display:flex; flex-direction:column; align-items:center; flex:1; min-width:0;}
+  .bar-track{height:120px; width:100%; display:flex; align-items:flex-end; justify-content:center;}
+  .bar-col .bar{width:100%; max-width:40px; border-radius:4px 4px 0 0; transition:height .3s; min-height:3px;}
+  .bar-col .bar-val{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:12px; color:var(--ink); margin-top:8px;}
+  .bar-col .bar-lbl{font-size:11px; color:var(--muted); margin-top:2px;}
+  .bar-chart-legend{font-size:13px; color:var(--muted); margin:var(--s-2) 0 var(--s-3); display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-style:italic;}
+  .bar-chart-legend span{display:inline-flex; align-items:center; gap:6px; font-style:normal;}
+  .bar-chart-legend i{width:10px; height:10px; border-radius:2px; display:inline-block;}
+
+  /* ── Bloc optionnel : eco-diagram — schéma explicatif SANS données chiffrées à comparer (ex.
+     arbre de décision). Toujours accompagné d'une légende texte (rôle="img" + aria-label + une
+     phrase de synthèse visible juste après). ── */
+  .eco-diagram{display:flex; gap:var(--s-3); margin:var(--s-4) 0; flex-wrap:wrap;}
+  .eco-col{flex:1; min-width:200px; background:#fff; border-radius:var(--r-m); padding:var(--s-4) var(--s-3); text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; box-shadow:var(--shadow-blue-2);}
+  .eco-badge{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:14px; padding:8px 14px; border-radius:20px; background:var(--blue-soft); color:var(--blue-text);}
+  .eco-arrow{font-size:20px; color:var(--muted); line-height:1;}
+  .eco-result{font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:18px; padding:8px 18px; border-radius:8px; color:#fff;}
+  .eco-result.gemini{background:var(--blue); box-shadow:0 6px 16px -4px rgba(67,121,242,.5);}
+  .eco-result.claude{background:var(--red); box-shadow:0 6px 16px -4px rgba(214,54,43,.5);}
+  p.eco-caption{font-size:14px; color:var(--muted); text-align:center; margin:0 0 var(--s-3); max-width:none; font-style:italic;}
+
+  /* ── Bloc optionnel : fi-teaser (rouge, "Chez France IA") — encart COURT en milieu d'article
+     qui renvoie par ancre vers le bloc .proof plus bas. Augmente la densité de mentions France IA
+     sans dupliquer de contenu ni inventer une deuxième preuve. ── */
+  .fi-teaser{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:26px var(--s-3) 18px; margin:var(--s-4) 0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
+  .fi-teaser p{margin:0; font-size:15px; max-width:62ch;}
+  .fi-teaser a{color:var(--red-text); text-decoration:underline; font-weight:700;}
+
+  /* ── Bloc optionnel : fi-mention (bleu, "Mention France IA") — réflexe/nuance courte à la voix
+     France IA mais de nature neutre (pas un avis tranché ni une alerte) : "pour aller plus loin",
+     un rappel méthodologique, une précision utile. ── */
+  .fi-mention{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-blue-2);}
+  .fi-mention p{margin:0; font-size:15px; max-width:62ch;}
+
+  .proof-photo{aspect-ratio:16/9; max-width:100%; border-radius:var(--r-s); background:repeating-linear-gradient(45deg,var(--red-soft),var(--red-soft) 10px,#F5D5D2 10px,#F5D5D2 20px); display:flex; align-items:center; justify-content:center; margin-bottom:var(--s-2); padding:var(--s-2); font-size:13px; color:var(--red-text); font-style:italic; text-align:center;}
+  .video-note{font-size:14px; color:var(--muted); margin-top:var(--s-2); padding-top:var(--s-2); border-top:1px dashed var(--border);}
+
+  /* Conteneur scrollable en dernier recours pour TOUT table.compare : une cellule avec un token
+     collé par "/" (ex. "Team/Enterprise") ne peut pas se couper et force un débordement horizontal
+     de toute la page sur mobile si le tableau n'est pas contenu. Le tableau lui-même reste
+     intact — c'est le conteneur qui absorbe le débordement via un scroll horizontal local. */
+  .table-wrap{overflow-x:auto; margin:var(--s-4) 0; -webkit-overflow-scrolling:touch;}
+  .table-wrap table.compare{margin:0;}
+  table.compare{width:100%; border-collapse:separate; border-spacing:0; margin:var(--s-4) 0; font-size:15px; background:#fff; border-radius:var(--r-m); overflow:hidden; box-shadow:var(--shadow-blue-2);}
+  table.compare th{background:var(--blue); color:#fff; text-align:left; padding:14px; font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.02em;}
+  table.compare td{padding:14px; background:#fff; color:var(--ink); border-bottom:1px solid var(--blue-soft);}
+  table.compare tbody tr:last-child td{border-bottom:none;}
+  table.compare tbody tr:hover td{background:var(--blue-soft);}
+  table.compare .price{color:var(--ink); font-family:"Manrope",Arial,sans-serif; font-weight:700;}
+
+  /* Palier 1 (les 3 temps forts) : verdict, proof, citation. */
+  .verdict{position:relative; background:var(--blue-soft); border-radius:var(--r-l); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-blue-1);}
+  .verdict-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-3); margin-bottom:var(--s-3);}
+  @media (max-width:600px){ .verdict-grid{grid-template-columns:1fr;} }
+  .verdict-card{background:#fff; border-radius:var(--r-m); padding:var(--s-3) var(--s-2) 20px; box-shadow:0 6px 18px -10px rgba(34,40,49,.18);}
+  .verdict-card .vc-check{display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+  .verdict-card .vc-outcome{font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:17px;}
+  .verdict-card.gemini .vc-check svg{color:var(--blue);}
+  .verdict-card.gemini .vc-outcome{color:var(--blue-text);}
+  .verdict-card.claude .vc-check svg{color:var(--red);}
+  .verdict-card.claude .vc-outcome{color:var(--red-text);}
+  .verdict-card p{font-size:14px; line-height:1.55; color:var(--ink); margin:0;}
+  .verdict-note{font-size:14px; color:var(--blue-text); font-style:italic; margin:0;}
+
+  /* proof ("Testé chez France IA") — obligatoire gabarit complet. Chaque <span class="fill-in">
+     est un FAIT RÉEL requis (chiffre interne, photo) — jamais inventé, jamais rempli au hasard :
+     emplacement explicitement marqué à compléter par un humain tant que la donnée n'existe pas. */
+  .proof{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-red-1);}
+  .proof p{margin:0 0 10px; font-size:16px; max-width:62ch;}
+  .proof p:last-child{margin-bottom:0;}
+  .proof .fill-in{background:#fff; border:1px dashed var(--red); padding:4px 8px; border-radius:4px; color:var(--red-text); font-style:italic;}
+
+  /* blockquote.expert — citation réelle et nommée, obligatoire gabarit complet, jamais inventée. */
+  blockquote.expert{position:relative; font-family:"DM Sans",Arial,sans-serif; font-weight:500; font-style:italic; font-size:19px; line-height:1.5; background:var(--blue-soft); border-left:4px solid var(--blue); border-radius:0 var(--r-m) var(--r-m) 0; padding:var(--s-4) var(--s-3) var(--s-4) 56px; margin:var(--s-4) 0; color:var(--ink); max-width:62ch; box-shadow:var(--shadow-blue-1); overflow:hidden;}
+  blockquote.expert::before{content:"\201C"; position:absolute; left:10px; top:-6px; font-family:Georgia,"Times New Roman",serif; font-style:normal; font-weight:800; font-size:74px; line-height:1; color:var(--blue); opacity:.22;}
+  .expert-attrib{display:flex; align-items:center; gap:10px; margin-top:14px; font-style:normal;}
+  .expert-attrib .avatar{width:48px; height:48px; border-radius:50%; background:#fff; border:2px solid var(--blue); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--blue-text); flex-shrink:0; box-shadow:0 4px 10px -2px rgba(67,121,242,.4);}
+  .expert-attrib .who{font-size:14px; line-height:1.4;}
+  .expert-attrib .who b{display:block; color:var(--ink);}
+  .fill-in{background:#fff; border:1px dashed var(--red); padding:4px 8px; border-radius:4px; color:var(--red-text); font-style:italic;}
+
+  /* ── Bloc optionnel : fi-insight (rouge, "Le regard France IA") — UN SEUL par article sur
+     gabarit complet, produit par l'Agent Approfondissement. Porte la nuance la plus contre-
+     intuitive de l'article, jamais une opinion non étayée. Placé au point du corps où elle
+     apporte le plus de valeur, jamais systématiquement en fin d'article. ── */
+  .fi-insight{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-red-2);}
+  .fi-insight p{margin:0; font-size:16px; max-width:62ch;}
+
+  /* ── Bloc optionnel : sovereign-note (rouge, "Point conformité") — obligatoire dès qu'un outil
+     américain est mentionné (prisme souverain). CNIL + Mistral AI comme alternative. ── */
+  .sovereign-note{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
+
+  .faq{margin-top:var(--s-4);}
+  .faq details{border-bottom:1px solid var(--border); padding:14px 0;}
+  .faq summary{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:17px; color:var(--ink); cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:16px;}
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary::after{content:"+"; flex-shrink:0; width:26px; height:26px; border-radius:50%; border:1.5px solid var(--blue); color:var(--blue); font-weight:700; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s,color .15s;}
+  .faq details[open] summary::after{content:"\2013"; background:var(--blue); color:#fff;}
+  .faq p{margin-top:10px; font-size:16px;}
+
+  /* hub-encart (bleu, "Pour aller plus loin") — lien montant navigationnel UNIQUEMENT, jamais
+     transactionnel dans le corps de l'article (la conversion appartient au CTA site-wide). */
+  .hub-encart{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin-top:var(--s-4); display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; box-shadow:var(--shadow-blue-2);}
+  .hub-encart p{margin:0; font-size:16px; color:var(--ink); max-width:480px;}
+  .hub-encart .tertiary-btn{color:var(--blue-text); font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:15px; text-decoration:none; white-space:nowrap; display:inline-flex; align-items:center; gap:6px;}
+  .hub-encart .tertiary-btn svg{transition:transform .15s;}
+  .hub-encart .tertiary-btn:hover svg{transform:translateX(3px);}
+  .hub-encart .tertiary-btn:hover{text-decoration:underline;}
+
+  /* Aligné sur la largeur réelle de la colonne de lecture (760px, main-col) — le wrapper reprend
+     la MÊME grille que .editorial (760px 216px, gap 56, justify-content:center), colonne 2 vide,
+     pour que la bannière se centre exactement comme main-col plutôt qu'un centrage indépendant
+     (760px centré seul dans le même conteneur ne tombe PAS au même endroit qu'une grille
+     760+56+216 centrée : les deux formules doivent être identiques, pas juste les mêmes valeurs).
+     CTA site-wide, hors <article> — seul CTA transactionnel toléré, texte fixe, ne varie pas
+     d'un article à l'autre. */
+  .pre-footer-cta-wrap{max-width:clamp(1080px, 82vw, 1320px); margin:var(--s-4) auto 0; padding:0 24px; display:grid; grid-template-columns:760px 216px; gap:56px; justify-content:center;}
+  .pre-footer-cta{grid-column:1; background:var(--blue); border-radius:var(--r-l); padding:var(--s-5) var(--s-4); text-align:center;}
+  @media (max-width:1079px){ .pre-footer-cta-wrap{grid-template-columns:1fr; max-width:760px;} }
+  .pre-footer-cta h2{color:#fff; font-size:28px; margin-bottom:12px;}
+  .pre-footer-cta p{color:rgba(255,255,255,.95); font-size:16px; margin-bottom:var(--s-3);}
+  .pre-footer-cta .btn-inverse{background:#fff; color:var(--blue-text); font-family:"DM Sans",Arial,sans-serif; font-weight:700; font-size:15px; padding:12px 22px; border-radius:var(--r-s); text-decoration:none; display:inline-block;}
+
+  /* ═══ PIED DE PAGE SITE (identique sur toutes les pages du site) ═══ */
+  .site-footer{border-top:1px solid var(--border); margin-top:var(--s-5);}
+  .site-footer .wrap{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:var(--s-4) 24px var(--s-5);}
+  .site-footer__top{display:flex; justify-content:space-between; gap:var(--s-4); flex-wrap:wrap;}
+  .site-footer__brand p{font-size:14px; color:var(--muted); margin:10px 0 var(--s-2);}
+  .site-footer__brand img{height:40px; width:auto;}
+  .site-footer__qualiopi{max-width:280px;}
+  .site-footer__qualiopi img{height:40px; margin-bottom:8px;}
+  .site-footer__qualiopi small{display:block; font-size:11.5px; color:var(--muted); line-height:1.5; margin-bottom:6px;}
+  .site-footer__qualiopi a{font-size:12.5px;}
+  .site-footer h4{font-family:"Manrope",Arial,sans-serif; font-size:13px; color:var(--ink); margin:0 0 10px;}
+  .site-footer ul{list-style:none; margin:0; padding:0;}
+  .site-footer li{margin-bottom:7px;}
+  .site-footer a{color:var(--muted); font-size:13.5px; text-decoration:none;}
+  .site-footer a:hover{color:var(--blue-text);}
+  .site-footer__bottom{border-top:1px solid var(--border); margin-top:var(--s-3); padding-top:var(--s-3); font-size:12.5px; color:var(--muted); line-height:1.6;}
+</style>
+</head>
+<body>
+
+<!--
+  TEMPLATE — gabarit article de blog France IA (V1, 24/07/2026)
+  Base : gabarit "comparatif" (Gemini vs Claude) validé en lab, généralisé à tous les gabarits.
+  Convention de ce fichier : [[texte entre double crochets]] = contenu à écrire par l'Agent
+  Rédacteur (ou un humain) pour CET article précis. Les <span class="fill-in">[texte]</span>
+  entre simple crochet sont une convention DIFFÉRENTE et déjà en charte : un FAIT RÉEL requis
+  (chiffre interne, citation, photo), jamais un contenu à générer — ne jamais remplacer un
+  fill-in par une valeur inventée, seulement par la donnée réelle une fois disponible.
+
+  Ordre obligatoire (gabarit Direct-to-Answer, tous gabarits) :
+  H1 → méta → chapô (préface) → TL;DR → corps (H2 selon le plan de l'intention détectée, cf.
+  Pipeline_Master_Prompts.html § "Plans de base par intention") → [si gabarit complet : proof →
+  verdict → citation experte, dans cet ordre] → FAQ → conclusion + hub-encart.
+
+  La bibliothèque de blocs optionnels (price-tabs, bar-chart, eco-diagram, table.compare,
+  fi-teaser, fi-mention, fi-insight, sovereign-note) est démontrée plus bas dans le corps, à
+  garder ou retirer selon le plan par intention et le contenu réel de l'article — ne pas tous
+  les utiliser systématiquement : un article n'a pas besoin de montrer toute la bibliothèque.
+-->
+
+<header class="site-header">
+  <div class="site-nav">
+    <a class="site-nav__logo" href="/">
+      <img loading="lazy" src="https://framerusercontent.com/images/5W1ZN0WThTL43ytqxxCGKldWY.png?width=88&height=88" alt="Logo officiel de l'organisme France IA">
+    </a>
+    <nav class="site-nav__links">
+      <a class="btn btn--outline" href="/formation-equipes">Formation d'équipe</a>
+      <a class="btn" href="/demande-contact-b2c">Je souhaite me former</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Pastilles mobiles : un <a> par H2 du corps, même ancres que le sommaire desktop plus bas,
+     libellés raccourcis si besoin pour tenir en pastille. -->
+<nav class="mobile-toc" aria-label="Sections de l'article">
+  <a href="#[[ancre-1]]">[[Libellé court 1]]</a>
+  <a href="#[[ancre-2]]">[[Libellé court 2]]</a>
+  <a href="#[[ancre-3]]">[[Libellé court 3]]</a>
+</nav>
+
+<nav class="breadcrumb">
+  <a href="/">Accueil</a><span class="sep">/</span><a href="/guide/[[slug-cocon]]">[[Nom du cocon]]</a><span class="sep">/</span><span class="current">[[Titre court de l'article]]</span>
+</nav>
+
+<div class="editorial">
+  <main class="main-col">
+    <article>
+      <h1 class="article-h1">[[H1 — question ou promesse, mot-clé principal inclus, jamais d'année ni de millésime]]</h1>
+      <div class="article-meta">
+        <span>Par <a href="[[URL LinkedIn de l'auteur]]" target="_blank" rel="nofollow noopener">[[Nom de l'auteur]]</a>, [[Fonction — reliée à sa fiche formateur/auteur existante sur le site]]</span>
+        <span>·</span>
+        <span>Publié le [[JJ/MM/AAAA]]</span>
+        <span>·</span>
+        <span>Mis à jour le [[JJ/MM/AAAA]]</span>
+        <span>·</span>
+        <span>[[N]] min de lecture</span>
+      </div>
+
+      <div class="hero-answer">
+        <div class="preface">
+          <p>[[Chapô — 2 à 5 phrases à la première personne du pluriel ("Chez France IA, ..."), répond DIRECTEMENT à la question de l'article (verdict si comparatif, définition si pédagogique, etc. — jamais un cadrage méta type "comparer X et Y revient à..."). Mot-clé principal en gras dans la réponse elle-même. Lien contextualisé vers le hub du cocon en clause secondaire : <a href="/guide/[[slug-cocon]]">[[texte du lien vers le hub]]</a>.]]</p>
+        </div>
+
+        <div class="tldr">
+          <span class="blk-tag blk-tag--blue">L'essentiel</span>
+          <ul>
+            <li>[[Item 1 — donnée ou conclusion autonome, mot-clé en gras dans ce premier item]]</li>
+            <li>[[Item 2]]</li>
+            <li>[[Item 3]]</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════════════════
+           CORPS DE L'ARTICLE — construire les sections H2 selon le plan de base de
+           l'intention détectée par l'Agent Brief (comparatif, prix/tarif, guide, définition,
+           avis, cas d'usage métier, actualité — cf. Pipeline_Master_Prompts.html § "Plans de
+           base par intention"). Chaque H2 répond en 1-2 phrases avant de développer. Les
+           blocs ci-dessous sont des EXEMPLES de la bibliothèque, à garder/retirer/dupliquer
+           selon le contenu réel — ne pas les recopier tous systématiquement. ═══════════════ -->
+
+      <h2 id="[[ancre-1]]">[[H2 — question ou affirmation claire, jamais métaphorique, jamais d'année]]</h2>
+      <p>[[Paragraphe qui répond à la question du H2 dès la première phrase — pas une transition ("Au-delà de...", "C'est là que..."). ≤260 caractères, couper en deux paragraphes sinon.]]</p>
+
+      <!-- Bloc optionnel — dès 2 contextes de prix distincts (individuel vs équipe) -->
+      <div class="price-tabs">
+        <input type="radio" name="price-tab" id="tab-indiv" checked>
+        <input type="radio" name="price-tab" id="tab-team">
+        <div class="tab-nav">
+          <label for="tab-indiv">[[Libellé onglet 1]]</label>
+          <label for="tab-team">[[Libellé onglet 2]]</label>
+        </div>
+        <div class="tab-panel panel-indiv">
+          <div class="table-wrap"><table class="compare">
+            <thead><tr><th>[[Colonne 1]]</th><th>[[Colonne 2]]</th><th>[[Colonne 3]]</th></tr></thead>
+            <tbody>
+              <tr><td>[[Ligne]]</td><td class="price">[[Valeur]]</td><td class="price">[[Valeur]]</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="tab-panel panel-team">
+          <div class="table-wrap"><table class="compare">
+            <thead><tr><th>[[Colonne 1]]</th><th>[[Colonne 2]]</th><th>[[Colonne 3]]</th></tr></thead>
+            <tbody>
+              <tr><td>[[Ligne]]</td><td class="price">[[Valeur]]</td><td class="price">[[Valeur]]</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- Bloc optionnel — comparaison visuelle de valeurs numériques, toujours à côté d'un
+           tableau équivalent. L'aria-label doit reprendre exactement les valeurs visibles. -->
+      <div class="bar-chart" role="img" aria-label="[[Description complète : quelles valeurs, pour quelles formules]]">
+        <div class="bar-group">
+          <div class="bar-col"><div class="bar-track"><div class="bar" style="height:[[%]]; background:#4379F2;"></div></div><span class="bar-val">[[valeur]]</span><span class="bar-lbl">[[libellé]]</span></div>
+        </div>
+      </div>
+      <div class="bar-chart-legend"><span><i style="background:#4379F2;"></i> [[Légende 1]]</span><span><i style="background:#D6362B;"></i> [[Légende 2]]</span></div>
+
+      <!-- Bloc optionnel — encart court "Chez France IA", renvoie par ancre vers .proof plus bas -->
+      <div class="fi-teaser">
+        <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Chez France IA</span>
+        <p>[[Phrase courte qui renvoie vers <a href="#preuve">[[texte du lien]]</a> plus bas, sans dupliquer son contenu.]]</p>
+      </div>
+
+      <h2 id="[[ancre-2]]">[[H2]]</h2>
+      <p>[[Réponse directe.]]</p>
+
+      <!-- Bloc optionnel — schéma explicatif SANS données chiffrées, toujours avec une phrase
+           de synthèse visible juste après -->
+      <div class="eco-diagram" role="img" aria-label="[[Description du schéma]]">
+        <div class="eco-col">
+          <div class="eco-badge">[[Point de départ]]</div>
+          <div class="eco-arrow">↓</div>
+          <div class="eco-result gemini">[[Résultat]]</div>
+        </div>
+      </div>
+      <p class="eco-caption">[[Phrase de synthèse visible — porte la même info que l'aria-label]]</p>
+
+      <!-- Bloc optionnel — mention courte, neutre, "pour aller plus loin" ou rappel
+           méthodologique -->
+      <div class="fi-mention">
+        <span class="blk-tag blk-tag--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>Mention France IA</span>
+        <p>[[Nuance ou réflexe utile, une phrase.]]</p>
+      </div>
+
+      <h2 id="[[ancre-3]]">[[H2 — ex. capacité différenciante, ou confidentialité si un outil US est mentionné]]</h2>
+      <p>[[Réponse directe.]]</p>
+
+      <!-- Bloc requis dès 3 éléments comparés -->
+      <div class="table-wrap"><table class="compare">
+        <thead><tr><th>[[Critère]]</th><th>[[Option 1]]</th><th>[[Option 2]]</th></tr></thead>
+        <tbody>
+          <tr><td>[[Ligne]]</td><td class="price">[[Valeur]]</td><td class="price">[[Valeur]]</td></tr>
+        </tbody>
+      </table></div>
+
+      <!-- Bloc optionnel — UN SEUL par article sur gabarit complet, la nuance la plus contre-
+           intuitive, placée au point du corps où elle apporte le plus de valeur -->
+      <div class="fi-insight">
+        <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>Le regard France IA</span>
+        <p>[[La nuance la plus contre-intuitive de l'article, sourcée ou vécue — jamais une opinion non étayée.]]</p>
+      </div>
+
+      <!-- Bloc obligatoire dès qu'un outil américain est mentionné (prisme souverain) -->
+      <div class="sovereign-note">
+        <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Z"/></svg>Point conformité</span>
+        [[Texte : les données peuvent transiter hors UE selon la configuration ; lien CNIL ; Mistral AI comme alternative souveraine si pertinent.]]
+      </div>
+
+      <!-- ═══ Fin du corps variable — à partir d'ici, séquence obligatoire sur gabarit
+           complet, dans cet ordre exact : proof → verdict → citation experte. ═══ -->
+
+      <div class="proof" id="preuve">
+        <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a1.2 1.2 0 0 0 1 1.8h12a1.2 1.2 0 0 0 1-1.8l-5-9V3"/></svg>Testé chez France IA</span>
+        <div class="proof-photo fill-in" role="img" aria-label="Photo réelle à ajouter — jamais une photo stock ni générée.">[Photo réelle à ajouter : contexte précis (formateur, session, quoi). Jamais une photo stock ni générée.]</div>
+        <p><span class="fill-in">[Résultat chiffré d'un test interne réel, donnée réelle de l'équipe, jamais un chiffre inventé.]</span></p>
+        <div class="video-note">[[Note vidéo roadmap si pertinent, sinon retirer ce div entièrement]]</div>
+      </div>
+
+      <div class="verdict">
+        <span class="blk-tag blk-tag--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Verdict selon votre contexte</span>
+        <div class="verdict-grid">
+          <div class="verdict-card gemini">
+            <div class="vc-check"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span class="vc-outcome">[[Option 1]]</span></div>
+            <p><strong>[[Condition]]</strong> → [[conséquence]].</p>
+          </div>
+          <div class="verdict-card claude">
+            <div class="vc-check"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span class="vc-outcome">[[Option 2]]</span></div>
+            <p><strong>[[Condition]]</strong> → [[conséquence]].</p>
+          </div>
+        </div>
+        <p class="verdict-note">[[Phrase de synthèse — jamais un vainqueur universel artificiel s'il n'y en a pas.]]</p>
+      </div>
+
+      <blockquote class="expert">
+        « <span class="fill-in">[Citation réelle et nommée, 1-2 phrases, un avis tranché et concret, jamais inventée]</span> »
+        <div class="expert-attrib">
+          <div class="avatar">[[Initiales]]</div>
+          <div class="who"><b>[[Nom]]</b>[[Fonction]]</div>
+        </div>
+      </blockquote>
+
+      <h2 id="faq">Questions fréquentes</h2>
+      <div class="faq">
+        <details>
+          <summary>[[Question PAA réelle 1 — jamais générique, jamais d'année]]</summary>
+          <p>[[Réponse]]</p>
+        </details>
+        <details>
+          <summary>[[Question PAA réelle 2]]</summary>
+          <p>[[Réponse]]</p>
+        </details>
+        <details>
+          <summary>[[Question PAA réelle 3]]</summary>
+          <p>[[Réponse]]</p>
+        </details>
+      </div>
+
+      <p style="margin-top:var(--s-4);">[[Conclusion — 2-3 phrases, jamais transactionnelle.]]</p>
+
+      <div class="hub-encart">
+        <span class="blk-tag blk-tag--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Pour aller plus loin</span>
+        <p>[[Question d'accroche vers le hub du cocon]]</p>
+        <a class="tertiary-btn" href="/guide/[[slug-cocon]]">[[Texte du lien vers le hub]] <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </article>
+  </main>
+
+  <!-- Sommaire : un <li><a> par H2 du corps, mêmes ancres que la nav mobile plus haut -->
+  <aside class="toc">
+    <div class="toc-label">Sommaire</div>
+    <ul>
+      <li><a href="#[[ancre-1]]">[[Libellé sommaire 1]]</a></li>
+      <li><a href="#[[ancre-2]]">[[Libellé sommaire 2]]</a></li>
+      <li><a href="#[[ancre-3]]">[[Libellé sommaire 3]]</a></li>
+      <li><a href="#faq">Questions fréquentes</a></li>
+    </ul>
+  </aside>
+</div>
+
+<!-- CTA site-wide, texte fixe — ne pas réécrire d'un article à l'autre -->
+<div class="pre-footer-cta-wrap">
+  <div class="pre-footer-cta">
+    <h2>Envie de passer à l'action, sans attendre ?</h2>
+    <p>Formation en présentiel, seul ou avec votre équipe, décision rapide, CPF possible mais pas nécessaire pour démarrer.</p>
+    <a class="btn-inverse" href="/contact">Discutons de vos besoins</a>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <img loading="lazy" src="https://framerusercontent.com/images/5W1ZN0WThTL43ytqxxCGKldWY.png?width=88&height=88" alt="Logo officiel de l'organisme France IA">
+        <p>Adoptez la puissance de l'IA.</p>
+        <div class="site-footer__qualiopi">
+          <a href="https://drive.google.com/file/d/1Ex7o8FlQ-kut1zqiJYTB_y5LqR-xIBcD/view?usp=sharing" target="_blank" rel="noopener"><img loading="lazy" src="https://framerusercontent.com/images/2eHJZZP5xNGX8jxkC4pmCcORg.png" alt="Qualiopi — processus certifié, République Française"></a>
+          <small>La certification qualité a été délivrée au titre de la catégorie d'action suivante : ACTIONS DE FORMATION</small>
+          <a href="https://drive.google.com/file/d/1Ex7o8FlQ-kut1zqiJYTB_y5LqR-xIBcD/view?usp=sharing" target="_blank" rel="noopener">Téléchargez notre certificat Qualiopi</a>
+        </div>
+      </div>
+      <div>
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="/">Accueil</a></li>
+          <li><a href="/a-propos">À propos</a></li>
+          <li><a href="/demande-contact-b2c">Contact</a></li>
+          <li><a href="/guide/[[slug-cocon]]">[[Nom du cocon]]</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Légal</h4>
+        <ul>
+          <li><a href="https://drive.google.com/file/d/1zTUTWaa_rdF2fAUmipkFdp0-_LSVlcWF/view?usp=sharing" target="_blank" rel="noopener">CGU</a></li>
+          <li><a href="https://drive.google.com/file/d/1hpyBppB8VwSOpqMHPPe09S3yKHWQnmFS/view?usp=sharing" target="_blank" rel="noopener">CGV</a></li>
+          <li><a href="https://drive.google.com/file/d/1xMXOpa9sj9GQw7nVz5o0nz1l3VwsH3Cl/view?usp=sharing" target="_blank" rel="noopener">Politique de confidentialité</a></li>
+          <li><a href="https://drive.google.com/file/d/1EZ32g-lOBbg6y1Di3jQwFfNKfFEmvD0J/view?usp=sharing" target="_blank" rel="noopener">Mentions légales</a></li>
+          <li><a href="https://drive.google.com/file/d/1kkHVxnAjF6B_7QUjAFno2HodFijfxSez/view?usp=sharing" target="_blank" rel="noopener">Règlement intérieur</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <small style="display:block;">France IA est un organisme de formation privé (certifié Qualiopi). Nous sommes une entité indépendante, sans lien avec le Hub France IA ou le rapport gouvernemental de 2017. <a href="https://drive.google.com/file/d/1EZ32g-lOBbg6y1Di3jQwFfNKfFEmvD0J/view?usp=sharing" target="_blank" rel="noopener">En savoir plus</a>.</small>
+      <small style="display:block; margin-top:10px;">Copyright © France IA 2026 · <a href="mailto:contact@franceia.com">contact@franceia.com</a> · <a href="tel:+33781042847">07 81 04 28 47</a></small>
+    </div>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "[[Headline — identique au H1, sans année]]",
+  "datePublished": "[[AAAA-MM-JJ]]",
+  "dateModified": "[[AAAA-MM-JJ]]",
+  "inLanguage": "fr-FR",
+  "author": { "@type": "Person", "name": "[[Nom de l'auteur]]", "sameAs": "[[URL LinkedIn]]" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "France IA",
+    "url": "https://franceia.com",
+    "sameAs": [
+      "https://www.linkedin.com/company/[à compléter]",
+      "https://www.google.com/maps/place/?q=place_id:[GBP siège, à compléter]"
+    ]
+  },
+  "mainEntityOfPage": "https://franceia.com/guide/[[slug-cocon]]/[[slug-article]]",
+  "isPartOf": { "@type": "CollectionPage", "name": "[[Nom du cocon]]", "url": "https://franceia.com/guide/[[slug-cocon]]" },
+  "about": [
+    { "@type": "SoftwareApplication", "name": "[[Outil discuté, si pertinent — retirer le tableau about sinon]]" }
+  ],
+  "citation": [
+    "[[URL source officielle 1]]",
+    "[[URL source officielle 2]]"
+  ],
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".preface", ".tldr", ".verdict"]
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://franceia.com/" },
+    { "@type": "ListItem", "position": 2, "name": "[[Nom du cocon]]", "item": "https://franceia.com/guide/[[slug-cocon]]" },
+    { "@type": "ListItem", "position": 3, "name": "[[Titre court de l'article]]" }
+  ]
+}
+</script>
+<!-- FAQPage : parité STRICTE avec le texte visible de .faq, question par question, réponse par
+     réponse, au caractère près — vérifiée systématiquement avant publication. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "[[Question 1 — identique au texte visible]]", "acceptedAnswer": { "@type": "Answer", "text": "[[Réponse 1 — identique au texte visible]]" } },
+    { "@type": "Question", "name": "[[Question 2]]", "acceptedAnswer": { "@type": "Answer", "text": "[[Réponse 2]]" } },
+    { "@type": "Question", "name": "[[Question 3]]", "acceptedAnswer": { "@type": "Answer", "text": "[[Réponse 3]]" } }
+  ]
+}
+</script>
+
+<script>
+  const links = [...document.querySelectorAll('.toc a'), ...document.querySelectorAll('.mobile-toc a')];
+  /* .filter(id => !id.includes('[[')) : garde-fou propre au TEMPLATE — tant que les ancres
+     [[ancre-1]] n'ont pas été remplacées par de vrais id, querySelector lèverait une erreur de
+     sélecteur invalide. Sans effet une fois les vraies ancres en place. */
+  const sectionIds = [...new Set(links.map(l => l.getAttribute('href')))].filter(id => id && !id.includes('[['));
+  const sections = sectionIds.map(id => document.querySelector(id)).filter(Boolean);
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => obs.observe(s));
+
+  const article = document.querySelector('article');
+  const toc = document.querySelector('.toc');
+  function updateProgress(){
+    if(!toc) return;
+    const rect = article.getBoundingClientRect();
+    const total = rect.height - window.innerHeight * 0.5;
+    const passed = -rect.top;
+    const progress = total > 0 ? Math.min(1, Math.max(0, passed / total)) : 0;
+    toc.style.setProperty('--progress', progress.toFixed(3));
+  }
+  document.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+</script>
+
+</body>
+</html>
