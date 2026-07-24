@@ -87,7 +87,7 @@
      trop en marges égales de chaque côté, plutôt qu'un vide asymétrique après le sommaire — choix
      du 24/07 après retour direct. Contrepartie assumée : au-delà de 1317px de large, le bord
      gauche du texte n'est plus exactement sur celui du fil d'Ariane/CTA (inchangé en-deçà). */
-  .editorial{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:var(--s-3) 24px var(--s-3); display:grid; grid-template-columns:760px 216px; gap:56px; justify-content:center;}
+  .editorial{max-width:clamp(1080px, 82vw, 1320px); margin:0 auto; padding:var(--s-4) 24px var(--s-4); display:grid; grid-template-columns:760px 216px; gap:56px; justify-content:center;}
   /* Seuil à 1079 (pas 1024) : bug trouvé le 24/07 en auditant les débordements — la grille 2
      colonnes a besoin d'un plancher de 1080px (760+56+216+48 padding) pour tenir sans déborder.
      Un seuil à 1024 laissait une zone morte de 1025 à 1079px où le mode mobile n'était plus actif
@@ -102,28 +102,29 @@
   .article-meta{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:13px; color:var(--muted); margin-top:var(--s-2);}
   .article-meta a{color:var(--blue-text); text-decoration:underline;}
 
-  .hero-answer{margin-top:var(--s-3);}
+  .hero-answer{margin-top:var(--s-4);}
 
-  /* Chapô "L'avis France IA" — retour du 24/07 : doit avoir une présentation PARTICULIÈRE, pas
-     se fondre dans le lot des encarts à étiquette inclinée (.blk-tag) utilisés partout ailleurs
-     pour les mentions courtes/utilitaires. Traitement propre au chapô, jamais réutilisé ailleurs :
-     pas de boîte ni de fond, juste un guillemet géant (même famille que blockquote.expert, en
-     rouge) — pas de kicker/titre non plus (retiré le 24/07), le guillemet seul suffit à signaler
-     que c'est le seul chapô de la page. */
-  .hero-answer .preface{position:relative; margin:0; padding:0 0 0 34px;}
-  .preface::before{content:"\201C"; position:absolute; left:-6px; top:-18px; font-family:Georgia,"Times New Roman",serif; font-style:normal; font-weight:800; font-size:64px; line-height:1; color:var(--red); opacity:.24;}
-  .preface p{margin:0; font-size:23px; line-height:1.55; color:var(--ink); font-weight:500; font-style:italic;}
-  .preface strong{font-weight:600; font-style:normal;}
+  /* Chapô "L'avis France IA" — retour du 24/07 : "c'est un style CSS, juste un paragraphe mais
+     en italique." Rien d'autre : pas de boîte, pas de guillemet décoratif, pas de couleur à part
+     — un paragraphe du corps, seul le style italique le distingue. */
+  .hero-answer .preface{margin:0;}
+  .preface p{margin:0; font-size:17px; line-height:1.65; color:var(--gray-text); font-style:italic; max-width:70ch;}
+  .preface strong{font-weight:700; font-style:italic;}
   .preface a{color:var(--blue-text); text-decoration:underline; font-weight:700;}
 
-  .hero-answer .tldr{margin-top:var(--s-3);}
+  .hero-answer .tldr{margin-top:var(--s-4);}
   .tldr{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); box-shadow:var(--shadow-blue-2);}
   .tldr p{margin:0; font-size:17px; line-height:1.65; color:var(--ink);}
   .tldr ul{margin:0; padding-left:20px; font-size:16px; line-height:1.6; color:var(--ink); max-width:62ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
   .tldr li{margin-bottom:4px;}
   .tldr li:last-child{margin-bottom:0;}
 
-  .price-warning{background:var(--red-soft); border:1px solid var(--red); border-radius:var(--r-m); padding:14px var(--s-3); margin:var(--s-3) 0; font-size:14px; line-height:1.6; color:var(--red-text); box-shadow:var(--shadow-red-3);}
+  /* Taxonomie des blocs (24/07, retour direct) : rouge = avis France IA / point important
+     (garde le style à étiquette inclinée déjà en place — fi-teaser, proof, fi-insight, sovereign-
+     note, et maintenant price-warning) ; bleu = mention / pour aller plus loin, MÊME style que
+     les blocs rouges (fi-mention, hub-encart) ; tout le reste (données, tableaux, citation
+     attribuée) garde sa présentation propre, déjà distincte. */
+  .price-warning{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; font-size:14px; line-height:1.6; box-shadow:var(--shadow-red-3);}
   .price-warning a{color:var(--red-text); text-decoration:underline; font-weight:700;}
 
   /* Sommaire + rail de progression (signature V1 lab) : le filet gauche existant du sommaire
@@ -140,13 +141,13 @@
   @media (prefers-reduced-motion:no-preference){ .toc ul::before{transition:height .2s ease-out;} }
 
   .main-col p{font-size:17px; line-height:1.65; margin:0 0 20px; max-width:70ch;}
-  .main-col h2{font-size:28px; line-height:1.25; margin-top:var(--s-3); margin-bottom:20px;}
-  .main-col h3{font-size:21px; line-height:1.3; margin-top:var(--s-3); margin-bottom:14px;}
+  .main-col h2{font-size:28px; line-height:1.25; margin-top:var(--s-4); margin-bottom:20px;}
+  .main-col h3{font-size:21px; line-height:1.3; margin-top:var(--s-4); margin-bottom:14px;}
   .main-col ul, .main-col ol{font-size:17px; line-height:1.65; padding-left:22px; max-width:70ch; text-align:justify; text-justify:inter-word; hyphens:auto; -webkit-hyphens:auto;}
   .main-col li{margin-bottom:6px;}
   .inline-link{text-decoration:underline;}
 
-  .price-tabs{margin:var(--s-3) 0;}
+  .price-tabs{margin:var(--s-4) 0;}
   .price-tabs input[type="radio"]{position:absolute; opacity:0; pointer-events:none;}
   .price-tabs .tab-nav{display:flex; gap:8px; border-bottom:2px solid var(--border); margin-bottom:var(--s-2);}
   .price-tabs .tab-nav label{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:14px; color:var(--muted); padding:10px 16px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px;}
@@ -157,7 +158,7 @@
   #tab-team:checked ~ .panel-team{display:block;}
   .price-tabs table.compare{margin-top:0;}
 
-  .bar-chart{display:flex; gap:var(--s-4); padding:var(--s-4) var(--s-3); background:#fff; border-radius:var(--r-m); margin:var(--s-3) 0; box-sizing:border-box; box-shadow:var(--shadow-blue-2);}
+  .bar-chart{display:flex; gap:var(--s-4); padding:var(--s-4) var(--s-3); background:#fff; border-radius:var(--r-m); margin:var(--s-4) 0; box-sizing:border-box; box-shadow:var(--shadow-blue-2);}
   .bar-group{display:flex; gap:14px; flex:1; min-width:0;}
   .bar-col{display:flex; flex-direction:column; align-items:center; flex:1; min-width:0;}
   .bar-track{height:120px; width:100%; display:flex; align-items:flex-end; justify-content:center;}
@@ -168,7 +169,7 @@
   .bar-chart-legend span{display:inline-flex; align-items:center; gap:6px; font-style:normal;}
   .bar-chart-legend i{width:10px; height:10px; border-radius:2px; display:inline-block;}
 
-  .eco-diagram{display:flex; gap:var(--s-3); margin:var(--s-3) 0; flex-wrap:wrap;}
+  .eco-diagram{display:flex; gap:var(--s-3); margin:var(--s-4) 0; flex-wrap:wrap;}
   .eco-col{flex:1; min-width:200px; background:#fff; border-radius:var(--r-m); padding:var(--s-4) var(--s-3); text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px; box-shadow:var(--shadow-blue-2);}
   .eco-badge{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:14px; padding:8px 14px; border-radius:20px; background:var(--blue-soft); color:var(--blue-text);}
   .eco-arrow{font-size:20px; color:var(--muted); line-height:1;}
@@ -177,20 +178,15 @@
   .eco-result.claude{background:var(--red); box-shadow:0 6px 16px -4px rgba(214,54,43,.5);}
   p.eco-caption{font-size:14px; color:var(--muted); text-align:center; margin:0 0 var(--s-3); max-width:none; font-style:italic;}
 
-  .fi-teaser{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:26px var(--s-3) 18px; margin:var(--s-3) 0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
+  .fi-teaser{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:26px var(--s-3) 18px; margin:var(--s-4) 0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
   .fi-teaser p{margin:0; font-size:15px; max-width:62ch;}
   .fi-teaser a{color:var(--red-text); text-decoration:underline; font-weight:700;}
 
   .proof-photo{aspect-ratio:16/9; max-width:100%; border-radius:var(--r-s); background:repeating-linear-gradient(45deg,var(--red-soft),var(--red-soft) 10px,#F5D5D2 10px,#F5D5D2 20px); display:flex; align-items:center; justify-content:center; margin-bottom:var(--s-2); padding:var(--s-2); font-size:13px; color:var(--red-text); font-style:italic; text-align:center;}
-  .fi-badge{display:inline-flex; align-items:center; justify-content:center; width:19px; height:19px; border-radius:6px; background:var(--blue); color:#fff; font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:9px; letter-spacing:-.01em; flex-shrink:0;}
-  .fi-badge.red{background:var(--red);}
-  .mini-note{background:#fff; border-radius:var(--r-s); padding:14px 16px; margin:var(--s-3) 0; font-size:14.5px; line-height:1.6; box-shadow:0 6px 16px -12px rgba(34,40,49,.22);}
-  .mini-note .mn-tag{display:inline-block; font-family:"Manrope",Arial,sans-serif; font-weight:800; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; padding:2px 9px; border-radius:20px; margin-bottom:7px;}
-  .mini-note.mention{border-left:3px solid var(--blue);}
-  .mini-note.mention .mn-tag{background:var(--blue-soft); color:var(--blue-text);}
-  .mini-note.bonus{border-left:3px solid var(--red);}
-  .mini-note.bonus .mn-tag{background:var(--red-soft); color:var(--red-text);}
-  .mini-note p{margin:0; font-size:14.5px; text-align:left;}
+  /* Mention/pour-aller-plus-loin = bleu, même style à étiquette inclinée que les blocs rouges
+     (remplace l'ancien .mini-note à pastille inline, qui ne suivait pas cette famille). */
+  .fi-mention{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-blue-2);}
+  .fi-mention p{margin:0; font-size:15px; max-width:62ch;}
 
   .video-note{font-size:14px; color:var(--muted); margin-top:var(--s-2); padding-top:var(--s-2); border-top:1px dashed var(--border);}
 
@@ -198,16 +194,16 @@
      Free/Plus/Pro, Team/Enterprise) ne peuvent pas se couper — le tableau forçait 48px de
      débordement horizontal sur toute la page à 390px. Conteneur scrollable en dernier recours
      (comme dans Pipeline_Master_Prompts.html), le tableau lui-même reste intact. */
-  .table-wrap{overflow-x:auto; margin:var(--s-3) 0; -webkit-overflow-scrolling:touch;}
+  .table-wrap{overflow-x:auto; margin:var(--s-4) 0; -webkit-overflow-scrolling:touch;}
   .table-wrap table.compare{margin:0;}
-  table.compare{width:100%; border-collapse:separate; border-spacing:0; margin:var(--s-3) 0; font-size:15px; background:#fff; border-radius:var(--r-m); overflow:hidden; box-shadow:var(--shadow-blue-2);}
+  table.compare{width:100%; border-collapse:separate; border-spacing:0; margin:var(--s-4) 0; font-size:15px; background:#fff; border-radius:var(--r-m); overflow:hidden; box-shadow:var(--shadow-blue-2);}
   table.compare th{background:var(--blue); color:#fff; text-align:left; padding:14px; font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.02em;}
   table.compare td{padding:14px; background:#fff; color:var(--ink); border-bottom:1px solid var(--blue-soft);}
   table.compare tbody tr:last-child td{border-bottom:none;}
   table.compare tbody tr:hover td{background:var(--blue-soft);}
   table.compare .price{color:var(--ink); font-family:"Manrope",Arial,sans-serif; font-weight:700;}
 
-  .verdict{position:relative; background:var(--blue-soft); border-radius:var(--r-l); padding:32px var(--s-3) var(--s-4); margin:var(--s-3) 0; box-shadow:var(--shadow-blue-1);}
+  .verdict{position:relative; background:var(--blue-soft); border-radius:var(--r-l); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-blue-1);}
   .verdict-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-3); margin-bottom:var(--s-3);}
   @media (max-width:600px){ .verdict-grid{grid-template-columns:1fr;} }
   .verdict-card{background:#fff; border-radius:var(--r-m); padding:var(--s-3) var(--s-2) 20px; box-shadow:0 6px 18px -10px rgba(34,40,49,.18);}
@@ -220,12 +216,12 @@
   .verdict-card p{font-size:14px; line-height:1.55; color:var(--ink); margin:0;}
   .verdict-note{font-size:14px; color:var(--blue-text); font-style:italic; margin:0;}
 
-  .proof{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-3) 0; box-shadow:var(--shadow-red-1);}
+  .proof{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-red-1);}
   .proof p{margin:0 0 10px; font-size:16px; max-width:62ch;}
   .proof p:last-child{margin-bottom:0;}
   .proof .fill-in{background:#fff; border:1px dashed var(--red); padding:4px 8px; border-radius:4px; color:var(--red-text); font-style:italic;}
 
-  blockquote.expert{position:relative; font-family:"DM Sans",Arial,sans-serif; font-weight:500; font-style:italic; font-size:19px; line-height:1.5; background:var(--blue-soft); border-left:4px solid var(--blue); border-radius:0 var(--r-m) var(--r-m) 0; padding:var(--s-4) var(--s-3) var(--s-4) 56px; margin:var(--s-3) 0; color:var(--ink); max-width:62ch; box-shadow:var(--shadow-blue-1); overflow:hidden;}
+  blockquote.expert{position:relative; font-family:"DM Sans",Arial,sans-serif; font-weight:500; font-style:italic; font-size:19px; line-height:1.5; background:var(--blue-soft); border-left:4px solid var(--blue); border-radius:0 var(--r-m) var(--r-m) 0; padding:var(--s-4) var(--s-3) var(--s-4) 56px; margin:var(--s-4) 0; color:var(--ink); max-width:62ch; box-shadow:var(--shadow-blue-1); overflow:hidden;}
   blockquote.expert::before{content:"\201C"; position:absolute; left:10px; top:-6px; font-family:Georgia,"Times New Roman",serif; font-style:normal; font-weight:800; font-size:74px; line-height:1; color:var(--blue); opacity:.22;}
   .expert-attrib{display:flex; align-items:center; gap:10px; margin-top:14px; font-style:normal;}
   .expert-attrib .avatar{width:48px; height:48px; border-radius:50%; background:#fff; border:2px solid var(--blue); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--blue-text); flex-shrink:0; box-shadow:0 4px 10px -2px rgba(67,121,242,.4);}
@@ -244,12 +240,12 @@
   .blk-tag--red{background:var(--red); box-shadow:0 8px 16px -6px rgba(214,54,43,.55);}
   .blk-tag--blue{background:var(--blue); box-shadow:0 8px 16px -6px rgba(67,121,242,.55);}
 
-  .fi-insight{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-3) 0; box-shadow:var(--shadow-red-2);}
+  .fi-insight{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; box-shadow:var(--shadow-red-2);}
   .fi-insight p{margin:0; font-size:16px; max-width:62ch;}
 
-  .sovereign-note{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-3) 0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
+  .sovereign-note{position:relative; background:var(--red-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin:var(--s-4) 0; font-size:15px; line-height:1.6; box-shadow:var(--shadow-red-3);}
 
-  .faq{margin-top:var(--s-3);}
+  .faq{margin-top:var(--s-4);}
   .faq details{border-bottom:1px solid var(--border); padding:14px 0;}
   .faq summary{font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:17px; color:var(--ink); cursor:pointer; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:16px;}
   .faq summary::-webkit-details-marker{display:none;}
@@ -257,7 +253,7 @@
   .faq details[open] summary::after{content:"\2013"; background:var(--blue); color:#fff;}
   .faq p{margin-top:10px; font-size:16px;}
 
-  .hub-encart{background:var(--blue-soft); border-radius:var(--r-m); padding:var(--s-4) var(--s-3); margin-top:var(--s-3); display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; box-shadow:var(--shadow-blue-2);}
+  .hub-encart{position:relative; background:var(--blue-soft); border-radius:var(--r-m); padding:32px var(--s-3) var(--s-4); margin-top:var(--s-4); display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; box-shadow:var(--shadow-blue-2);}
   .hub-encart p{margin:0; font-size:16px; color:var(--ink); max-width:480px;}
   .hub-encart .tertiary-btn{color:var(--blue-text); font-family:"Manrope",Arial,sans-serif; font-weight:700; font-size:15px; text-decoration:none; white-space:nowrap; display:inline-flex; align-items:center; gap:6px;}
   .hub-encart .tertiary-btn svg{transition:transform .15s;}
@@ -270,7 +266,7 @@
      indépendant (760px centré seul dans le même conteneur ne tombe PAS au même endroit qu'une
      grille 760+56+216 centrée : les deux formules doivent être identiques, pas juste les mêmes
      valeurs). */
-  .pre-footer-cta-wrap{max-width:clamp(1080px, 82vw, 1320px); margin:var(--s-3) auto 0; padding:0 24px; display:grid; grid-template-columns:760px 216px; gap:56px; justify-content:center;}
+  .pre-footer-cta-wrap{max-width:clamp(1080px, 82vw, 1320px); margin:var(--s-4) auto 0; padding:0 24px; display:grid; grid-template-columns:760px 216px; gap:56px; justify-content:center;}
   .pre-footer-cta{grid-column:1; background:var(--blue); border-radius:var(--r-l); padding:var(--s-5) var(--s-4); text-align:center;}
   @media (max-width:1079px){ .pre-footer-cta-wrap{grid-template-columns:1fr; max-width:760px;} }
   .pre-footer-cta h2{color:#fff; font-size:28px; margin-bottom:12px;}
@@ -379,7 +375,9 @@
       </div>
 
       <h2 id="tableau">Gemini vs Claude : le comparatif prix et formules</h2>
-      <div class="price-warning">⚠ Les deux éditeurs facturent réellement en euros en France, mais le prix affiché dépend de l'engagement choisi. Chez Claude, le forfait Pro passe de <strong>15 €/mois</strong> facturé annuellement (180 € en une fois) à <strong>18 €/mois</strong> si vous payez chaque mois, un écart de 20 %, confirmé sur les <a href="https://claude.com/pricing" target="_blank" rel="nofollow noopener">tarifs officiels</a>. Gemini applique la même logique sur ses forfaits Google AI, détaillés sur <a href="https://one.google.com/about/google-ai-plans/" target="_blank" rel="nofollow noopener">one.google.com</a>. Vérifiez toujours le mode de facturation avant de comparer deux prix.</div>
+      <div class="price-warning">
+        <span class="blk-tag blk-tag--red"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>Point important</span>
+        Les deux éditeurs facturent réellement en euros en France, mais le prix affiché dépend de l'engagement choisi. Chez Claude, le forfait Pro passe de <strong>15 €/mois</strong> facturé annuellement (180 € en une fois) à <strong>18 €/mois</strong> si vous payez chaque mois, un écart de 20 %, confirmé sur les <a href="https://claude.com/pricing" target="_blank" rel="nofollow noopener">tarifs officiels</a>. Gemini applique la même logique sur ses forfaits Google AI, détaillés sur <a href="https://one.google.com/about/google-ai-plans/" target="_blank" rel="nofollow noopener">one.google.com</a>. Vérifiez toujours le mode de facturation avant de comparer deux prix.</div>
 
       <div class="price-tabs">
         <input type="radio" name="price-tab" id="tab-indiv" checked>
@@ -462,8 +460,8 @@
       <p>Point notable pour une entreprise sur Microsoft 365 : Claude s'intègre directement à la suite Microsoft 365 Copilot Studio et aux applications Office, ce que Gemini ne propose pas nativement.</p>
       <p>Une équipe qui a déjà Copilot n'a donc pas à choisir entre les deux. Claude vient s'ajouter dans le même environnement plutôt que le remplacer.</p>
 
-      <div class="mini-note mention">
-        <span class="mn-tag"><span class="fi-badge" style="width:15px;height:15px;font-size:7px;vertical-align:-2px;margin-right:5px;">FI</span>Mention France IA</span>
+      <div class="fi-mention">
+        <span class="blk-tag blk-tag--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>Mention France IA</span>
         <p>Le bon réflexe n'est pas de choisir l'outil le plus complet, mais celui qui s'intègre à ce que vous utilisez déjà&nbsp;: c'est ce qui fait gagner le plus de temps concrètement, avant même de comparer les fonctionnalités.</p>
       </div>
 
@@ -592,9 +590,10 @@
         </details>
       </div>
 
-      <p style="margin-top:var(--s-3);">Le bon réflexe n'est pas de chercher un vainqueur unique entre Gemini et Claude, mais de partir de l'écosystème déjà utilisé par l'entreprise avant de comparer les prix.</p>
+      <p style="margin-top:var(--s-4);">Le bon réflexe n'est pas de chercher un vainqueur unique entre Gemini et Claude, mais de partir de l'écosystème déjà utilisé par l'entreprise avant de comparer les prix.</p>
 
       <div class="hub-encart">
+        <span class="blk-tag blk-tag--blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Pour aller plus loin</span>
         <p>Envie de comparer toutes les IA génératives et choisir la bonne pour votre équipe&nbsp;?</p>
         <a class="tertiary-btn" href="/guide/comparatifs-ia">Tout notre guide Comparatifs IA <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
