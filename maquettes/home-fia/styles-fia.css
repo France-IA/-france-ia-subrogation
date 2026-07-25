@@ -1,0 +1,264 @@
+/* polices auto-hébergées (assets/fonts) — voir styles-fonts-local.css chargé
+   avant celle-ci dans le <head> ; fonts.gstatic.com est bloqué dans certains
+   bacs à sable de test, donc l'auto-hébergement est aussi ce qui permet de
+   vérifier le rendu réel. Gain de perf en prime : un domaine externe de
+   moins à résoudre/connecter avant le premier texte visible. */
+
+html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
+
+.fia-page {
+  --blue: #4379f2;
+  --blue-dark: #1c4eba;
+  --blue-soft: #f4f4fa;
+  --cream: #f5f3ec;
+  --ink: #16161a;
+  --muted: #54545e;
+  --dark: #222831;
+  --line: #e6e6ee;
+  --radius: 18px;
+
+  /* échelle typographique — valeurs mesurées sur la vraie page (l'échelle
+     "nombre d'or" posée initialement était une invention mathématique, pas
+     la réalité de Framer). */
+  --t-1: 13px;
+  --t0: 16px;
+  --t1: 20px;
+  --t2: 20px;
+  --t3: 25px;
+  --t4: 40px;
+  --t5: 53px;
+
+  --sp0: 16px;
+  --sp1: 20px;
+  --sp2: 26px;
+  --sp3: 33px;
+  --sp4: 42px;
+  --sp5: 53px;
+  --sp6: 68px;
+  --sp7: 86px;
+  --sp8: 110px;
+  --sp9: 140px;
+
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.fia-page *, .fia-page *::before, .fia-page *::after { box-sizing: border-box; }
+.fia-page img { max-width: 100%; height: auto; display: block; }
+.fia-page a { color: inherit; text-decoration: none; }
+.fia-page h1, .fia-page h2, .fia-page h3, .fia-page h4, .fia-page .fia-h2 { font-family: 'Manrope', 'DM Sans', sans-serif; }
+
+/* ---- conteneurs & utilitaires ---- */
+.fia-page .fia-wrap { max-width: clamp(1080px, 82vw, 1320px); margin: 0 auto; padding: 0 var(--sp2); }
+/* 80px mesuré sur la vraie page pour la majorité des sections. Deux sections
+   dérogent, mesurées séparément : parti pris (60px) et avis Trustpilot
+   (100px) — voir .fia-section--pillars et .fia-avis. */
+.fia-page .fia-section { padding: 80px 0; }
+.fia-page .fia-section--tight { padding: var(--sp6) 0; }
+.fia-page .fia-section.fia-section--pillars { padding: 60px 0; }
+.fia-page .fia-section.fia-avis { padding: 100px 0; }
+.fia-page .fia-eyebrow {
+  font-family: 'Fragment Mono', monospace; font-size: var(--t-1); letter-spacing: .04em;
+  text-transform: uppercase; color: var(--blue); margin: 0 0 var(--sp0);
+}
+.fia-page h2.fia-h2 { font-size: clamp(28px, 3.4vw, var(--t4)); line-height: 1.1; font-weight: 700; margin: 0 0 var(--sp1); letter-spacing: -.02em; }
+.fia-page .fia-h2 em { font-style: normal; color: var(--blue); }
+.fia-page .fia-lead { font-size: var(--t1); line-height: 1.2; font-weight: 500; color: var(--muted); max-width: 900px; margin: 0 0 var(--sp4); }
+.fia-page .fia-center { text-align: center; }
+.fia-page .fia-center .fia-lead { margin-left: auto; margin-right: auto; }
+
+/* ---- boutons ---- */
+.fia-page .fia-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--blue); color: #fff; font-weight: 600; font-size: var(--t0);
+  padding: var(--sp1) var(--sp3); border-radius: 0; transition: background .18s ease, transform .18s ease;
+}
+.fia-page .fia-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
+.fia-page .fia-btn--ghost { background: transparent; color: var(--blue); border: 1.5px solid var(--blue); }
+.fia-page .fia-btn--ghost:hover { background: var(--blue); color: #fff; }
+.fia-page .fia-btn--outline { background: #fff; color: var(--ink); border: 1.5px solid var(--line); padding: var(--sp0) calc(var(--sp3) - var(--sp0)); }
+.fia-page .fia-btn--outline:hover { background: #fff; color: var(--blue); border-color: var(--blue); }
+.fia-page .fia-cta-row { margin-top: var(--sp4); }
+
+/* ---- header ----
+   backdrop-filter sur un élément sticky force le navigateur à recomposer le
+   flou à chaque frame de scroll (jank vécu). Fond quasi opaque à la place. */
+.fia-page .fia-header {
+  position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.98);
+  border-bottom: 1px solid var(--line);
+}
+.fia-page .fia-nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.fia-page .fia-nav__logo img { height: 46px; }
+.fia-page .fia-nav__links { display: flex; align-items: center; gap: 28px; }
+.fia-page .fia-nav__links a:not(.fia-btn) { font-weight: 500; color: var(--muted); }
+.fia-page .fia-nav__links a:not(.fia-btn):hover { color: var(--ink); }
+
+/* ---- hero ---- */
+.fia-page .fia-hero { padding: 64px 0 80px; background: #fff; }
+.fia-page .fia-hero__proof { display: flex; align-items: center; gap: 22px; margin-top: 24px; }
+.fia-page .fia-hero__proof img.fia-cpf { height: 62px; width: auto; }
+.fia-page .fia-hero__proof img.fia-stationf { height: 30px; width: auto; }
+.fia-page .fia-hero__tp { max-width: 240px; }
+.fia-page .fia-hero__grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: start; }
+.fia-page .fia-hero__text { display: flex; flex-direction: column; gap: 26px; }
+.fia-page .fia-hero h1 { font-size: clamp(40px, 5.6vw, 72px); line-height: 1.1; font-weight: 700; letter-spacing: -.02em; margin: 0 0 22px; }
+.fia-page .fia-hero h1 span { color: var(--blue); }
+.fia-page .fia-hero p { font-size: 20px; line-height: 1.2; color: var(--muted); margin: 0 0 28px; }
+@media (max-width: 560px) { .fia-page .fia-hero h1 { line-height: 1.2; } }
+.fia-page .fia-badges { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+.fia-page .fia-badge {
+  font-size: 14px; font-weight: 600; color: var(--blue);
+  background: rgba(67,121,242,.1); border: 1px solid rgba(67,121,242,.22); padding: 8px 16px; border-radius: 999px;
+}
+.fia-page .fia-form-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; box-shadow: 0 24px 60px -28px rgba(67,121,242,.4); overflow: hidden; }
+.fia-page .fia-form-card iframe { width: 100%; border: none; border-radius: 12px; min-height: 720px; display: block; margin-bottom: -16px; }
+
+/* ---- piliers (parti pris) ----
+   fond, rayon et icône mesurés sur la vraie page : pas de bordure (l'effet
+   de contour vient du contraste doux entre le fond bleu à 10% d'opacité et
+   le blanc), rayon 10px, icône 140x140 à 30% d'opacité positionnée pour
+   déborder du coin haut-droit et rognée par overflow:hidden. */
+.fia-page .fia-pillars { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp2); margin: var(--sp5) auto 0; max-width: 940px; }
+.fia-page .fia-pillar { position: relative; overflow: hidden; flex: 0 1 420px; background: rgba(67,121,242,.1); border-radius: 10px; padding: var(--sp4) var(--sp3); text-align: left; }
+.fia-page .fia-pillar h3 { font-size: 38px; line-height: 1; font-weight: 600; color: var(--blue); margin: 0 0 var(--sp0); }
+.fia-page .fia-pillar p { margin: 0; color: var(--muted); font-size: var(--t0); }
+.fia-page .fia-pillar__ico { position: absolute; top: 7px; right: -10px; width: 140px; height: 140px; color: var(--blue); stroke-width: 1.5; opacity: .3; }
+
+/* ---- avis Trustpilot (widget) ---- */
+.fia-page .fia-avis__more { font-weight: 600; color: var(--blue); margin: -8px 0 var(--sp2); }
+.fia-page .fia-avis .trustpilot-widget { margin: 0 auto var(--sp4); max-width: 1030px; }
+
+/* ---- accordéon modules ---- */
+.fia-page .fia-acc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp5); align-items: start; }
+.fia-page .fia-acc-grid img { border-radius: var(--radius); width: 100%; aspect-ratio: 510/530; object-fit: cover; }
+.fia-page .fia-acc details { border-bottom: 1px solid var(--line); padding: 4px 0; }
+.fia-page .fia-acc summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 16px; padding: var(--sp1) 0; font-weight: 500; font-size: 20px; font-family: 'DM Sans', sans-serif; }
+.fia-page .fia-acc summary::-webkit-details-marker { display: none; }
+.fia-page .fia-acc__ico { flex: 0 0 auto; width: 30px; height: 30px; color: var(--blue); }
+.fia-page .fia-acc h3 { font: inherit; margin: 0; display: inline; font-family: 'DM Sans', sans-serif; }
+.fia-page .fia-acc__plus { margin-left: auto; color: var(--blue); font-size: 24px; line-height: 1; }
+.fia-page .fia-acc__plus::after { content: "+"; }
+.fia-page .fia-acc details[open] .fia-acc__plus::after { content: "–"; }
+.fia-page .fia-acc details p { margin: 0 0 var(--sp1) 46px; color: var(--muted); font-size: var(--t0); }
+.fia-page .fia-acc-tools { display: grid; grid-template-columns: repeat(3, auto); gap: 18px 32px; margin-top: var(--sp4); }
+.fia-page .fia-acc-tools img { height: 28px; width: 140px; object-fit: contain; object-position: left center; }
+@media (max-width: 560px) { .fia-page .fia-acc-tools { grid-template-columns: repeat(2, auto); } }
+
+/* ---- étapes (pratique et personnalisée) ---- */
+.fia-page .fia-steps { display: flex; flex-direction: column; gap: var(--sp5); margin-top: var(--sp4); }
+.fia-page .fia-step { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp5); align-items: center; }
+.fia-page .fia-step--rev .fia-step__media { order: 2; }
+.fia-page .fia-step__media img { width: 100%; border-radius: var(--radius); aspect-ratio: 446/295; object-fit: cover; }
+.fia-page .fia-step__num { display: inline-block; font-family: 'Fragment Mono', monospace; color: var(--blue); font-size: var(--t-1); margin-bottom: var(--sp0); }
+.fia-page .fia-step h3 { font-size: var(--t3); line-height: 1.2; font-weight: 700; margin: 0 0 var(--sp0); }
+.fia-page .fia-step p { margin: 0; color: var(--muted); font-size: var(--t0); }
+
+/* ---- cartes 3 (faite pour vous si) ---- */
+.fia-page .fia-cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp2); margin-top: var(--sp4); }
+.fia-page .fia-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: var(--sp3); }
+.fia-page .fia-card h3 { font-size: var(--t3); line-height: 1.2; font-weight: 700; margin: 0 0 var(--sp0); }
+.fia-page .fia-card p { margin: 0 0 var(--sp1); color: var(--muted); font-size: var(--t0); }
+.fia-page .fia-card__link { display: inline-block; font-weight: 600; color: var(--blue); }
+.fia-page .fia-card__link:hover { text-decoration: underline; }
+
+/* ---- bénéfices (vous repartirez avec) ---- */
+.fia-page .fia-benefits { display: flex; flex-direction: column; margin-top: var(--sp4); }
+.fia-page .fia-benefit { border-bottom: 1px solid var(--line); padding: var(--sp3) 0; }
+.fia-page .fia-benefit__head { display: flex; align-items: center; gap: var(--sp0); padding: var(--sp1) var(--sp3); border-bottom: 1px solid var(--line); }
+.fia-page .fia-benefit__num { font-family: 'Fragment Mono', monospace; color: var(--blue); font-size: var(--t-1); }
+.fia-page .fia-benefit__head p { font-size: var(--t1); font-weight: 700; margin: 0; }
+.fia-page .fia-benefit__body { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp4); align-items: center; padding-top: var(--sp3); }
+.fia-page .fia-benefit__hook { font-weight: 600; color: var(--ink); margin: 0 0 var(--sp1); }
+.fia-page .fia-benefit__body ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: var(--t0); }
+.fia-page .fia-benefit__body img { width: 100%; aspect-ratio: 504/260; object-fit: cover; border: 1px solid var(--line); border-radius: 12px; }
+
+/* ---- formateurs (carrousel) ---- */
+.fia-page .fia-carousel { position: relative; margin-top: var(--sp4); }
+.fia-page .fia-trainers { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 8px; scrollbar-width: none; }
+.fia-page .fia-trainers::-webkit-scrollbar { display: none; }
+.fia-page .fia-trainer { position: relative; flex: 0 0 260px; aspect-ratio: 340/420; border-radius: var(--radius); overflow: hidden; scroll-snap-align: start; display: block; }
+.fia-page .fia-trainer img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
+.fia-page .fia-trainer:hover img { transform: scale(1.04); }
+.fia-page .fia-trainer__grad { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,.75) 100%); }
+.fia-page .fia-trainer__cap { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--sp1); color: #fff; }
+.fia-page .fia-trainer__name { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.fia-page .fia-trainer__name p { font-size: var(--t1); font-weight: 700; margin: 0; }
+.fia-page .fia-trainer__stat { font-size: 12px; background: rgba(255,255,255,.18); padding: 3px 8px; border-radius: 999px; }
+.fia-page .fia-trainer__role { font-size: 13px; color: rgba(255,255,255,.85); margin: 4px 0 0; }
+.fia-page .fia-carousel__btn { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: #fff; border: 1px solid var(--line); box-shadow: 0 8px 20px -8px rgba(0,0,0,.25); cursor: pointer; z-index: 2; }
+.fia-page .fia-carousel__btn--prev { left: -22px; }
+.fia-page .fia-carousel__btn--next { right: -22px; }
+
+/* ---- résumé (carte) ---- */
+.fia-page .fia-summary { display: flex; flex-direction: column; align-items: center; gap: var(--sp3); }
+.fia-page .fia-summary__card { width: 100%; max-width: 550px; background: #fff; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; text-align: left; }
+.fia-page .fia-summary__head { background: var(--blue); padding: var(--sp3) var(--sp3) var(--sp2); }
+.fia-page .fia-summary__head h3 { color: #fff; font-size: var(--t3); line-height: 1.2; font-weight: 700; text-align: center; margin: 0 0 var(--sp2); }
+.fia-page .fia-summary__head img { width: 100%; aspect-ratio: 490/269; object-fit: cover; border-radius: 10px; }
+.fia-page .fia-summary__body { padding: var(--sp3); }
+.fia-page .fia-summary__list { list-style: none; margin: 0 0 var(--sp2); padding: 0; display: flex; flex-direction: column; gap: var(--sp2); }
+.fia-page .fia-summary__list li { display: flex; gap: 14px; align-items: flex-start; }
+.fia-page .fia-summary__list svg { flex: 0 0 auto; width: 20px; height: 20px; margin-top: 2px; color: var(--blue); }
+.fia-page .fia-summary__list p { margin: 0; color: var(--ink); font-size: var(--t0); }
+.fia-page .fia-summary__price { text-align: center; font-size: 40px; font-weight: 800; color: var(--blue); margin: 0; padding-top: var(--sp2); border-top: 1px solid var(--line); }
+
+/* ---- FAQ ---- */
+.fia-page .fia-faq { max-width: clamp(940px, 60vw, 1080px); margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+.fia-page .fia-faq details { border: 1px solid rgba(67,121,242,.35); border-radius: 10px; padding: 4px 20px; }
+.fia-page .fia-faq summary { cursor: pointer; list-style: none; font-weight: 600; font-size: 18px; padding: var(--sp1) 0; display: flex; justify-content: space-between; gap: 16px; }
+.fia-page .fia-faq summary::-webkit-details-marker { display: none; }
+.fia-page .fia-faq summary::after { content: "+"; color: var(--blue); font-size: 24px; line-height: 1; }
+.fia-page .fia-faq details[open] summary::after { content: "–"; }
+.fia-page .fia-faq details p { margin: 0 0 var(--sp1); color: var(--muted); text-align: justify; font-size: var(--t0); }
+.fia-page .fia-faq details ol { text-align: justify; }
+.fia-page .fia-faq__more { display: flex; align-items: center; gap: 16px; padding: var(--sp1) 0; font-weight: 600; font-size: var(--t1); color: var(--ink); }
+.fia-page .fia-faq__more::after { content: "↗"; margin-left: auto; color: var(--blue); font-size: 20px; }
+.fia-page .fia-faq__more:hover { color: var(--blue); }
+
+/* ---- CTA final + footer ----
+   padding-bottom à 0 sur le CTA : sur la vraie page, CTA final et footer
+   partagent un seul écart (64px, porté par le padding-top du footer) — les
+   deux valant chacun --sp8 empilait 174px, d'où un pied de page "trop
+   espacé" repéré en revue. */
+.fia-page .fia-final { background: var(--cream); padding-bottom: 0; }
+.fia-page .fia-final__card { max-width: clamp(720px, 45vw, 860px); margin: 0 auto; background: var(--blue); color: #fff; border-radius: var(--radius); padding: var(--sp6) var(--sp4); text-align: center; }
+.fia-page .fia-final h3 { font-size: clamp(22px, 3vw, 25px); line-height: 1.2; font-weight: 700; margin: 0 auto var(--sp2); letter-spacing: -.02em; max-width: 520px; }
+.fia-page .fia-final .fia-btn { background: #fff; color: var(--blue); }
+.fia-page .fia-final .fia-btn:hover { background: var(--ink); color: #fff; }
+
+.fia-page .fia-footer { background: var(--cream); color: var(--muted); padding: 64px 0 var(--sp3); }
+.fia-page .fia-footer__top { display: grid; grid-template-columns: 1fr auto auto; gap: var(--sp6); }
+.fia-page .fia-footer img.fia-footer__logo { height: 36px; margin-bottom: var(--sp0); }
+.fia-page .fia-footer__brand p { color: var(--ink); font-weight: 500; margin: 0; font-size: var(--t0); }
+.fia-page .fia-footer__group-title { color: var(--ink); font-size: 22px; font-weight: 600; margin: 0 0 var(--sp2); }
+.fia-page .fia-footer ul { list-style: none; margin: 0; padding: 0; }
+.fia-page .fia-footer li { margin-bottom: var(--sp2); font-size: var(--t0); }
+.fia-page .fia-footer a { color: var(--muted); }
+.fia-page .fia-footer a:hover { color: var(--blue); }
+.fia-page .fia-footer__qualiopi { margin-top: var(--sp2); max-width: 256px; }
+.fia-page .fia-footer__qualiopi img { width: 256px; max-width: 100%; height: auto; display: block; border: 1px solid rgba(0,0,0,.08); border-radius: 4px; }
+.fia-page .fia-footer__qualiopi small { display: block; font-size: var(--t-1); color: var(--muted); margin: 10px 0 6px; line-height: 1.4; max-width: 256px; }
+.fia-page .fia-footer__qualiopi a { color: var(--blue); font-size: var(--t-1); font-weight: 500; }
+.fia-page .fia-footer__bottom { border-top: 1px solid rgba(0,0,0,.1); margin-top: 38px; padding-top: var(--sp2); font-size: var(--t-1); text-align: center; color: var(--muted); }
+
+/* ---- animation d'apparition au scroll ---- */
+.fia-page .fia-fade { opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease; }
+.fia-page .fia-fade.fia-in { opacity: 1; transform: translateY(0); }
+
+/* ---- responsive ---- */
+@media (max-width: 960px) {
+  .fia-page .fia-hero__grid { grid-template-columns: minmax(0,1fr); }
+  .fia-page .fia-pillars, .fia-page .fia-cards3 { grid-template-columns: minmax(0,1fr); }
+  /* padding mesuré à 25px sur la vraie page en mobile (var(--sp4)/(--sp3) du
+     desktop faisait manquer ~16px de largeur de texte). */
+  .fia-page .fia-pillar { padding: 25px; }
+  .fia-page .fia-prog { grid-template-columns: minmax(0,1fr); gap: 24px; }
+  .fia-page .fia-acc-grid { grid-template-columns: minmax(0,1fr); }
+  .fia-page .fia-footer__top { grid-template-columns: minmax(0,1fr); gap: 36px; }
+  .fia-page .fia-final__card { padding: 36px 28px; }
+  .fia-page .fia-step { grid-template-columns: minmax(0,1fr); gap: 18px; }
+  .fia-page .fia-step--rev .fia-step__media { order: 0; }
+  .fia-page .fia-benefit__body { grid-template-columns: minmax(0,1fr); gap: 20px; }
+  .fia-page .fia-section { padding: 56px 0; }
+}
