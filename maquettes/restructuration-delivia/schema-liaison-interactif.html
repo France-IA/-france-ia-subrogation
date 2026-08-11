@@ -58,6 +58,15 @@ button:hover{background:#eef1f6}
 .card .col .cn{font-family:ui-monospace,Consolas,monospace; word-break:break-all}
 .card .col .ct{color:var(--muted); text-align:right; flex:none; max-width:46%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .card.nouvelle .tname::after{content:" NOUVELLE"; font-size:9px; color:#8a4fbf; letter-spacing:.4px}
+.card.core{width:222px; border:1.5px solid #aab6cf; box-shadow:0 2px 10px rgba(40,60,110,.18)}
+.card.core .head{padding:9px 10px 7px}
+.card.core .tname{font-size:13.5px}
+.zonetitle{
+  position:absolute; left:0; top:0; pointer-events:none; user-select:none; white-space:nowrap;
+  font-size:26px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+  color:rgba(31,36,48,.11);
+}
+#flowhint{font-size:11.5px; color:var(--muted); white-space:nowrap}
 #stage.focus .card{opacity:.16}
 #stage.focus .card.hl{opacity:1}
 #stage.focus #edges path{opacity:.05}
@@ -91,12 +100,14 @@ button:hover{background:#eef1f6}
   <div class="ctl">
     <button id="expandAll">Tout déplier</button>
     <button id="collapseAll">Tout replier</button>
+    <button id="flowLayout" title="Revenir à la disposition par défaut : le flux métier de gauche à droite">Disposition : flux métier</button>
     <button id="resetLayout">Réinitialiser la disposition</button>
   </div>
   <div class="ctl" id="searchWrap">
     <input id="search" type="text" placeholder="Rechercher une table..." autocomplete="off">
     <div id="searchList"></div>
   </div>
+  <span id="flowhint">le flux : closing &rarr; vente &rarr; encaissement &rarr; livraison &rarr; conformité &rarr; qualité</span>
 </header>
 <div id="viewport">
   <div id="stage">
@@ -123,35 +134,72 @@ var DATA = JSON.parse(document.getElementById('data').textContent);
 var FAMC = {1:'--f1',2:'--f2',3:'--f3',4:'--f4',5:'--f5',6:'--f6',7:'--f7',8:'--f8',9:'--f9'};
 var css = getComputedStyle(document.documentElement);
 function famColor(f){ return css.getPropertyValue(FAMC[f]).trim(); }
-var LSKEY = 'delivia-schema-liaison-v1';
+var LSKEY = 'delivia-schema-liaison-v2';
 
 var byName = {}; DATA.tables.forEach(function(t){ byName[t.name] = t; });
 
-/* ---------- disposition initiale ---------- */
-var CORE = {
-  sessions:[-330,-170], session_apprenants:[-30,-190], apprenants:[280,-170],
-  offres:[-350,60], ventes:[-40,40], clients:[280,60],
-  paiements:[-200,270], documents_financiers:[120,270]
+/* ---------- disposition par défaut : le flux métier, de gauche à droite ----------
+   closing → personnes → vente & argent → delivery (formateurs dessous) → conformité → qualité,
+   bandeau technique tout en bas. Les tables du cœur (CORE_SET) sont agrandies. */
+var CORE_SET = {clients:1, ventes:1, paiements:1, offres:1, apprenants:1, session_apprenants:1, sessions:1};
+var FLOW = {
+  /* 1 · Commercial */
+  closing_calendars:[0,30], closing_sent_log:[0,96], commerciaux:[0,162],
+  /* 2 · Personnes */
+  clients:[270,30], apprenants:[270,130], user_profiles:[270,230],
+  /* 3 · Vente & argent */
+  offres:[560,-80],
+  ventes:[560,30], paiements:[810,30],
+  conventions:[560,140], documents_financiers:[810,140],
+  imputations:[560,280], imputation_lignes:[775,280],
+  facturation_bibby:[560,350], virement_rapprochements:[775,350],
+  facturation_card_checks:[560,420], facturation_card_documents:[775,420],
+  facturation_repair_status:[560,490], facture_emails_log:[775,490],
+  sync_edof_dismissals:[560,562],
+  /* 4 · Delivery */
+  sessions:[1090,30], session_apprenants:[1340,30],
+  coachings:[1090,140], session_checks:[1340,140],
+  coaching_creneaux:[1090,206], check_definitions:[1340,206],
+  coaching_temoignages:[1090,272], session_ard_config:[1340,272],
+  demandes_intra:[1090,338], hal_invitations:[1340,338],
+  salles:[1090,440], lieux:[1340,440], villes:[1090,506],
+  /* 5 · Formateurs */
+  formateurs:[1090,650], formateur_dispos:[1305,650], formateur_offres_autorisees:[1520,650],
+  formateur_documents:[1090,722], coffre_documents:[1305,722], formateur_ressources:[1520,722],
+  formateur_demandes:[1090,794], formateur_demandes_qualification:[1305,794], formateur_demandes_retrait:[1520,794],
+  formateur_qualification_checks:[1090,866], formateur_onboarding_checks:[1305,866], formateur_profil_modifications:[1520,866],
+  formateur_villes_notifications:[1090,938], notifications_formateurs_envoyees:[1305,938],
+  /* 6 · Conformité */
+  preuves:[1850,30], preuves_apprenant:[2065,30],
+  preuves_collecte_en_cours:[1850,100], preuves_runs:[2065,100],
+  drive_folders:[1850,172], certifiag_candidats:[2065,172],
+  /* 7 · Qualité */
+  fb_sessions:[1850,330], fb_survey_runs:[2065,330], fb_survey_tokens:[2280,330],
+  fb_responses:[1850,396], fb_question_results:[2065,396], fb_verbatims:[2280,396],
+  fb_syntheses:[1850,462], fb_run_insights:[2065,462], fb_alerts:[2280,462],
+  fb_formateur_overrides:[1850,528], fb_cron_sends:[2065,528], fb_sync_runs:[2280,528],
+  questionnaire_client_b2b_envois:[1850,594],
+  /* 8 · Technique (bandeau bas) */
+  tickets:[350,1040], ticket_comments:[565,1040], ticket_attachments:[780,1040], ticket_votes:[995,1040],
+  notifications:[1210,1040], pending_actions:[1425,1040], actions_log:[1640,1040],
+  app_logs:[350,1106], webhook_events:[565,1106], automation_emails_log:[780,1106], automation_settings:[995,1106],
+  message_templates:[1210,1106], faq_entries:[1425,1106], role_page_access:[1640,1106]
 };
-/* grappes satellites par famille : [x0, y0, nb colonnes] */
-var CLUSTERS = {
-  1:[-1480,-780,3], 2:[-520,-980,3], 3:[760,-140,3], 5:[-1560,180,3],
-  6:[-560,760,3], 7:[700,700,3], 8:[-1420,-40,2], 9:[760,-1080,3]
-};
+var ZONE_TITLES = [
+  ['Commercial', 0, -20],
+  ['Personnes', 270, -20],
+  ['Vente & argent', 560, -130],
+  ['Delivery', 1090, -20],
+  ['Formateurs', 1090, 605],
+  ['Conformité', 1850, -20],
+  ['Qualité', 1850, 285],
+  ['Technique', 350, 995]
+];
 function defaultPositions(){
-  var pos = {}, used = {};
+  var pos = {}, extra = 0;
   DATA.tables.forEach(function(t){
-    if (CORE[t.name]) { pos[t.name] = CORE[t.name].slice(); used[t.name]=1; }
-  });
-  Object.keys(CLUSTERS).forEach(function(f){
-    f = +f;
-    var c = CLUSTERS[f], i = 0;
-    DATA.tables.forEach(function(t){
-      if (t.family !== f || used[t.name]) return;
-      var col = i % c[2], row = Math.floor(i / c[2]);
-      pos[t.name] = [c[0] + col*225, c[1] + row*78];
-      i++;
-    });
+    if (FLOW[t.name]) pos[t.name] = FLOW[t.name].slice();
+    else { pos[t.name] = [350 + (extra%7)*215, 1190 + Math.floor(extra/7)*66]; extra++; }
   });
   return pos;
 }
@@ -190,9 +238,17 @@ function fmtRows(n){
   return '≈ ' + n.toLocaleString('fr-FR') + ' ligne' + (n > 1 ? 's' : '');
 }
 
+ZONE_TITLES.forEach(function(z){
+  var el = document.createElement('div');
+  el.className = 'zonetitle';
+  el.textContent = z[0];
+  el.style.transform = 'translate(' + z[1] + 'px,' + z[2] + 'px)';
+  world.appendChild(el);
+});
+
 DATA.tables.forEach(function(t){
   var el = document.createElement('div');
-  el.className = 'card' + (t.nouvelle ? ' nouvelle' : '');
+  el.className = 'card' + (t.nouvelle ? ' nouvelle' : '') + (CORE_SET[t.name] ? ' core' : '');
   el.dataset.name = t.name;
   var colsHtml = '<div class="role">' + esc(t.role) + '</div>';
   t.cols.forEach(function(c){
@@ -369,6 +425,11 @@ document.getElementById('collapseAll').onclick = function(){
 document.getElementById('resetLayout').onclick = function(){
   try { localStorage.removeItem(LSKEY); } catch(e){}
   location.reload();
+};
+document.getElementById('flowLayout').onclick = function(){
+  state.pos = defaultPositions();
+  DATA.tables.forEach(function(t){ placeCard(t.name); });
+  measureAll(); drawAll(); fitView(); save();
 };
 
 /* ---------- survol : mise en évidence ---------- */
