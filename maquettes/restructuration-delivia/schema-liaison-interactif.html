@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DELIV'IA : schéma de liaison des tables cibles (11/08/2026)</title>
+<style>
+:root{
+  --bg:#f4f5f7; --panel:#ffffff; --ink:#1f2430; --muted:#6b7280; --line:#d6d9e0;
+  --edge:#9aa1ad; --edge-new:#3b6fe0; --edge-logic:#8a929e;
+  --f1:#4d7fd6; --f2:#2fa36b; --f3:#e2574c; --f4:#8a4fbf; --f5:#e78a2e;
+  --f6:#2aa0a8; --f7:#c74e86; --f8:#a08432; --f9:#6b7280;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html,body{height:100%; overflow:hidden}
+body{font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif; background:var(--bg); color:var(--ink)}
+header{
+  position:fixed; top:0; left:0; right:0; z-index:30; background:var(--panel);
+  border-bottom:1px solid var(--line); padding:8px 14px; display:flex; flex-wrap:wrap;
+  gap:8px 14px; align-items:center; box-shadow:0 1px 4px rgba(20,25,40,.06);
+}
+header h1{font-size:15px; font-weight:600; margin-right:6px; white-space:nowrap}
+header h1 small{font-weight:400; color:var(--muted); font-size:12px}
+.ctl{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+button{
+  background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:4px 10px;
+  font-size:12.5px; cursor:pointer; color:var(--ink); line-height:1.5;
+}
+button:hover{background:#eef1f6}
+#search{border:1px solid var(--line); border-radius:6px; padding:4px 9px; font-size:12.5px; width:220px}
+#searchWrap{position:relative}
+#searchList{
+  position:absolute; top:30px; left:0; width:260px; max-height:260px; overflow:auto;
+  background:var(--panel); border:1px solid var(--line); border-radius:6px; display:none; z-index:40;
+  box-shadow:0 6px 18px rgba(20,25,40,.14);
+}
+#searchList div{padding:5px 10px; font-size:12.5px; cursor:pointer; display:flex; align-items:center; gap:7px}
+#searchList div:hover{background:#eef1f6}
+#viewport{position:absolute; inset:0; top:0; cursor:grab; overflow:hidden; touch-action:none}
+#viewport.panning{cursor:grabbing}
+#world{position:absolute; left:0; top:0; width:0; height:0; transform-origin:0 0}
+#edges{position:absolute; left:0; top:0; overflow:visible; width:1px; height:1px; pointer-events:none}
+#edges path{fill:none; stroke:var(--edge); stroke-width:1.4; opacity:.8}
+#edges path.k-new{stroke:var(--edge-new); stroke-width:1.7}
+#edges path.k-logic{stroke:var(--edge-logic); stroke-dasharray:5 4}
+.card{
+  position:absolute; width:200px; background:var(--panel); border:1px solid var(--line);
+  border-radius:9px; box-shadow:0 1px 4px rgba(20,25,40,.09); user-select:none; font-size:12px;
+}
+.card .head{padding:7px 9px 6px; cursor:pointer; border-left:4px solid var(--f9); border-radius:9px 0 0 9px}
+.card .tname{font-weight:600; font-size:12.5px; font-family:ui-monospace,Consolas,monospace; word-break:break-all}
+.card .meta{color:var(--muted); font-size:11px; margin-top:2px; display:flex; gap:6px; align-items:center}
+.card .dot{width:8px; height:8px; border-radius:50%; display:inline-block; flex:none}
+.card .cols{display:none; border-top:1px solid var(--line); padding:5px 9px 7px; max-height:340px; overflow:auto}
+.card.open .cols{display:block}
+.card .role{color:var(--muted); font-size:10.5px; font-style:italic; margin-bottom:5px; line-height:1.35}
+.card .col{display:flex; justify-content:space-between; gap:8px; padding:1px 0; line-height:1.45}
+.card .col .cn{font-family:ui-monospace,Consolas,monospace; word-break:break-all}
+.card .col .ct{color:var(--muted); text-align:right; flex:none; max-width:46%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.card.nouvelle .tname::after{content:" NOUVELLE"; font-size:9px; color:#8a4fbf; letter-spacing:.4px}
+#stage.focus .card{opacity:.16}
+#stage.focus .card.hl{opacity:1}
+#stage.focus #edges path{opacity:.05}
+#stage.focus #edges path.hl{opacity:1; stroke-width:2.2}
+.card.found{outline:3px solid #f0b429; outline-offset:2px}
+.card:active{cursor:grabbing}
+#legend{
+  position:fixed; right:12px; bottom:12px; z-index:25; background:var(--panel);
+  border:1px solid var(--line); border-radius:9px; padding:10px 13px; font-size:11.5px;
+  box-shadow:0 2px 8px rgba(20,25,40,.10); max-width:250px;
+}
+#legend h3{font-size:11.5px; margin:0 0 6px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted)}
+#legend label{display:flex; align-items:center; gap:6px; padding:1.5px 0; cursor:pointer}
+#legend .dot{width:9px; height:9px; border-radius:50%; display:inline-block; flex:none}
+#legend hr{border:none; border-top:1px solid var(--line); margin:8px 0}
+#legend .lt{display:flex; align-items:center; gap:7px; padding:1.5px 0}
+#legend svg{flex:none}
+#hint{position:fixed; left:12px; bottom:12px; z-index:25; color:var(--muted); font-size:11px; background:rgba(255,255,255,.85); padding:5px 9px; border-radius:6px}
+#zoomPct{font-size:11.5px; color:var(--muted); min-width:38px; text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <h1>DELIV'IA : schéma de liaison des tables cibles <small>proposition du 11/08/2026 · 80 tables · 138 liens</small></h1>
+  <div class="ctl">
+    <button id="zoomOut" title="Dézoomer">&minus;</button>
+    <span id="zoomPct">100%</span>
+    <button id="zoomIn" title="Zoomer">+</button>
+    <button id="fit" title="Recadrer la vue sur l'ensemble">Recadrer</button>
+  </div>
+  <div class="ctl">
+    <button id="expandAll">Tout déplier</button>
+    <button id="collapseAll">Tout replier</button>
+    <button id="resetLayout">Réinitialiser la disposition</button>
+  </div>
+  <div class="ctl" id="searchWrap">
+    <input id="search" type="text" placeholder="Rechercher une table..." autocomplete="off">
+    <div id="searchList"></div>
+  </div>
+</header>
+<div id="viewport">
+  <div id="stage">
+    <div id="world">
+      <svg id="edges" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+  </div>
+</div>
+<div id="legend">
+  <h3>Familles (filtre)</h3>
+  <div id="famFilters"></div>
+  <hr>
+  <h3>Types de liens</h3>
+  <div class="lt"><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#9aa1ad" stroke-width="1.6"/></svg>Clé étrangère reconduite</div>
+  <div class="lt"><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#3b6fe0" stroke-width="2"/></svg>FK nouvelle ou ajustée (fusions, nouveau modèle)</div>
+  <div class="lt"><svg width="26" height="8"><line x1="0" y1="4" x2="26" y2="4" stroke="#8a929e" stroke-width="1.6" stroke-dasharray="5 4"/></svg>Lien logique sans contrainte</div>
+</div>
+<div id="hint">Molette : zoom · glisser le fond : déplacer la vue · glisser une carte : la déplacer · clic sur l'en-tête : colonnes</div>
+<script id="data" type="application/json">{"tables":[{"name":"apprenants","family":1,"nouvelle":false,"role":"La fiche de chaque apprenant : identité, contact, parcours, et le lien vers sa fiche client.","rows":685,"cols":[{"n":"nom","t":"texte"},{"n":"prenom","t":"texte"},{"n":"email","t":"texte"},{"n":"telephone","t":"texte"},{"n":"ghl_contact_id","t":"texte"},{"n":"wedof_dossier_id","t":"texte"},{"n":"qualiobee_learner_id","t":"texte"},{"n":"apolearn_id","t":"texte"},{"n":"domaine_activite","t":"texte"},{"n":"type","t":"liste : particulier \\| entreprise \\| auto_entrepreneur"},{"n":"notes","t":"texte"},{"n":"orphelin","t":"booléen"},{"n":"source","t":"texte"},{"n":"conflit","t":"booléen"},{"n":"conflit_avec","t":"uuid"},{"n":"conflit_raison","t":"texte"},{"n":"adresse","t":"texte"},{"n":"code_postal","t":"texte"},{"n":"ville","t":"texte"},{"n":"statut_professionnel","t":"texte"},{"n":"is_placeholder","t":"booléen"},{"n":"date_naissance","t":"date"},{"n":"wedof_certification_id","t":"texte"},{"n":"client_id","t":"uuid"}]},{"name":"clients","family":1,"nouvelle":false,"role":"La fiche de qui paie : le particulier ou l'entreprise derrière chaque vente. **Important :** Chaque apprenant a sa fiche client liée.","rows":668,"cols":[{"n":"nom","t":"texte"},{"n":"type","t":"liste : particulier \\| entreprise \\| opco"},{"n":"email","t":"texte"},{"n":"telephone","t":"texte"},{"n":"siret","t":"texte"},{"n":"ghl_contact_id","t":"texte"},{"n":"qonto_client_id","t":"texte"},{"n":"qualiobee_customer_id","t":"texte"},{"n":"responsable_prenom","t":"texte"},{"n":"responsable_nom","t":"texte"},{"n":"responsable_email","t":"texte"},{"n":"notes","t":"texte"},{"n":"adresse","t":"texte"},{"n":"code_postal","t":"texte"},{"n":"ville","t":"texte"},{"n":"pays","t":"texte"},{"n":"vat_number","t":"texte"}]},{"name":"commerciaux","family":1,"nouvelle":true,"role":"L'annuaire des commerciaux, avec une colonne rôle : closer ou setter.","rows":15,"cols":[{"n":"nom","t":"texte"},{"n":"role","t":"liste : closer \\| setter"},{"n":"user_id","t":"uuid"},{"n":"actif","t":"booléen"}]},{"name":"formateurs","family":1,"nouvelle":false,"role":"L'annuaire des formateurs : profil, contact, villes où ils interviennent.","rows":24,"cols":[{"n":"nom","t":"texte"},{"n":"ghl_contact_id","t":"texte"},{"n":"specialite","t":"texte"},{"n":"tarif_journalier","t":"décimal"},{"n":"tarif_coaching","t":"décimal"},{"n":"actif","t":"booléen"},{"n":"user_id","t":"uuid"},{"n":"calendly_url","t":"texte"},{"n":"linkedin","t":"texte"},{"n":"siret","t":"texte"},{"n":"nda","t":"texte"},{"n":"forme_juridique","t":"liste : micro_entreprise \\| societe"},{"n":"adresse","t":"texte"}]},{"name":"user_profiles","family":1,"nouvelle":false,"role":"Les comptes de connexion à DELIV'IA et le rôle de chacun.","rows":44,"cols":[{"n":"nom","t":"texte"},{"n":"email","t":"texte"},{"n":"role","t":"liste : admin \\| closer \\| setter \\| formateur"},{"n":"ghl_user_id","t":"texte"},{"n":"telephone","t":"texte"},{"n":"qualiobee_id","t":"texte"},{"n":"disabled","t":"booléen"}]},{"name":"offres","family":1,"nouvelle":false,"role":"Le catalogue unique de ce qu'on vend : nom, prix, durée. ARD internalisé y branchera ses catalogues aujourd'hui codés en dur.","rows":7,"cols":[{"n":"nom","t":"texte"},{"n":"prix","t":"décimal"},{"n":"taux_tva","t":"décimal"},{"n":"duree_presentiel","t":"entier"},{"n":"jours_presentiel","t":"entier"},{"n":"qonto_product_id","t":"texte"},{"n":"actif","t":"booléen"}]},{"name":"salles","family":1,"nouvelle":false,"role":"Les salles de formation réservables dans chaque lieu.","rows":85,"cols":[{"n":"nom","t":"texte"},{"n":"hal_room_id","t":"texte"},{"n":"capacite","t":"entier"},{"n":"priorite","t":"entier"},{"n":"notes","t":"texte"},{"n":"lieu_id","t":"uuid"},{"n":"notion_page_id","t":"texte"}]},{"name":"lieux","family":1,"nouvelle":false,"role":"Les lieux de formation (adresse, accès) rattachés à une ville.","rows":73,"cols":[{"n":"slug","t":"texte"},{"n":"nom","t":"texte"},{"n":"adresse_ligne1","t":"texte"},{"n":"adresse_ligne2","t":"texte"},{"n":"code_postal","t":"texte"},{"n":"description","t":"texte"},{"n":"qualiobee_location_uuid","t":"texte"},{"n":"hal","t":"booléen"},{"n":"actif","t":"booléen"},{"n":"priorite","t":"entier"},{"n":"message_accueil_specifique","t":"texte"},{"n":"telephone","t":"texte"},{"n":"email_contact","t":"texte"},{"n":"photos","t":"json"},{"n":"notes_internes","t":"texte"},{"n":"notion_page_id","t":"texte"},{"n":"ville_id","t":"uuid"}]},{"name":"villes","family":1,"nouvelle":false,"role":"Le référentiel des villes où France IA ouvre des sessions.","rows":35,"cols":[{"n":"nom","t":"texte"},{"n":"pays","t":"texte"},{"n":"emoji","t":"texte"},{"n":"epingle","t":"booléen"}]},{"name":"sessions","family":2,"nouvelle":false,"role":"Une session de formation planifiée : dates, ville, salle, formateur.","rows":145,"cols":[{"n":"statut","t":"liste : brouillon \\| date_validee \\| qualiobee_creee \\| salle_reservee \\| prete \\| en_formation \\| terminee \\| abandonnee \\| parametrage_incomplet \\| demarree \\| archivee"},{"n":"offre_id","t":"uuid"},{"n":"formateur_id","t":"uuid"},{"n":"salle_id","t":"uuid"},{"n":"salle_j2_id","t":"uuid"},{"n":"salles_supplementaires_ids","t":"tableau d'uuid"},{"n":"lieu_id","t":"uuid"},{"n":"lieu_id_qualiobee_sync","t":"uuid"},{"n":"dates_presentiel","t":"tableau de dates"},{"n":"date_elearning_debut","t":"date"},{"n":"niveau","t":"liste : debutant \\| avance"},{"n":"type_session","t":"liste : inter \\| intra"},{"n":"qualiobee_session_id","t":"texte"},{"n":"qualiobee_started_at","t":"date+heure"},{"n":"edof_session_id","t":"texte"},{"n":"hal_booking_id","t":"texte"},{"n":"whatsapp_group_id","t":"texte"},{"n":"whatsapp_group_name","t":"texte"},{"n":"whatsapp_invite_url","t":"texte"},{"n":"whatsapp_group_created_at","t":"date+heure"},{"n":"whatsapp_missing","t":"json"},{"n":"salle_paiement_statut","t":"liste : en_cours \\| payee"},{"n":"salle_paiement_maj_at","t":"date+heure"},{"n":"notes","t":"texte"}]},{"name":"session_apprenants","family":2,"nouvelle":false,"role":"L'inscription d'un apprenant à une session, redevenue purement pédagogique : présence, avancement, et un seul statut de kanban delivery, personnalisé par offre.","rows":688,"cols":[{"n":"session_id","t":"uuid"},{"n":"apprenant_id","t":"uuid"},{"n":"client_id","t":"uuid"},{"n":"financement","t":"liste : cpf \\| fonds_propres \\| opco \\| b2b_inter \\| b2b_intra"},{"n":"mode_financement","t":"liste : cpf \\| fonds_propres \\| lettre_intention_cpf"},{"n":"statut_delivery","t":"liste personnalisée par offre"},{"n":"closer_id","t":"uuid"},{"n":"setter_id","t":"uuid"},{"n":"closer_notes","t":"texte"},{"n":"source_lead","t":"texte"},{"n":"date_rdv_setting","t":"date+heure"},{"n":"date_rdv_closing","t":"date+heure"},{"n":"date_inscription","t":"date+heure"},{"n":"type_apprenant","t":"texte"},{"n":"questionnaire_ard","t":"json"},{"n":"registration_group_id","t":"texte"},{"n":"reservation_expires_at","t":"date+heure"},{"n":"reservation_released_at","t":"date+heure"},{"n":"reservation_released_reason","t":"liste : paid \\| expired \\| cancelled_manual \\| cancelled_extended_then_expired"},{"n":"manual_reservation_note","t":"texte"},{"n":"manual_reservation_created_by","t":"uuid"},{"n":"statut_avant_absence","t":"texte"},{"n":"lost_reason","t":"texte"},{"n":"convention_transmise_client_at","t":"date+heure"},{"n":"opco_convention_confirmee_par","t":"uuid"},{"n":"opco_convention_confirmee_at","t":"date+heure"},{"n":"auto_acceptation_devis_failed_at","t":"date+heure"},{"n":"auto_acceptation_devis_error","t":"texte"},{"n":"notes","t":"texte"}]},{"name":"coachings","family":2,"nouvelle":false,"role":"Le suivi individuel d'un apprenant : son coach, ses séances, son avancement.","rows":51,"cols":[{"n":"apprenant_id","t":"uuid"},{"n":"client_id","t":"uuid"},{"n":"formateur_id","t":"uuid"},{"n":"nb_heures","t":"entier"},{"n":"statut","t":"liste : brouillon \\| vendu \\| effectué \\| annulé"},{"n":"montant_ht","t":"décimal"},{"n":"taux_tva","t":"décimal"},{"n":"check_paiement_effectue","t":"booléen"},{"n":"check_facture_emise","t":"booléen"},{"n":"check_whatsapp_cree","t":"booléen"},{"n":"check_coaching_effectue","t":"booléen"},{"n":"check_whatsapp_message_envoye","t":"booléen"},{"n":"paiement_effectue_at","t":"date+heure"},{"n":"facture_emise_at","t":"date+heure"},{"n":"whatsapp_cree_at","t":"date+heure"},{"n":"coaching_effectue_at","t":"date+heure"},{"n":"whatsapp_message_envoye_at","t":"date+heure"},{"n":"whatsapp_group_id","t":"texte"},{"n":"whatsapp_group_name","t":"texte"},{"n":"whatsapp_invite_url","t":"texte"},{"n":"whatsapp_missing","t":"json"},{"n":"refus_formateur_initial_id","t":"uuid"},{"n":"refus_formateur_initial_at","t":"date+heure"},{"n":"created_by","t":"uuid"},{"n":"notes","t":"texte"}]},{"name":"coaching_creneaux","family":2,"nouvelle":false,"role":"Les rendez-vous datés d'un coaching ; la paie des formateurs s'appuie déjà dessus.","rows":28,"cols":[{"n":"coaching_id","t":"uuid"},{"n":"date_seance","t":"date"},{"n":"heure_debut","t":"heure"},{"n":"duree_heures","t":"entier"},{"n":"lieu_type","t":"liste : station_f \\| chez_client \\| visio"},{"n":"lien_visio","t":"texte"}]},{"name":"coaching_temoignages","family":2,"nouvelle":false,"role":"Les témoignages recueillis en fin de coaching.","rows":3,"cols":[{"n":"coaching_id","t":"uuid"},{"n":"client_nom","t":"texte"},{"n":"entreprise","t":"texte"},{"n":"secteur","t":"texte"},{"n":"poste","t":"texte"},{"n":"problematique_initiale","t":"texte"},{"n":"objectif_vise","t":"texte"},{"n":"cas_usage","t":"texte"},{"n":"livrable_produit","t":"liste : oui \\| partiel \\| non"},{"n":"livrable_detail","t":"texte"},{"n":"resultat_concret","t":"texte"},{"n":"verbatim_recommandation","t":"texte"},{"n":"consentement","t":"liste : video \\| voix_seule \\| aucun"},{"n":"objectif_atteint","t":"entier"},{"n":"autonomie_sortie","t":"entier"},{"n":"blocage_principal","t":"tableau de texte"},{"n":"enregistrement_path","t":"texte"},{"n":"enregistrement_nom","t":"texte"},{"n":"date_cloture","t":"date"},{"n":"statut","t":"liste : brouillon \\| soumis"},{"n":"soumis_at","t":"date+heure"},{"n":"notion_page_id","t":"texte"},{"n":"last_synced_at","t":"date+heure"}]},{"name":"session_checks","family":2,"nouvelle":false,"role":"La check-list de préparation d'une session : ce qui est fait, ce qui reste.","rows":2696,"cols":[{"n":"session_id","t":"uuid"},{"n":"check_definition_id","t":"uuid"},{"n":"statut","t":"liste : pending \\| notified \\| in_progress \\| completed \\| skipped \\| failed \\| non_applicable"},{"n":"completed_at","t":"date+heure"},{"n":"completed_by","t":"uuid"},{"n":"n8n_execution_id","t":"texte"},{"n":"notes","t":"texte"}]},{"name":"check_definitions","family":2,"nouvelle":false,"role":"Le modèle des check-lists : quelles cases selon le statut et l'offre.","rows":81,"cols":[{"n":"statut_session","t":"liste : brouillon \\| date_validee \\| qualiobee_creee \\| salle_reservee \\| prete \\| en_formation \\| terminee \\| abandonnee \\| parametrage_incomplet \\| demarree \\| archivee"},{"n":"offre_id","t":"uuid"},{"n":"nom","t":"texte"},{"n":"description","t":"texte"},{"n":"type","t":"liste : auto \\| semi_auto \\| manuel"},{"n":"ordre","t":"entier"},{"n":"actif","t":"booléen"}]},{"name":"session_ard_config","family":2,"nouvelle":false,"role":"Les réglages d'affichage d'une session dans le formulaire d'inscription ARD.","rows":44,"cols":[{"n":"session_id","t":"uuid"},{"n":"capacite","t":"entier"},{"n":"capacity_override","t":"entier"},{"n":"capacity_reelle_override","t":"entier"},{"n":"hidden","t":"booléen"},{"n":"force_delai_bypass","t":"booléen"},{"n":"financement_reserve","t":"liste : cpf \\| fonds_propres"},{"n":"updated_by","t":"uuid"},{"n":"updated_at","t":"date+heure"}]},{"name":"demandes_intra","family":2,"nouvelle":false,"role":"Les demandes de formation sur mesure en entreprise (intra).","rows":3,"cols":[{"n":"client_id","t":"uuid"},{"n":"lieu_id","t":"uuid"},{"n":"lieu_preference","t":"liste : chez_client \\| france_ia"},{"n":"nb_blocs","t":"entier"},{"n":"prix_ht","t":"décimal"},{"n":"besoin","t":"texte"},{"n":"periodes","t":"json"},{"n":"statut","t":"liste : nouvelle \\| validee \\| refusee"},{"n":"refus_motif","t":"texte"},{"n":"session_id","t":"uuid"},{"n":"demande_uid","t":"uuid"},{"n":"created_by","t":"uuid"}]},{"name":"hal_invitations","family":2,"nouvelle":false,"role":"Les invitations d'accès au bâtiment Station F (QR code HAL).","rows":38,"cols":[{"n":"session_id","t":"uuid"},{"n":"apprenant_id","t":"uuid"},{"n":"email","t":"texte"},{"n":"date","t":"date"},{"n":"guest_id","t":"texte"}]},{"name":"paiements","family":3,"nouvelle":false,"role":"Un mouvement d'argent réel rattaché à sa vente : échéance de prélèvement, paiement par carte, versement de la CDC, reste à charge, virement. Les colonnes qonto_\\* restent le pivot du rail SEPA.","rows":601,"cols":[{"n":"vente_id","t":"uuid"},{"n":"session_apprenant_id","t":"uuid"},{"n":"coaching_id","t":"uuid"},{"n":"client_id","t":"uuid"},{"n":"session_id","t":"uuid"},{"n":"type","t":"texte"},{"n":"montant","t":"décimal"},{"n":"date_paiement","t":"date+heure"},{"n":"date_prevue","t":"date"},{"n":"numero_echeance","t":"entier"},{"n":"statut","t":"texte"},{"n":"reference","t":"texte"},{"n":"receipt_url","t":"texte"},{"n":"qonto_subscription_id","t":"texte"},{"n":"qonto_collection_id","t":"texte"},{"n":"qonto_mandate_id","t":"texte"},{"n":"stripe_payment_intent_id","t":"texte"},{"n":"confirme_manuellement_at","t":"date+heure"},{"n":"confirme_par","t":"uuid"},{"n":"confirme_motif","t":"texte"},{"n":"deleted_at","t":"date+heure"},{"n":"deleted_by","t":"uuid"},{"n":"deleted_reason","t":"texte"},{"n":"notes","t":"texte"}]},{"name":"documents_financiers","family":3,"nouvelle":false,"role":"Les factures et liens de paiement émis : les documents et leurs références.","rows":628,"cols":[{"n":"type","t":"liste : devis \\| facture \\| lien_paiement_cb \\| lien_paiement_sepa \\| lien_paiement_alma"},{"n":"vente_id","t":"uuid"},{"n":"client_id","t":"uuid"},{"n":"session_id","t":"uuid"},{"n":"session_apprenant_id","t":"uuid"},{"n":"montant","t":"décimal"},{"n":"description","t":"texte"},{"n":"lignes","t":"json"},{"n":"statut","t":"liste : brouillon \\| envoye \\| accepte \\| paye \\| expire \\| annule"},{"n":"qonto_id","t":"texte"},{"n":"qonto_number","t":"texte"},{"n":"pdf_url","t":"texte"},{"n":"lien_externe","t":"texte"},{"n":"qonto_product_id","t":"texte"},{"n":"quantity","t":"décimal"},{"n":"vat_rate","t":"texte"},{"n":"source","t":"texte"},{"n":"raw_webhook","t":"json"},{"n":"envoye_at","t":"date+heure"},{"n":"expire_at","t":"date+heure"},{"n":"due_date","t":"date"},{"n":"confirme_manuellement_at","t":"date+heure"},{"n":"confirme_par","t":"texte"},{"n":"deleted_at","t":"date+heure"},{"n":"deleted_by","t":"texte"},{"n":"deleted_reason","t":"texte"},{"n":"client_snapshot","t":"json"}]},{"name":"facturation_card_checks","family":3,"nouvelle":false,"role":"Les vérifications faites case par case, désormais rattachées à la vente.","rows":3045,"cols":[{"n":"vente_id","t":"uuid"},{"n":"check_type","t":"liste fermée : devis_signe \\| facture_envoyee \\| facture_acquittee \\| accord_opco \\| transmettre_facture_client \\| rac_paye \\| declarer_sortie \\| facture_edof_transmise \\| facture_transmise_bibby \\| paiement_bibby_recu \\| avoir_qonto_emis \\| remboursement_effectue \\| client_notifie"},{"n":"date_prevue","t":"date"},{"n":"date_reelle","t":"date+heure"},{"n":"effectue_par","t":"uuid"},{"n":"notes","t":"texte"}]},{"name":"facturation_card_documents","family":3,"nouvelle":false,"role":"Le lien entre une vente et ses documents successifs, avec un marqueur « document courant ».","rows":473,"cols":[{"n":"vente_id","t":"uuid"},{"n":"document_financier_id","t":"uuid"},{"n":"courant","t":"booléen"},{"n":"created_at","t":"date+heure"}]},{"name":"facturation_bibby","family":3,"nouvelle":false,"role":"Les dossiers d'affacturage Bibby : quelles factures CPF sont cédées et où elles en sont.","rows":366,"cols":[{"n":"vente_id","t":"uuid"},{"n":"session_apprenant_id","t":"uuid"},{"n":"statut","t":"liste : preparation \\| attente_export \\| pret \\| envoye \\| paye_bibby \\| erreur"},{"n":"drive_folder_id","t":"texte"},{"n":"drive_folder_url","t":"texte"},{"n":"facture_tamponnee_url","t":"texte"},{"n":"emargements","t":"json"},{"n":"export_edof_url","t":"texte"},{"n":"remise_ref","t":"texte"},{"n":"mail_envoye_at","t":"date+heure"},{"n":"remise_saisie_at","t":"date+heure"},{"n":"erreur_message","t":"texte"}]},{"name":"virement_rapprochements","family":3,"nouvelle":false,"role":"Le rapprochement entre un virement reçu sur Qonto et la facture correspondante.","rows":41,"cols":[{"n":"vente_id","t":"uuid"},{"n":"document_financier_id","t":"uuid"},{"n":"qonto_invoice_id","t":"texte"},{"n":"transaction_id","t":"texte"},{"n":"transaction_label","t":"texte"},{"n":"transaction_amount","t":"décimal"},{"n":"transaction_settled_at","t":"date+heure"},{"n":"match_type","t":"liste : parfait \\| approx \\| manuel"},{"n":"statut","t":"liste : auto_applique \\| propose \\| confirme \\| rejete \\| archive"},{"n":"decided_at","t":"date+heure"},{"n":"decided_by","t":"uuid"},{"n":"archive_raison","t":"texte"},{"n":"archive_regle","t":"texte"}]},{"name":"facturation_repair_status","family":3,"nouvelle":false,"role":"Le journal des réparations automatiques de la facturation.","rows":7,"cols":[{"n":"vente_id","t":"uuid"},{"n":"document_financier_id","t":"uuid"},{"n":"statut","t":"liste : ok \\| pending_confirm \\| needs_manual"},{"n":"last_error","t":"texte"},{"n":"last_checked_at","t":"date+heure"},{"n":"last_regenerated_at","t":"date+heure"}]},{"name":"facture_emails_log","family":3,"nouvelle":false,"role":"La trace des factures envoyées par email aux clients.","rows":9,"cols":[{"n":"session_apprenant_id","t":"uuid"},{"n":"client_id","t":"uuid"},{"n":"session_id","t":"uuid"},{"n":"document_financier_id","t":"uuid"},{"n":"facture_qonto_id","t":"texte"},{"n":"facture_qonto_number","t":"texte"},{"n":"template_slug","t":"texte"},{"n":"mode","t":"liste : auto \\| manuel"},{"n":"status","t":"texte"},{"n":"ghl_contact_id","t":"texte"},{"n":"destinataire","t":"texte"},{"n":"subject","t":"texte"},{"n":"sent_at","t":"date+heure"},{"n":"attempts","t":"entier"},{"n":"last_error","t":"texte"}]},{"name":"imputations","family":3,"nouvelle":false,"role":"La paie des formateurs : ce qu'on doit à chacun pour le mois.","rows":16,"cols":[{"n":"formateur_id","t":"uuid"},{"n":"mois","t":"date"},{"n":"statut","t":"liste : a_valider \\| validee_formateur \\| modifiee \\| validee_admin \\| payee"},{"n":"commentaire","t":"texte"},{"n":"total_jours","t":"décimal"},{"n":"total_heures","t":"décimal"},{"n":"total_montant","t":"décimal"},{"n":"validee_formateur_at","t":"date+heure"},{"n":"modifiee_at","t":"date+heure"},{"n":"validee_admin_at","t":"date+heure"},{"n":"validee_admin_by","t":"uuid"},{"n":"payee_at","t":"date+heure"},{"n":"payee_by","t":"uuid"},{"n":"facture_numero","t":"texte"},{"n":"facture_path","t":"texte"},{"n":"facture_generee_at","t":"date+heure"},{"n":"facture_source","t":"liste : generee \\| deposee"},{"n":"facture_echeance","t":"date"},{"n":"facture_coffre_doc_id","t":"uuid"}]},{"name":"imputation_lignes","family":3,"nouvelle":false,"role":"Le détail de la paie d'un formateur : chaque session ou coaching compté.","rows":121,"cols":[{"n":"imputation_id","t":"uuid"},{"n":"type","t":"liste : session_jour \\| coaching_heure \\| note_de_frais"},{"n":"session_id","t":"uuid"},{"n":"coaching_id","t":"uuid"},{"n":"date_prestation","t":"date"},{"n":"libelle","t":"texte"},{"n":"quantite","t":"décimal"},{"n":"tarif_applique","t":"décimal"},{"n":"montant","t":"décimal"},{"n":"origine","t":"liste : auto \\| ajout_formateur"},{"n":"retiree","t":"booléen"}]},{"name":"conventions","family":3,"nouvelle":false,"role":"Les conventions de formation générées, le document contractuel.","rows":54,"cols":[{"n":"client_id","t":"uuid"},{"n":"session_id","t":"uuid"},{"n":"session_apprenant_id","t":"uuid"},{"n":"scope","t":"liste : b2c \\| b2b"},{"n":"envoyee","t":"booléen"},{"n":"envoyee_at","t":"date+heure"},{"n":"signee","t":"booléen"},{"n":"signee_at","t":"date+heure"},{"n":"qualiobee_convention_uuid","t":"texte"},{"n":"relances_count","t":"entier"},{"n":"derniere_relance_at","t":"date+heure"},{"n":"relance_notifs_sent","t":"json"}]},{"name":"sync_edof_dismissals","family":3,"nouvelle":false,"role":"Les alertes de synchronisation EDOF que l'équipe a choisi d'ignorer.","rows":5,"cols":[{"n":"wedof_dossier_id","t":"texte"},{"n":"raison","t":"texte"},{"n":"dismissed_by","t":"texte"},{"n":"expire_at","t":"date+heure"},{"n":"created_at","t":"date+heure"}]},{"name":"ventes","family":4,"nouvelle":false,"role":"L'objet central : 1 vente = 1 offre = 1 facture = 1 moyen de paiement = 1 client. Le kanban Facturation devient sa vue, avec les statuts fixes RAF, Envoyer facture, En attente, En retard, Acquittée. Une vente peut porter plusieurs lignes de paiements (CPF + reste à charge, fractionné en N échéances, acompte + solde, paiement partagé OPCO/entreprise).","rows":0,"cols":[{"n":"client_id","t":"uuid"},{"n":"offre_id","t":"uuid"},{"n":"session_apprenant_id","t":"uuid"},{"n":"coaching_id","t":"uuid"},{"n":"montant","t":"décimal"},{"n":"taux_tva","t":"décimal"},{"n":"financement","t":"liste : cpf \\| fonds_propres \\| opco \\| b2b_inter \\| b2b_intra"},{"n":"mode_encaissement","t":"liste : cpf \\| stripe_cb \\| stripe_sepa \\| alma \\| virement \\| especes \\| opco \\| qonto_sdd_core \\| qonto_lien \\| qonto_sdd_b2b"},{"n":"statut","t":"liste : raf \\| envoyer_facture \\| en_attente \\| en_retard \\| acquittee"},{"n":"lost_reason","t":"texte"},{"n":"closer_id","t":"uuid"},{"n":"setter_id","t":"uuid"},{"n":"source_lead","t":"texte"},{"n":"closer_notes","t":"texte"},{"n":"date_vente","t":"date"},{"n":"profil_paiement","t":"liste : cpf \\| virement \\| opco \\| paiement_bancaire"},{"n":"prochaine_action_at","t":"date+heure"},{"n":"derniere_transition_at","t":"date+heure"},{"n":"no_show_presume","t":"booléen"},{"n":"no_show_raison","t":"texte"},{"n":"no_show_detecte_at","t":"date+heure"},{"n":"no_show_ecarte","t":"date+heure"},{"n":"no_show_ecarte_par","t":"texte"},{"n":"archived_at","t":"date+heure"},{"n":"archive_raison","t":"texte"},{"n":"notes_libres","t":"texte"}]},{"name":"formateur_dispos","family":5,"nouvelle":false,"role":"Les disponibilités déclarées par les formateurs, à la journée.","rows":223,"cols":[{"n":"formateur_id","t":"uuid"},{"n":"jour","t":"date"}]},{"name":"formateur_demandes","family":5,"nouvelle":true,"role":"Les demandes des formateurs pour prendre une session ou un coaching, avec une colonne type.","rows":61,"cols":[{"n":"type","t":"liste : session \\| coaching"},{"n":"session_id","t":"uuid"},{"n":"coaching_id","t":"uuid"},{"n":"formateur_id","t":"uuid"},{"n":"statut","t":"liste : en_attente \\| acceptee \\| refusee \\| refusee_auto \\| annulee"},{"n":"message","t":"texte"},{"n":"decided_by","t":"uuid"},{"n":"decided_at","t":"date+heure"},{"n":"decision_reason","t":"texte"}]},{"name":"formateur_demandes_qualification","family":5,"nouvelle":false,"role":"Les demandes pour être qualifié sur une nouvelle offre.","rows":8,"cols":[{"n":"formateur_id","t":"uuid"},{"n":"offre_id","t":"uuid"},{"n":"commentaire","t":"texte"},{"n":"statut","t":"liste : en_attente \\| acceptee \\| refusee \\| refusee_auto \\| annulee"},{"n":"decided_by","t":"uuid"},{"n":"decided_at","t":"date+heure"},{"n":"decision_reason","t":"texte"}]},{"name":"formateur_demandes_retrait","family":5,"nouvelle":false,"role":"Les demandes de retrait d'une session ou d'un coaching, avec une colonne type.","rows":4,"cols":[{"n":"type","t":"liste : session \\| coaching"},{"n":"session_id","t":"uuid"},{"n":"coaching_id","t":"uuid"},{"n":"formateur_id","t":"uuid"},{"n":"statut","t":"liste : en_attente \\| acceptee \\| refusee \\| refusee_auto \\| annulee"},{"n":"message","t":"texte"},{"n":"decided_by","t":"uuid"},{"n":"decided_at","t":"date+heure"},{"n":"decision_reason","t":"texte"}]},{"name":"formateur_offres_autorisees","family":5,"nouvelle":false,"role":"Les offres qu'un formateur a le droit de voir dans la marketplace.","rows":44,"cols":[{"n":"formateur_id","t":"uuid"},{"n":"offre_id","t":"uuid"},{"n":"created_at","t":"date+heure"}]},{"name":"formateur_qualification_checks","family":5,"nouvelle":false,"role":"L'état vivant de la check-list de qualification d'un formateur.","rows":93,"cols":[{"n":"formateur_id","t":"uuid"},{"n":"niveau","t":"liste : niveau_1 \\| niveau_2"},{"n":"item_key","t":"texte"},{"n":"checked","t":"booléen"},{"n":"updated_at","t":"date+heure"}]},{"name":"formateur_profil_modifications","family":5,"nouvelle":false,"role":"Les modifications de profil demandées, en attente de validation.","rows":11,"cols":[{"n":"formateur_id","t":"uuid"},{"n":"payload","t":"json"},{"n":"statut","t":"liste : en_attente \\| approuvee \\| refusee"},{"n":"decided_by","t":"uuid"},{"n":"decided_at","t":"date+heure"},{"n":"decision_reason","t":"texte"}]},{"name":"formateur_documents","family":5,"nouvelle":false,"role":"Les documents administratifs d'un formateur (contrats, attestations).","rows":27,"cols":[{"n":"formateur_id","t":"uuid"},{"n":"type","t":"liste : cv \\| nda \\| urssaf \\| tva \\| qualiopi \\| contrat"},{"n":"nom_fichier","t":"texte"},{"n":"storage_path","t":"texte"},{"n":"statut","t":"liste : en_attente \\| approuve \\| refuse"},{"n":"decided_by","t":"uuid"},{"n":"decided_at","t":"date+heure"},{"n":"decision_reason","t":"texte"}]},{"name":"coffre_documents","family":5,"nouvelle":false,"role":"Le coffre-fort de documents partagés avec un formateur.","rows":10,"cols":[{"n":"formateur_id","t":"uuid"},{"n":"categorie","t":"liste : facture"},{"n":"mois","t":"date"},{"n":"nom","t":"texte"},{"n":"path","t":"texte"},{"n":"taille_octets","t":"entier"},{"n":"content_type","t":"texte"}]},{"name":"formateur_onboarding_checks","family":5,"nouvelle":false,"role":"La check-list d'accueil d'un nouveau formateur.","rows":119,"cols":[{"n":"formateur_id","t":"uuid"},{"n":"item_key","t":"texte"},{"n":"cote","t":"liste : formateur \\| france_ia"},{"n":"checked","t":"booléen"},{"n":"checked_by","t":"uuid"},{"n":"checked_at","t":"date+heure"}]},{"name":"formateur_ressources","family":5,"nouvelle":false,"role":"Les ressources pédagogiques mises à disposition des formateurs.","rows":12,"cols":[{"n":"titre","t":"texte"},{"n":"url","t":"texte"},{"n":"categorie","t":"texte"},{"n":"type","t":"liste : video \\| canva \\| document \\| lien"},{"n":"position","t":"entier"},{"n":"actif","t":"booléen"}]},{"name":"formateur_villes_notifications","family":5,"nouvelle":false,"role":"Les villes pour lesquelles un formateur veut être alerté.","rows":121,"cols":[{"n":"formateur_id","t":"uuid"},{"n":"ville_id","t":"uuid"}]},{"name":"notifications_formateurs_envoyees","family":5,"nouvelle":false,"role":"La mémoire anti-doublon des notifications déjà envoyées aux formateurs.","rows":1374,"cols":[{"n":"id","t":"uuid"},{"n":"event_type","t":"liste : session_marketplace \\| coaching_a_valider \\| coaching_libre \\| imputation_generee"},{"n":"cible_id","t":"uuid"},{"n":"formateur_id","t":"uuid"},{"n":"sent_at","t":"date+heure"}]},{"name":"preuves","family":6,"nouvelle":false,"role":"Le référentiel des preuves Qualiopi attendues, par type de dossier.","rows":0,"cols":[{"n":"session_apprenant_id","t":"uuid"},{"n":"session_id","t":"uuid"},{"n":"client_id","t":"uuid"},{"n":"type","t":"liste fermée : contrat \\| convention \\| emargement \\| certificat \\| questionnaire \\| facture \\| screenshot \\| relance \\| autre"},{"n":"nom","t":"texte"},{"n":"source","t":"texte"},{"n":"url","t":"texte"},{"n":"external_ref","t":"texte"},{"n":"date_preuve","t":"date+heure"},{"n":"metadata","t":"json"}]},{"name":"preuves_apprenant","family":6,"nouvelle":false,"role":"Le dossier de preuves de chaque apprenant : quelle pièce est là, laquelle manque.","rows":13337,"cols":[{"n":"session_apprenant_id","t":"uuid"},{"n":"session_id","t":"uuid"},{"n":"preuve_num","t":"entier"},{"n":"statut","t":"liste : a_collecter \\| collectee \\| deposee_drive \\| bloquee \\| erreur \\| non_applicable"},{"n":"source","t":"texte"},{"n":"automatisation","t":"texte"},{"n":"drive_file_id","t":"texte"},{"n":"drive_folder_id","t":"texte"},{"n":"blocked_reason","t":"texte"},{"n":"last_error","t":"texte"},{"n":"attempts","t":"entier"},{"n":"collected_at","t":"date+heure"},{"n":"deposed_at","t":"date+heure"},{"n":"last_run_id","t":"uuid"},{"n":"metadata","t":"json"},{"n":"is_stock","t":"booléen"}]},{"name":"preuves_runs","family":6,"nouvelle":false,"role":"Le journal unique des collectes automatiques de preuves.","rows":12506,"cols":[{"n":"id","t":"uuid"},{"n":"automatisation","t":"texte"},{"n":"trigger_type","t":"texte"},{"n":"session_id","t":"uuid"},{"n":"scope","t":"json"},{"n":"status","t":"liste : running \\| success \\| partial \\| failed"},{"n":"stats","t":"json"},{"n":"error","t":"texte"},{"n":"started_at","t":"date+heure"},{"n":"finished_at","t":"date+heure"},{"n":"lance_par","t":"texte"},{"n":"dry_run","t":"booléen"},{"n":"rapport","t":"json"},{"n":"totaux","t":"json"}]},{"name":"preuves_collecte_en_cours","family":6,"nouvelle":false,"role":"Le verrou qui empêche deux collectes simultanées sur la même session.","rows":0,"cols":[{"n":"session_id","t":"uuid"},{"n":"preuve_num","t":"entier"},{"n":"lance_par","t":"texte"},{"n":"started_at","t":"date+heure"}]},{"name":"drive_folders","family":6,"nouvelle":false,"role":"La carte des dossiers Google Drive où sont rangées les preuves.","rows":12874,"cols":[{"n":"scope","t":"liste : racine \\| annee \\| mois \\| session \\| apprenant \\| preuve"},{"n":"parent_id","t":"uuid"},{"n":"nom","t":"texte"},{"n":"folder_id","t":"texte"},{"n":"session_id","t":"uuid"},{"n":"session_apprenant_id","t":"uuid"}]},{"name":"certifiag_candidats","family":6,"nouvelle":false,"role":"Les candidats à la certification suivis côté CertifIAG.","rows":475,"cols":[{"n":"apprenant_id","t":"uuid"},{"n":"email","t":"texte"},{"n":"ref","t":"texte"},{"n":"statut","t":"texte"},{"n":"relance_le","t":"date"},{"n":"synced_at","t":"date+heure"},{"n":"relance_id","t":"texte"}]},{"name":"fb_sessions","family":7,"nouvelle":false,"role":"Une session vue du côté des questionnaires de satisfaction Qualiobee.","rows":146,"cols":[{"n":"qualiobee_uuid","t":"texte"},{"n":"name","t":"texte"},{"n":"state","t":"texte"},{"n":"formation","t":"texte"},{"n":"audience","t":"texte"},{"n":"is_intra","t":"booléen"},{"n":"start_at","t":"date+heure"},{"n":"end_at","t":"date+heure"},{"n":"max_participants","t":"entier"},{"n":"formateur_id","t":"uuid"},{"n":"formateur_qualiobee_id","t":"texte"},{"n":"formateur_source","t":"texte"},{"n":"delivia_session_id","t":"uuid"},{"n":"qualiobee_satisfaction","t":"décimal"},{"n":"raw","t":"json"},{"n":"last_synced_at","t":"date+heure"}]},{"name":"fb_survey_runs","family":7,"nouvelle":false,"role":"Une campagne de questionnaire sur une session, avec ses notes moyennes.","rows":376,"cols":[{"n":"id","t":"uuid"},{"n":"qualiobee_uuid","t":"texte"},{"n":"slug","t":"texte"},{"n":"recipients","t":"entier"},{"n":"responded","t":"entier"},{"n":"response_rate","t":"décimal"},{"n":"satisfaction_avg","t":"décimal"},{"n":"objectifs_avg","t":"décimal"},{"n":"reco_rate","t":"décimal"},{"n":"pct_satisfait","t":"décimal"},{"n":"has_negative","t":"booléen"},{"n":"template_ok","t":"booléen"},{"n":"first_response_at","t":"date+heure"},{"n":"last_response_at","t":"date+heure"},{"n":"last_synced_at","t":"date+heure"}]},{"name":"fb_question_results","family":7,"nouvelle":false,"role":"Les résultats agrégés question par question.","rows":4480,"cols":[{"n":"id","t":"uuid"},{"n":"survey_run_id","t":"uuid"},{"n":"order_index","t":"entier"},{"n":"title","t":"texte"},{"n":"norm_key","t":"texte"},{"n":"strategy","t":"texte"},{"n":"category","t":"texte"},{"n":"options","t":"json"},{"n":"distribution","t":"json"},{"n":"mean","t":"décimal"},{"n":"n_answers","t":"entier"}]},{"name":"fb_verbatims","family":7,"nouvelle":false,"role":"La vue/cache anonyme des commentaires libres qui alimente la zone Qualité du dashboard, dérivée de fb_responses.","rows":706,"cols":[{"n":"survey_run_id","t":"uuid"},{"n":"qualiobee_uuid","t":"texte"},{"n":"slug","t":"texte"},{"n":"question_order","t":"entier"},{"n":"question_title","t":"texte"},{"n":"text","t":"texte"},{"n":"text_hash","t":"texte"},{"n":"sentiment","t":"texte"},{"n":"statut","t":"texte"},{"n":"tags","t":"tableau de texte"},{"n":"note_interne","t":"texte"},{"n":"traite_par","t":"texte"},{"n":"traite_at","t":"date+heure"}]},{"name":"fb_survey_tokens","family":7,"nouvelle":false,"role":"Les liens individuels de questionnaire envoyés à chaque répondant.","rows":4273,"cols":[{"n":"token","t":"texte"},{"n":"token_uuid","t":"texte"},{"n":"learner_uuid","t":"texte"},{"n":"apprenant_id","t":"uuid"},{"n":"learner_email","t":"texte"},{"n":"survey_title","t":"texte"},{"n":"survey_publi_uuid","t":"texte"},{"n":"survey_type","t":"texte"},{"n":"session_uuid","t":"texte"},{"n":"not_before","t":"date+heure"},{"n":"consume_date","t":"date+heure"},{"n":"answers_fetched_at","t":"date+heure"},{"n":"updated_at","t":"date+heure"}]},{"name":"fb_responses","family":7,"nouvelle":false,"role":"Chaque réponse individuelle aux questionnaires (16 000 lignes).","rows":16229,"cols":[{"n":"id","t":"entier"},{"n":"token","t":"texte"},{"n":"learner_uuid","t":"texte"},{"n":"learner_name","t":"texte"},{"n":"learner_email","t":"texte"},{"n":"session_uuid","t":"texte"},{"n":"session_name","t":"texte"},{"n":"survey_title","t":"texte"},{"n":"famille","t":"texte"},{"n":"consume_date","t":"date+heure"},{"n":"question_order","t":"entier"},{"n":"question_title","t":"texte"},{"n":"strategy","t":"texte"},{"n":"answer_text","t":"texte"},{"n":"answer_num","t":"décimal"}]},{"name":"fb_run_insights","family":7,"nouvelle":false,"role":"L'analyse automatique des retours d'une campagne.","rows":95,"cols":[{"n":"survey_run_id","t":"uuid"},{"n":"qualiobee_uuid","t":"texte"},{"n":"insights","t":"json"},{"n":"input_hash","t":"texte"},{"n":"responded","t":"entier"},{"n":"recipients","t":"entier"},{"n":"statut","t":"texte"},{"n":"model","t":"texte"},{"n":"generated_at","t":"date+heure"}]},{"name":"fb_syntheses","family":7,"nouvelle":false,"role":"La synthèse des retours par formateur, celle qui sert aujourd'hui.","rows":14,"cols":[{"n":"formateur_id","t":"uuid"},{"n":"synthese","t":"json"},{"n":"input_hash","t":"texte"},{"n":"n_verbatims","t":"entier"},{"n":"n_sessions","t":"entier"},{"n":"model","t":"texte"},{"n":"generated_at","t":"date+heure"}]},{"name":"fb_sync_runs","family":7,"nouvelle":false,"role":"Le journal des synchronisations avec Qualiobee.","rows":117,"cols":[{"n":"id","t":"uuid"},{"n":"trigger","t":"texte"},{"n":"type_collecte","t":"texte"},{"n":"started_at","t":"date+heure"},{"n":"finished_at","t":"date+heure"},{"n":"sessions_scanned","t":"entier"},{"n":"surveys_upserted","t":"entier"},{"n":"verbatims_upserted","t":"entier"},{"n":"tokens_upserted","t":"entier"},{"n":"responses_upserted","t":"entier"},{"n":"alerts_sent","t":"entier"},{"n":"errors","t":"json"},{"n":"ok","t":"booléen"}]},{"name":"fb_cron_sends","family":7,"nouvelle":false,"role":"Le verrou d'exécution des envois automatiques (pas un journal d'envois).","rows":108,"cols":[{"n":"key","t":"texte"},{"n":"created_at","t":"date+heure"}]},{"name":"fb_alerts","family":7,"nouvelle":false,"role":"Les alertes qualité envoyées sur Slack quand une note décroche.","rows":117,"cols":[{"n":"id","t":"uuid"},{"n":"kind","t":"texte"},{"n":"ref_key","t":"texte"},{"n":"qualiobee_uuid","t":"texte"},{"n":"payload","t":"json"},{"n":"sent_at","t":"date+heure"}]},{"name":"fb_formateur_overrides","family":7,"nouvelle":false,"role":"Les corrections manuelles de rattachement d'un retour à un formateur.","rows":82,"cols":[{"n":"qualiobee_uuid","t":"texte"},{"n":"formateur_id","t":"uuid"},{"n":"updated_by","t":"texte"},{"n":"updated_at","t":"date+heure"}]},{"name":"questionnaire_client_b2b_envois","family":7,"nouvelle":false,"role":"La trace des questionnaires envoyés aux clients entreprise.","rows":8,"cols":[{"n":"id","t":"uuid"},{"n":"session_apprenant_id","t":"uuid"},{"n":"etape","t":"liste : chaud \\| relance_chaud \\| froid \\| relance_froid"},{"n":"survey_token","t":"texte"},{"n":"sent_at","t":"date+heure"}]},{"name":"closing_calendars","family":8,"nouvelle":false,"role":"Les calendriers de rendez-vous des closers.","rows":9,"cols":[{"n":"ghl_calendar_id","t":"texte"},{"n":"nom","t":"texte"},{"n":"closer_id","t":"uuid"},{"n":"actif","t":"booléen"}]},{"name":"closing_sent_log","family":8,"nouvelle":false,"role":"La trace prévue des messages envoyés après un closing.","rows":0,"cols":[{"n":"ghl_appointment_id","t":"texte"},{"n":"ghl_contact_id","t":"texte"},{"n":"scenario","t":"texte"},{"n":"template_slug","t":"texte"},{"n":"channel","t":"texte"},{"n":"closer_ghl_user_id","t":"texte"},{"n":"send_after","t":"date+heure"},{"n":"scheduled_at","t":"date+heure"},{"n":"sent_at","t":"date+heure"},{"n":"status","t":"texte"},{"n":"attempt_count","t":"entier"},{"n":"last_error","t":"texte"},{"n":"provider_id","t":"texte"},{"n":"provider_response","t":"json"}]},{"name":"notifications","family":9,"nouvelle":false,"role":"La table unifiée des notifications et des rappels : la cloche DELIV'IA et les relances datées adressées à l'équipe.","rows":2233,"cols":[{"n":"session_id","t":"uuid"},{"n":"session_apprenant_id","t":"uuid"},{"n":"apprenant_id","t":"uuid"},{"n":"client_id","t":"uuid"},{"n":"check_id","t":"uuid"},{"n":"target_id","t":"uuid"},{"n":"type","t":"liste : action_requise \\| rappel \\| alerte \\| info"},{"n":"canal","t":"liste : in_app \\| slack \\| email"},{"n":"source","t":"liste : manual \\| system"},{"n":"titre","t":"texte"},{"n":"message","t":"texte"},{"n":"level","t":"liste : info \\| important \\| critical"},{"n":"destinataire_id","t":"uuid"},{"n":"statut","t":"texte"},{"n":"lu","t":"booléen"},{"n":"date_rappel","t":"date+heure"},{"n":"etape_index","t":"entier"},{"n":"scheduled_at","t":"date+heure"},{"n":"sent_at","t":"date+heure"},{"n":"read_at","t":"date+heure"},{"n":"action_url","t":"texte"}]},{"name":"actions_log","family":9,"nouvelle":false,"role":"L'historique de qui a fait quoi dans l'application.","rows":16484,"cols":[{"n":"session_id","t":"uuid"},{"n":"apprenant_id","t":"uuid"},{"n":"client_id","t":"uuid"},{"n":"action","t":"texte"},{"n":"source","t":"liste : utilisateur \\| n8n \\| system \\| sync"},{"n":"details","t":"json"},{"n":"user_id","t":"uuid"},{"n":"n8n_execution_id","t":"texte"},{"n":"service","t":"texte"}]},{"name":"app_logs","family":9,"nouvelle":false,"role":"Le journal technique de l'application.","rows":51584,"cols":[{"n":"level","t":"texte"},{"n":"source","t":"texte"},{"n":"message","t":"texte"},{"n":"details","t":"json"},{"n":"session_id","t":"uuid"},{"n":"apprenant_id","t":"uuid"},{"n":"n8n_execution_id","t":"texte"},{"n":"duration_ms","t":"entier"},{"n":"service","t":"texte"}]},{"name":"pending_actions","family":9,"nouvelle":false,"role":"La file des actions automatiques en attente d'exécution.","rows":310,"cols":[{"n":"apprenant_id","t":"uuid"},{"n":"session_id","t":"uuid"},{"n":"action_type","t":"liste fermée"},{"n":"payload","t":"json"},{"n":"source","t":"texte"},{"n":"status","t":"liste fermée"},{"n":"resolved_at","t":"date+heure"}]},{"name":"message_templates","family":9,"nouvelle":false,"role":"Les modèles de messages (emails, WhatsApp).","rows":30,"cols":[{"n":"slug","t":"texte"},{"n":"nom","t":"texte"},{"n":"description","t":"texte"},{"n":"contenu","t":"texte"},{"n":"variables","t":"json"},{"n":"canal","t":"texte"},{"n":"actif","t":"booléen"},{"n":"category","t":"texte"},{"n":"subject","t":"texte"}]},{"name":"automation_settings","family":9,"nouvelle":false,"role":"Les interrupteurs et réglages des automatisations.","rows":17,"cols":[{"n":"key","t":"texte"},{"n":"enabled","t":"booléen"},{"n":"value","t":"texte"},{"n":"updated_at","t":"date+heure"}]},{"name":"automation_emails_log","family":9,"nouvelle":false,"role":"La trace des emails envoyés par les automatisations.","rows":126,"cols":[{"n":"session_apprenant_id","t":"uuid"},{"n":"template_slug","t":"texte"},{"n":"status","t":"texte"},{"n":"ghl_contact_id","t":"texte"},{"n":"subject","t":"texte"},{"n":"sent_at","t":"date+heure"},{"n":"attempts","t":"entier"},{"n":"last_error","t":"texte"}]},{"name":"role_page_access","family":9,"nouvelle":false,"role":"Les droits d'accès aux pages de DELIV'IA selon le rôle.","rows":7,"cols":[{"n":"role","t":"texte"},{"n":"page_path","t":"texte"},{"n":"allowed","t":"booléen"},{"n":"updated_at","t":"date+heure"}]},{"name":"tickets","family":9,"nouvelle":false,"role":"Les tickets internes de support et d'amélioration.","rows":20,"cols":[{"n":"titre","t":"texte"},{"n":"description","t":"texte"},{"n":"statut","t":"liste : a_traiter \\| en_cours \\| termine"},{"n":"created_by","t":"uuid"}]},{"name":"ticket_comments","family":9,"nouvelle":false,"role":"Les commentaires sous chaque ticket.","rows":3,"cols":[{"n":"ticket_id","t":"uuid"},{"n":"author_id","t":"uuid"},{"n":"content","t":"texte"}]},{"name":"ticket_votes","family":9,"nouvelle":false,"role":"Les votes de l'équipe sur les tickets.","rows":8,"cols":[{"n":"ticket_id","t":"uuid"},{"n":"voter_id","t":"uuid"},{"n":"created_at","t":"date+heure"}]},{"name":"ticket_attachments","family":9,"nouvelle":false,"role":"Les pièces jointes des tickets.","rows":3,"cols":[{"n":"ticket_id","t":"uuid"},{"n":"comment_id","t":"uuid"},{"n":"storage_path","t":"texte"},{"n":"url","t":"texte"},{"n":"mimetype","t":"texte"},{"n":"file_name","t":"texte"},{"n":"size_bytes","t":"entier"},{"n":"uploaded_by","t":"uuid"}]},{"name":"faq_entries","family":9,"nouvelle":false,"role":"Les questions-réponses de la FAQ interne.","rows":18,"cols":[{"n":"question","t":"texte"},{"n":"reponse","t":"texte"},{"n":"position","t":"entier"},{"n":"audience","t":"liste : closers \\| formateurs"}]},{"name":"webhook_events","family":9,"nouvelle":false,"role":"La mémoire anti-doublon des événements reçus des services externes.","rows":1658,"cols":[{"n":"id","t":"uuid"},{"n":"source","t":"texte"},{"n":"event_type","t":"texte"},{"n":"external_id","t":"texte"},{"n":"delivery_hash","t":"texte"},{"n":"received_at","t":"date+heure"},{"n":"processed","t":"booléen"}]}],"links":[{"s":"actions_log","c":"apprenant_id","d":"apprenants","k":"fk"},{"s":"actions_log","c":"client_id","d":"clients","k":"fk"},{"s":"actions_log","c":"session_id","d":"sessions","k":"fk"},{"s":"app_logs","c":"apprenant_id","d":"apprenants","k":"fk"},{"s":"app_logs","c":"session_id","d":"sessions","k":"fk"},{"s":"apprenants","c":"client_id","d":"clients","k":"fk"},{"s":"apprenants","c":"conflit_avec","d":"apprenants","k":"fk"},{"s":"automation_emails_log","c":"session_apprenant_id","d":"session_apprenants","k":"fk"},{"s":"check_definitions","c":"offre_id","d":"offres","k":"fk"},{"s":"closing_calendars","c":"closer_id","d":"commerciaux","k":"new"},{"s":"coaching_creneaux","c":"coaching_id","d":"coachings","k":"fk"},{"s":"coaching_temoignages","c":"coaching_id","d":"coachings","k":"fk"},{"s":"coachings","c":"apprenant_id","d":"apprenants","k":"fk"},{"s":"coachings","c":"client_id","d":"clients","k":"fk"},{"s":"coachings","c":"created_by","d":"user_profiles","k":"new"},{"s":"coachings","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"coffre_documents","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"commerciaux","c":"user_id","d":"user_profiles","k":"new"},{"s":"conventions","c":"client_id","d":"clients","k":"fk"},{"s":"conventions","c":"session_apprenant_id","d":"session_apprenants","k":"fk"},{"s":"conventions","c":"session_id","d":"sessions","k":"fk"},{"s":"demandes_intra","c":"client_id","d":"clients","k":"fk"},{"s":"demandes_intra","c":"created_by","d":"user_profiles","k":"new"},{"s":"demandes_intra","c":"session_id","d":"sessions","k":"fk"},{"s":"documents_financiers","c":"client_id","d":"clients","k":"fk"},{"s":"documents_financiers","c":"session_apprenant_id","d":"session_apprenants","k":"fk"},{"s":"documents_financiers","c":"session_id","d":"sessions","k":"fk"},{"s":"documents_financiers","c":"vente_id","d":"ventes","k":"fk"},{"s":"drive_folders","c":"parent_id","d":"drive_folders","k":"new"},{"s":"drive_folders","c":"session_apprenant_id","d":"session_apprenants","k":"fk"},{"s":"drive_folders","c":"session_id","d":"sessions","k":"fk"},{"s":"facturation_bibby","c":"session_apprenant_id","d":"session_apprenants","k":"new"},{"s":"facturation_bibby","c":"vente_id","d":"ventes","k":"new"},{"s":"facturation_card_checks","c":"effectue_par","d":"user_profiles","k":"new"},{"s":"facturation_card_checks","c":"vente_id","d":"ventes","k":"new"},{"s":"facturation_card_documents","c":"document_financier_id","d":"documents_financiers","k":"fk"},{"s":"facturation_card_documents","c":"vente_id","d":"ventes","k":"new"},{"s":"facturation_repair_status","c":"document_financier_id","d":"documents_financiers","k":"fk"},{"s":"facturation_repair_status","c":"vente_id","d":"ventes","k":"new"},{"s":"facture_emails_log","c":"client_id","d":"clients","k":"fk"},{"s":"facture_emails_log","c":"session_apprenant_id","d":"session_apprenants","k":"fk"},{"s":"fb_question_results","c":"survey_run_id","d":"fb_survey_runs","k":"fk"},{"s":"fb_responses","c":"token","d":"fb_survey_tokens","k":"fk"},{"s":"fb_run_insights","c":"survey_run_id","d":"fb_survey_runs","k":"fk"},{"s":"fb_survey_runs","c":"qualiobee_uuid","d":"fb_sessions","k":"fk"},{"s":"fb_verbatims","c":"survey_run_id","d":"fb_survey_runs","k":"fk"},{"s":"formateur_demandes","c":"coaching_id","d":"coachings","k":"new"},{"s":"formateur_demandes","c":"decided_by","d":"user_profiles","k":"new"},{"s":"formateur_demandes","c":"formateur_id","d":"formateurs","k":"new"},{"s":"formateur_demandes","c":"session_id","d":"sessions","k":"new"},{"s":"formateur_demandes_qualification","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"formateur_demandes_qualification","c":"offre_id","d":"offres","k":"fk"},{"s":"formateur_demandes_retrait","c":"coaching_id","d":"coachings","k":"new"},{"s":"formateur_demandes_retrait","c":"decided_by","d":"user_profiles","k":"new"},{"s":"formateur_demandes_retrait","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"formateur_demandes_retrait","c":"session_id","d":"sessions","k":"fk"},{"s":"formateur_dispos","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"formateur_documents","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"formateur_offres_autorisees","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"formateur_offres_autorisees","c":"offre_id","d":"offres","k":"fk"},{"s":"formateur_onboarding_checks","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"formateur_profil_modifications","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"formateur_qualification_checks","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"formateur_villes_notifications","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"formateur_villes_notifications","c":"ville_id","d":"villes","k":"fk"},{"s":"formateurs","c":"user_id","d":"user_profiles","k":"new"},{"s":"hal_invitations","c":"session_id","d":"sessions","k":"fk"},{"s":"imputation_lignes","c":"coaching_id","d":"coachings","k":"fk"},{"s":"imputation_lignes","c":"imputation_id","d":"imputations","k":"fk"},{"s":"imputation_lignes","c":"session_id","d":"sessions","k":"fk"},{"s":"imputations","c":"facture_coffre_doc_id","d":"coffre_documents","k":"fk"},{"s":"imputations","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"lieux","c":"ville_id","d":"villes","k":"fk"},{"s":"notifications","c":"apprenant_id","d":"apprenants","k":"fk"},{"s":"notifications","c":"check_id","d":"session_checks","k":"fk"},{"s":"notifications","c":"client_id","d":"clients","k":"new"},{"s":"notifications","c":"destinataire_id","d":"user_profiles","k":"new"},{"s":"notifications","c":"session_apprenant_id","d":"session_apprenants","k":"new"},{"s":"notifications","c":"session_id","d":"sessions","k":"fk"},{"s":"notifications_formateurs_envoyees","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"paiements","c":"client_id","d":"clients","k":"fk"},{"s":"paiements","c":"coaching_id","d":"coachings","k":"fk"},{"s":"paiements","c":"confirme_par","d":"user_profiles","k":"new"},{"s":"paiements","c":"deleted_by","d":"user_profiles","k":"new"},{"s":"paiements","c":"session_apprenant_id","d":"session_apprenants","k":"fk"},{"s":"paiements","c":"session_id","d":"sessions","k":"fk"},{"s":"paiements","c":"vente_id","d":"ventes","k":"fk"},{"s":"pending_actions","c":"apprenant_id","d":"apprenants","k":"fk"},{"s":"pending_actions","c":"session_id","d":"sessions","k":"fk"},{"s":"preuves","c":"client_id","d":"clients","k":"new"},{"s":"preuves","c":"session_apprenant_id","d":"session_apprenants","k":"new"},{"s":"preuves","c":"session_id","d":"sessions","k":"fk"},{"s":"preuves_apprenant","c":"session_apprenant_id","d":"session_apprenants","k":"fk"},{"s":"preuves_apprenant","c":"session_id","d":"sessions","k":"fk"},{"s":"preuves_runs","c":"session_id","d":"sessions","k":"fk"},{"s":"questionnaire_client_b2b_envois","c":"session_apprenant_id","d":"session_apprenants","k":"fk"},{"s":"salles","c":"lieu_id","d":"lieux","k":"fk"},{"s":"session_apprenants","c":"apprenant_id","d":"apprenants","k":"fk"},{"s":"session_apprenants","c":"client_id","d":"clients","k":"fk"},{"s":"session_apprenants","c":"closer_id","d":"commerciaux","k":"new"},{"s":"session_apprenants","c":"manual_reservation_created_by","d":"user_profiles","k":"new"},{"s":"session_apprenants","c":"opco_convention_confirmee_par","d":"user_profiles","k":"new"},{"s":"session_apprenants","c":"session_id","d":"sessions","k":"fk"},{"s":"session_apprenants","c":"setter_id","d":"commerciaux","k":"new"},{"s":"session_ard_config","c":"session_id","d":"sessions","k":"fk"},{"s":"session_ard_config","c":"updated_by","d":"user_profiles","k":"new"},{"s":"session_checks","c":"check_definition_id","d":"check_definitions","k":"fk"},{"s":"session_checks","c":"session_id","d":"sessions","k":"fk"},{"s":"sessions","c":"formateur_id","d":"formateurs","k":"fk"},{"s":"sessions","c":"lieu_id","d":"lieux","k":"fk"},{"s":"sessions","c":"lieu_id_qualiobee_sync","d":"lieux","k":"fk"},{"s":"sessions","c":"offre_id","d":"offres","k":"fk"},{"s":"sessions","c":"salle_id","d":"salles","k":"fk"},{"s":"sessions","c":"salle_j2_id","d":"salles","k":"fk"},{"s":"ticket_attachments","c":"comment_id","d":"ticket_comments","k":"fk"},{"s":"ticket_attachments","c":"ticket_id","d":"tickets","k":"fk"},{"s":"ticket_attachments","c":"uploaded_by","d":"user_profiles","k":"new"},{"s":"ticket_comments","c":"author_id","d":"user_profiles","k":"new"},{"s":"ticket_comments","c":"ticket_id","d":"tickets","k":"fk"},{"s":"ticket_votes","c":"ticket_id","d":"tickets","k":"fk"},{"s":"ticket_votes","c":"voter_id","d":"user_profiles","k":"new"},{"s":"tickets","c":"created_by","d":"user_profiles","k":"new"},{"s":"ventes","c":"client_id","d":"clients","k":"fk"},{"s":"ventes","c":"closer_id","d":"commerciaux","k":"new"},{"s":"ventes","c":"coaching_id","d":"coachings","k":"new"},{"s":"ventes","c":"offre_id","d":"offres","k":"new"},{"s":"ventes","c":"session_apprenant_id","d":"session_apprenants","k":"new"},{"s":"ventes","c":"setter_id","d":"commerciaux","k":"new"},{"s":"virement_rapprochements","c":"document_financier_id","d":"documents_financiers","k":"fk"},{"s":"virement_rapprochements","c":"vente_id","d":"ventes","k":"new"},{"s":"fb_sessions","c":"formateur_id","d":"formateurs","k":"logic"},{"s":"fb_sessions","c":"delivia_session_id","d":"sessions","k":"logic"},{"s":"fb_formateur_overrides","c":"formateur_id","d":"formateurs","k":"logic"},{"s":"fb_syntheses","c":"formateur_id","d":"formateurs","k":"logic"},{"s":"fb_survey_tokens","c":"apprenant_id","d":"apprenants","k":"logic"},{"s":"certifiag_candidats","c":"apprenant_id","d":"apprenants","k":"logic"},{"s":"preuves_collecte_en_cours","c":"session_id","d":"sessions","k":"logic"},{"s":"hal_invitations","c":"apprenant_id","d":"apprenants","k":"logic"}],"families":{"1":"Personnes et référentiels","2":"Delivery et pédagogie","3":"Argent et facturation","4":"La vente","5":"Portail formateur (BMS)","6":"Preuves et conformité","7":"Qualité et feedback","8":"Commercial et closing","9":"Système et technique"}}</script>
+<script>
+(function(){
+"use strict";
+var DATA = JSON.parse(document.getElementById('data').textContent);
+var FAMC = {1:'--f1',2:'--f2',3:'--f3',4:'--f4',5:'--f5',6:'--f6',7:'--f7',8:'--f8',9:'--f9'};
+var css = getComputedStyle(document.documentElement);
+function famColor(f){ return css.getPropertyValue(FAMC[f]).trim(); }
+var LSKEY = 'delivia-schema-liaison-v1';
+
+var byName = {}; DATA.tables.forEach(function(t){ byName[t.name] = t; });
+
+/* ---------- disposition initiale ---------- */
+var CORE = {
+  sessions:[-330,-170], session_apprenants:[-30,-190], apprenants:[280,-170],
+  offres:[-350,60], ventes:[-40,40], clients:[280,60],
+  paiements:[-200,270], documents_financiers:[120,270]
+};
+/* grappes satellites par famille : [x0, y0, nb colonnes] */
+var CLUSTERS = {
+  1:[-1480,-780,3], 2:[-520,-980,3], 3:[760,-140,3], 5:[-1560,180,3],
+  6:[-560,760,3], 7:[700,700,3], 8:[-1420,-40,2], 9:[760,-1080,3]
+};
+function defaultPositions(){
+  var pos = {}, used = {};
+  DATA.tables.forEach(function(t){
+    if (CORE[t.name]) { pos[t.name] = CORE[t.name].slice(); used[t.name]=1; }
+  });
+  Object.keys(CLUSTERS).forEach(function(f){
+    f = +f;
+    var c = CLUSTERS[f], i = 0;
+    DATA.tables.forEach(function(t){
+      if (t.family !== f || used[t.name]) return;
+      var col = i % c[2], row = Math.floor(i / c[2]);
+      pos[t.name] = [c[0] + col*225, c[1] + row*78];
+      i++;
+    });
+  });
+  return pos;
+}
+
+/* ---------- état ---------- */
+var saved = null;
+try { saved = JSON.parse(localStorage.getItem(LSKEY) || 'null'); } catch(e){}
+var state = {
+  pos: (saved && saved.pos) || defaultPositions(),
+  open: (saved && saved.open) || {},
+  view: (saved && saved.view) || null,
+  hidden: (saved && saved.hidden) || []
+};
+DATA.tables.forEach(function(t){ if(!state.pos[t.name]) state.pos[t.name] = [0,0]; });
+var hiddenFams = {};
+state.hidden.forEach(function(f){ hiddenFams[f] = true; });
+
+var saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    state.hidden = Object.keys(hiddenFams).filter(function(f){return hiddenFams[f];}).map(Number);
+    try { localStorage.setItem(LSKEY, JSON.stringify(state)); } catch(e){}
+  }, 250);
+}
+
+/* ---------- DOM ---------- */
+var viewport = document.getElementById('viewport');
+var stage = document.getElementById('stage');
+var world = document.getElementById('world');
+var svg = document.getElementById('edges');
+var cards = {}, cardSize = {};
+
+function fmtRows(n){
+  if (n === null || n === undefined) return 'volume à définir';
+  return '≈ ' + n.toLocaleString('fr-FR') + ' ligne' + (n > 1 ? 's' : '');
+}
+
+DATA.tables.forEach(function(t){
+  var el = document.createElement('div');
+  el.className = 'card' + (t.nouvelle ? ' nouvelle' : '');
+  el.dataset.name = t.name;
+  var colsHtml = '<div class="role">' + esc(t.role) + '</div>';
+  t.cols.forEach(function(c){
+    colsHtml += '<div class="col"><span class="cn">' + esc(c.n) + '</span><span class="ct" title="' + esc(c.t) + '">' + esc(c.t) + '</span></div>';
+  });
+  el.innerHTML =
+    '<div class="head" style="border-left-color:' + famColor(t.family) + '">' +
+      '<div class="tname">' + esc(t.name) + '</div>' +
+      '<div class="meta"><span class="dot" style="background:' + famColor(t.family) + '"></span>' +
+      '<span>' + fmtRows(t.rows) + '</span><span class="nc">· ' + t.cols.length + ' col.</span></div>' +
+    '</div>' +
+    '<div class="cols">' + colsHtml + '</div>';
+  world.appendChild(el);
+  cards[t.name] = el;
+  if (state.open[t.name]) el.classList.add('open');
+});
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* edges */
+var edgeEls = [];
+var adj = {};   /* table -> {edges:[], neighbors:{}} */
+DATA.tables.forEach(function(t){ adj[t.name] = {edges:[], nb:{}}; });
+DATA.links.forEach(function(l, i){
+  var p = document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('class', 'k-' + l.k);
+  var tt = document.createElementNS('http://www.w3.org/2000/svg','title');
+  tt.textContent = l.s + '.' + l.c + ' → ' + l.d;
+  p.appendChild(tt);
+  svg.appendChild(p);
+  edgeEls.push({el:p, l:l});
+  adj[l.s].edges.push(i); adj[l.d].edges.push(i);
+  adj[l.s].nb[l.d] = 1; adj[l.d].nb[l.s] = 1;
+});
+
+/* ---------- géométrie ---------- */
+function measure(name){
+  var el = cards[name];
+  cardSize[name] = [el.offsetWidth, el.offsetHeight];
+}
+function measureAll(){ DATA.tables.forEach(function(t){ measure(t.name); }); }
+
+function edgePath(l){
+  var a = state.pos[l.s], b = state.pos[l.d];
+  var sa = cardSize[l.s] || [200,54], sb = cardSize[l.d] || [200,54];
+  if (l.s === l.d){
+    var x = a[0] + sa[0], y = a[1] + 18;
+    return 'M' + x + ' ' + y + ' C ' + (x+55) + ' ' + (y-28) + ', ' + (x+55) + ' ' + (y+46) + ', ' + x + ' ' + (y+18);
+  }
+  var ac = [a[0]+sa[0]/2, a[1]+sa[1]/2], bc = [b[0]+sb[0]/2, b[1]+sb[1]/2];
+  var dx = bc[0]-ac[0], dy = bc[1]-ac[1];
+  var p1, p2, c1, c2;
+  if (Math.abs(dx) > Math.abs(dy)) {
+    if (dx > 0) { p1=[a[0]+sa[0], ac[1]]; p2=[b[0], bc[1]]; }
+    else        { p1=[a[0], ac[1]];       p2=[b[0]+sb[0], bc[1]]; }
+    var off = Math.max(40, Math.abs(p2[0]-p1[0])/2);
+    c1 = [p1[0] + (dx>0?off:-off), p1[1]]; c2 = [p2[0] + (dx>0?-off:off), p2[1]];
+  } else {
+    if (dy > 0) { p1=[ac[0], a[1]+sa[1]]; p2=[bc[0], b[1]]; }
+    else        { p1=[ac[0], a[1]];       p2=[bc[0], b[1]+sb[1]]; }
+    var off2 = Math.max(40, Math.abs(p2[1]-p1[1])/2);
+    c1 = [p1[0], p1[1] + (dy>0?off2:-off2)]; c2 = [p2[0], p2[1] + (dy>0?-off2:off2)];
+  }
+  return 'M' + p1[0] + ' ' + p1[1] + ' C ' + c1[0] + ' ' + c1[1] + ', ' + c2[0] + ' ' + c2[1] + ', ' + p2[0] + ' ' + p2[1];
+}
+function drawEdge(i){
+  var e = edgeEls[i];
+  var vis = !hiddenFams[byName[e.l.s].family] && !hiddenFams[byName[e.l.d].family];
+  e.el.style.display = vis ? '' : 'none';
+  if (vis) e.el.setAttribute('d', edgePath(e.l));
+}
+function drawAll(){ for (var i=0;i<edgeEls.length;i++) drawEdge(i); }
+function drawFor(name){ adj[name].edges.forEach(drawEdge); }
+
+function placeCard(name){
+  var p = state.pos[name];
+  cards[name].style.transform = 'translate(' + p[0] + 'px,' + p[1] + 'px)';
+}
+DATA.tables.forEach(function(t){ placeCard(t.name); });
+
+/* ---------- vue (pan / zoom) ---------- */
+var view = state.view || {x:0, y:0, k:1};
+function applyView(){
+  world.style.transform = 'translate(' + view.x + 'px,' + view.y + 'px) scale(' + view.k + ')';
+  document.getElementById('zoomPct').textContent = Math.round(view.k*100) + '%';
+  state.view = view; save();
+}
+function zoomAt(cx, cy, factor){
+  var nk = Math.min(2.5, Math.max(0.08, view.k * factor));
+  factor = nk / view.k;
+  view.x = cx - (cx - view.x) * factor;
+  view.y = cy - (cy - view.y) * factor;
+  view.k = nk;
+  applyView();
+}
+viewport.addEventListener('wheel', function(ev){
+  ev.preventDefault();
+  zoomAt(ev.clientX, ev.clientY, Math.pow(1.0015, -ev.deltaY));
+}, {passive:false});
+document.getElementById('zoomIn').onclick = function(){ zoomAt(innerWidth/2, innerHeight/2, 1.25); };
+document.getElementById('zoomOut').onclick = function(){ zoomAt(innerWidth/2, innerHeight/2, 0.8); };
+
+function fitView(){
+  var minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;
+  DATA.tables.forEach(function(t){
+    if (hiddenFams[t.family]) return;
+    var p = state.pos[t.name], s = cardSize[t.name] || [200,54];
+    minX=Math.min(minX,p[0]); minY=Math.min(minY,p[1]);
+    maxX=Math.max(maxX,p[0]+s[0]); maxY=Math.max(maxY,p[1]+s[1]);
+  });
+  var pad=60, hh=64;
+  var kw=(innerWidth-2*pad)/(maxX-minX), kh=(innerHeight-hh-2*pad)/(maxY-minY);
+  view.k = Math.min(1.2, Math.min(kw, kh));
+  view.x = (innerWidth - (maxX-minX)*view.k)/2 - minX*view.k;
+  view.y = hh + (innerHeight-hh - (maxY-minY)*view.k)/2 - minY*view.k;
+  applyView();
+}
+document.getElementById('fit').onclick = fitView;
+
+/* ---------- drag (fond + cartes) ---------- */
+var drag = null;
+viewport.addEventListener('pointerdown', function(ev){
+  if (ev.button !== 0) return;
+  var cardEl = ev.target.closest('.card');
+  if (cardEl){
+    drag = {type:'card', name:cardEl.dataset.name, sx:ev.clientX, sy:ev.clientY,
+            ox:state.pos[cardEl.dataset.name][0], oy:state.pos[cardEl.dataset.name][1], moved:false,
+            head: !!ev.target.closest('.head')};
+    cardEl.setPointerCapture && viewport.setPointerCapture(ev.pointerId);
+  } else {
+    drag = {type:'pan', sx:ev.clientX, sy:ev.clientY, ox:view.x, oy:view.y, moved:false};
+    viewport.classList.add('panning');
+    viewport.setPointerCapture(ev.pointerId);
+  }
+});
+viewport.addEventListener('pointermove', function(ev){
+  if (!drag) return;
+  var dx = ev.clientX - drag.sx, dy = ev.clientY - drag.sy;
+  if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+  if (!drag.moved) return;
+  if (drag.type === 'pan'){
+    view.x = drag.ox + dx; view.y = drag.oy + dy; applyView();
+  } else {
+    state.pos[drag.name] = [drag.ox + dx/view.k, drag.oy + dy/view.k];
+    placeCard(drag.name);
+    drawFor(drag.name);
+  }
+});
+viewport.addEventListener('pointerup', function(ev){
+  if (!drag) return;
+  if (drag.type === 'card' && !drag.moved && drag.head){
+    toggleCard(drag.name);
+  }
+  if (drag.type === 'card' && drag.moved) save();
+  viewport.classList.remove('panning');
+  drag = null;
+});
+
+/* ---------- replier / déplier ---------- */
+function toggleCard(name, force){
+  var el = cards[name];
+  var open = (force !== undefined) ? force : !el.classList.contains('open');
+  el.classList.toggle('open', open);
+  if (open) state.open[name] = 1; else delete state.open[name];
+  measure(name); drawFor(name); save();
+}
+document.getElementById('expandAll').onclick = function(){
+  DATA.tables.forEach(function(t){ cards[t.name].classList.add('open'); state.open[t.name] = 1; });
+  measureAll(); drawAll(); save();
+};
+document.getElementById('collapseAll').onclick = function(){
+  DATA.tables.forEach(function(t){ cards[t.name].classList.remove('open'); });
+  state.open = {}; measureAll(); drawAll(); save();
+};
+document.getElementById('resetLayout').onclick = function(){
+  try { localStorage.removeItem(LSKEY); } catch(e){}
+  location.reload();
+};
+
+/* ---------- survol : mise en évidence ---------- */
+var hoverTimer = null;
+DATA.tables.forEach(function(t){
+  var el = cards[t.name];
+  el.addEventListener('pointerenter', function(){
+    if (drag) return;
+    clearTimeout(hoverTimer);
+    hoverTimer = setTimeout(function(){ highlight(t.name); }, 60);
+  });
+  el.addEventListener('pointerleave', function(){
+    clearTimeout(hoverTimer);
+    unhighlight();
+  });
+});
+function highlight(name){
+  stage.classList.add('focus');
+  cards[name].classList.add('hl');
+  Object.keys(adj[name].nb).forEach(function(n){ cards[n].classList.add('hl'); });
+  adj[name].edges.forEach(function(i){ edgeEls[i].el.classList.add('hl'); });
+}
+function unhighlight(){
+  stage.classList.remove('focus');
+  world.querySelectorAll('.card.hl').forEach(function(e){ e.classList.remove('hl'); });
+  svg.querySelectorAll('path.hl').forEach(function(e){ e.classList.remove('hl'); });
+}
+
+/* ---------- recherche ---------- */
+var search = document.getElementById('search');
+var list = document.getElementById('searchList');
+function renderList(q){
+  var names = DATA.tables.map(function(t){return t.name;})
+    .filter(function(n){ return n.indexOf(q) !== -1; }).sort().slice(0, 12);
+  if (!q || !names.length){ list.style.display = 'none'; return; }
+  list.innerHTML = names.map(function(n){
+    return '<div data-n="' + n + '"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:' +
+      famColor(byName[n].family) + '"></span>' + n + '</div>';
+  }).join('');
+  list.style.display = 'block';
+}
+search.addEventListener('input', function(){ renderList(search.value.trim().toLowerCase()); });
+search.addEventListener('keydown', function(ev){
+  if (ev.key === 'Enter'){
+    var q = search.value.trim().toLowerCase();
+    var m = DATA.tables.map(function(t){return t.name;}).filter(function(n){ return n.indexOf(q) !== -1; }).sort();
+    if (m.length) goTo(m[0]);
+    list.style.display = 'none';
+  }
+  if (ev.key === 'Escape'){ list.style.display = 'none'; search.blur(); }
+});
+list.addEventListener('click', function(ev){
+  var d = ev.target.closest('[data-n]');
+  if (d){ goTo(d.dataset.n); list.style.display = 'none'; }
+});
+document.addEventListener('click', function(ev){
+  if (!ev.target.closest('#searchWrap')) list.style.display = 'none';
+});
+function goTo(name){
+  hiddenFams[byName[name].family] = false; syncFilters();
+  var p = state.pos[name], s = cardSize[name] || [200,54];
+  if (view.k < 0.6) { view.k = 0.9; }
+  view.x = innerWidth/2 - (p[0]+s[0]/2)*view.k;
+  view.y = (innerHeight+56)/2 - (p[1]+s[1]/2)*view.k;
+  applyView();
+  var el = cards[name];
+  el.classList.add('found');
+  setTimeout(function(){ el.classList.remove('found'); }, 2600);
+}
+
+/* ---------- filtre familles ---------- */
+var ff = document.getElementById('famFilters');
+Object.keys(DATA.families).forEach(function(f){
+  var lab = document.createElement('label');
+  lab.innerHTML = '<input type="checkbox" data-f="' + f + '"' + (hiddenFams[f] ? '' : ' checked') +
+    '><span class="dot" style="background:' + famColor(+f) + '"></span>F' + f + ' · ' + esc(DATA.families[f]);
+  ff.appendChild(lab);
+});
+ff.addEventListener('change', function(ev){
+  var f = +ev.target.dataset.f;
+  hiddenFams[f] = !ev.target.checked;
+  applyFilters(); save();
+});
+function syncFilters(){
+  ff.querySelectorAll('input').forEach(function(i){ i.checked = !hiddenFams[+i.dataset.f]; });
+  applyFilters();
+}
+function applyFilters(){
+  DATA.tables.forEach(function(t){
+    cards[t.name].style.display = hiddenFams[t.family] ? 'none' : '';
+  });
+  drawAll();
+}
+
+/* ---------- init ---------- */
+measureAll();
+applyFilters();
+drawAll();
+if (state.view) applyView(); else fitView();
+window.addEventListener('resize', function(){ /* rien à recalculer, la vue reste */ });
+})();
+</script>
+</body>
+</html>
