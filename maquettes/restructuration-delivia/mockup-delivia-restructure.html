@@ -73,6 +73,15 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 /* Bandeau propositions ATLAS */
 .prop-banner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--indigo-50);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--indigo-700);margin-bottom:14px;width:fit-content;max-width:100%}
 
+/* Filtres du kanban Ventes (puces combinables : paiement + offre) */
+.filter-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.filter-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.filter-group .flbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--slate-400);margin-right:2px}
+.fchip{border:1px solid var(--slate-200);background:#fff;color:var(--slate-500);border-radius:999px;padding:4px 11px;font-size:12px;cursor:pointer;transition:background .12s,color .12s,border-color .12s;display:inline-flex;align-items:center;gap:5px}
+.fchip:hover{border-color:var(--slate-300);color:var(--slate-700)}
+.fchip.on{background:var(--indigo-50);border-color:var(--indigo-400);color:var(--indigo-700);font-weight:500}
+.filter-sep{width:1px;height:18px;background:var(--slate-200)}
+
 /* ---------- Kanban (fidèle : colonnes bg-slate-50/80, w-72, titres uppercase) ---------- */
 .board-wrap{flex:1;overflow-x:auto;overflow-y:hidden;padding-bottom:16px;min-height:0}
 .board{display:flex;gap:16px;align-items:stretch;height:100%;min-height:380px}
@@ -133,11 +142,9 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 #pop.open{display:block}
 #pop h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--slate-500);margin-bottom:8px;display:flex;align-items:center;gap:7px}
 #pop h4 .dot{width:8px;height:8px;border-radius:50%;flex:none}
-.pop-note{font-size:11.5px;color:var(--slate-500);background:#f8fafc;border-radius:8px;padding:7px 10px;margin-bottom:8px;line-height:1.45}
 .pop-case{font-size:12.3px;line-height:1.45;padding:6px 0;border-top:1px solid var(--slate-100);color:var(--slate-500)}
 .pop-case:first-of-type{border-top:none}
 .pop-case b{color:var(--slate-800)}
-.pop-lock{margin-top:8px;background:#f8fafc;border:1px dashed var(--slate-200);border-radius:8px;padding:8px 10px;font-size:11.6px;color:var(--slate-500);line-height:1.45}
 
 /* ---------- Toast (drag refusé côté ventes) ---------- */
 #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(12px);z-index:90;background:var(--slate-800);color:#f1f5f9;border-radius:10px;padding:11px 16px;font-size:12.5px;line-height:1.5;max-width:480px;box-shadow:0 10px 30px rgb(15 23 42 / 0.4);opacity:0;pointer-events:none;transition:opacity .18s, transform .18s}
@@ -187,10 +194,11 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .ch-next .ch-t{font-weight:600;color:var(--slate-900)}
 .ch-d{font-size:11px;color:var(--slate-400);font-variant-numeric:tabular-nums}
 .ch-next-tag{display:inline-flex;margin-left:6px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--indigo-600);background:var(--indigo-50);border-radius:4px;padding:1px 5px;vertical-align:1px}
-/* ce qu'il reste à faire */
-.cm-todo{display:flex;align-items:center;gap:10px;background:#f8fafc;border:1px solid var(--slate-100);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--slate-700);line-height:1.45}
-.cm-todo.alerte{background:var(--rose-50);border-color:var(--rose-100);color:var(--rose-600)}
-.cm-todo .na-who{margin-left:auto;flex:none}
+/* notes du client / dossier */
+.cm-note{display:flex;gap:10px;font-size:12.3px;color:var(--slate-600);padding:8px 11px;background:#f8fafc;border:1px solid var(--slate-100);border-radius:8px;line-height:1.45}
+.cm-note + .cm-note{margin-top:6px}
+.cm-note .who{color:var(--slate-400);white-space:nowrap;font-size:11px;padding-top:1px;flex:none}
+.cm-note-add{margin-top:8px;display:flex;align-items:center;gap:8px;border:1px dashed var(--slate-200);border-radius:8px;padding:8px 11px;font-size:12px;color:var(--slate-300);cursor:text}
 /* documents + fiche client */
 .cm-docs{display:flex;flex-wrap:wrap;gap:8px}
 .doc-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--slate-200);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--indigo-600);background:#fff;cursor:pointer}
@@ -319,6 +327,23 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
       </div>
       <p class="page-sub">Kanban unique quelle que soit l'offre : 1 carte = 1 vente = 1 offre = 1 mode de paiement. La facture part automatiquement dès l'engagement (mandat signé, devis signé) ; le CPF attend la validation du service fait, l'OPCO l'accord de prise en charge. Survolez une carte pour comprendre son étape, cliquez pour ouvrir son détail, et cliquez sur ℹ️ dans l'en-tête d'une colonne pour les cas de figure par moyen de paiement (contenu validé le 12/08).</p>
       <div class="prop-banner">💡 <span class="prop-pill">proposition</span> Sur chaque carte : le responsable de l'étape en cours (🤖 automatique ou 👤 closer). L'étape est calculée depuis les paiements réels, jamais déplacée à la main (🔒). Le clic ouvre un détail de carte repensé.</div>
+      <div class="filter-bar" id="ventes-filters">
+        <div class="filter-group">
+          <span class="flbl">Paiement</span>
+          <button class="fchip" data-fmode="cpf">CPF</button>
+          <button class="fchip" data-fmode="sdd">Mandat</button>
+          <button class="fchip" data-fmode="virement">Virement</button>
+          <button class="fchip" data-fmode="opco">OPCO</button>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+          <span class="flbl">Offre</span>
+          <button class="fchip" data-foffre="Formation Niveau 1">Formation Niveau 1</button>
+          <button class="fchip" data-foffre="Formation Niveau 2">Formation Niveau 2</button>
+          <button class="fchip" data-foffre="Agent sur mesure">Agent</button>
+          <button class="fchip" data-foffre="Coaching">Coaching</button>
+        </div>
+      </div>
       <div class="board-wrap"><div class="board" id="board-ventes"></div></div>
       <div class="foot-note">Maquette de démonstration, données factices. Structure : 1 vente = 1 offre = 1 mode de paiement ; kanban inscription personnalisé par offre ; kanban vente unique.</div>
     </div>
@@ -460,18 +485,16 @@ const INSCRIPTIONS = {
    « Niveau 1 uniquement ». */
 function infoN1N2(isN2){
   const cpfLbl = "🎓 CPF (Niveau 1 uniquement)";
-  const n2Note = isN2 ? "Le Niveau 2 n'est pas éligible CPF : il se vend uniquement en fonds propres (mandat SDD) ou en B2B (virement, OPCO)." : null;
   const actionCases = [
     {p:cpfLbl, t:"Devis CPF demandé par le client. France IA accepte le devis : automatique si l'ARD a été rempli en amont, sinon validation manuelle. Les demandes de devis spontanées de clients inconnus atterrissent ici."},
     {p:"🤝 OPCO", t:"Convention à générer et à transmettre au référent (closer)."}
   ];
   if(isN2) actionCases.push({p:"🧑‍🎓 Niveau 2 uniquement", t:"Prérequis Niveau 1 à vérifier avant de valider."});
   return [
-    { note: n2Note || "Seul le CPF passe par cette étape : les fonds propres arrivent directement en « En attente », l'OPCO en « Action de notre part ».",
-      cases:[
+    { cases:[
         {p:cpfLbl, t:"ARD rempli. On attend la demande de devis du client sur Mon Compte Formation. Détection automatique de la demande."}
       ]},
-    { note:n2Note, cases: actionCases },
+    { cases: actionCases },
     { cases:[
         {p:cpfLbl, t:"Devis accepté par France IA. On attend la validation du client sur Mon Compte Formation et le paiement du reste à charge. Passage automatique au paiement."},
         {p:"🏦 Fonds propres (SDD)", t:"En attente de la signature du mandat de prélèvement par le client. Place réservée 48 h. Passage automatique à la signature. Cas rare : le mandat se signe en règle générale en même temps que l'inscription ARD."},
@@ -522,8 +545,7 @@ const INFO_AGENT = [
 ];
 
 const INFO_COACHING = [
-  { note:"Le coaching (4 h) est toujours payé en fonds propres, prélèvement SDD unique à J+14, même pour un apprenant CPF : il n'entre jamais dans le dossier EDOF.",
-    cases:[
+  { cases:[
       {p:"💳 Tous", t:"Coaching vendu, rien d'organisé. Un formateur est à trouver."}
     ]},
   { cases:[
@@ -556,13 +578,11 @@ const DOTS_VENTES = ["#94a3b8","#818cf8","#fbbf24","#f43f5e","#10b981"];
    La facture est émise et envoyée automatiquement dès l'engagement ;
    seul le CPF attend la validation du service fait par la Caisse des Dépôts. */
 const INFO_VENTES = [
-  { note:"Pour le Mandat SDD et le Virement, la facture part automatiquement dès l'engagement : leurs cartes naissent directement en « En attente » et ne passent jamais ici. Seuls le CPF et l'OPCO passent par cette étape.",
-    cases:[
+  { cases:[
       {p:"🎓 CPF (les individuels)", t:"Dossier CPF en cours. On attend la fin de la formation puis la validation du service fait par la Caisse des Dépôts. Rien à faire, la carte avancera toute seule."},
       {p:"🤝 OPCO (les B2B financés subventionnés)", t:"Dossier engagé, accord de prise en charge attendu de l'organisme. Aucune facture ne part avant l'accord. Rien à faire."}
     ]},
-  { note:"Le CPF (facturation après validation du service fait) et l'OPCO (facturation après l'accord de prise en charge) passent ici normalement. Pour le Mandat SDD et le Virement, cette étape est un filet d'anomalie : une carte n'y apparaît que si l'envoi automatique de la facture a échoué.",
-    cases:[
+  { cases:[
       {p:"🎓 CPF (les individuels)", t:"Service fait validé par la Caisse des Dépôts. L'admin génère la facture puis la transmet sur EDOF et à Bibby."},
       {p:"🤝 OPCO (les B2B financés subventionnés)", t:"Accord de prise en charge reçu : le closer génère la facture et l'envoie à l'organisme financeur."},
       {p:"🏦 Mandat SDD (les B2C fonds propres)", t:"L'envoi automatique de la facture a échoué : l'envoyer à la main."},
@@ -580,8 +600,7 @@ const INFO_VENTES = [
       {p:"🧾 Virement sur devis/facture (les B2B fonds propres)", t:"Délai de paiement de 30 jours dépassé. Relancer l'entreprise."},
       {p:"🤝 OPCO (les B2B financés subventionnés)", t:"Règlement OPCO en retard. Relancer l'organisme."}
     ]},
-  { note:"Mandat SDD : la facture émise à l'engagement n'est jamais remplacée, elle est tamponnée acquittée automatiquement au dernier encaissement (appel API Qonto).",
-    cases:[
+  { cases:[
       {p:"🎓 CPF (les individuels)", t:"Paiement reçu, dossier soldé. Plus rien à faire."},
       {p:"🏦 Mandat SDD (les B2C fonds propres)", t:"Payé en totalité. Plus rien à faire."},
       {p:"🧾 Virement sur devis/facture (les B2B fonds propres)", t:"Virement reçu, facture acquittée. Plus rien à faire."},
@@ -663,7 +682,7 @@ const VENTES = [
       {t:"Facture transmise (EDOF + Bibby)", st:"plan"},
       {t:"Facture acquittée et transmise", st:"plan"}
     ],
-    todo:{t:"Rien à faire : la carte avancera toute seule.", who:"auto"},
+    notes:[{d:"30/07", a:"Karim (closer)", t:"Client motivé, préfère la session de Lyon."}],
     docs:[{t:"Devis EDOF n° 2026-08412", s:"accepté"}]
   },
   {
@@ -679,7 +698,7 @@ const VENTES = [
       {t:"Facture transmise (EDOF + Bibby)", st:"plan"},
       {t:"Facture acquittée et transmise", st:"plan"}
     ],
-    todo:{t:"Rien à faire : la validation CDC arrive automatiquement.", who:"auto"},
+    notes:[{d:"12/08", a:"Sophie (admin)", t:"Sortie et service fait déclarés sur EDOF, dossier propre."}],
     docs:[{t:"Devis EDOF n° 2026-07208", s:"accepté"}]
   },
   {
@@ -694,7 +713,7 @@ const VENTES = [
       {t:"Règlement OPCO", st:"plan"},
       {t:"Facture acquittée et transmise", st:"plan"}
     ],
-    todo:{t:"Rien à faire : on attend l'accord de prise en charge.", who:"auto"},
+    notes:[{d:"04/08", a:"Léa (closer)", t:"Référent OPCO prévenu, accord espéré sous 3 semaines."}],
     docs:[{t:"Convention C-2026-064", s:"signée"}]
   },
   /* ---- Envoyer facture : CPF post service fait, OPCO post accord,
@@ -712,7 +731,7 @@ const VENTES = [
       {t:"Paiement Bibby sous 30 jours", st:"plan"},
       {t:"Facture acquittée et transmise", st:"plan"}
     ],
-    todo:{t:"Générer la facture Qonto, transmettre son numéro sur EDOF puis le dossier à Bibby.", who:"admin"},
+    notes:[{d:"08/08", a:"Sophie (admin)", t:"Validation CDC reçue, facturation prévue cette semaine."}],
     docs:[{t:"Devis EDOF n° 2026-06914", s:"accepté"}]
   },
   {
@@ -728,7 +747,10 @@ const VENTES = [
       {t:"Virement attendu sous 30 jours", st:"plan"},
       {t:"Facture acquittée et transmise", st:"plan"}
     ],
-    todo:{t:"Envoyer la facture à la main à l'entreprise, puis la carte rejoint le circuit normal.", who:"closer", alerte:true},
+    notes:[
+      {d:"05/08", a:"Léa (closer)", t:"Adresse de facturation demandée au client par mail."},
+      {d:"07/08", a:"Léa (closer)", t:"Relance faite, en attente du retour du cabinet."}
+    ],
     docs:[{t:"Devis D-2026-0104", s:"signé"},{t:"Facture F-2026-0231", s:"générée, non envoyée"}]
   },
   {
@@ -743,7 +765,7 @@ const VENTES = [
       {t:"Règlement OPCO", st:"plan"},
       {t:"Facture acquittée et transmise", st:"plan"}
     ],
-    todo:{t:"Générer la facture et l'envoyer à l'organisme financeur.", who:"closer"},
+    notes:[{d:"05/08", a:"Karim (closer)", t:"Accord reçu, facture à générer avant vendredi."}],
     docs:[{t:"Convention C-2026-058", s:"signée"},{t:"Accord de prise en charge", s:"reçu le 05/08"}]
   },
   /* ---- En attente : les cartes SDD et Virement naissent ici,
@@ -760,7 +782,7 @@ const VENTES = [
       {t:"Encaissement vérifié (J+5)", st:"plan"},
       {t:"Facture tamponnée acquittée automatiquement (API Qonto)", st:"plan"}
     ],
-    todo:{t:"Rien à faire : le prélèvement partira seul le 18/08.", who:"auto"},
+    notes:[{d:"28/07", a:"Karim (closer)", t:"Cliente prévenue du prélèvement unique du 18/08."}],
     docs:[{t:"Facture F-2026-0219", s:"envoyée"},{t:"Mandat SEPA M-0714", s:"signé"}]
   },
   {
@@ -776,7 +798,7 @@ const VENTES = [
       {t:"Échéance 3", d:"550 € · 05/10", st:"plan"},
       {t:"Facture tamponnée acquittée automatiquement (API Qonto)", st:"plan"}
     ],
-    todo:{t:"Rien à faire : prélèvement 2/3 le 05/09.", who:"auto"},
+    notes:[{d:"12/08", a:"Léa (closer)", t:"Client prévenu du prélèvement du 05/09."}],
     docs:[{t:"Facture F-2026-0197", s:"envoyée"},{t:"Mandat SEPA M-0698", s:"signé"}]
   },
   {
@@ -790,7 +812,7 @@ const VENTES = [
       {t:"Prélèvement unique 550 €", d:"24/08", st:"next"},
       {t:"Facture tamponnée acquittée automatiquement (API Qonto)", st:"plan"}
     ],
-    todo:{t:"Rien à faire : prélèvement le 24/08.", who:"auto"},
+    notes:[{d:"10/08", a:"Sophie (admin)", t:"Formateur à confirmer, voir Book My Sessions."}],
     docs:[{t:"Facture F-2026-0242", s:"envoyée"}]
   },
   /* ---- En retard ---- */
@@ -809,7 +831,10 @@ const VENTES = [
       {t:"Échéance 3 (suspendue)", d:"550 €", st:"plan"},
       {t:"Facture tamponnée acquittée automatiquement (API Qonto)", st:"plan"}
     ],
-    todo:{t:"Relancer le client, puis décider du rejeu de l'échéance 2 (au cas par cas : un rejeu coûte des frais).", who:"closer", alerte:true},
+    notes:[
+      {d:"26/07", a:"Léa (closer)", t:"Client appelé : promet de régulariser en fin de mois."},
+      {d:"05/08", a:"Léa (closer)", t:"Sans nouvelle, relance SMS envoyée."}
+    ],
     docs:[{t:"Facture F-2026-0164", s:"envoyée"},{t:"Mandat SEPA M-0655", s:"signé"}]
   },
   /* ---- Facture acquittée et transmise ---- */
@@ -824,7 +849,7 @@ const VENTES = [
       {t:"Paiement Bibby reçu et rapproché", d:"1 485 € · 02/08", st:"ok"},
       {t:"Facture acquittée et transmise", d:"02/08", st:"ok"}
     ],
-    todo:null,
+    notes:[{d:"02/08", a:"Sophie (admin)", t:"Paiement Bibby rapproché, dossier archivé."}],
     docs:[{t:"Facture F-2026-0151", s:"acquittée"}]
   },
   {
@@ -838,7 +863,7 @@ const VENTES = [
       {t:"Virement reçu et rapproché", d:"3 300 € · 05/08", st:"ok"},
       {t:"Facture acquittée et transmise", d:"05/08", st:"ok"}
     ],
-    todo:null,
+    notes:[{d:"05/08", a:"Karim (closer)", t:"Client satisfait de l'agent, à recontacter pour un Niveau 1 équipe."}],
     docs:[{t:"Facture F-2026-0126", s:"acquittée"},{t:"Devis D-2026-089", s:"signé"}]
   }
 ];
@@ -918,7 +943,7 @@ function renderInscriptions(){
 
 function refreshCounts(board){
   [...board.children].forEach(col=>{
-    const n = col.querySelectorAll(".card").length;
+    const n = col.querySelectorAll(".card:not(.hidden)").length;
     col.querySelector(".count").textContent = n;
     let empty = col.querySelector(".col-empty");
     if(n===0 && !empty){ col.querySelector(".col-cards").appendChild(el("p","col-empty","·")); }
@@ -960,6 +985,8 @@ function renderVentes(){
     const pf = PROFILS[v.profil];
     const card = el("div","card vente");
     card.id = "vente-"+idx;
+    card.dataset.mode = v.profil;
+    card.dataset.offre = v.offre;
     if(v.alert) card.classList.add("alerte");
     /* Ligne 1 : client + UN badge de mode de paiement */
     const row1 = el("div","vrow1");
@@ -989,6 +1016,30 @@ function renderVentes(){
     card.addEventListener("click", ()=> openCardModal(idx));
     board.children[v.col].querySelector(".col-cards").appendChild(card);
   });
+  applyVentesFilters();
+}
+
+/* ---------- Filtres du kanban Ventes (combinables, vide = tout) ---------- */
+const fModes = new Set();
+const fOffres = new Set();
+
+document.getElementById("ventes-filters").addEventListener("click", ev=>{
+  const chip = ev.target.closest(".fchip");
+  if(!chip) return;
+  const set = chip.dataset.fmode ? fModes : fOffres;
+  const val = chip.dataset.fmode || chip.dataset.foffre;
+  if(set.has(val)){ set.delete(val); chip.classList.remove("on"); }
+  else { set.add(val); chip.classList.add("on"); }
+  applyVentesFilters();
+});
+
+function applyVentesFilters(){
+  const board = document.getElementById("board-ventes");
+  board.querySelectorAll(".card.vente").forEach(c=>{
+    const okMode  = fModes.size===0  || fModes.has(c.dataset.mode);
+    const okOffre = fOffres.size===0 || fOffres.has(c.dataset.offre);
+    c.classList.toggle("hidden", !(okMode && okOffre));
+  });
   refreshCounts(board);
 }
 
@@ -1000,9 +1051,7 @@ function togglePop(btn, title, info, dotColor, isVente){
   if(pop.classList.contains("open") && popBtn===btn){ closePop(); return; }
   popBtn = btn;
   let html = "<h4><span class='dot' style='background:"+dotColor+"'></span>"+title+"</h4>";
-  if(info?.note) html += "<div class='pop-note'>"+info.note+"</div>";
   (info?.cases||[]).forEach(c=>{ html += "<div class='pop-case'><b>"+c.p+" :</b> "+c.t+"</div>"; });
-  if(isVente) html += "<div class='pop-lock'>🔒 Étape calculée, pas déplacée (proposition) : la colonne d'une carte vente est dérivée automatiquement de l'état réel des paiements. On ne déplace jamais ces cartes à la main, contrairement au kanban Inscriptions qui reste manuel.</div>";
   pop.innerHTML = html;
   pop.classList.add("open");
   const r = btn.getBoundingClientRect();
@@ -1086,17 +1135,16 @@ function openCardModal(idx){
     ch.appendChild(it);
   });
   body.appendChild(ch);
-  /* 3. Ce qu'il reste à faire */
-  body.appendChild(el("div","cm-sec","Ce qu'il reste à faire"));
-  const todo = el("div","cm-todo"+(v.todo && v.todo.alerte ? " alerte" : ""));
-  if(v.todo){
-    todo.appendChild(el("span",null,(v.todo.alerte?"⚠️ ":"")+v.todo.t));
-    todo.appendChild(whoBadge(v.todo.who));
+  /* 3. Notes du client / dossier */
+  body.appendChild(el("div","cm-sec","Notes"));
+  if(v.notes && v.notes.length){
+    v.notes.forEach(n=>{
+      body.appendChild(el("div","cm-note","<span class='who'>"+n.d+" · "+n.a+"</span><span>"+n.t+"</span>"));
+    });
   } else {
-    todo.appendChild(el("span",null,"Rien : vente soldée."));
-    todo.appendChild(whoBadge(null));
+    body.appendChild(el("div","cm-note","<span style='color:var(--slate-400)'>Aucune note pour l'instant.</span>"));
   }
-  body.appendChild(todo);
+  body.appendChild(el("div","cm-note-add","✎ Ajouter une note…"));
   /* 4. Documents + fiche client */
   body.appendChild(el("div","cm-sec","Documents"));
   const docs = el("div","cm-docs");
