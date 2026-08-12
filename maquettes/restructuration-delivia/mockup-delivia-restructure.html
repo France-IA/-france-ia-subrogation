@@ -120,6 +120,8 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .paylines{margin-top:8px;border-top:1px dashed var(--slate-200);padding-top:7px;display:flex;flex-direction:column;gap:4px}
 .payline{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate-500)}
 .payline .st{margin-left:auto;font-size:10px;font-weight:500;border-radius:4px;padding:1px 6px;white-space:nowrap}
+.payline .sep{color:var(--slate-300)}
+.payline .st.tight{margin-left:0}
 .st-ok{background:var(--emerald-50);color:var(--emerald-600)}
 .st-wait{background:var(--amber-50);color:var(--amber-600)}
 .st-ko{background:var(--rose-50);color:var(--rose-600)}
@@ -150,8 +152,7 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .pop-case{font-size:12.3px;line-height:1.45;padding:6px 0;border-top:1px solid var(--slate-100);color:var(--slate-500)}
 .pop-case:first-of-type{border-top:none}
 .pop-case b{color:var(--slate-800)}
-.pop-move{margin-top:9px;background:var(--indigo-50);border-radius:8px;padding:8px 10px;font-size:12px;line-height:1.45;color:var(--slate-700)}
-.pop-move b{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--indigo-600);margin-bottom:2px}
+.pop-review{margin-top:9px;font-size:10.5px;color:var(--slate-400);font-style:italic}
 .pop-lock{margin-top:8px;background:#f8fafc;border:1px dashed var(--slate-200);border-radius:8px;padding:8px 10px;font-size:11.6px;color:var(--slate-500);line-height:1.45}
 
 /* ---------- Toast (drag refusé côté ventes) ---------- */
@@ -269,7 +270,7 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
           <button data-offer="coaching">Coaching</button>
         </div>
       </div>
-      <p class="page-sub">Suivi pédagogique par offre : chaque offre a son kanban personnalisé, les cartes se déplacent à la main. Cliquez sur l'icône ℹ️ d'une colonne pour voir qui peut s'y trouver et ce qui fait avancer les cartes.</p>
+      <p class="page-sub">Suivi pédagogique par offre : chaque offre a son kanban personnalisé, les cartes se déplacent à la main. Cliquez sur l'icône ℹ️ d'une colonne pour voir les cas de figure possibles à cette étape.</p>
       <div class="board-wrap"><div class="board" id="board-inscriptions"></div></div>
       <div class="foot-note">Maquette de démonstration, données factices. Structure : 1 vente = 1 offre = 1 mode de paiement ; kanban inscription personnalisé par offre ; kanban vente unique.</div>
     </div>
@@ -281,7 +282,7 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
       <div class="page-head">
         <h1>Ventes</h1>
       </div>
-      <p class="page-sub">Kanban unique quelle que soit l'offre : 1 carte = 1 vente = 1 offre = 1 mode de paiement. Survolez une carte pour comprendre son étape, cliquez pour ouvrir la fiche client, et cliquez sur ℹ️ dans l'en-tête d'une colonne pour tous les cas de figure (CPF, SDD, B2B, OPCO).</p>
+      <p class="page-sub">Kanban unique quelle que soit l'offre : 1 carte = 1 vente = 1 offre = 1 mode de paiement. Survolez une carte pour comprendre son étape, cliquez pour ouvrir la fiche client, et cliquez sur ℹ️ dans l'en-tête d'une colonne pour les cas de figure, rangés par moyen de paiement (CPF, mandat SDD, virement, OPCO).</p>
       <div class="prop-banner">💡 <span class="prop-pill">proposition</span> « Prochaine action » sur chaque carte : l'action suivante et son porteur. <span class="prop-pill">proposition</span> « Statut calculé, pas déplacé » : l'étape est dérivée des paiements, les cartes ne se déplacent pas à la main (🔒).</div>
       <div class="board-wrap"><div class="board" id="board-ventes"></div></div>
       <div class="foot-note">Maquette de démonstration, données factices. Structure : 1 vente = 1 offre = 1 mode de paiement ; kanban inscription personnalisé par offre ; kanban vente unique.</div>
@@ -401,103 +402,82 @@ const INSCRIPTIONS = {
 /* ---------- Cas de figure par étape : kanban INSCRIPTIONS ---------- */
 function infoN1N2(isN2){
   const actionCases = [
-    {p:"🎓 CPF", t:"dossier EDOF à confirmer ou pièce à valider côté France IA."},
+    {p:"🎓 CPF", t:"accepter le devis CPF du client (automatique si l'ARD a été bien rempli en amont)."},
     {p:"📅 Tous", t:"une session est à proposer à l'apprenant."}
   ];
   if(isN2) actionCases.splice(1,0,{p:"🧑‍🎓 Prérequis", t:"vérifier que le Niveau 1 est acquis avant de valider."});
   return [
     { cases:[
-        {p:"🎓 CPF", t:"dossier accepté sur EDOF, l'apprenant sort du closing."},
+        {p:"🎓 CPF", t:"ARD rempli, en attente de la demande de devis sur MonCompteFormation."},
         {p:"💳 Fonds propres", t:"inscription ARD finalisée, mandat SDD signé."},
         {p:"🏢 B2B / 🤝 OPCO", t:"convention ou devis signé, apprenants transmis par l'entreprise."}
-      ],
-      move:"L'admin prend le dossier en main (proposition de session). Action humaine." },
-    { cases: actionCases,
-      move:"L'action est faite par l'admin : la carte repart vers « En attente » ou « Inscription validée ». Humain." },
+      ]},
+    { cases: actionCases },
     { cases:[
         {p:"🧑‍🎓 Apprenant", t:"réponse attendue (choix de date, pièce manquante)."},
         {p:"🤝 OPCO", t:"décision de prise en charge attendue de l'organisme."}
-      ],
-      move:"Le retour arrive : l'admin repositionne la carte. Humain." },
+      ]},
     { cases:[
         {p:"📅 Tous", t:"apprenant positionné sur un mois, sans session précise (disponibilités, report souhaité)."}
-      ],
-      move:"Une session datée du mois est choisie : passage en « Inscription validée ». Humain." },
+      ]},
     { cases:[
         {p:"✅ Tous", t:"session datée et lieu confirmés, convocation envoyée."}
-      ],
-      move:"Le J1 de la session arrive : passage en « En formation ». Automatique." },
+      ]},
     { cases:[
         {p:"🏫 Tous", t:"la session est en cours (J1-J2), émargements en cours de collecte."}
-      ],
-      move:"Fin de session avec émargements complets : « Terminé ». Absence constatée : « Absence justifiée / injustifiée ». Automatique, puis contrôle humain." },
+      ]},
     { cases:[
         {p:"🎓 Tous", t:"formation suivie et émargée, parcours pédagogique terminé."}
-      ],
-      move:"État final ici. Le paiement, lui, continue sa vie dans le kanban Ventes." },
+      ]},
     { cases:[
         {p:"📄 Tous", t:"absent au J1/J2 avec justificatif recevable (certificat médical, force majeure)."}
-      ],
-      move:"Repositionnement sur une prochaine session : retour en « Inscription prévue ». Humain." },
+      ]},
     { cases:[
         {p:"❌ Tous", t:"absent sans justificatif ni nouvelle malgré relance."}
-      ],
-      move:"Justificatif reçu : bascule en « Absence justifiée ». Toujours sans nouvelle : « Lost ». Humain." },
+      ]},
     { cases:[
         {p:"🚫 Tous", t:"rétractation, abandon, ou financement annulé (dossier CPF annulé côté EDOF compris)."}
-      ],
-      move:"État final : la carte ne bouge plus." }
+      ]}
   ];
 }
 
 const INFO_AGENT = [
   { cases:[
       {p:"🏢 Entreprise", t:"demande d'agent sur mesure entrée (formulaire, closing ou client formation existant). Paiement le plus courant : virement B2B."}
-    ],
-    move:"Un appel de cadrage est posé : passage en « Précision des besoins ». Humain." },
+    ]},
   { cases:[
       {p:"📞 Tous", t:"appel de cadrage planifié ou réalisé, périmètre et chiffrage en cours."}
-    ],
-    move:"Devis signé : « Agent en construction ». Sans suite : « Lost ». Humain." },
+    ]},
   { cases:[
       {p:"🔧 Tous", t:"devis signé, sprint de construction en cours."}
-    ],
-    move:"Livraison et recette avec le client : « Livré ». Humain." },
+    ]},
   { cases:[
       {p:"✅ Tous", t:"agent livré et recetté."}
-    ],
-    move:"État final ici. La facturation suit dans le kanban Ventes." },
+    ]},
   { cases:[
       {p:"🚫 Tous", t:"sans suite après l'appel, ou devis refusé."}
-    ],
-    move:"État final : la carte ne bouge plus." }
+    ]}
 ];
 
 const INFO_COACHING = [
   { cases:[
       {p:"💳 Tous", t:"coaching vendu (souvent en complément d'un Niveau 1, prélèvement SDD comptant), rien n'est encore organisé."}
-    ],
-    move:"Un formateur est identifié : « Formateur trouvé ». Humain." },
+    ]},
   { cases:[
       {p:"🧑‍🏫 Tous", t:"formateur assigné, date à caler avec l'apprenant."}
-    ],
-    move:"La date est posée avec l'apprenant : « Date déterminée ». Humain." },
+    ]},
   { cases:[
       {p:"📅 Tous", t:"séance planifiée (visio ou présentiel)."}
-    ],
-    move:"Séance passée avec CR et émargement déposés : « Effectué ». Pièce manquante : « Irrégularité »." },
+    ]},
   { cases:[
       {p:"✅ Tous", t:"séance réalisée, compte rendu et émargement déposés."}
-    ],
-    move:"État final ici. La facturation suit dans le kanban Ventes." },
+    ]},
   { cases:[
       {p:"⚠️ Tous", t:"séance passée mais une pièce manque (émargement, compte rendu)."}
-    ],
-    move:"La pièce est récupérée : retour en « Effectué ». Humain." },
+    ]},
   { cases:[
       {p:"🚫 Tous", t:"coaching annulé, le plus souvent avec la formation associée."}
-    ],
-    move:"État final : la carte ne bouge plus." }
+    ]}
 ];
 
 const INFO_INSC = { n1: infoN1N2(false), n2: infoN1N2(true), agent: INFO_AGENT, coaching: INFO_COACHING };
@@ -507,38 +487,39 @@ const COLS_VENTES = ["RAF","Envoyer facture","En attente","En retard","Facture a
 /* Pastilles reprises du kanban Facturation réel : slate, indigo, amber, rose, emerald */
 const DOTS_VENTES = ["#94a3b8","#818cf8","#fbbf24","#f43f5e","#10b981"];
 
-/* ---------- Cas de figure par étape : kanban VENTES ---------- */
+/* ---------- Cas de figure par étape : kanban VENTES ----------
+   Rangés par MOYEN DE PAIEMENT (types de client concernés entre parenthèses).
+   Un moyen impossible à une étape n'apparaît pas. */
 const INFO_VENTES = [
   { cases:[
-      {p:"🎓 CPF", t:"dossier EDOF validé. On attend la date clef : fin de formation, puis déclaration du service fait. Rien à faire."},
-      {p:"💳 Fonds propres (SDD)", t:"mandat signé, première échéance programmée à J+14 minimum. Rien à faire, le prélèvement partira seul."},
-      {p:"🏢 B2B (virement)", t:"devis signé : la vente existe, la facture sera émise au moment prévu."},
-      {p:"🤝 OPCO", t:"accord de prise en charge attendu de l'organisme."}
-    ],
-    move:"La date clef arrive ou la facture est émise. Passage automatique, personne ne déplace la carte." },
+      {p:"🎓 CPF (les individuels)", t:"dossier EDOF validé. On attend la date clef : fin de formation, puis déclaration du service fait. Rien à faire."},
+      {p:"🏦 Mandat SDD (les B2C fonds propres)", t:"mandat signé, première échéance programmée à J+14 minimum. Rien à faire, le prélèvement partira seul."},
+      {p:"🧾 Virement sur devis/facture (les B2B fonds propres)", t:"devis signé : la vente existe, la facture sera émise au moment prévu."},
+      {p:"🤝 OPCO (les B2B financés subventionnés)", t:"accord de prise en charge attendu de l'organisme."}
+    ]},
   { cases:[
-      {p:"🎓 CPF", t:"service fait déclaré : la facture est à transmettre (CDC ou remise Bibby)."},
-      {p:"💳 Fonds propres (SDD)", t:"facture à émettre et à envoyer au client."},
-      {p:"🏢 B2B (virement)", t:"facture à émettre et à envoyer à l'entreprise."}
-    ],
-    move:"La facture est envoyée : action humaine (admin) ou automatisation selon le canal." },
+      {p:"🎓 CPF (les individuels)", t:"service fait déclaré : la facture est à transmettre (CDC ou remise Bibby)."},
+      {p:"🏦 Mandat SDD (les B2C fonds propres)", t:"facture à émettre et à envoyer au client."},
+      {p:"🧾 Virement sur devis/facture (les B2B fonds propres)", t:"facture à émettre et à envoyer à l'entreprise."},
+      {p:"🤝 OPCO (les B2B financés subventionnés)", t:"accord reçu : facture à émettre et à envoyer à l'organisme financeur."}
+    ]},
   { cases:[
-      {p:"🎓 CPF", t:"versement CDC ou reste à charge attendu. Délai normal, rien d'anormal."},
-      {p:"💳 Fonds propres (SDD)", t:"échéances en cours de prélèvement, aucune en retard."},
-      {p:"🏢 B2B (virement)", t:"facture envoyée, délai de paiement de 30 jours en cours."},
-      {p:"🤝 OPCO", t:"règlement OPCO attendu. Les délais longs sont normaux avec ces organismes."}
-    ],
-    move:"Encaissement constaté par le rapprochement bancaire (automatique), ou délai dépassé : la carte passe alors en « En retard »." },
+      {p:"🎓 CPF (les individuels)", t:"versement CDC ou reste à charge attendu. Délai normal, rien d'anormal."},
+      {p:"🏦 Mandat SDD (les B2C fonds propres)", t:"échéances en cours de prélèvement, aucune en retard."},
+      {p:"🧾 Virement sur devis/facture (les B2B fonds propres)", t:"facture envoyée, délai de paiement de 30 jours en cours."},
+      {p:"🤝 OPCO (les B2B financés subventionnés)", t:"règlement OPCO attendu. Les délais longs sont normaux avec ces organismes."}
+    ]},
   { cases:[
-      {p:"💳 Fonds propres (SDD)", t:"un prélèvement refusé ou impayé : relance à faire, le rejeu se décide au cas par cas."},
-      {p:"🏢 B2B (virement)", t:"les 30 jours de délai sont dépassés : relance de l'entreprise."},
-      {p:"🤝 OPCO", t:"relance de l'organisme financeur."}
-    ],
-    move:"Paiement régularisé (repassage automatique via le rapprochement bancaire) ou geste de recouvrement (humain : closer ou admin)." },
+      {p:"🏦 Mandat SDD (les B2C fonds propres)", t:"un prélèvement refusé ou impayé : relance à faire, le rejeu se décide au cas par cas."},
+      {p:"🧾 Virement sur devis/facture (les B2B fonds propres)", t:"les 30 jours de délai sont dépassés : relance de l'entreprise."},
+      {p:"🤝 OPCO (les B2B financés subventionnés)", t:"relance de l'organisme financeur."}
+    ]},
   { cases:[
-      {p:"✅ Tous profils", t:"tous les paiements sont encaissés et vérifiés (l'encaissement réel à J+5 est confirmé), la facture est transmise au client."}
-    ],
-    move:"État final : la carte ne bouge plus." }
+      {p:"🎓 CPF (les individuels)", t:"versement CDC rapproché en banque et reste à charge encaissé, facture transmise."},
+      {p:"🏦 Mandat SDD (les B2C fonds propres)", t:"toutes les échéances encaissées et vérifiées (encaissement réel à J+5 confirmé), facture transmise."},
+      {p:"🧾 Virement sur devis/facture (les B2B fonds propres)", t:"virement reçu et rapproché, facture acquittée transmise à l'entreprise."},
+      {p:"🤝 OPCO (les B2B financés subventionnés)", t:"règlement OPCO reçu et rapproché, facture acquittée transmise."}
+    ]}
 ];
 
 /* Clients (fiche client : panier total, ventes) */
@@ -643,13 +624,13 @@ const VENTES = [
     client:"marchetti", offre:"Formation Niveau 1", montant:"1 650 €", col:3,
     profil:"sdd", mode:"SDD fractionné 3x",
     lines:[
-      {l:"Échéance 1 : 550 €", st:"encaissée", cls:"st-ok"},
-      {l:"Échéance 2 : 550 € (25/07)", st:"refusée", cls:"st-ko"},
-      {l:"Échéance 3 : 550 €", st:"suspendue", cls:"st-plan"}
+      {l:"Échéance 1 : 550 €", st:"encaissée", cls:"st-ok", tight:true},
+      {l:"Échéance 2 : 550 €", st:"refusée le 25/07", cls:"st-ko", tight:true},
+      {l:"Échéance 3 : 550 €", st:"suspendue", cls:"st-plan", tight:true}
     ],
-    next:{t:"Relancer le client", who:"closer"},
-    why:"Prélèvement 2 de 550 € refusé le 25/07 (provision insuffisante) : la carte est signalée en retard, anneau rouge sur le kanban.",
-    when:"Repassera en « En attente » si le prélèvement est représenté et accepté ; la relance se décide au cas par cas (un rejeu coûte des frais)."
+    next:{t:"Relancer le client, puis décider du rejeu de l'échéance 2", who:"closer"},
+    why:"Échéance 1 encaissée, mais l'échéance 2 de 550 € a été refusée le 25/07 (provision insuffisante) ; l'échéance 3 est suspendue tant que la 2 n'est pas régularisée. La carte est signalée en retard, anneau rouge sur le kanban.",
+    when:"Repassera en « En attente » si l'échéance 2 est représentée et acceptée (l'échéance 3 est alors reprogrammée) ; la relance se décide au cas par cas (un rejeu coûte des frais)."
   },
   {
     client:"elfassi", offre:"Formation Niveau 1", montant:"1 650 €", col:4,
@@ -797,7 +778,8 @@ function renderVentes(){
     v.lines.forEach(l=>{
       const line = el("div","payline");
       line.appendChild(el("span",null,l.l));
-      line.appendChild(el("span","st "+l.cls, l.st));
+      if(l.tight) line.appendChild(el("span","sep","·"));
+      line.appendChild(el("span","st "+l.cls+(l.tight?" tight":""), l.st));
       pl.appendChild(line);
     });
     body.appendChild(pl);
@@ -838,8 +820,8 @@ function togglePop(btn, title, info, dotColor, isVente){
   popBtn = btn;
   let html = "<h4><span class='dot' style='background:"+dotColor+"'></span>"+title+"</h4>";
   (info?.cases||[]).forEach(c=>{ html += "<div class='pop-case'><b>"+c.p+" :</b> "+c.t+"</div>"; });
-  if(info?.move) html += "<div class='pop-move'><b>Ce qui fait bouger la carte</b>"+info.move+"</div>";
   if(isVente) html += "<div class='pop-lock'>🔒 <span class='prop-pill'>proposition</span> Étape calculée, pas déplacée : la colonne d'une carte vente est dérivée automatiquement de l'état réel des paiements (une vente ne passe en « Facture acquittée » que quand tout est encaissé et vérifié). On ne déplace jamais ces cartes à la main, contrairement au kanban Inscriptions qui reste manuel.</div>";
+  html += "<div class='pop-review'>Contenu en cours de relecture</div>";
   pop.innerHTML = html;
   pop.classList.add("open");
   const r = btn.getBoundingClientRect();
