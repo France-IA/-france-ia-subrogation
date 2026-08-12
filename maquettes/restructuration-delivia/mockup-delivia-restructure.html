@@ -5,191 +5,284 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>DELIV'IA restructuré : maquette kanbans</title>
 <style>
+/* ============================================================
+   Design system DELIV'IA (repris de l'app réelle : Tailwind 4,
+   palette slate/indigo/emerald/amber/rose, valeurs recopiées en dur)
+   ============================================================ */
 :root{
-  --bg:#f4f5f8; --panel:#ffffff; --border:#e4e7ee; --border-2:#d5dae4;
-  --txt:#1c2433; --txt-2:#5b6575; --txt-3:#8a93a5;
-  --accent:#4f46e5; --accent-soft:#eef0fe;
-  --green:#0f9d58; --green-soft:#e7f6ee;
-  --orange:#d97706; --orange-soft:#fdf3e3;
-  --red:#dc2626; --red-soft:#fdecec;
-  --blue:#2563eb; --blue-soft:#e8f0fe;
-  --violet:#7c3aed; --violet-soft:#f1eafd;
-  --shadow:0 1px 3px rgba(20,26,40,.07), 0 6px 18px rgba(20,26,40,.05);
+  --bg:#f8fafc;            /* slate-50, fond de page */
+  --surface:#ffffff;
+  --slate-100:#f1f5f9; --slate-200:#e2e8f0; --slate-300:#cbd5e1;
+  --slate-400:#94a3b8; --slate-500:#64748b; --slate-600:#475569;
+  --slate-700:#334155; --slate-800:#1e293b; --slate-900:#0f172a;
+  --indigo-50:#eef2ff; --indigo-400:#818cf8; --indigo-600:#4f46e5; --indigo-700:#4338ca;
+  --emerald-50:#ecfdf5; --emerald-500:#10b981; --emerald-600:#059669;
+  --amber-50:#fffbeb; --amber-400:#fbbf24; --amber-600:#d97706;
+  --rose-50:#fff1f2; --rose-100:#ffe4e6; --rose-500:#f43f5e; --rose-600:#e11d48;
+  --blue-50:#eff6ff; --blue-500:#3b82f6; --blue-600:#2563eb;
+  --orange-50:#fff7ed; --orange-500:#f97316; --orange-600:#ea580c;
+  --purple-50:#faf5ff; --purple-500:#a855f7; --purple-600:#9333ea;
+  --violet-400:#a78bfa;
+  --card-shadow:0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --card-shadow-hover:0 4px 6px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--txt);background:var(--bg);display:flex;overflow:hidden}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:14px;line-height:1.5;color:var(--slate-800);background:var(--bg);
+  -webkit-font-smoothing:antialiased;display:flex;overflow:hidden
+}
+button{font-family:inherit}
+svg.ic{flex:none}
 
-/* ---------- Sidebar ---------- */
-aside{width:212px;min-width:212px;background:#171d2b;color:#c6cbd8;display:flex;flex-direction:column;padding:18px 12px;gap:2px}
-.logo{display:flex;align-items:center;gap:10px;padding:4px 10px 18px}
-.logo .mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:13px}
-.logo b{color:#fff;font-size:15px;letter-spacing:.2px}
-.logo small{display:block;font-size:10px;color:#8a93a5;font-weight:400}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13.5px;color:#c6cbd8;background:none;border:none;width:100%;text-align:left}
-.nav-item svg{width:17px;height:17px;flex:none;opacity:.85}
-.nav-item:hover{background:rgba(255,255,255,.06)}
-.nav-item.active{background:var(--accent);color:#fff}
-.nav-item.disabled{color:#5b6575;cursor:default;font-weight:500}
-.nav-item.disabled:hover{background:none}
-.nav-sep{margin:14px 10px 6px;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#5b6575}
-.sidebar-foot{margin-top:auto;padding:10px;font-size:11px;color:#5b6575;border-top:1px solid rgba(255,255,255,.08)}
+/* ---------- Sidebar (reprise de l'app : blanche, 240px, hairline droite) ---------- */
+aside{width:240px;min-width:240px;background:#fff;box-shadow:1px 0 0 0 var(--slate-100);display:flex;flex-direction:column;height:100vh}
+.sb-head{padding:20px 20px 18px}
+.sb-head h1{font-size:18px;font-weight:600;letter-spacing:-.02em;color:var(--slate-900)}
+.sb-head p{font-size:12px;color:var(--slate-400);margin-top:2px}
+.sb-sep{height:1px;background:var(--slate-100);margin:0 16px}
+nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;overflow-y:auto}
+.nav-list{display:flex;flex-direction:column;gap:2px}
+.nav-link{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;font-size:14px;color:var(--slate-500);background:none;border:none;width:100%;text-align:left;cursor:pointer;transition:background .12s,color .12s}
+.nav-link:hover{background:#f8fafc;color:var(--slate-700)}
+.nav-link.active{background:var(--indigo-50);color:var(--indigo-700);font-weight:500}
+.nav-link.inert{cursor:default}
+.nav-link.inert:hover{background:none;color:var(--slate-500)}
+.nav-link .lbl{flex:1}
+.pill-new{height:20px;display:flex;align-items:center;border-radius:999px;background:var(--indigo-50);color:var(--indigo-600);font-size:10px;font-weight:600;padding:0 6px}
+.nav-groups{margin-top:auto;padding-top:16px;display:flex;flex-direction:column;gap:8px}
+.nav-group-head{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;color:var(--slate-400);background:none;border:none;width:100%;cursor:default}
+.nav-group-head .cnt{margin-left:auto;font-size:10px;color:var(--slate-300);text-transform:none;letter-spacing:0}
+.sb-foot{padding:10px 20px 14px;font-size:11px;color:var(--slate-300)}
 
 /* ---------- Main ---------- */
-main{flex:1;display:flex;flex-direction:column;min-width:0}
-header.topbar{background:var(--panel);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-header.topbar h1{font-size:17px;font-weight:700}
-header.topbar p{font-size:12.5px;color:var(--txt-2)}
-.content{flex:1;overflow:auto;padding:18px 24px 8px;display:flex;flex-direction:column}
+main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.page{flex:1;display:flex;flex-direction:column;min-height:0;padding:24px;overflow:hidden}
+.page-inner{max-width:1536px;margin:0 auto;width:100%;display:flex;flex-direction:column;flex:1;min-height:0}
+.page-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:10px;flex-wrap:wrap}
+.page-head h1{font-size:20px;font-weight:600;letter-spacing:-.02em;color:var(--slate-900)}
+.page-sub{font-size:13px;color:var(--slate-500);margin-bottom:16px;max-width:900px}
 
-/* ---------- Segmented offer selector ---------- */
-.seg{display:inline-flex;background:#e9ebf1;border-radius:9px;padding:3px;gap:2px;margin-left:auto}
-.seg button{border:none;background:none;padding:6px 14px;border-radius:7px;font-size:13px;font-weight:600;color:var(--txt-2);cursor:pointer}
-.seg button.on{background:#fff;color:var(--accent);box-shadow:0 1px 2px rgba(20,26,40,.12)}
+/* Onglets / sélecteur d'offre (style tabs réel : bg-slate-100, actif blanc ombré) */
+.tabs{display:flex;gap:4px;background:var(--slate-100);padding:4px;border-radius:8px;width:fit-content}
+.tabs button{display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:14px;border-radius:6px;border:none;background:none;color:var(--slate-500);cursor:pointer;white-space:nowrap;transition:color .12s}
+.tabs button:hover{color:var(--slate-700)}
+.tabs button.on{background:#fff;color:var(--slate-900);font-weight:500;box-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05)}
 
-/* ---------- Kanban ---------- */
-.board-wrap{flex:1;overflow-x:auto;padding-bottom:10px}
-.board{display:flex;gap:12px;align-items:flex-start;min-height:420px}
-.col{background:#eceef3;border:1px solid var(--border);border-radius:12px;width:236px;min-width:236px;display:flex;flex-direction:column;max-height:100%}
-.col-head{padding:10px 12px 8px;display:flex;align-items:center;gap:8px}
+/* Bandeau propositions ATLAS */
+.prop-banner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--indigo-50);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--indigo-700);margin-bottom:14px;width:fit-content;max-width:100%}
+
+/* ---------- Kanban (fidèle : colonnes bg-slate-50/80, w-72, titres uppercase) ---------- */
+.board-wrap{flex:1;overflow-x:auto;overflow-y:hidden;padding-bottom:16px;min-height:0}
+.board{display:flex;gap:16px;align-items:stretch;height:100%;min-height:380px}
+.col{border-radius:12px;background:rgba(248,250,252,.8);padding:12px;width:288px;min-width:288px;display:flex;flex-direction:column;min-height:200px;max-height:100%}
+.col-head{display:flex;align-items:center;gap:8px;padding:0 4px;margin-bottom:12px}
 .col-head .dot{width:8px;height:8px;border-radius:50%;flex:none}
-.col-head h3{font-size:12.5px;font-weight:700;color:var(--txt);flex:1;line-height:1.25}
-.col-head .count{font-size:11px;font-weight:700;color:var(--txt-3);background:#fff;border:1px solid var(--border);border-radius:20px;padding:1px 8px}
-.col-cards{padding:4px 8px 10px;display:flex;flex-direction:column;gap:8px;min-height:60px;flex:1}
-.col.dragover{outline:2px dashed var(--accent);outline-offset:-4px}
+.col-head h3{font-size:12px;font-weight:600;color:var(--slate-500);text-transform:uppercase;letter-spacing:.05em;flex:1;line-height:1.3}
+.col-head .count{font-size:12px;color:var(--slate-400);font-variant-numeric:tabular-nums}
+.col-cards{display:flex;flex-direction:column;gap:8px;padding:2px 2px 6px;flex:1;overflow-y:auto;min-height:60px}
+.col.dragover{outline:2px dashed var(--indigo-600);outline-offset:-4px}
+.col-empty{font-size:12px;color:var(--slate-300);text-align:center;padding:24px 0}
 
-.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 12px;box-shadow:var(--shadow);cursor:grab;position:relative}
-.card:active{cursor:grabbing}
+/* Cartes (reprise .card réelle : blanches, sans bordure, radius 12, ombre douce) */
+.card{background:#fff;border-radius:12px;box-shadow:var(--card-shadow);padding:12px;position:relative;transition:box-shadow .12s;display:flex;gap:10px}
+.card:hover{box-shadow:var(--card-shadow-hover)}
+.card.insc{cursor:grab;display:block}
+.card.insc:active{cursor:grabbing}
 .card.dragging{opacity:.45}
-.card .name{font-weight:700;font-size:13px}
-.card .meta{font-size:11.5px;color:var(--txt-2);margin-top:2px}
-.badge{display:inline-block;font-size:10px;font-weight:700;border-radius:5px;padding:1.5px 7px;margin-top:6px;letter-spacing:.02em}
-.b-accent{background:var(--accent-soft);color:var(--accent)}
-.b-green{background:var(--green-soft);color:var(--green)}
-.b-orange{background:var(--orange-soft);color:var(--orange)}
-.b-red{background:var(--red-soft);color:var(--red)}
-.b-blue{background:var(--blue-soft);color:var(--blue)}
-.b-violet{background:var(--violet-soft);color:var(--violet)}
-.b-gray{background:#eef0f4;color:var(--txt-2)}
+.card .name{font-weight:500;font-size:14px;color:var(--slate-800)}
+.card .meta{font-size:11px;color:var(--slate-400);margin-top:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.card .meta svg{width:10px;height:10px;flex:none}
 
-/* vente cards */
+/* Barre de profil à gauche (cartes vente, comme le kanban Facturation réel) */
+.pbar{width:4px;border-radius:999px;flex:none}
+.pbar-cpf{background:var(--blue-500)}
+.pbar-sdd{background:var(--purple-500)}
+.pbar-virement{background:var(--emerald-500)}
+.pbar-opco{background:var(--orange-500)}
+
+.badge{display:inline-flex;align-items:center;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;white-space:nowrap}
+.b-cpf{background:var(--blue-50);color:var(--blue-600)}
+.b-sdd{background:var(--purple-50);color:var(--purple-600)}
+.b-virement{background:var(--emerald-50);color:var(--emerald-600)}
+.b-opco{background:var(--orange-50);color:var(--orange-600)}
+.b-sepa{background:var(--indigo-50);color:var(--indigo-600)}
+.b-gray{background:var(--slate-100);color:var(--slate-500)}
+.b-green{background:var(--emerald-50);color:var(--emerald-600)}
+.b-orange{background:var(--amber-50);color:var(--amber-600)}
+
+/* Cartes vente */
 .card.vente{cursor:pointer}
-.card .amount{font-weight:800;font-size:13px;margin-left:auto}
-.card .row{display:flex;align-items:baseline;gap:8px}
-.paylines{margin-top:8px;border-top:1px dashed var(--border-2);padding-top:7px;display:flex;flex-direction:column;gap:4px}
-.payline{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--txt-2)}
-.payline .st{margin-left:auto;font-size:10px;font-weight:700;border-radius:4px;padding:1px 6px}
-.st-ok{background:var(--green-soft);color:var(--green)}
-.st-wait{background:var(--orange-soft);color:var(--orange)}
-.st-ko{background:var(--red-soft);color:var(--red)}
-.st-plan{background:#eef0f4;color:var(--txt-2)}
-.card .foot-link{margin-top:8px;font-size:11px;color:var(--accent);font-weight:600}
+.card.vente .body{min-width:0;flex:1}
+.vrow1{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px}
+.vrow1 .badges{display:flex;align-items:center;gap:4px;flex:none}
+.paylines{margin-top:8px;border-top:1px dashed var(--slate-200);padding-top:7px;display:flex;flex-direction:column;gap:4px}
+.payline{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate-500)}
+.payline .st{margin-left:auto;font-size:10px;font-weight:500;border-radius:4px;padding:1px 6px;white-space:nowrap}
+.st-ok{background:var(--emerald-50);color:var(--emerald-600)}
+.st-wait{background:var(--amber-50);color:var(--amber-600)}
+.st-ko{background:var(--rose-50);color:var(--rose-600)}
+.st-plan{background:var(--slate-100);color:var(--slate-500)}
+.foot-link{margin-top:8px;font-size:11px;color:var(--indigo-600);font-weight:500}
 
-/* ---------- Tooltip ---------- */
-#tip{position:fixed;z-index:60;max-width:290px;background:#171d2b;color:#e7eaf2;border-radius:10px;padding:11px 13px;font-size:12px;line-height:1.5;box-shadow:0 10px 30px rgba(10,14,25,.35);pointer-events:none;opacity:0;transition:opacity .12s;}
+/* ---------- Proposition 1 : prochaine action ---------- */
+.next-action{margin-top:8px;border-top:1px dashed var(--slate-200);padding-top:7px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--slate-600);flex-wrap:wrap}
+.next-action .na-txt{font-weight:500}
+.na-who{font-size:10px;font-weight:600;border-radius:4px;padding:1px 6px;white-space:nowrap}
+.na-auto{background:var(--slate-100);color:var(--slate-500)}
+.na-human{background:var(--amber-50);color:var(--amber-600)}
+.prop-pill{display:inline-flex;align-items:center;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--purple-600);background:var(--purple-50);border-radius:4px;padding:1px 5px}
+.next-action .prop-pill{margin-left:auto}
+
+/* ---------- Icône info + cadenas dans les en-têtes de colonnes ---------- */
+.info-btn{border:none;background:none;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--slate-400);flex:none;padding:0}
+.info-btn:hover{background:#fff;color:var(--indigo-600)}
+.info-btn svg{width:14px;height:14px}
+.lock-wrap{display:flex;color:var(--slate-400);flex:none;cursor:help}
+.lock-wrap svg{width:12px;height:12px}
+
+/* ---------- Popover cas de figure ---------- */
+#pop{position:fixed;z-index:65;width:340px;max-width:calc(100vw - 16px);max-height:min(460px,74vh);overflow:auto;background:#fff;border:1px solid var(--slate-200);border-radius:12px;box-shadow:0 14px 40px rgb(15 23 42 / 0.16);padding:13px 15px;display:none}
+#pop.open{display:block}
+#pop h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--slate-500);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+#pop h4 .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.pop-case{font-size:12.3px;line-height:1.45;padding:6px 0;border-top:1px solid var(--slate-100);color:var(--slate-500)}
+.pop-case:first-of-type{border-top:none}
+.pop-case b{color:var(--slate-800)}
+.pop-move{margin-top:9px;background:var(--indigo-50);border-radius:8px;padding:8px 10px;font-size:12px;line-height:1.45;color:var(--slate-700)}
+.pop-move b{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--indigo-600);margin-bottom:2px}
+.pop-lock{margin-top:8px;background:#f8fafc;border:1px dashed var(--slate-200);border-radius:8px;padding:8px 10px;font-size:11.6px;color:var(--slate-500);line-height:1.45}
+
+/* ---------- Toast (drag refusé côté ventes) ---------- */
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(12px);z-index:90;background:var(--slate-800);color:#f1f5f9;border-radius:10px;padding:11px 16px;font-size:12.5px;line-height:1.5;max-width:480px;box-shadow:0 10px 30px rgb(15 23 42 / 0.4);opacity:0;pointer-events:none;transition:opacity .18s, transform .18s}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- Tooltip carte vente ---------- */
+#tip{position:fixed;z-index:60;max-width:290px;background:var(--slate-800);color:#e2e8f0;border-radius:10px;padding:11px 13px;font-size:12px;line-height:1.5;box-shadow:0 10px 30px rgb(15 23 42 / 0.35);pointer-events:none;opacity:0;transition:opacity .12s}
 #tip b{color:#fff;display:block;margin-bottom:3px;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
 #tip .why{margin-bottom:7px}
 #tip .when b{color:#a5b4fc}
 
 /* ---------- Fiche client (drawer) ---------- */
-#overlay{position:fixed;inset:0;background:rgba(15,20,32,.35);z-index:70;opacity:0;pointer-events:none;transition:opacity .18s}
+#overlay{position:fixed;inset:0;background:rgb(15 23 42 / 0.3);z-index:70;opacity:0;pointer-events:none;transition:opacity .18s}
 #overlay.open{opacity:1;pointer-events:auto}
-#drawer{position:fixed;top:0;right:-400px;width:380px;max-width:92vw;height:100%;background:var(--panel);z-index:80;box-shadow:-12px 0 40px rgba(10,14,25,.18);transition:right .22s ease;display:flex;flex-direction:column}
+#drawer{position:fixed;top:0;right:-400px;width:380px;max-width:92vw;height:100%;background:#fff;z-index:80;box-shadow:-12px 0 40px rgb(15 23 42 / 0.15);transition:right .22s ease;display:flex;flex-direction:column}
 #drawer.open{right:0}
-#drawer .d-head{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px}
-#drawer .avatar{width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex:none}
-#drawer h2{font-size:16px}
-#drawer .d-head p{font-size:12px;color:var(--txt-2)}
-#drawer .close{margin-left:auto;border:none;background:#eef0f4;color:var(--txt-2);width:28px;height:28px;border-radius:8px;font-size:15px;cursor:pointer}
+#drawer .d-head{padding:18px 20px 14px;border-bottom:1px solid var(--slate-100);display:flex;align-items:flex-start;gap:12px}
+#drawer .avatar{width:40px;height:40px;border-radius:50%;background:var(--indigo-50);color:var(--indigo-600);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:none}
+#drawer h2{font-size:16px;font-weight:600;color:var(--slate-900)}
+#drawer .d-head p{font-size:12px;color:var(--slate-500)}
+#drawer .close{margin-left:auto;border:none;background:var(--slate-100);color:var(--slate-500);width:28px;height:28px;border-radius:8px;font-size:15px;cursor:pointer}
 #drawer .d-body{padding:18px 20px;overflow:auto}
-.panier{display:flex;align-items:center;gap:18px;background:#f8f9fc;border:1px solid var(--border);border-radius:12px;padding:14px}
-.panier .legend{font-size:12px;color:var(--txt-2)}
-.panier .legend .big{font-size:19px;font-weight:800;color:var(--txt)}
+.panier{display:flex;align-items:center;gap:18px;background:#f8fafc;border:1px solid var(--slate-100);border-radius:12px;padding:14px}
+.panier .legend{font-size:12px;color:var(--slate-500)}
+.panier .legend .big{font-size:19px;font-weight:700;color:var(--slate-900)}
 .panier .legend .li{display:flex;align-items:center;gap:6px;margin-top:5px}
 .panier .legend .sw{width:9px;height:9px;border-radius:3px}
-.d-sec{margin-top:18px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--txt-3)}
-.v-item{border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-top:8px}
+.d-sec{margin-top:18px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--slate-400)}
+.v-item{border:1px solid var(--slate-100);border-radius:10px;padding:10px 12px;margin-top:8px;box-shadow:var(--card-shadow)}
 .v-item .row{display:flex;align-items:baseline;gap:8px}
-.v-item .row b{font-size:13px}
-.v-item .row .amount{margin-left:auto;font-weight:800}
-.v-item .meta{font-size:11.5px;color:var(--txt-2);margin-top:2px}
+.v-item .row b{font-size:13px;color:var(--slate-800)}
+.v-item .row .amount{margin-left:auto;font-weight:700;color:var(--slate-900)}
+.v-item .meta{font-size:11px;color:var(--slate-400);margin-top:2px}
+.v-item .badge{margin-top:6px}
 
-/* ---------- Footer note ---------- */
-.foot-note{margin:14px 0 12px;font-size:11.5px;color:var(--txt-3);border-top:1px solid var(--border);padding-top:10px}
+/* ---------- Note de pied ---------- */
+.foot-note{margin-top:6px;font-size:11.5px;color:var(--slate-400);border-top:1px solid var(--slate-100);padding-top:10px}
 
 .hidden{display:none !important}
 </style>
 </head>
 <body>
 
+<!-- ============ SIDEBAR (design réel DELIV'IA) ============ -->
 <aside>
-  <div class="logo">
-    <div class="mark">D</div>
-    <div><b>DELIV'IA</b><small>maquette restructuration</small></div>
+  <div class="sb-head">
+    <h1>DELIV'IA</h1>
+    <p>France IA</p>
   </div>
-  <div class="nav-sep">Pilotage</div>
-  <button class="nav-item active" id="nav-inscriptions" onclick="showPage('inscriptions')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="10" rx="1"/><rect x="17" y="4" width="4" height="13" rx="1"/></svg>
-    Inscriptions
-  </button>
-  <button class="nav-item" id="nav-ventes" onclick="showPage('ventes')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.2c-.5-.8-1.4-1.2-2.5-1.2-1.5 0-2.6.8-2.6 2s1 1.7 2.6 2c1.7.3 2.7 1 2.7 2.2 0 1.3-1.2 2-2.7 2-1.2 0-2.2-.5-2.7-1.4M12 6.5v11"/></svg>
-    Ventes
-  </button>
-  <div class="nav-sep">Modules</div>
-  <button class="nav-item disabled">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-    Sessions
-  </button>
-  <button class="nav-item disabled">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5M17 4a3.5 3.5 0 0 1 0 7M21.5 20c-.5-2.1-1.8-3.6-3.5-4.4"/></svg>
-    Formateurs
-  </button>
-  <button class="nav-item disabled">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/></svg>
-    Preuves
-  </button>
-  <button class="nav-item disabled">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17.5l-5.5 3 1-6.2L3 9.8l6.2-.9L12 3.5l2.8 5.4 6.2.9-4.5 4.5 1 6.2z"/></svg>
-    Qualité
-  </button>
-  <button class="nav-item disabled">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.15-1.4l2-1.55-2-3.5-2.4 1a7 7 0 0 0-2.4-1.4L13.7 2.7h-4l-.4 2.5a7 7 0 0 0-2.4 1.4l-2.4-1-2 3.5 2 1.55A7 7 0 0 0 5 12c0 .5.05.95.15 1.4l-2 1.55 2 3.5 2.4-1a7 7 0 0 0 2.4 1.4l.4 2.5h4l.35-2.45a7 7 0 0 0 2.4-1.4l2.4 1 2-3.5-2-1.55c.1-.45.15-.9.15-1.4z"/></svg>
-    Paramètres
-  </button>
-  <div class="sidebar-foot">Maquette de démonstration.<br>Données factices.</div>
+  <div class="sb-sep"></div>
+  <nav>
+    <div class="nav-list">
+      <button class="nav-link inert" title="Maquette : page non simulée">
+        <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        <span class="lbl">Dashboard</span>
+      </button>
+      <button class="nav-link inert" title="Maquette : page non simulée">
+        <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+        <span class="lbl">Sessions</span>
+      </button>
+      <button class="nav-link inert" title="Maquette : page non simulée">
+        <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
+        <span class="lbl">BookMySessions</span>
+      </button>
+      <button class="nav-link" id="nav-inscriptions" onclick="showPage('inscriptions')">
+        <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 7v7"/><path d="M12 7v4"/><path d="M16 7v9"/></svg>
+        <span class="lbl">Inscriptions</span>
+        <span class="pill-new">nouveau</span>
+      </button>
+      <button class="nav-link" id="nav-ventes" onclick="showPage('ventes')">
+        <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M11 16h5"/></svg>
+        <span class="lbl">Ventes</span>
+        <span class="pill-new">nouveau</span>
+      </button>
+      <button class="nav-link inert" title="Maquette : page non simulée">
+        <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <span class="lbl">Actions</span>
+      </button>
+      <button class="nav-link inert" title="Maquette : page non simulée">
+        <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 0 0 9 9"/></svg>
+        <span class="lbl">Anomalies</span>
+      </button>
+      <button class="nav-link inert" title="Maquette : page non simulée">
+        <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        <span class="lbl">FAQ Closers</span>
+      </button>
+    </div>
+    <div class="nav-groups">
+      <button class="nav-group-head" title="Maquette : groupe non simulé">
+        <svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        <span style="flex:1;text-align:left">Back end</span>
+        <span class="cnt">5</span>
+      </button>
+      <button class="nav-group-head" title="Maquette : groupe non simulé">
+        <svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        <span style="flex:1;text-align:left">Archivé</span>
+        <span class="cnt">6</span>
+      </button>
+    </div>
+  </nav>
+  <div class="sb-foot">Maquette de démonstration · données factices</div>
 </aside>
 
 <main>
   <!-- ============ PAGE INSCRIPTIONS ============ -->
-  <div id="page-inscriptions" class="page" style="display:flex;flex-direction:column;flex:1;min-height:0">
-    <header class="topbar">
-      <div>
+  <div id="page-inscriptions" class="page">
+    <div class="page-inner">
+      <div class="page-head">
         <h1>Inscriptions</h1>
-        <p>Suivi pédagogique par offre : chaque offre a son kanban personnalisé.</p>
+        <div class="tabs" id="offer-seg">
+          <button data-offer="n1" class="on">Niveau 1</button>
+          <button data-offer="n2">Niveau 2</button>
+          <button data-offer="agent">Agent</button>
+          <button data-offer="coaching">Coaching</button>
+        </div>
       </div>
-      <div class="seg" id="offer-seg">
-        <button data-offer="n1" class="on">Niveau 1</button>
-        <button data-offer="n2">Niveau 2</button>
-        <button data-offer="agent">Agent</button>
-        <button data-offer="coaching">Coaching</button>
-      </div>
-    </header>
-    <div class="content">
+      <p class="page-sub">Suivi pédagogique par offre : chaque offre a son kanban personnalisé, les cartes se déplacent à la main. Cliquez sur l'icône ℹ️ d'une colonne pour voir qui peut s'y trouver et ce qui fait avancer les cartes.</p>
       <div class="board-wrap"><div class="board" id="board-inscriptions"></div></div>
       <div class="foot-note">Maquette de démonstration, données factices. Structure : 1 vente = 1 offre = 1 mode de paiement ; kanban inscription personnalisé par offre ; kanban vente unique.</div>
     </div>
   </div>
 
   <!-- ============ PAGE VENTES ============ -->
-  <div id="page-ventes" class="page hidden" style="display:flex;flex-direction:column;flex:1;min-height:0">
-    <header class="topbar">
-      <div>
+  <div id="page-ventes" class="page hidden">
+    <div class="page-inner">
+      <div class="page-head">
         <h1>Ventes</h1>
-        <p>Kanban unique quelle que soit l'offre : 1 carte = 1 vente = 1 offre. Survolez une carte pour comprendre son étape ; cliquez pour ouvrir la fiche client.</p>
       </div>
-    </header>
-    <div class="content">
+      <p class="page-sub">Kanban unique quelle que soit l'offre : 1 carte = 1 vente = 1 offre = 1 mode de paiement. Survolez une carte pour comprendre son étape, cliquez pour ouvrir la fiche client, et cliquez sur ℹ️ dans l'en-tête d'une colonne pour tous les cas de figure (CPF, SDD, B2B, OPCO).</p>
+      <div class="prop-banner">💡 <span class="prop-pill">proposition</span> « Prochaine action » sur chaque carte : l'action suivante et son porteur. <span class="prop-pill">proposition</span> « Statut calculé, pas déplacé » : l'étape est dérivée des paiements, les cartes ne se déplacent pas à la main (🔒).</div>
       <div class="board-wrap"><div class="board" id="board-ventes"></div></div>
       <div class="foot-note">Maquette de démonstration, données factices. Structure : 1 vente = 1 offre = 1 mode de paiement ; kanban inscription personnalisé par offre ; kanban vente unique.</div>
     </div>
@@ -198,6 +291,12 @@ header.topbar p{font-size:12.5px;color:var(--txt-2)}
 
 <!-- Tooltip -->
 <div id="tip"></div>
+
+<!-- Popover cas de figure -->
+<div id="pop"></div>
+
+<!-- Toast -->
+<div id="toast"></div>
 
 <!-- Fiche client -->
 <div id="overlay" onclick="closeDrawer()"></div>
@@ -216,8 +315,8 @@ header.topbar p{font-size:12.5px;color:var(--txt-2)}
       <div class="legend">
         <div>Panier total</div>
         <div class="big" id="d-total">0 €</div>
-        <div class="li"><span class="sw" style="background:var(--green)"></span><span id="d-paye">Payé : 0 €</span></div>
-        <div class="li"><span class="sw" style="background:#d5dae4"></span><span id="d-restant">Restant : 0 €</span></div>
+        <div class="li"><span class="sw" style="background:var(--emerald-500)"></span><span id="d-paye">Payé : 0 €</span></div>
+        <div class="li"><span class="sw" style="background:var(--slate-300)"></span><span id="d-restant">Restant : 0 €</span></div>
       </div>
     </div>
     <div class="d-sec">Ses ventes (1 carte par offre)</div>
@@ -232,7 +331,8 @@ header.topbar p{font-size:12.5px;color:var(--txt-2)}
    DONNÉES FACTICES
    ============================================================ */
 
-const COLORS = ["#8a93a5","#d97706","#2563eb","#7c3aed","#4f46e5","#0f9d58","#0f9d58","#d97706","#dc2626","#dc2626"];
+/* Pastilles de colonnes : palette du kanban Facturation réel */
+const DOTS_N1N2 = ["#94a3b8","#fbbf24","#60a5fa","#a78bfa","#818cf8","#10b981","#059669","#fbbf24","#f43f5e","#cbd5e1"];
 
 const COLS_N1N2 = ["Inscription reçue","Action de notre part","En attente","Inscription prévue (mois)","Inscription validée","En formation","Terminé","Absence justifiée","Absence injustifiée","Lost"];
 const COLS_AGENT = ["Demande reçue","Précision des besoins (appel)","Agent en construction","Livré","Lost"];
@@ -241,7 +341,7 @@ const COLS_COACHING = ["À administrer","Formateur trouvé","Date déterminée",
 const INSCRIPTIONS = {
   n1: {
     cols: COLS_N1N2,
-    colors: COLORS,
+    colors: DOTS_N1N2,
     cards: [
       {n:"Margaux Ferrand",  s:"Session Paris, 14-15 sept.", c:0},
       {n:"Idriss Bellamy",   s:"Session Lyon, 21-22 sept.",  c:0},
@@ -260,7 +360,7 @@ const INSCRIPTIONS = {
   },
   n2: {
     cols: COLS_N1N2,
-    colors: COLORS,
+    colors: DOTS_N1N2,
     cards: [
       {n:"Hugo Bonnaire",    s:"Session Paris N2, 28-29 sept.", c:0},
       {n:"Salomé Vidal",     s:"Prérequis N1 à vérifier",       c:1},
@@ -275,7 +375,7 @@ const INSCRIPTIONS = {
   },
   agent: {
     cols: COLS_AGENT,
-    colors: ["#8a93a5","#d97706","#2563eb","#0f9d58","#dc2626"],
+    colors: ["#94a3b8","#fbbf24","#818cf8","#10b981","#cbd5e1"],
     cards: [
       {n:"Cabinet Verdoyer",     s:"Agent tri de mails, demande du 08/08", c:0},
       {n:"Garage Petitcolas",    s:"Appel de cadrage : jeudi 10h",         c:1},
@@ -286,7 +386,7 @@ const INSCRIPTIONS = {
   },
   coaching: {
     cols: COLS_COACHING,
-    colors: ["#8a93a5","#2563eb","#7c3aed","#0f9d58","#d97706","#dc2626"],
+    colors: ["#94a3b8","#60a5fa","#a78bfa","#10b981","#fbbf24","#cbd5e1"],
     cards: [
       {n:"Lucie Prandini",  s:"Coaching post-N1, à planifier",     c:0},
       {n:"Samuel Ohayon",   s:"Formateur : R. Vercruysse",          c:1},
@@ -298,9 +398,148 @@ const INSCRIPTIONS = {
   }
 };
 
+/* ---------- Cas de figure par étape : kanban INSCRIPTIONS ---------- */
+function infoN1N2(isN2){
+  const actionCases = [
+    {p:"🎓 CPF", t:"dossier EDOF à confirmer ou pièce à valider côté France IA."},
+    {p:"📅 Tous", t:"une session est à proposer à l'apprenant."}
+  ];
+  if(isN2) actionCases.splice(1,0,{p:"🧑‍🎓 Prérequis", t:"vérifier que le Niveau 1 est acquis avant de valider."});
+  return [
+    { cases:[
+        {p:"🎓 CPF", t:"dossier accepté sur EDOF, l'apprenant sort du closing."},
+        {p:"💳 Fonds propres", t:"inscription ARD finalisée, mandat SDD signé."},
+        {p:"🏢 B2B / 🤝 OPCO", t:"convention ou devis signé, apprenants transmis par l'entreprise."}
+      ],
+      move:"L'admin prend le dossier en main (proposition de session). Action humaine." },
+    { cases: actionCases,
+      move:"L'action est faite par l'admin : la carte repart vers « En attente » ou « Inscription validée ». Humain." },
+    { cases:[
+        {p:"🧑‍🎓 Apprenant", t:"réponse attendue (choix de date, pièce manquante)."},
+        {p:"🤝 OPCO", t:"décision de prise en charge attendue de l'organisme."}
+      ],
+      move:"Le retour arrive : l'admin repositionne la carte. Humain." },
+    { cases:[
+        {p:"📅 Tous", t:"apprenant positionné sur un mois, sans session précise (disponibilités, report souhaité)."}
+      ],
+      move:"Une session datée du mois est choisie : passage en « Inscription validée ». Humain." },
+    { cases:[
+        {p:"✅ Tous", t:"session datée et lieu confirmés, convocation envoyée."}
+      ],
+      move:"Le J1 de la session arrive : passage en « En formation ». Automatique." },
+    { cases:[
+        {p:"🏫 Tous", t:"la session est en cours (J1-J2), émargements en cours de collecte."}
+      ],
+      move:"Fin de session avec émargements complets : « Terminé ». Absence constatée : « Absence justifiée / injustifiée ». Automatique, puis contrôle humain." },
+    { cases:[
+        {p:"🎓 Tous", t:"formation suivie et émargée, parcours pédagogique terminé."}
+      ],
+      move:"État final ici. Le paiement, lui, continue sa vie dans le kanban Ventes." },
+    { cases:[
+        {p:"📄 Tous", t:"absent au J1/J2 avec justificatif recevable (certificat médical, force majeure)."}
+      ],
+      move:"Repositionnement sur une prochaine session : retour en « Inscription prévue ». Humain." },
+    { cases:[
+        {p:"❌ Tous", t:"absent sans justificatif ni nouvelle malgré relance."}
+      ],
+      move:"Justificatif reçu : bascule en « Absence justifiée ». Toujours sans nouvelle : « Lost ». Humain." },
+    { cases:[
+        {p:"🚫 Tous", t:"rétractation, abandon, ou financement annulé (dossier CPF annulé côté EDOF compris)."}
+      ],
+      move:"État final : la carte ne bouge plus." }
+  ];
+}
+
+const INFO_AGENT = [
+  { cases:[
+      {p:"🏢 Entreprise", t:"demande d'agent sur mesure entrée (formulaire, closing ou client formation existant). Paiement le plus courant : virement B2B."}
+    ],
+    move:"Un appel de cadrage est posé : passage en « Précision des besoins ». Humain." },
+  { cases:[
+      {p:"📞 Tous", t:"appel de cadrage planifié ou réalisé, périmètre et chiffrage en cours."}
+    ],
+    move:"Devis signé : « Agent en construction ». Sans suite : « Lost ». Humain." },
+  { cases:[
+      {p:"🔧 Tous", t:"devis signé, sprint de construction en cours."}
+    ],
+    move:"Livraison et recette avec le client : « Livré ». Humain." },
+  { cases:[
+      {p:"✅ Tous", t:"agent livré et recetté."}
+    ],
+    move:"État final ici. La facturation suit dans le kanban Ventes." },
+  { cases:[
+      {p:"🚫 Tous", t:"sans suite après l'appel, ou devis refusé."}
+    ],
+    move:"État final : la carte ne bouge plus." }
+];
+
+const INFO_COACHING = [
+  { cases:[
+      {p:"💳 Tous", t:"coaching vendu (souvent en complément d'un Niveau 1, prélèvement SDD comptant), rien n'est encore organisé."}
+    ],
+    move:"Un formateur est identifié : « Formateur trouvé ». Humain." },
+  { cases:[
+      {p:"🧑‍🏫 Tous", t:"formateur assigné, date à caler avec l'apprenant."}
+    ],
+    move:"La date est posée avec l'apprenant : « Date déterminée ». Humain." },
+  { cases:[
+      {p:"📅 Tous", t:"séance planifiée (visio ou présentiel)."}
+    ],
+    move:"Séance passée avec CR et émargement déposés : « Effectué ». Pièce manquante : « Irrégularité »." },
+  { cases:[
+      {p:"✅ Tous", t:"séance réalisée, compte rendu et émargement déposés."}
+    ],
+    move:"État final ici. La facturation suit dans le kanban Ventes." },
+  { cases:[
+      {p:"⚠️ Tous", t:"séance passée mais une pièce manque (émargement, compte rendu)."}
+    ],
+    move:"La pièce est récupérée : retour en « Effectué ». Humain." },
+  { cases:[
+      {p:"🚫 Tous", t:"coaching annulé, le plus souvent avec la formation associée."}
+    ],
+    move:"État final : la carte ne bouge plus." }
+];
+
+const INFO_INSC = { n1: infoN1N2(false), n2: infoN1N2(true), agent: INFO_AGENT, coaching: INFO_COACHING };
+
 /* ---------- Ventes : kanban FIXE ---------- */
 const COLS_VENTES = ["RAF","Envoyer facture","En attente","En retard","Facture acquittée et transmise"];
-const COLORS_VENTES = ["#8a93a5","#2563eb","#d97706","#dc2626","#0f9d58"];
+/* Pastilles reprises du kanban Facturation réel : slate, indigo, amber, rose, emerald */
+const DOTS_VENTES = ["#94a3b8","#818cf8","#fbbf24","#f43f5e","#10b981"];
+
+/* ---------- Cas de figure par étape : kanban VENTES ---------- */
+const INFO_VENTES = [
+  { cases:[
+      {p:"🎓 CPF", t:"dossier EDOF validé. On attend la date clef : fin de formation, puis déclaration du service fait. Rien à faire."},
+      {p:"💳 Fonds propres (SDD)", t:"mandat signé, première échéance programmée à J+14 minimum. Rien à faire, le prélèvement partira seul."},
+      {p:"🏢 B2B (virement)", t:"devis signé : la vente existe, la facture sera émise au moment prévu."},
+      {p:"🤝 OPCO", t:"accord de prise en charge attendu de l'organisme."}
+    ],
+    move:"La date clef arrive ou la facture est émise. Passage automatique, personne ne déplace la carte." },
+  { cases:[
+      {p:"🎓 CPF", t:"service fait déclaré : la facture est à transmettre (CDC ou remise Bibby)."},
+      {p:"💳 Fonds propres (SDD)", t:"facture à émettre et à envoyer au client."},
+      {p:"🏢 B2B (virement)", t:"facture à émettre et à envoyer à l'entreprise."}
+    ],
+    move:"La facture est envoyée : action humaine (admin) ou automatisation selon le canal." },
+  { cases:[
+      {p:"🎓 CPF", t:"versement CDC ou reste à charge attendu. Délai normal, rien d'anormal."},
+      {p:"💳 Fonds propres (SDD)", t:"échéances en cours de prélèvement, aucune en retard."},
+      {p:"🏢 B2B (virement)", t:"facture envoyée, délai de paiement de 30 jours en cours."},
+      {p:"🤝 OPCO", t:"règlement OPCO attendu. Les délais longs sont normaux avec ces organismes."}
+    ],
+    move:"Encaissement constaté par le rapprochement bancaire (automatique), ou délai dépassé : la carte passe alors en « En retard »." },
+  { cases:[
+      {p:"💳 Fonds propres (SDD)", t:"un prélèvement refusé ou impayé : relance à faire, le rejeu se décide au cas par cas."},
+      {p:"🏢 B2B (virement)", t:"les 30 jours de délai sont dépassés : relance de l'entreprise."},
+      {p:"🤝 OPCO", t:"relance de l'organisme financeur."}
+    ],
+    move:"Paiement régularisé (repassage automatique via le rapprochement bancaire) ou geste de recouvrement (humain : closer ou admin)." },
+  { cases:[
+      {p:"✅ Tous profils", t:"tous les paiements sont encaissés et vérifiés (l'encaissement réel à J+5 est confirmé), la facture est transmise au client."}
+    ],
+    move:"État final : la carte ne bouge plus." }
+];
 
 /* Clients (fiche client : panier total, ventes) */
 const CLIENTS = {
@@ -326,78 +565,108 @@ const CLIENTS = {
   ]},
   deswarte: { nom:"Menuiserie Deswarte", type:"Entreprise (B2B)", ventes:[
     {offre:"Agent sur mesure", fin:"Virement", montant:3300, paye:3300, detail:"Virement reçu le 05/08, facture transmise"}
+  ]},
+  sologne: { nom:"Groupe Sologne Métal", type:"Entreprise (OPCO)", ventes:[
+    {offre:"Formation Niveau 2", fin:"OPCO", montant:1650, paye:0, detail:"Facture envoyée à l'OPCO le 28/07, règlement attendu"}
   ]}
 };
 
-/* Cartes ventes : 1 carte = 1 vente = 1 offre = 1 mode de paiement */
+/* Cartes ventes : 1 carte = 1 vente = 1 offre = 1 mode de paiement.
+   profil : cpf | sdd | virement | opco (barre + badge, palette du kanban réel) */
+const PROFILS = {
+  cpf:      {bar:"pbar-cpf",      badge:"b-cpf",      label:"CPF"},
+  sdd:      {bar:"pbar-sdd",      badge:"b-sdd",      label:"Bancaire"},
+  virement: {bar:"pbar-virement", badge:"b-virement", label:"Virement"},
+  opco:     {bar:"pbar-opco",     badge:"b-opco",     label:"OPCO"}
+};
+
 const VENTES = [
   {
     client:"tardieu", offre:"Formation Niveau 2", montant:"1 650 €", col:0,
-    badge:{t:"SDD comptant", cls:"b-blue"}, off:{t:"Niveau 2", cls:"b-accent"},
+    profil:"sdd", mode:"SDD comptant",
     lines:[ {l:"Prélèvement unique 1 650 €", st:"programmé", cls:"st-plan"} ],
+    next:{t:"Facturation à J2+1 (13/08)", who:"auto"},
     why:"La formation est en cours : rien à facturer avant la fin du J2.",
     when:"Passera en « Envoyer facture » à J2+1, quand le cron générera la facture et programmera le prélèvement."
   },
   {
     client:"verdoyer", offre:"Agent sur mesure", montant:"3 300 €", col:1,
-    badge:{t:"Virement B2B", cls:"b-violet"}, off:{t:"Agent", cls:"b-accent"},
+    profil:"virement", mode:"Virement B2B",
     lines:[ {l:"Devis signé le 04/08", st:"acquis", cls:"st-ok"}, {l:"Facture à émettre", st:"à faire", cls:"st-wait"} ],
+    next:{t:"Émettre et envoyer la facture", who:"admin"},
     why:"Le devis signé a créé la vente (l'engagement client) ; la facture n'est pas encore émise.",
     when:"Passera en « En attente » dès l'envoi de la facture, puis en « Facture acquittée » à réception du virement (30 jours)."
   },
   {
     client:"prandini", offre:"Formation Niveau 1", montant:"1 650 €", col:2,
-    badge:{t:"CPF", cls:"b-green"}, off:{t:"Niveau 1", cls:"b-accent"},
+    profil:"cpf", mode:"CPF",
     lines:[
       {l:"Versement CDC : 1 485 €", st:"en attente", cls:"st-wait"},
       {l:"Reste à charge : 165 €", st:"encaissé", cls:"st-ok"}
     ],
+    next:{t:"Versement CDC attendu (vers le 05/09)", who:"auto"},
     why:"Vente CPF : une seule carte porte les deux payeurs. Le reste à charge est encaissé, le versement CDC est déclaré mais pas encore reçu.",
     when:"Bougera en « Facture acquittée et transmise » quand le virement CDC sera rapproché en banque (sous ~30 jours après la sortie de formation)."
   },
   {
     client:"ohayon", offre:"Formation Niveau 1", montant:"1 650 €", col:2,
-    badge:{t:"SDD fractionné 3x", cls:"b-blue"}, off:{t:"Niveau 1", cls:"b-accent"},
+    profil:"sdd", mode:"SDD fractionné 3x",
     lines:[
       {l:"Échéance 1 : 550 € (05/08)", st:"encaissée", cls:"st-ok"},
       {l:"Échéance 2 : 550 € (05/09)", st:"prochaine", cls:"st-wait"},
       {l:"Échéance 3 : 550 € (05/10)", st:"programmée", cls:"st-plan"}
     ],
+    next:{t:"Prélèvement 2/3 le 05/09", who:"auto"},
     why:"Échéancier SDD en cours : 1 prélèvement encaissé sur 3, aucun refus.",
     when:"Reste ici jusqu'à l'encaissement de la 3e échéance (05/10), puis passe en « Facture acquittée ». Un prélèvement refusé la ferait passer en « En retard »."
   },
   {
     client:"prandini", offre:"Coaching", montant:"550 €", col:2,
-    badge:{t:"SDD comptant", cls:"b-blue"}, off:{t:"Coaching", cls:"b-accent"},
+    profil:"sdd", mode:"SDD comptant",
     lines:[ {l:"Prélèvement unique 550 € (J+14)", st:"programmé", cls:"st-plan"} ],
+    next:{t:"Prélèvement unique le 24/08", who:"auto"},
     why:"Le coaching est une vente à part entière (1 carte = 1 offre) : son prélèvement unique est programmé à J+14.",
     when:"Passera en « Facture acquittée » à l'encaissement du prélèvement, prévu le 24/08."
   },
   {
+    client:"sologne", offre:"Formation Niveau 2", montant:"1 650 €", col:2,
+    profil:"opco", mode:"OPCO",
+    lines:[
+      {l:"Facture envoyée à l'OPCO (28/07)", st:"envoyée", cls:"st-ok"},
+      {l:"Règlement OPCO", st:"attendu", cls:"st-wait"}
+    ],
+    next:{t:"Règlement OPCO attendu (délai long normal)", who:"auto"},
+    why:"Vente financée par un OPCO : la facture est partie à l'organisme, dont les délais de règlement sont structurellement longs.",
+    when:"Passera en « Facture acquittée » au rapprochement bancaire du virement OPCO ; une relance part si le délai s'étire."
+  },
+  {
     client:"marchetti", offre:"Formation Niveau 1", montant:"1 650 €", col:3,
-    badge:{t:"SDD fractionné 3x", cls:"b-blue"}, off:{t:"Niveau 1", cls:"b-accent"},
+    profil:"sdd", mode:"SDD fractionné 3x",
     lines:[
       {l:"Échéance 1 : 550 €", st:"encaissée", cls:"st-ok"},
       {l:"Échéance 2 : 550 € (25/07)", st:"refusée", cls:"st-ko"},
       {l:"Échéance 3 : 550 €", st:"suspendue", cls:"st-plan"}
     ],
+    next:{t:"Relancer le client", who:"closer"},
     why:"Prélèvement 2 de 550 € refusé le 25/07 (provision insuffisante) : la carte est signalée en retard, anneau rouge sur le kanban.",
     when:"Repassera en « En attente » si le prélèvement est représenté et accepté ; la relance se décide au cas par cas (un rejeu coûte des frais)."
   },
   {
     client:"elfassi", offre:"Formation Niveau 1", montant:"1 650 €", col:4,
-    badge:{t:"CPF", cls:"b-green"}, off:{t:"Niveau 1", cls:"b-accent"},
+    profil:"cpf", mode:"CPF",
     lines:[
       {l:"Versement CDC : 1 485 €", st:"encaissé", cls:"st-ok"},
       {l:"Reste à charge : 165 €", st:"encaissé", cls:"st-ok"}
     ],
+    next:{t:"Aucune : vente soldée", who:null},
     why:"Les deux payeurs de cette vente CPF ont réglé : virement CDC rapproché, reste à charge encaissé, facture transmise.",
     when:"Étape terminale : la carte ne bouge plus."
   },
   {
     client:"deswarte", offre:"Agent sur mesure", montant:"3 300 €", col:4,
-    badge:{t:"Virement B2B", cls:"b-violet"}, off:{t:"Agent", cls:"b-accent"},
+    profil:"virement", mode:"Virement B2B",
     lines:[ {l:"Virement reçu le 05/08", st:"encaissé", cls:"st-ok"} ],
+    next:{t:"Aucune : vente soldée", who:null},
     why:"Virement B2B reçu et rapproché, facture acquittée et transmise au client.",
     when:"Étape terminale : la carte ne bouge plus."
   }
@@ -409,10 +678,22 @@ const VENTES = [
 
 function el(tag, cls, html){ const e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
 
+const SVG_INFO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>';
+const SVG_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+const SVG_TAG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.3 9.3a2 2 0 0 0 2.8 0l7.2-7.2a2 2 0 0 0 0-2.8z"/><path d="M7 7h.01"/></svg>';
+
+function makeInfoBtn(handler){
+  const b = el("button","info-btn",SVG_INFO);
+  b.title = "Tous les cas de figure à cette étape";
+  b.addEventListener("click", ev=>{ ev.stopPropagation(); handler(b); });
+  return b;
+}
+
 /* ---------- Kanban inscriptions ---------- */
 let currentOffer = "n1";
 
 function renderInscriptions(){
+  closePop();
   const data = INSCRIPTIONS[currentOffer];
   const board = document.getElementById("board-inscriptions");
   board.innerHTML = "";
@@ -420,16 +701,17 @@ function renderInscriptions(){
     const col = el("div","col");
     col.dataset.col = i;
     const head = el("div","col-head");
-    const dot = el("span","dot"); dot.style.background = data.colors[i] || "#8a93a5";
+    const dot = el("span","dot"); dot.style.background = data.colors[i] || "#94a3b8";
     head.appendChild(dot);
     head.appendChild(el("h3",null,title));
+    head.appendChild(makeInfoBtn(btn=> togglePop(btn, title, INFO_INSC[currentOffer][i], data.colors[i], false)));
     const count = el("span","count","0");
     head.appendChild(count);
     col.appendChild(head);
     const zone = el("div","col-cards");
     col.appendChild(zone);
     board.appendChild(col);
-    /* drop zone */
+    /* drop zone : le kanban inscriptions RESTE manuel */
     col.addEventListener("dragover", ev=>{ ev.preventDefault(); col.classList.add("dragover"); });
     col.addEventListener("dragleave", ()=> col.classList.remove("dragover"));
     col.addEventListener("drop", ev=>{
@@ -440,11 +722,11 @@ function renderInscriptions(){
     });
   });
   data.cards.forEach((c,idx)=>{
-    const card = el("div","card");
+    const card = el("div","card insc");
     card.id = "insc-"+currentOffer+"-"+idx;
     card.draggable = true;
     card.appendChild(el("div","name",c.n));
-    card.appendChild(el("div","meta",c.s));
+    card.appendChild(el("div","meta","<span>"+c.s+"</span>"));
     card.addEventListener("dragstart", ev=>{
       ev.dataTransfer.setData("text/plain", card.id);
       card.classList.add("dragging");
@@ -458,7 +740,11 @@ function renderInscriptions(){
 
 function refreshCounts(board){
   [...board.children].forEach(col=>{
-    col.querySelector(".count").textContent = col.querySelectorAll(".card").length;
+    const n = col.querySelectorAll(".card").length;
+    col.querySelector(".count").textContent = n;
+    let empty = col.querySelector(".col-empty");
+    if(n===0 && !empty){ col.querySelector(".col-cards").appendChild(el("p","col-empty","·")); }
+    if(n>0 && empty){ empty.remove(); }
   });
 }
 
@@ -477,9 +763,14 @@ function renderVentes(){
   COLS_VENTES.forEach((title,i)=>{
     const col = el("div","col");
     const head = el("div","col-head");
-    const dot = el("span","dot"); dot.style.background = COLORS_VENTES[i];
+    const dot = el("span","dot"); dot.style.background = DOTS_VENTES[i];
     head.appendChild(dot);
     head.appendChild(el("h3",null,title));
+    /* Proposition 2 : étape calculée, cadenas dans l'en-tête */
+    const lk = el("span","lock-wrap",SVG_LOCK);
+    lk.title = "Proposition : étape calculée automatiquement depuis l'état réel des paiements. Les cartes ne se déplacent pas à la main.";
+    head.appendChild(lk);
+    head.appendChild(makeInfoBtn(btn=> togglePop(btn, title, INFO_VENTES[i], DOTS_VENTES[i], true)));
     const count = el("span","count","0");
     head.appendChild(count);
     col.appendChild(head);
@@ -488,19 +779,20 @@ function renderVentes(){
   });
   VENTES.forEach((v,idx)=>{
     const cl = CLIENTS[v.client];
+    const pf = PROFILS[v.profil];
     const card = el("div","card vente");
     card.id = "vente-"+idx;
-    if(v.col===3) card.style.boxShadow = "0 0 0 2px var(--red), var(--shadow)";
-    const row = el("div","row");
-    row.appendChild(el("span","name",cl.nom));
-    row.appendChild(el("span","amount",v.montant));
-    card.appendChild(row);
-    card.appendChild(el("div","meta",v.offre));
-    const badges = el("div");
-    badges.appendChild(el("span","badge "+v.off.cls, v.off.t));
-    badges.appendChild(document.createTextNode(" "));
-    badges.appendChild(el("span","badge "+v.badge.cls, v.badge.t));
-    card.appendChild(badges);
+    if(v.col===3) card.style.boxShadow = "0 0 0 2px var(--rose-500), var(--card-shadow)";
+    card.appendChild(el("div","pbar "+pf.bar));
+    const body = el("div","body");
+    const row1 = el("div","vrow1");
+    row1.appendChild(el("span","name",cl.nom));
+    const badges = el("span","badges");
+    badges.appendChild(el("span","badge "+pf.badge, pf.label));
+    if(v.profil==="sdd") badges.appendChild(el("span","badge b-sepa","SEPA"));
+    row1.appendChild(badges);
+    body.appendChild(row1);
+    body.appendChild(el("div","meta", SVG_TAG+"<span>"+v.offre+"</span><span>·</span><span>"+v.mode+"</span><span>·</span><span style='font-weight:500;color:var(--slate-600)'>"+v.montant+"</span>"));
     const pl = el("div","paylines");
     v.lines.forEach(l=>{
       const line = el("div","payline");
@@ -508,16 +800,70 @@ function renderVentes(){
       line.appendChild(el("span","st "+l.cls, l.st));
       pl.appendChild(line);
     });
-    card.appendChild(pl);
-    card.appendChild(el("div","foot-link","Voir la fiche client →"));
-    /* tooltip */
-    card.addEventListener("mouseenter", ev=> showTip(v, card));
+    body.appendChild(pl);
+    /* Proposition 1 : prochaine action concrète + porteur */
+    if(v.next){
+      const na = el("div","next-action");
+      na.appendChild(el("span",null,"⏭"));
+      na.appendChild(el("span","na-txt",v.next.t));
+      if(v.next.who==="auto") na.appendChild(el("span","na-who na-auto","🤖 automatique"));
+      else if(v.next.who) na.appendChild(el("span","na-who na-human","👤 "+v.next.who));
+      na.appendChild(el("span","prop-pill","proposition"));
+      body.appendChild(na);
+    }
+    body.appendChild(el("div","foot-link","Voir la fiche client →"));
+    card.appendChild(body);
+    /* Proposition 2 : drag refusé + toast pédagogique */
+    card.draggable = true;
+    card.addEventListener("dragstart", ev=>{
+      ev.preventDefault();
+      showToast("🔒 Les cartes vente ne se déplacent pas à la main : leur étape est calculée automatiquement depuis l'état réel des paiements (proposition). Le kanban Inscriptions, lui, reste manuel.");
+    });
+    /* tooltip + fiche client */
+    card.addEventListener("mouseenter", ()=> showTip(v, card));
     card.addEventListener("mousemove", ev=> moveTip(ev));
     card.addEventListener("mouseleave", hideTip);
     card.addEventListener("click", ()=> openDrawer(v.client));
     board.children[v.col].querySelector(".col-cards").appendChild(card);
   });
   refreshCounts(board);
+}
+
+/* ---------- Popover cas de figure ---------- */
+const pop = document.getElementById("pop");
+let popBtn = null;
+
+function togglePop(btn, title, info, dotColor, isVente){
+  if(pop.classList.contains("open") && popBtn===btn){ closePop(); return; }
+  popBtn = btn;
+  let html = "<h4><span class='dot' style='background:"+dotColor+"'></span>"+title+"</h4>";
+  (info?.cases||[]).forEach(c=>{ html += "<div class='pop-case'><b>"+c.p+" :</b> "+c.t+"</div>"; });
+  if(info?.move) html += "<div class='pop-move'><b>Ce qui fait bouger la carte</b>"+info.move+"</div>";
+  if(isVente) html += "<div class='pop-lock'>🔒 <span class='prop-pill'>proposition</span> Étape calculée, pas déplacée : la colonne d'une carte vente est dérivée automatiquement de l'état réel des paiements (une vente ne passe en « Facture acquittée » que quand tout est encaissé et vérifié). On ne déplace jamais ces cartes à la main, contrairement au kanban Inscriptions qui reste manuel.</div>";
+  pop.innerHTML = html;
+  pop.classList.add("open");
+  const r = btn.getBoundingClientRect();
+  const w = pop.offsetWidth, h = pop.offsetHeight;
+  let x = Math.min(Math.max(8, r.left - 10), window.innerWidth - w - 8);
+  let y = r.bottom + 8;
+  if(y + h > window.innerHeight - 8) y = Math.max(8, r.top - h - 8);
+  pop.style.left = x+"px"; pop.style.top = y+"px";
+}
+function closePop(){ pop.classList.remove("open"); popBtn = null; }
+document.addEventListener("click", ev=>{
+  if(!pop.classList.contains("open")) return;
+  if(pop.contains(ev.target) || ev.target.closest(".info-btn")) return;
+  closePop();
+});
+
+/* ---------- Toast ---------- */
+const toast = document.getElementById("toast");
+let toastTimer = null;
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toast.classList.remove("show"), 4200);
 }
 
 /* ---------- Tooltip ---------- */
@@ -544,7 +890,7 @@ function hideTip(){ tip.style.opacity = "0"; }
 function fmt(n){ return n.toLocaleString("fr-FR")+" €"; }
 
 function openDrawer(clientId){
-  hideTip();
+  hideTip(); closePop();
   const cl = CLIENTS[clientId];
   const total = cl.ventes.reduce((s,v)=>s+v.montant,0);
   const paye  = cl.ventes.reduce((s,v)=>s+v.paye,0);
@@ -558,10 +904,10 @@ function openDrawer(clientId){
   const pct = total ? (paye/total)*100 : 0;
   const C = 2*Math.PI*15.9155;
   document.getElementById("d-donut").innerHTML =
-    "<circle cx='21' cy='21' r='15.9155' fill='none' stroke='#e4e7ee' stroke-width='5'/>"+
-    "<circle cx='21' cy='21' r='15.9155' fill='none' stroke='#0f9d58' stroke-width='5' stroke-linecap='round' "+
+    "<circle cx='21' cy='21' r='15.9155' fill='none' stroke='#e2e8f0' stroke-width='5'/>"+
+    "<circle cx='21' cy='21' r='15.9155' fill='none' stroke='#10b981' stroke-width='5' stroke-linecap='round' "+
     "stroke-dasharray='"+(pct*C/100).toFixed(1)+" "+C.toFixed(1)+"' transform='rotate(-90 21 21)'/>"+
-    "<text x='21' y='23.5' text-anchor='middle' font-size='8' font-weight='700' fill='#1c2433'>"+Math.round(pct)+"%</text>";
+    "<text x='21' y='23.5' text-anchor='middle' font-size='8' font-weight='700' fill='#1e293b'>"+Math.round(pct)+"%</text>";
   /* ventes list */
   const list = document.getElementById("d-ventes");
   list.innerHTML = "";
@@ -586,13 +932,14 @@ function closeDrawer(){
 
 /* ---------- Navigation ---------- */
 function showPage(p){
-  hideTip(); closeDrawer();
+  hideTip(); closeDrawer(); closePop();
   document.getElementById("page-inscriptions").classList.toggle("hidden", p!=="inscriptions");
   document.getElementById("page-ventes").classList.toggle("hidden", p!=="ventes");
   document.getElementById("nav-inscriptions").classList.toggle("active", p==="inscriptions");
   document.getElementById("nav-ventes").classList.toggle("active", p==="ventes");
 }
 
+showPage("inscriptions");
 renderInscriptions();
 renderVentes();
 </script>
