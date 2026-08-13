@@ -611,14 +611,14 @@ const INFO_VENTES = [
 /* Clients (fiche client : panier total, ventes) */
 const CLIENTS = {
   prandini: { nom:"Lucie Prandini", type:"Particulier", ventes:[
-    {offre:"Formation Niveau 1", fin:"CPF", montant:1650, paye:165, detail:"Service fait déclaré, validation CDC attendue"},
+    {offre:"Formation Niveau 1", fin:"CPF", montant:1650, paye:0, detail:"Service fait déclaré, validation CDC attendue"},
     {offre:"Coaching", fin:"SDD comptant", montant:550, paye:0, detail:"Prélèvement unique prévu le 24/08"}
   ]},
   bellamy: { nom:"Idriss Bellamy", type:"Particulier", ventes:[
-    {offre:"Formation Niveau 1", fin:"CPF", montant:1650, paye:165, detail:"Formation 21-22 sept., dossier EDOF validé"}
+    {offre:"Formation Niveau 1", fin:"CPF", montant:1650, paye:0, detail:"Formation 21-22 sept., dossier EDOF validé"}
   ]},
   feuillet: { nom:"Bertrand Feuillet", type:"Particulier", ventes:[
-    {offre:"Formation Niveau 1", fin:"CPF", montant:1650, paye:165, detail:"Service fait validé par la CDC, facturation en cours"}
+    {offre:"Formation Niveau 1", fin:"CPF", montant:1650, paye:0, detail:"Service fait validé par la CDC, facturation en cours"}
   ]},
   ohayon: { nom:"Samuel Ohayon", type:"Particulier", ventes:[
     {offre:"Formation Niveau 1", fin:"SDD fractionné 3x", montant:1650, paye:550, detail:"Échéancier 3 × 550 €, 1 encaissé"}
@@ -670,33 +670,33 @@ const VENTES = [
      en charge, aucune facture avant l'accord). SDD et Virement naissent
      directement en En attente, facture partie à l'engagement. ---- */
   {
-    client:"bellamy", offre:"Formation Niveau 1", montant:1650, paye:165, col:0,
+    client:"bellamy", offre:"Formation Niveau 1", montant:1650, paye:0, col:0,
     profil:"cpf", resp:"auto",
     why:"Dossier CPF en cours : la carte naît ici à l'inscription et y reste pendant toute la formation, jusqu'à la validation du service fait par la Caisse des Dépôts.",
     when:"Passera en « Envoyer facture » à la validation du service fait par la CDC (reçue automatiquement via Wedof), après la formation des 21-22 septembre.",
     tl:[
       {t:"Inscription ARD, dossier EDOF validé", d:"30/07", st:"ok"},
-      {t:"Reste à charge encaissé", d:"165 € · 30/07", st:"ok"},
+      {t:"Devis accepté par le client (reste à charge réglé à la CDC)", d:"30/07", st:"ok"},
       {t:"Formation", d:"21-22 sept.", st:"next"},
       {t:"Service fait déclaré puis validé par la CDC", st:"plan"},
       {t:"Facture transmise (EDOF + Bibby)", st:"plan"},
-      {t:"Facture acquittée et transmise", st:"plan"}
+      {t:"Paiement unique reçu (totalité), facture acquittée", st:"plan"}
     ],
     notes:[{d:"30/07", a:"Karim (closer)", t:"Client motivé, préfère la session de Lyon."}],
     docs:[{t:"Devis EDOF n° 2026-08412", s:"accepté"}]
   },
   {
-    client:"prandini", offre:"Formation Niveau 1", montant:1650, paye:165, col:0,
+    client:"prandini", offre:"Formation Niveau 1", montant:1650, paye:0, col:0,
     profil:"cpf", resp:"auto",
     why:"Formation suivie, sortie et service fait déclarés sur EDOF le lendemain du J2. La carte ne bouge pas encore : on attend la validation du service fait par la Caisse des Dépôts.",
     when:"Passera automatiquement en « Envoyer facture » quand la CDC validera le service fait (reçu via Wedof).",
     tl:[
-      {t:"Inscription ARD, reste à charge encaissé", d:"165 € · 12/07", st:"ok"},
+      {t:"Inscription ARD, devis accepté par le client (reste à charge réglé à la CDC)", d:"12/07", st:"ok"},
       {t:"Formation suivie et émargée", d:"10-11 août", st:"ok"},
       {t:"Sortie et service fait déclarés sur EDOF", d:"12/08", st:"ok"},
       {t:"Validation du service fait par la CDC", d:"attendue", st:"next"},
       {t:"Facture transmise (EDOF + Bibby)", st:"plan"},
-      {t:"Facture acquittée et transmise", st:"plan"}
+      {t:"Paiement unique reçu (totalité), facture acquittée", st:"plan"}
     ],
     notes:[{d:"12/08", a:"Sophie (admin)", t:"Sortie et service fait déclarés sur EDOF, dossier propre."}],
     docs:[{t:"Devis EDOF n° 2026-07208", s:"accepté"}]
@@ -719,7 +719,7 @@ const VENTES = [
   /* ---- Envoyer facture : CPF post service fait, OPCO post accord,
      + filet d'anomalie SDD/Virement ---- */
   {
-    client:"feuillet", offre:"Formation Niveau 1", montant:1650, paye:165, col:1,
+    client:"feuillet", offre:"Formation Niveau 1", montant:1650, paye:0, col:1,
     profil:"cpf", resp:"admin",
     why:"Service fait validé par la Caisse des Dépôts le 08/08 : la facturation CPF peut partir (seul moyen de paiement qui passe ici normalement).",
     when:"Passera en « En attente » quand la facture aura été transmise sur EDOF et à Bibby (les deux transmissions faites).",
@@ -728,7 +728,7 @@ const VENTES = [
       {t:"Sortie et service fait déclarés sur EDOF", d:"17/07", st:"ok"},
       {t:"Service fait validé par la CDC", d:"08/08", st:"ok"},
       {t:"Facture à générer puis à transmettre (EDOF + Bibby)", st:"next"},
-      {t:"Paiement Bibby sous 30 jours", st:"plan"},
+      {t:"Paiement Bibby unique couvrant la totalité, sous 30 jours", st:"plan"},
       {t:"Facture acquittée et transmise", st:"plan"}
     ],
     notes:[{d:"08/08", a:"Sophie (admin)", t:"Validation CDC reçue, facturation prévue cette semaine."}],
@@ -841,12 +841,13 @@ const VENTES = [
   {
     client:"elfassi", offre:"Formation Niveau 1", montant:1650, paye:1650, col:4,
     profil:"cpf", resp:null,
-    why:"Paiement Bibby reçu et rapproché en banque : le dossier CPF est soldé (le reste à charge avait été encaissé dès l'inscription).",
+    why:"Paiement Bibby reçu et rapproché en banque : la totalité de la vente en un seul versement, le dossier CPF est soldé.",
     when:"Étape terminale : la carte ne bouge plus.",
     tl:[
+      {t:"Devis accepté par le client (reste à charge réglé à la CDC)", d:"20/06", st:"ok"},
       {t:"Formation suivie, service fait validé par la CDC", d:"22/07", st:"ok"},
       {t:"Facture transmise (EDOF + Bibby)", d:"24/07", st:"ok"},
-      {t:"Paiement Bibby reçu et rapproché", d:"1 485 € · 02/08", st:"ok"},
+      {t:"Paiement unique reçu (totalité), rapproché en banque", d:"1 650 € · 02/08", st:"ok"},
       {t:"Facture acquittée et transmise", d:"02/08", st:"ok"}
     ],
     notes:[{d:"02/08", a:"Sophie (admin)", t:"Paiement Bibby rapproché, dossier archivé."}],
