@@ -113,21 +113,24 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .b-green{background:var(--emerald-50);color:var(--emerald-600)}
 .b-orange{background:var(--amber-50);color:var(--amber-600)}
 
-/* Cartes vente v4 : sobres, fond blanc, UN badge de mode, responsable de l'étape */
+/* Cartes vente : sobres, fond blanc, UN badge de mode, prévision, responsable en mot gris */
 .card.vente{cursor:pointer}
-.card.vente.alerte{box-shadow:0 0 0 2px var(--rose-500), var(--card-shadow)}
+.card.vente.alerte,.card.insc.alerte{box-shadow:0 0 0 2px var(--rose-500), var(--card-shadow)}
 .vrow1{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .badge.mode{gap:5px;padding:3px 8px;font-size:10.5px;font-weight:600;flex:none}
 .badge.mode svg{width:11px;height:11px;flex:none}
 .v-line2{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--slate-500);margin-top:4px}
 .v-line2 .offre{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .v-line2 .total{margin-left:auto;font-weight:600;font-size:13px;color:var(--slate-900);font-variant-numeric:tabular-nums;flex:none}
-.v-resp{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--slate-100);font-size:11px;color:var(--slate-400)}
-.v-resp .na-who{margin-left:auto}
-.na-who{font-size:10px;font-weight:600;border-radius:4px;padding:1px 6px;white-space:nowrap}
-.na-auto{background:var(--slate-100);color:var(--slate-500)}
-.na-human{background:var(--amber-50);color:var(--amber-600)}
-.na-done{background:var(--emerald-50);color:var(--emerald-600)}
+.v-prev{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--slate-500);margin-top:7px}
+.v-prev svg{width:11px;height:11px;flex:none;color:var(--slate-400)}
+.v-prev.late{color:var(--rose-600);font-weight:500}
+.v-prev.late svg{color:var(--rose-600)}
+.v-resp{margin-top:8px;padding-top:7px;border-top:1px solid var(--slate-100);font-size:11px;color:var(--slate-400)}
+/* Cartes inscription : nom, mode discret, closer, soumission ARD, next action */
+.i-mode{font-size:10px;font-weight:600;letter-spacing:.02em;color:var(--slate-400);flex:none;padding-top:3px}
+.i-meta{font-size:11px;color:var(--slate-400);margin-top:2px}
+.i-na{margin-top:8px;padding-top:7px;border-top:1px solid var(--slate-100);font-size:11.5px;font-weight:500;color:var(--slate-600)}
 .prop-pill{display:inline-flex;align-items:center;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--purple-600);background:var(--purple-50);border-radius:4px;padding:1px 5px}
 
 /* ---------- Icône info + cadenas dans les en-têtes de colonnes ---------- */
@@ -313,7 +316,7 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
           <button data-offer="coaching">Coaching</button>
         </div>
       </div>
-      <p class="page-sub">Suivi pédagogique par offre : chaque offre a son kanban personnalisé, les cartes se déplacent à la main. Cliquez sur l'icône ℹ️ d'une colonne pour voir les cas de figure possibles à cette étape (contenu validé le 12/08).</p>
+      <p class="page-sub">Suivi pédagogique par offre : chaque offre a son kanban personnalisé, les cartes se déplacent à la main. Survolez une carte pour comprendre son étape, et cliquez sur l'icône ℹ️ d'une colonne pour voir les cas de figure possibles à cette étape (contenu validé le 12/08).</p>
       <div class="board-wrap"><div class="board" id="board-inscriptions"></div></div>
       <div class="foot-note">Maquette de démonstration, données factices. Structure : 1 vente = 1 offre = 1 mode de paiement ; kanban inscription personnalisé par offre ; kanban vente unique.</div>
     </div>
@@ -326,7 +329,7 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
         <h1>Ventes</h1>
       </div>
       <p class="page-sub">Kanban unique quelle que soit l'offre : 1 carte = 1 vente = 1 offre = 1 mode de paiement. La facture part automatiquement dès l'engagement (mandat signé, devis signé) ; le CPF attend la validation du service fait, l'OPCO l'accord de prise en charge. Survolez une carte pour comprendre son étape, cliquez pour ouvrir son détail, et cliquez sur ℹ️ dans l'en-tête d'une colonne pour les cas de figure par moyen de paiement (contenu validé le 12/08).</p>
-      <div class="prop-banner">💡 <span class="prop-pill">proposition</span> Sur chaque carte : le responsable de l'étape en cours (🤖 automatique ou 👤 closer). L'étape est calculée depuis les paiements réels, jamais déplacée à la main (🔒). Le clic ouvre un détail de carte repensé.</div>
+      <div class="prop-banner">💡 <span class="prop-pill">proposition</span> Sur chaque carte : la prochaine échéance et le responsable de l'étape en cours (automatique ou closer). L'étape est calculée depuis les paiements réels, jamais déplacée à la main (🔒). Le clic ouvre un détail de carte repensé.</div>
       <div class="filter-bar" id="ventes-filters">
         <div class="filter-group">
           <span class="flbl">Paiement</span>
@@ -418,62 +421,136 @@ const COLS_N1N2 = ["Inscription reçue","Action de notre part","En attente","Ins
 const COLS_AGENT = ["Demande reçue","Précision des besoins (appel)","Agent en construction","Livré","Lost"];
 const COLS_COACHING = ["À administrer","Formateur trouvé","Date déterminée","Effectué","Irrégularité","Lost"];
 
+/* Cartes inscriptions (simplicité maximale, retour Côme v7) :
+   nom, mode de paiement (discret, en haut à droite), closer, date et heure
+   de soumission ARD, next action en 3-4 mots (rien si attente passive).
+   Pas d'offre (le sélecteur filtre déjà), pas de date de formation.
+   Au survol : pourquoi / quand (détaillés, repris de la page des cas de
+   figure validée le 12/08) + « ⚠️ Erreur » si la carte est en anomalie. */
 const INSCRIPTIONS = {
   n1: {
     cols: COLS_N1N2,
     colors: DOTS_N1N2,
     cards: [
-      {n:"Margaux Ferrand",  s:"Session Paris, 14-15 sept.", c:0},
-      {n:"Idriss Bellamy",   s:"Session Lyon, 21-22 sept.",  c:0},
-      {n:"Renaud Chassagne", s:"Devis CPF à accepter",        c:1},
-      {n:"Awa Diallo-Mercier",s:"Attente retour apprenant",   c:2},
-      {n:"Théo Vasseur",     s:"Prévu : octobre",             c:3},
-      {n:"Clara Wojcik",     s:"Session Bordeaux, 5-6 oct.",  c:4},
-      {n:"Samuel Ohayon",    s:"Session Paris, 7-8 août",     c:5},
-      {n:"Lucie Prandini",   s:"Session Lille, 10-11 août",   c:5},
-      {n:"Bertrand Feuillet",s:"Session Nantes, 15-16 juil.", c:6},
-      {n:"Nora El Fassi",    s:"Session Paris, 8-9 juil.",    c:6},
-      {n:"Damien Roussel",   s:"Certificat médical reçu",     c:7},
-      {n:"Kevin Marchetti",  s:"Sans nouvelle depuis J1",     c:8},
-      {n:"Patricia Lenglet", s:"Rétractation avant J1",       c:9}
+      {n:"Margaux Ferrand", mode:"cpf", closer:"Léa", d:"ARD le 11/08 à 9h12", na:"Attente demande de devis", c:0,
+       why:"ARD rempli, profil créé dans DELIV'IA et place réservée 48 h dans la session. Le dossier EDOF attend que la cliente fasse sa demande de devis sur Mon Compte Formation.",
+       when:"Dès que la demande de devis arrive, la carte passe automatiquement en « Action de notre part » (détection par le webhook Wedof). Seul le CPF passe par cette étape : les fonds propres arrivent directement en « En attente »."},
+      {n:"Idriss Bellamy", mode:"cpf", closer:"Karim", d:"ARD le 30/07 à 16h47", na:"Attente demande de devis", c:0,
+       why:"ARD rempli et place réservée 48 h dans la session. Le dossier EDOF est prêt : on attend la demande de devis du client sur Mon Compte Formation.",
+       when:"Passage automatique en « Action de notre part » à la réception de la demande de devis (webhook Wedof). Rien à faire d'ici là."},
+      {n:"Renaud Chassagne", mode:"cpf", closer:"Léa", d:"ARD le 05/08 à 11h03", na:"Devis CPF à accepter", c:1,
+       why:"Le client a demandé son devis sur Mon Compte Formation. L'acceptation par France IA est normalement automatique quand l'ARD a été bien rempli en amont ; ici l'automate s'est bloqué et la fiche est passée en rouge.",
+       when:"Dès qu'un humain valide le devis à la main, la carte passe en « En attente » du règlement du reste à charge par le client sur Mon Compte Formation.",
+       err:"Les dates du devis ne correspondent pas à celles de l'ARD : l'acceptation automatique s'est bloquée, validation manuelle requise."},
+      {n:"Awa Diallo-Mercier", mode:"sdd", closer:"Manon", d:"ARD le 08/08 à 15h26", na:"Attente signature mandat", c:2,
+       why:"Inscription ARD envoyée en fonds propres : on attend la signature du mandat de prélèvement dans le tunnel, la place est réservée 48 h. Cas rare : le mandat se signe en règle générale en même temps que l'ARD.",
+       when:"À la signature du mandat, passage automatique en « Inscription validée » : cascade Qualiobee, opportunité GHL en Won et message de bienvenue."},
+      {n:"Théo Vasseur", mode:"cpf", closer:"Karim", d:"ARD le 22/07 à 10h41", na:null, c:3,
+       why:"Place réservée par lettre d'intention CPF pour une session future, sans dossier EDOF ni Qualiobee pour l'instant. Le dossier CPF sera monté en R2 avec le closer.",
+       when:"À la création du dossier CPF, la carte rejoint automatiquement le parcours normal en « Inscription reçue »."},
+      {n:"Clara Wojcik", mode:"sdd", closer:"Léa", d:"ARD le 01/08 à 18h05", na:null, c:4,
+       why:"Mandat signé : paiement et engagement confirmés. La cascade automatique a créé le profil Qualiobee avec convocation, passé l'opportunité GHL en Won et envoyé le message de bienvenue.",
+       when:"À J-14, Qualiobee envoie convocation et documents. La carte passera toute seule en « En formation » au matin du premier jour de la session."},
+      {n:"Samuel Ohayon", mode:"sdd", closer:"Léa", d:"ARD le 22/07 à 14h18", na:null, c:5,
+       why:"La session est en cours (J1 et J2), bascule faite automatiquement au matin du J1. Chaque apprenant signe l'émargement électronique sur Qualiobee à chaque demi-journée (4 signatures).",
+       when:"La carte passera automatiquement en « Terminé » après le J2, une fois la formation suivie et émargée."},
+      {n:"Lucie Prandini", mode:"cpf", closer:"Karim", d:"ARD le 12/07 à 9h55", na:null, c:5,
+       why:"Session en cours (J1 et J2). En CPF, chaque signature d'émargement conditionne le paiement du dossier : les 4 signatures sont suivies sur Qualiobee.",
+       when:"Passage automatique en « Terminé » après le J2. L'admin déclarera ensuite l'entrée, la sortie et le service fait sur EDOF."},
+      {n:"Bertrand Feuillet", mode:"cpf", closer:"Manon", d:"ARD le 28/06 à 17h34", na:"Déclarations EDOF à faire", c:6,
+       why:"Formation suivie et émargée, questionnaires et certificat gérés par Qualiobee. En CPF s'ajoutent les déclarations EDOF (entrée, sortie, service fait), volontairement manuelles pour ne jamais déclarer quelqu'un qui n'a pas émargé.",
+       when:"État final côté pédagogie : la carte ne bouge plus ici. Le paiement continue sa vie dans le kanban Ventes : validation du service fait par la CDC, puis facturation."},
+      {n:"Nora El Fassi", mode:"cpf", closer:"Léa", d:"ARD le 20/06 à 8h50", na:"Déclarations EDOF à faire", c:6,
+       why:"Formation suivie et émargée. Les déclarations EDOF se font depuis Deliv'ia après vérification des émargements, jamais automatiquement.",
+       when:"État final côté pédagogie. Le paiement du dossier CPF suit son cours dans le kanban Ventes."},
+      {n:"Damien Roussel", mode:"sdd", closer:"Karim", d:"ARD le 15/07 à 12h20", na:"À repositionner", c:7,
+       why:"Absent au J1 avec un certificat médical recevable, joint aux preuves par le closer. L'apprenant reste payé et garde sa place : une absence n'est pas un désistement.",
+       when:"La carte reste ici jusqu'à ce que l'équipe repositionne l'apprenant sur une prochaine session ; il repartira alors en « Inscription validée »."},
+      {n:"Kevin Marchetti", mode:"sdd", closer:"Léa", d:"ARD le 20/06 à 19h02", na:"Relancer l'apprenant", c:8,
+       why:"Absent au J1 sans justificatif ni nouvelle malgré relance. Le statut a été posé par le closer.",
+       when:"Si un justificatif arrive, bascule en « Absence justifiée ». Toujours sans nouvelle, le passage en « Lost » sera une décision humaine, jamais automatique."},
+      {n:"Patricia Lenglet", mode:"sdd", closer:"Manon", d:"ARD le 03/07 à 13h44", na:null, c:9,
+       why:"Rétractation avant le J1 : perte définitive, actée d'un clic humain. La cascade a libéré la place, retiré la convocation Qualiobee et stoppé les prélèvements futurs.",
+       when:"État final : la carte ne bouge plus."}
     ]
   },
   n2: {
     cols: COLS_N1N2,
     colors: DOTS_N1N2,
     cards: [
-      {n:"Hugo Bonnaire",    s:"Session Paris N2, 28-29 sept.", c:0},
-      {n:"Salomé Vidal",     s:"Prérequis N1 à vérifier",       c:1},
-      {n:"Marc-Antoine Josse",s:"Attente financement OPCO",     c:2},
-      {n:"Inès Barthelemy",  s:"Prévu : novembre",              c:3},
-      {n:"Farid Belkacem",   s:"Session Lyon N2, 12-13 oct.",   c:4},
-      {n:"Émilie Tardieu",   s:"Session Paris N2, 11-12 août",  c:5},
-      {n:"Joris Lemaitre",   s:"Session Paris N2, 1-2 juil.",   c:6},
-      {n:"Sandra Nowak",     s:"Absence signalée, justif. attendu", c:7},
-      {n:"Ludovic Pastor",   s:"Non présenté, sans justificatif",   c:8}
+      {n:"Hugo Bonnaire", mode:"virement", closer:"Karim", d:"ARD le 09/08 à 10h27", na:null, c:0,
+       why:"Inscription ARD reçue pour un dossier B2B au virement. Profil créé dans DELIV'IA, place réservée 48 h dans la session N2. Le Niveau 2 n'est pas éligible CPF.",
+       when:"La carte passera en « En attente » de la signature du devis par l'entreprise, qui vaut engagement."},
+      {n:"Salomé Vidal", mode:"sdd", closer:"Léa", d:"ARD le 07/08 à 16h12", na:"Prérequis N1 à vérifier", c:1,
+       why:"Inscription N2 reçue. En plus du financement, il faut vérifier que le prérequis Niveau 1 est acquis avant de valider l'inscription.",
+       when:"Prérequis vérifié et mandat signé, la carte passe en « Inscription validée » ; prérequis manquant, le closer recontacte l'apprenante."},
+      {n:"Marc-Antoine Josse", mode:"opco", closer:"Manon", d:"ARD le 25/07 à 11h58", na:"Attente accord OPCO", c:2,
+       why:"Convention transmise au référent de l'entreprise. On attend l'accord de prise en charge de l'OPCO puis le retour de la convention signée (rappels automatiques à J+7 et J+14). La convention ne doit jamais être signée avant l'accord.",
+       when:"Au retour de la convention signée, l'admin clique « Convention signée » et la carte passe en « Inscription validée »."},
+      {n:"Inès Barthelemy", mode:"sdd", closer:"Karim", d:"ARD le 18/07 à 9h36", na:null, c:3,
+       why:"Place réservée pour une session de novembre, sans session datée pour l'instant (statut temporaire « Inscription prévue », appelé à disparaître).",
+       when:"Quand une session de novembre sera ouverte et datée, la carte rejoindra le parcours normal en « Inscription validée »."},
+      {n:"Farid Belkacem", mode:"virement", closer:"Léa", d:"ARD le 30/07 à 15h09", na:null, c:4,
+       why:"Devis signé par l'entreprise : l'engagement est confirmé. La cascade automatique a créé le profil Qualiobee avec convocation et notifié l'équipe.",
+       when:"Passage automatique en « En formation » au matin du premier jour de la session d'octobre."},
+      {n:"Émilie Tardieu", mode:"sdd", closer:"Karim", d:"ARD le 28/07 à 14h51", na:null, c:5,
+       why:"La session est en cours (J1 et J2), bascule faite automatiquement au matin du J1. Émargements électroniques signés par demi-journée sur Qualiobee.",
+       when:"La carte passera automatiquement en « Terminé » après le J2, formation suivie et émargée."},
+      {n:"Joris Lemaitre", mode:"sdd", closer:"Manon", d:"ARD le 12/06 à 10h15", na:null, c:6,
+       why:"Formation suivie et émargée. Qualiobee a envoyé les questionnaires de satisfaction et produit le certificat de réalisation.",
+       when:"État final côté pédagogie : le paiement continue sa vie dans le kanban Ventes."},
+      {n:"Sandra Nowak", mode:"virement", closer:"Léa", d:"ARD le 21/06 à 17h28", na:"À repositionner", c:7,
+       why:"Absente au J1 avec un justificatif recevable (force majeure), joint aux preuves. L'apprenante reste payée et garde sa place.",
+       when:"La carte reste ici jusqu'au repositionnement sur une prochaine session N2."},
+      {n:"Ludovic Pastor", mode:"sdd", closer:"Karim", d:"ARD le 15/06 à 11h42", na:"Relancer l'apprenant", c:8,
+       why:"Absent au J1 sans justificatif ni nouvelle malgré relance. Le statut a été posé par le closer.",
+       when:"Un justificatif reçu le fait basculer en « Absence justifiée » ; toujours sans nouvelle, le passage en « Lost » restera une décision humaine."}
     ]
   },
   agent: {
     cols: COLS_AGENT,
     colors: ["#94a3b8","#fbbf24","#818cf8","#10b981","#cbd5e1"],
     cards: [
-      {n:"Cabinet Verdoyer",     s:"Agent tri de mails, demande du 08/08", c:0},
-      {n:"Garage Petitcolas",    s:"Appel de cadrage : jeudi 10h",         c:1},
-      {n:"SARL Boulangerie Fario",s:"Agent devis auto, sprint en cours",   c:2},
-      {n:"Menuiserie Deswarte",  s:"Agent SAV livré le 30/07",             c:3},
-      {n:"Transports RoubaixEx.",s:"Sans suite après l'appel",            c:4}
+      {n:"Cabinet Verdoyer", mode:"virement", closer:"Léa", d:"Demande le 08/08 à 9h15", na:"Appel de cadrage à poser", c:0,
+       why:"Demande d'agent sur mesure (tri de mails) entrée par le formulaire, client déjà en formation. Paiement le plus courant : virement B2B sur devis.",
+       when:"Dès que l'appel de cadrage est posé puis réalisé, la carte passe en « Précision des besoins »."},
+      {n:"Garage Petitcolas", mode:"virement", closer:"Karim", d:"Demande le 04/08 à 15h40", na:"Devis à faire signer", c:1,
+       why:"Appel de cadrage planifié jeudi 10h : périmètre, cas d'usage et chiffrage en cours avec le closer.",
+       when:"Devis signé, la carte passe en « Agent en construction » ; sans suite, elle part en « Lost »."},
+      {n:"SARL Boulangerie Fario", mode:"virement", closer:"Manon", d:"Demande le 21/07 à 8h55", na:null, c:2,
+       why:"Devis signé, sprint de construction de l'agent devis auto en cours.",
+       when:"La livraison et la recette avec le client feront passer la carte en « Livré » (action humaine)."},
+      {n:"Menuiserie Deswarte", mode:"virement", closer:"Karim", d:"Demande le 12/06 à 13h30", na:null, c:3,
+       why:"Agent SAV livré et recetté avec le client le 30/07.",
+       when:"État final côté delivery : la facturation suit dans le kanban Ventes (virement sur facture)."},
+      {n:"Transports RoubaixEx.", mode:"virement", closer:"Léa", d:"Demande le 02/07 à 16h20", na:null, c:4,
+       why:"Sans suite après l'appel de cadrage : le devis a été refusé.",
+       when:"État final : la carte ne bouge plus."}
     ]
   },
   coaching: {
     cols: COLS_COACHING,
     colors: ["#94a3b8","#60a5fa","#a78bfa","#10b981","#fbbf24","#cbd5e1"],
     cards: [
-      {n:"Lucie Prandini",  s:"Coaching post-N1, à planifier",     c:0},
-      {n:"Samuel Ohayon",   s:"Formateur : R. Vercruysse",          c:1},
-      {n:"Nora El Fassi",   s:"Visio le 19/08 à 14h",               c:2},
-      {n:"Bertrand Feuillet",s:"Effectué le 22/07, CR déposé",      c:3},
-      {n:"Maxence Dubreuil",s:"Émargement manquant",                c:4},
-      {n:"Patricia Lenglet",s:"Annulé avec la formation",           c:5}
+      {n:"Lucie Prandini", mode:"sdd", closer:"Karim", d:"ARD le 10/08 à 9h58", na:"Formateur à trouver", c:0,
+       why:"Coaching vendu en complément du Niveau 1, rien n'est encore organisé. Le prélèvement unique est déjà programmé à J+14 et suivi dans le kanban Ventes.",
+       when:"Dès qu'un formateur est identifié, en direct ou via le marketplace Book My Sessions, la carte passe en « Formateur trouvé »."},
+      {n:"Samuel Ohayon", mode:"sdd", closer:"Léa", d:"ARD le 22/07 à 14h18", na:"Date à caler", c:1,
+       why:"Formateur identifié : R. Vercruysse, demande prise sur le marketplace Book My Sessions puis validée par un admin.",
+       when:"Reste à caler la date de la séance avec l'apprenant ; la carte passera alors en « Date déterminée »."},
+      {n:"Nora El Fassi", mode:"sdd", closer:"Léa", d:"ARD le 20/06 à 8h50", na:null, c:2,
+       why:"Séance planifiée en visio le 19/08 à 14h, suivie dans le groupe WhatsApp à 3 (apprenante, formateur, ops).",
+       when:"Séance passée avec compte rendu et émargement déposés : « Effectué ». Une pièce manquante : « Irrégularité »."},
+      {n:"Bertrand Feuillet", mode:"sdd", closer:"Manon", d:"ARD le 28/06 à 17h34", na:null, c:3,
+       why:"Séance réalisée le 22/07, compte rendu et émargement déposés.",
+       when:"État final côté delivery : la facturation suit dans le kanban Ventes."},
+      {n:"Maxence Dubreuil", mode:"sdd", closer:"Karim", d:"ARD le 30/06 à 12h05", na:"Pièce à récupérer", c:4,
+       why:"Séance passée mais une pièce manque au dossier. L'admin la récupère auprès du formateur.",
+       when:"Une fois la pièce déposée, la carte repart en « Effectué ».",
+       err:"La séance est passée mais l'émargement n'a pas été déposé par le formateur."},
+      {n:"Patricia Lenglet", mode:"sdd", closer:"Manon", d:"ARD le 03/07 à 13h44", na:null, c:5,
+       why:"Coaching annulé en cascade avec la formation associée (Lost formation, décidé par un humain).",
+       when:"État final : la carte ne bouge plus."}
     ]
   }
 };
@@ -671,7 +748,7 @@ const VENTES = [
      directement en En attente, facture partie à l'engagement. ---- */
   {
     client:"bellamy", offre:"Formation Niveau 1", montant:1650, paye:0, col:0,
-    profil:"cpf", resp:"auto",
+    profil:"cpf", resp:"auto", prev:"21-22/09 · Formation à venir",
     why:"Dossier CPF en cours : la carte naît ici à l'inscription et y reste pendant toute la formation, jusqu'à la validation du service fait par la Caisse des Dépôts.",
     when:"Passera en « Envoyer facture » à la validation du service fait par la CDC (reçue automatiquement via Wedof), après la formation des 21-22 septembre.",
     tl:[
@@ -703,7 +780,7 @@ const VENTES = [
   },
   {
     client:"kerbrat", offre:"Formation Niveau 2", montant:1650, paye:0, col:0,
-    profil:"opco", resp:"auto",
+    profil:"opco", resp:"auto", prev:"11-12/09 · Formation à venir",
     why:"Dossier OPCO engagé : on attend l'accord de prise en charge de l'organisme. Aucune facture ne part avant l'accord.",
     when:"Passera en « Envoyer facture » à la réception de l'accord de prise en charge : le closer génèrera alors la facture.",
     tl:[
@@ -772,7 +849,7 @@ const VENTES = [
      facture partie automatiquement à l'engagement ---- */
   {
     client:"tardieu", offre:"Formation Niveau 2", montant:1650, paye:0, col:2,
-    profil:"sdd", resp:"auto",
+    profil:"sdd", resp:"auto", prev:"18/08 · Prélèvement 1/1",
     why:"Mandat signé : la facture est partie automatiquement à la signature (non acquittée). Le prélèvement unique est programmé, rien n'est en retard.",
     when:"Passera en « Facture acquittée et transmise » à l'encaissement vérifié du prélèvement (fonds reçus environ 5 jours après le règlement).",
     tl:[
@@ -787,7 +864,7 @@ const VENTES = [
   },
   {
     client:"ohayon", offre:"Formation Niveau 1", montant:1650, paye:550, col:2,
-    profil:"sdd", resp:"auto",
+    profil:"sdd", resp:"auto", prev:"05/09 · Prélèvement 2/3",
     why:"Échéancier SDD en 3 fois : la facture est partie à la signature du mandat, 1 échéance encaissée sur 3, aucune en retard.",
     when:"Reste ici jusqu'à l'encaissement de la 3e échéance (05/10), puis passe en « Facture acquittée ». Un prélèvement refusé la ferait passer en « En retard ».",
     tl:[
@@ -803,7 +880,7 @@ const VENTES = [
   },
   {
     client:"prandini", offre:"Coaching", montant:550, paye:0, col:2,
-    profil:"sdd", resp:"auto",
+    profil:"sdd", resp:"auto", prev:"24/08 · Prélèvement 1/1",
     why:"Le coaching est une vente à part entière (1 carte = 1 offre), payée par prélèvement SDD unique à J+14, même pour un apprenant CPF.",
     when:"Passera en « Facture acquittée » à l'encaissement du prélèvement, prévu le 24/08.",
     tl:[
@@ -818,7 +895,7 @@ const VENTES = [
   /* ---- En retard ---- */
   {
     client:"marchetti", offre:"Formation Niveau 1", montant:1650, paye:550, col:3,
-    profil:"sdd", resp:"closer",
+    profil:"sdd", resp:"closer", prev:"25/07 · Prélèvement 2/3 refusé", prevLate:true,
     alert:"Échéance 2 refusée le 25/07 : provision insuffisante. L'échéance 3 est suspendue tant que la 2 n'est pas régularisée.",
     why:"Un prélèvement a été refusé par la banque : la carte est passée automatiquement en retard, anneau rouge sur le kanban.",
     when:"Repassera en « En attente » si l'échéance 2 est représentée et acceptée ; le rejeu coûte des frais, il se décide au cas par cas, jamais automatiquement.",
@@ -886,12 +963,9 @@ function makeInfoBtn(handler){
   return b;
 }
 
-function whoBadge(who){
-  if(who==="auto")   return el("span","na-who na-auto","🤖 automatique");
-  if(who==="closer") return el("span","na-who na-human","👤 closer");
-  if(who==="admin")  return el("span","na-who na-human","👤 admin");
-  return el("span","na-who na-done","✓ soldée");
-}
+/* Responsable de l'étape : simple mot gris (retour Côme v7) */
+const RESP_LBL = { auto:"automatique", closer:"closer", admin:"admin" };
+const SVG_CAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>';
 
 /* ---------- Kanban inscriptions ---------- */
 let currentOffer = "n1";
@@ -929,11 +1003,25 @@ function renderInscriptions(){
     const card = el("div","card insc");
     card.id = "insc-"+currentOffer+"-"+idx;
     card.draggable = true;
-    card.appendChild(el("div","name",c.n));
-    card.appendChild(el("div","meta","<span>"+c.s+"</span>"));
+    if(c.err) card.classList.add("alerte");
+    /* Ligne 1 : nom + mode de paiement discret en haut à droite */
+    const r1 = el("div","vrow1");
+    r1.appendChild(el("span","name",c.n));
+    r1.appendChild(el("span","i-mode",PROFILS[c.mode].label));
+    card.appendChild(r1);
+    /* Closer + soumission ARD */
+    card.appendChild(el("div","i-meta","Closer : "+c.closer));
+    card.appendChild(el("div","i-meta",c.d));
+    /* Next action (rien si attente passive) */
+    if(c.na) card.appendChild(el("div","i-na",c.na));
+    /* Survol : pourquoi / quand détaillés + erreur si anomalie */
+    card.addEventListener("mouseenter", ()=> showTipData(c.why, c.when, c.err, "⚠️ Erreur", card));
+    card.addEventListener("mousemove", ev=> moveTip(ev));
+    card.addEventListener("mouseleave", hideTip);
     card.addEventListener("dragstart", ev=>{
       ev.dataTransfer.setData("text/plain", card.id);
       card.classList.add("dragging");
+      hideTip();
     });
     card.addEventListener("dragend", ()=> card.classList.remove("dragging"));
     const zone = board.children[c.c].querySelector(".col-cards");
@@ -999,11 +1087,10 @@ function renderVentes(){
     l2.appendChild(el("span","offre",v.offre));
     l2.appendChild(el("span","total",fmt(v.montant)));
     card.appendChild(l2);
-    /* Responsable de l'étape en cours */
-    const resp = el("div","v-resp");
-    resp.appendChild(el("span",null,"Responsable"));
-    resp.appendChild(whoBadge(v.resp));
-    card.appendChild(resp);
+    /* Date prévue (comme le board de prod) : rouge si dépassée, rien sans date fiable */
+    if(v.prev) card.appendChild(el("div","v-prev"+(v.prevLate?" late":""), SVG_CAL+"<span>"+v.prev+"</span>"));
+    /* Responsable de l'étape en cours : simple mot gris */
+    if(v.resp) card.appendChild(el("div","v-resp","Responsable : "+RESP_LBL[v.resp]));
     /* Étape calculée : drag refusé + toast pédagogique */
     card.draggable = true;
     card.addEventListener("dragstart", ev=>{
@@ -1081,14 +1168,17 @@ function showToast(msg){
 
 /* ---------- Tooltip (pourquoi / quand / raison de l'alerte) ---------- */
 const tip = document.getElementById("tip");
-function showTip(v, card){
-  let html = "<div class='why'><b>Pourquoi cette carte est ici</b>"+v.why+"</div>"+
-             "<div class='when'><b>Quand elle bougera</b>"+v.when+"</div>";
-  if(v.alert) html += "<div class='al'><b>⚠️ Raison de l'alerte</b>"+v.alert+"</div>";
+function showTipData(why, when, alert, alertLabel, card){
+  let html = "<div class='why'><b>Pourquoi cette carte est ici</b>"+why+"</div>"+
+             "<div class='when'><b>Quand elle bougera</b>"+when+"</div>";
+  if(alert) html += "<div class='al'><b>"+alertLabel+"</b>"+alert+"</div>";
   tip.innerHTML = html;
   tip.style.opacity = "1";
   const r = card.getBoundingClientRect();
   positionTip(r.right+10, r.top);
+}
+function showTip(v, card){
+  showTipData(v.why, v.when, v.alert, "⚠️ Raison de l'alerte", card);
 }
 function moveTip(ev){
   positionTip(ev.clientX+16, ev.clientY+12);
