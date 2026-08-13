@@ -122,11 +122,10 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
 .v-line2{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--slate-500);margin-top:4px}
 .v-line2 .offre{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .v-line2 .total{margin-left:auto;font-weight:600;font-size:13px;color:var(--slate-900);font-variant-numeric:tabular-nums;flex:none}
-.v-prev{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--slate-500);margin-top:7px}
+.v-prev{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--slate-500);margin-top:8px;padding-top:7px;border-top:1px solid var(--slate-100)}
 .v-prev svg{width:11px;height:11px;flex:none;color:var(--slate-400)}
 .v-prev.late{color:var(--rose-600);font-weight:500}
 .v-prev.late svg{color:var(--rose-600)}
-.v-resp{margin-top:8px;padding-top:7px;border-top:1px solid var(--slate-100);font-size:11px;color:var(--slate-400)}
 /* Cartes inscription : nom, mode discret, closer, soumission ARD, next action */
 .i-mode{font-size:10px;font-weight:600;letter-spacing:.02em;color:var(--slate-400);flex:none;padding-top:3px}
 .i-meta{font-size:11px;color:var(--slate-400);margin-top:2px}
@@ -329,7 +328,7 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
         <h1>Ventes</h1>
       </div>
       <p class="page-sub">Kanban unique quelle que soit l'offre : 1 carte = 1 vente = 1 offre = 1 mode de paiement. La facture part automatiquement dès l'engagement (mandat signé, devis signé) ; le CPF attend la validation du service fait, l'OPCO l'accord de prise en charge. Survolez une carte pour comprendre son étape, cliquez pour ouvrir son détail, et cliquez sur ℹ️ dans l'en-tête d'une colonne pour les cas de figure par moyen de paiement (contenu validé le 12/08).</p>
-      <div class="prop-banner">💡 <span class="prop-pill">proposition</span> Sur chaque carte : la prochaine échéance et le responsable de l'étape en cours (automatique ou closer). L'étape est calculée depuis les paiements réels, jamais déplacée à la main (🔒). Le clic ouvre un détail de carte repensé.</div>
+      <div class="prop-banner">💡 <span class="prop-pill">proposition</span> Sur chaque carte : la prochaine action datée, son porteur entre parenthèses. L'étape est calculée depuis les paiements réels, jamais déplacée à la main (🔒). Le clic ouvre un détail de carte repensé.</div>
       <div class="filter-bar" id="ventes-filters">
         <div class="filter-group">
           <span class="flbl">Paiement</span>
@@ -432,17 +431,17 @@ const INSCRIPTIONS = {
     cols: COLS_N1N2,
     colors: DOTS_N1N2,
     cards: [
-      {n:"Margaux Ferrand", mode:"cpf", closer:"Léa", d:"ARD le 11/08 à 9h12", na:"Attente demande de devis", c:0,
+      {n:"Margaux Ferrand", mode:"cpf", closer:"Léa", d:"ARD le 11/08 à 9h12", na:"Attente demande de devis (client)", c:0,
        why:"ARD rempli, profil créé dans DELIV'IA et place réservée 48 h dans la session. Le dossier EDOF attend que la cliente fasse sa demande de devis sur Mon Compte Formation.",
        when:"Dès que la demande de devis arrive, la carte passe automatiquement en « Action de notre part » (détection par le webhook Wedof). Seul le CPF passe par cette étape : les fonds propres arrivent directement en « En attente »."},
-      {n:"Idriss Bellamy", mode:"cpf", closer:"Karim", d:"ARD le 30/07 à 16h47", na:"Attente demande de devis", c:0,
+      {n:"Idriss Bellamy", mode:"cpf", closer:"Karim", d:"ARD le 30/07 à 16h47", na:"Attente demande de devis (client)", c:0,
        why:"ARD rempli et place réservée 48 h dans la session. Le dossier EDOF est prêt : on attend la demande de devis du client sur Mon Compte Formation.",
        when:"Passage automatique en « Action de notre part » à la réception de la demande de devis (webhook Wedof). Rien à faire d'ici là."},
-      {n:"Renaud Chassagne", mode:"cpf", closer:"Léa", d:"ARD le 05/08 à 11h03", na:"Devis CPF à accepter", c:1,
+      {n:"Renaud Chassagne", mode:"cpf", closer:"Léa", d:"ARD le 05/08 à 11h03", na:"Devis CPF à accepter (closer)", c:1,
        why:"Le client a demandé son devis sur Mon Compte Formation. L'acceptation par France IA est normalement automatique quand l'ARD a été bien rempli en amont ; ici l'automate s'est bloqué et la fiche est passée en rouge.",
        when:"Dès qu'un humain valide le devis à la main, la carte passe en « En attente » du règlement du reste à charge par le client sur Mon Compte Formation.",
        err:"Les dates du devis ne correspondent pas à celles de l'ARD : l'acceptation automatique s'est bloquée, validation manuelle requise."},
-      {n:"Awa Diallo-Mercier", mode:"sdd", closer:"Manon", d:"ARD le 08/08 à 15h26", na:"Attente signature mandat", c:2,
+      {n:"Awa Diallo-Mercier", mode:"sdd", closer:"Manon", d:"ARD le 08/08 à 15h26", na:"Attente signature mandat (client)", c:2,
        why:"Inscription ARD envoyée en fonds propres : on attend la signature du mandat de prélèvement dans le tunnel, la place est réservée 48 h. Cas rare : le mandat se signe en règle générale en même temps que l'ARD.",
        when:"À la signature du mandat, passage automatique en « Inscription validée » : cascade Qualiobee, opportunité GHL en Won et message de bienvenue."},
       {n:"Théo Vasseur", mode:"cpf", closer:"Karim", d:"ARD le 22/07 à 10h41", na:null, c:3,
@@ -457,16 +456,16 @@ const INSCRIPTIONS = {
       {n:"Lucie Prandini", mode:"cpf", closer:"Karim", d:"ARD le 12/07 à 9h55", na:null, c:5,
        why:"Session en cours (J1 et J2). En CPF, chaque signature d'émargement conditionne le paiement du dossier : les 4 signatures sont suivies sur Qualiobee.",
        when:"Passage automatique en « Terminé » après le J2. L'admin déclarera ensuite l'entrée, la sortie et le service fait sur EDOF."},
-      {n:"Bertrand Feuillet", mode:"cpf", closer:"Manon", d:"ARD le 28/06 à 17h34", na:"Déclarations EDOF à faire", c:6,
+      {n:"Bertrand Feuillet", mode:"cpf", closer:"Manon", d:"ARD le 28/06 à 17h34", na:"Déclarations EDOF à faire (admin)", c:6,
        why:"Formation suivie et émargée, questionnaires et certificat gérés par Qualiobee. En CPF s'ajoutent les déclarations EDOF (entrée, sortie, service fait), volontairement manuelles pour ne jamais déclarer quelqu'un qui n'a pas émargé.",
        when:"État final côté pédagogie : la carte ne bouge plus ici. Le paiement continue sa vie dans le kanban Ventes : validation du service fait par la CDC, puis facturation."},
-      {n:"Nora El Fassi", mode:"cpf", closer:"Léa", d:"ARD le 20/06 à 8h50", na:"Déclarations EDOF à faire", c:6,
+      {n:"Nora El Fassi", mode:"cpf", closer:"Léa", d:"ARD le 20/06 à 8h50", na:"Déclarations EDOF à faire (admin)", c:6,
        why:"Formation suivie et émargée. Les déclarations EDOF se font depuis Deliv'ia après vérification des émargements, jamais automatiquement.",
        when:"État final côté pédagogie. Le paiement du dossier CPF suit son cours dans le kanban Ventes."},
-      {n:"Damien Roussel", mode:"sdd", closer:"Karim", d:"ARD le 15/07 à 12h20", na:"À repositionner", c:7,
+      {n:"Damien Roussel", mode:"sdd", closer:"Karim", d:"ARD le 15/07 à 12h20", na:"À repositionner (closer)", c:7,
        why:"Absent au J1 avec un certificat médical recevable, joint aux preuves par le closer. L'apprenant reste payé et garde sa place : une absence n'est pas un désistement.",
        when:"La carte reste ici jusqu'à ce que l'équipe repositionne l'apprenant sur une prochaine session ; il repartira alors en « Inscription validée »."},
-      {n:"Kevin Marchetti", mode:"sdd", closer:"Léa", d:"ARD le 20/06 à 19h02", na:"Relancer l'apprenant", c:8,
+      {n:"Kevin Marchetti", mode:"sdd", closer:"Léa", d:"ARD le 20/06 à 19h02", na:"Relancer l'apprenant (closer)", c:8,
        why:"Absent au J1 sans justificatif ni nouvelle malgré relance. Le statut a été posé par le closer.",
        when:"Si un justificatif arrive, bascule en « Absence justifiée ». Toujours sans nouvelle, le passage en « Lost » sera une décision humaine, jamais automatique."},
       {n:"Patricia Lenglet", mode:"sdd", closer:"Manon", d:"ARD le 03/07 à 13h44", na:null, c:9,
@@ -481,10 +480,10 @@ const INSCRIPTIONS = {
       {n:"Hugo Bonnaire", mode:"virement", closer:"Karim", d:"ARD le 09/08 à 10h27", na:null, c:0,
        why:"Inscription ARD reçue pour un dossier B2B au virement. Profil créé dans DELIV'IA, place réservée 48 h dans la session N2. Le Niveau 2 n'est pas éligible CPF.",
        when:"La carte passera en « En attente » de la signature du devis par l'entreprise, qui vaut engagement."},
-      {n:"Salomé Vidal", mode:"sdd", closer:"Léa", d:"ARD le 07/08 à 16h12", na:"Prérequis N1 à vérifier", c:1,
+      {n:"Salomé Vidal", mode:"sdd", closer:"Léa", d:"ARD le 07/08 à 16h12", na:"Prérequis N1 à vérifier (closer)", c:1,
        why:"Inscription N2 reçue. En plus du financement, il faut vérifier que le prérequis Niveau 1 est acquis avant de valider l'inscription.",
        when:"Prérequis vérifié et mandat signé, la carte passe en « Inscription validée » ; prérequis manquant, le closer recontacte l'apprenante."},
-      {n:"Marc-Antoine Josse", mode:"opco", closer:"Manon", d:"ARD le 25/07 à 11h58", na:"Attente accord OPCO", c:2,
+      {n:"Marc-Antoine Josse", mode:"opco", closer:"Manon", d:"ARD le 25/07 à 11h58", na:"Attente accord OPCO (opco)", c:2,
        why:"Convention transmise au référent de l'entreprise. On attend l'accord de prise en charge de l'OPCO puis le retour de la convention signée (rappels automatiques à J+7 et J+14). La convention ne doit jamais être signée avant l'accord.",
        when:"Au retour de la convention signée, l'admin clique « Convention signée » et la carte passe en « Inscription validée »."},
       {n:"Inès Barthelemy", mode:"sdd", closer:"Karim", d:"ARD le 18/07 à 9h36", na:null, c:3,
@@ -499,10 +498,10 @@ const INSCRIPTIONS = {
       {n:"Joris Lemaitre", mode:"sdd", closer:"Manon", d:"ARD le 12/06 à 10h15", na:null, c:6,
        why:"Formation suivie et émargée. Qualiobee a envoyé les questionnaires de satisfaction et produit le certificat de réalisation.",
        when:"État final côté pédagogie : le paiement continue sa vie dans le kanban Ventes."},
-      {n:"Sandra Nowak", mode:"virement", closer:"Léa", d:"ARD le 21/06 à 17h28", na:"À repositionner", c:7,
+      {n:"Sandra Nowak", mode:"virement", closer:"Léa", d:"ARD le 21/06 à 17h28", na:"À repositionner (closer)", c:7,
        why:"Absente au J1 avec un justificatif recevable (force majeure), joint aux preuves. L'apprenante reste payée et garde sa place.",
        when:"La carte reste ici jusqu'au repositionnement sur une prochaine session N2."},
-      {n:"Ludovic Pastor", mode:"sdd", closer:"Karim", d:"ARD le 15/06 à 11h42", na:"Relancer l'apprenant", c:8,
+      {n:"Ludovic Pastor", mode:"sdd", closer:"Karim", d:"ARD le 15/06 à 11h42", na:"Relancer l'apprenant (closer)", c:8,
        why:"Absent au J1 sans justificatif ni nouvelle malgré relance. Le statut a été posé par le closer.",
        when:"Un justificatif reçu le fait basculer en « Absence justifiée » ; toujours sans nouvelle, le passage en « Lost » restera une décision humaine."}
     ]
@@ -511,10 +510,10 @@ const INSCRIPTIONS = {
     cols: COLS_AGENT,
     colors: ["#94a3b8","#fbbf24","#818cf8","#10b981","#cbd5e1"],
     cards: [
-      {n:"Cabinet Verdoyer", mode:"virement", closer:"Léa", d:"Demande le 08/08 à 9h15", na:"Appel de cadrage à poser", c:0,
+      {n:"Cabinet Verdoyer", mode:"virement", closer:"Léa", d:"Demande le 08/08 à 9h15", na:"Appel de cadrage à poser (closer)", c:0,
        why:"Demande d'agent sur mesure (tri de mails) entrée par le formulaire, client déjà en formation. Paiement le plus courant : virement B2B sur devis.",
        when:"Dès que l'appel de cadrage est posé puis réalisé, la carte passe en « Précision des besoins »."},
-      {n:"Garage Petitcolas", mode:"virement", closer:"Karim", d:"Demande le 04/08 à 15h40", na:"Devis à faire signer", c:1,
+      {n:"Garage Petitcolas", mode:"virement", closer:"Karim", d:"Demande le 04/08 à 15h40", na:"Devis à faire signer (closer)", c:1,
        why:"Appel de cadrage planifié jeudi 10h : périmètre, cas d'usage et chiffrage en cours avec le closer.",
        when:"Devis signé, la carte passe en « Agent en construction » ; sans suite, elle part en « Lost »."},
       {n:"SARL Boulangerie Fario", mode:"virement", closer:"Manon", d:"Demande le 21/07 à 8h55", na:null, c:2,
@@ -532,10 +531,10 @@ const INSCRIPTIONS = {
     cols: COLS_COACHING,
     colors: ["#94a3b8","#60a5fa","#a78bfa","#10b981","#fbbf24","#cbd5e1"],
     cards: [
-      {n:"Lucie Prandini", mode:"sdd", closer:"Karim", d:"ARD le 10/08 à 9h58", na:"Formateur à trouver", c:0,
+      {n:"Lucie Prandini", mode:"sdd", closer:"Karim", d:"ARD le 10/08 à 9h58", na:"Formateur à trouver (admin)", c:0,
        why:"Coaching vendu en complément du Niveau 1, rien n'est encore organisé. Le prélèvement unique est déjà programmé à J+14 et suivi dans le kanban Ventes.",
        when:"Dès qu'un formateur est identifié, en direct ou via le marketplace Book My Sessions, la carte passe en « Formateur trouvé »."},
-      {n:"Samuel Ohayon", mode:"sdd", closer:"Léa", d:"ARD le 22/07 à 14h18", na:"Date à caler", c:1,
+      {n:"Samuel Ohayon", mode:"sdd", closer:"Léa", d:"ARD le 22/07 à 14h18", na:"Date à caler (admin)", c:1,
        why:"Formateur identifié : R. Vercruysse, demande prise sur le marketplace Book My Sessions puis validée par un admin.",
        when:"Reste à caler la date de la séance avec l'apprenant ; la carte passera alors en « Date déterminée »."},
       {n:"Nora El Fassi", mode:"sdd", closer:"Léa", d:"ARD le 20/06 à 8h50", na:null, c:2,
@@ -544,7 +543,7 @@ const INSCRIPTIONS = {
       {n:"Bertrand Feuillet", mode:"sdd", closer:"Manon", d:"ARD le 28/06 à 17h34", na:null, c:3,
        why:"Séance réalisée le 22/07, compte rendu et émargement déposés.",
        when:"État final côté delivery : la facturation suit dans le kanban Ventes."},
-      {n:"Maxence Dubreuil", mode:"sdd", closer:"Karim", d:"ARD le 30/06 à 12h05", na:"Pièce à récupérer", c:4,
+      {n:"Maxence Dubreuil", mode:"sdd", closer:"Karim", d:"ARD le 30/06 à 12h05", na:"Pièce à récupérer (admin)", c:4,
        why:"Séance passée mais une pièce manque au dossier. L'admin la récupère auprès du formateur.",
        when:"Une fois la pièce déposée, la carte repart en « Effectué ».",
        err:"La séance est passée mais l'émargement n'a pas été déposé par le formateur."},
@@ -748,7 +747,7 @@ const VENTES = [
      directement en En attente, facture partie à l'engagement. ---- */
   {
     client:"bellamy", offre:"Formation Niveau 1", montant:1650, paye:0, col:0,
-    profil:"cpf", resp:"auto", prev:"21-22/09 · Formation à venir",
+    profil:"cpf", prev:"23/09 · Déclarer sortie EDOF (automatique)",
     why:"Dossier CPF en cours : la carte naît ici à l'inscription et y reste pendant toute la formation, jusqu'à la validation du service fait par la Caisse des Dépôts.",
     when:"Passera en « Envoyer facture » à la validation du service fait par la CDC (reçue automatiquement via Wedof), après la formation des 21-22 septembre.",
     tl:[
@@ -764,7 +763,7 @@ const VENTES = [
   },
   {
     client:"prandini", offre:"Formation Niveau 1", montant:1650, paye:0, col:0,
-    profil:"cpf", resp:"auto",
+    profil:"cpf", prev:"Service fait à valider (CDC)",
     why:"Formation suivie, sortie et service fait déclarés sur EDOF le lendemain du J2. La carte ne bouge pas encore : on attend la validation du service fait par la Caisse des Dépôts.",
     when:"Passera automatiquement en « Envoyer facture » quand la CDC validera le service fait (reçu via Wedof).",
     tl:[
@@ -780,7 +779,7 @@ const VENTES = [
   },
   {
     client:"kerbrat", offre:"Formation Niveau 2", montant:1650, paye:0, col:0,
-    profil:"opco", resp:"auto", prev:"11-12/09 · Formation à venir",
+    profil:"opco", prev:"Attente accord OPCO (opco)",
     why:"Dossier OPCO engagé : on attend l'accord de prise en charge de l'organisme. Aucune facture ne part avant l'accord.",
     when:"Passera en « Envoyer facture » à la réception de l'accord de prise en charge : le closer génèrera alors la facture.",
     tl:[
@@ -797,7 +796,7 @@ const VENTES = [
      + filet d'anomalie SDD/Virement ---- */
   {
     client:"feuillet", offre:"Formation Niveau 1", montant:1650, paye:0, col:1,
-    profil:"cpf", resp:"admin",
+    profil:"cpf", prev:"Transmettre EDOF + Bibby (admin)",
     why:"Service fait validé par la Caisse des Dépôts le 08/08 : la facturation CPF peut partir (seul moyen de paiement qui passe ici normalement).",
     when:"Passera en « En attente » quand la facture aura été transmise sur EDOF et à Bibby (les deux transmissions faites).",
     tl:[
@@ -813,7 +812,7 @@ const VENTES = [
   },
   {
     client:"verdoyer", offre:"Agent sur mesure", montant:3300, paye:0, col:1,
-    profil:"virement", resp:"closer",
+    profil:"virement", prev:"Renvoyer la facture (closer)",
     alert:"L'envoi automatique de la facture a échoué le 05/08 (adresse de facturation manquante). L'envoyer à la main.",
     why:"Le devis signé le 04/08 vaut engagement : la facture part normalement toute seule. Ici l'envoi automatique a échoué, la carte est remontée en filet d'anomalie.",
     when:"Rejoindra le circuit normal en « En attente » dès que la facture aura été envoyée à la main (échéance à 30 jours).",
@@ -832,7 +831,7 @@ const VENTES = [
   },
   {
     client:"sologne", offre:"Formation Niveau 2", montant:1650, paye:0, col:1,
-    profil:"opco", resp:"closer",
+    profil:"opco", prev:"Facture OPCO à générer (closer)",
     why:"L'accord de prise en charge de l'OPCO est arrivé le 05/08 : la facture peut maintenant être générée et envoyée à l'organisme financeur.",
     when:"Passera en « En attente » dès l'envoi de la facture à l'OPCO (les délais de règlement longs sont normaux).",
     tl:[
@@ -849,7 +848,7 @@ const VENTES = [
      facture partie automatiquement à l'engagement ---- */
   {
     client:"tardieu", offre:"Formation Niveau 2", montant:1650, paye:0, col:2,
-    profil:"sdd", resp:"auto", prev:"18/08 · Prélèvement 1/1",
+    profil:"sdd", prev:"18/08 · Prélèvement 1/1 (automatique)",
     why:"Mandat signé : la facture est partie automatiquement à la signature (non acquittée). Le prélèvement unique est programmé, rien n'est en retard.",
     when:"Passera en « Facture acquittée et transmise » à l'encaissement vérifié du prélèvement (fonds reçus environ 5 jours après le règlement).",
     tl:[
@@ -864,7 +863,7 @@ const VENTES = [
   },
   {
     client:"ohayon", offre:"Formation Niveau 1", montant:1650, paye:550, col:2,
-    profil:"sdd", resp:"auto", prev:"05/09 · Prélèvement 2/3",
+    profil:"sdd", prev:"05/09 · Prélèvement 2/3 (automatique)",
     why:"Échéancier SDD en 3 fois : la facture est partie à la signature du mandat, 1 échéance encaissée sur 3, aucune en retard.",
     when:"Reste ici jusqu'à l'encaissement de la 3e échéance (05/10), puis passe en « Facture acquittée ». Un prélèvement refusé la ferait passer en « En retard ».",
     tl:[
@@ -880,7 +879,7 @@ const VENTES = [
   },
   {
     client:"prandini", offre:"Coaching", montant:550, paye:0, col:2,
-    profil:"sdd", resp:"auto", prev:"24/08 · Prélèvement 1/1",
+    profil:"sdd", prev:"24/08 · Prélèvement 1/1 (automatique)",
     why:"Le coaching est une vente à part entière (1 carte = 1 offre), payée par prélèvement SDD unique à J+14, même pour un apprenant CPF.",
     when:"Passera en « Facture acquittée » à l'encaissement du prélèvement, prévu le 24/08.",
     tl:[
@@ -895,7 +894,7 @@ const VENTES = [
   /* ---- En retard ---- */
   {
     client:"marchetti", offre:"Formation Niveau 1", montant:1650, paye:550, col:3,
-    profil:"sdd", resp:"closer", prev:"25/07 · Prélèvement 2/3 refusé", prevLate:true,
+    profil:"sdd", prev:"25/07 · Relancer le client (closer)", prevLate:true,
     alert:"Échéance 2 refusée le 25/07 : provision insuffisante. L'échéance 3 est suspendue tant que la 2 n'est pas régularisée.",
     why:"Un prélèvement a été refusé par la banque : la carte est passée automatiquement en retard, anneau rouge sur le kanban.",
     when:"Repassera en « En attente » si l'échéance 2 est représentée et acceptée ; le rejeu coûte des frais, il se décide au cas par cas, jamais automatiquement.",
@@ -917,7 +916,7 @@ const VENTES = [
   /* ---- Facture acquittée et transmise ---- */
   {
     client:"elfassi", offre:"Formation Niveau 1", montant:1650, paye:1650, col:4,
-    profil:"cpf", resp:null,
+    profil:"cpf",
     why:"Paiement Bibby reçu et rapproché en banque : la totalité de la vente en un seul versement, le dossier CPF est soldé.",
     when:"Étape terminale : la carte ne bouge plus.",
     tl:[
@@ -932,7 +931,7 @@ const VENTES = [
   },
   {
     client:"deswarte", offre:"Agent sur mesure", montant:3300, paye:3300, col:4,
-    profil:"virement", resp:null,
+    profil:"virement",
     why:"Virement reçu et rapproché en banque, facture acquittée et transmise à l'entreprise.",
     when:"Étape terminale : la carte ne bouge plus.",
     tl:[
@@ -963,8 +962,6 @@ function makeInfoBtn(handler){
   return b;
 }
 
-/* Responsable de l'étape : simple mot gris (retour Côme v7) */
-const RESP_LBL = { auto:"automatique", closer:"closer", admin:"admin" };
 const SVG_CAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>';
 
 /* ---------- Kanban inscriptions ---------- */
@@ -1087,10 +1084,9 @@ function renderVentes(){
     l2.appendChild(el("span","offre",v.offre));
     l2.appendChild(el("span","total",fmt(v.montant)));
     card.appendChild(l2);
-    /* Date prévue (comme le board de prod) : rouge si dépassée, rien sans date fiable */
+    /* Prochaine action datée, porteur entre parenthèses : rouge si dépassée,
+       rien sur les acquittées */
     if(v.prev) card.appendChild(el("div","v-prev"+(v.prevLate?" late":""), SVG_CAL+"<span>"+v.prev+"</span>"));
-    /* Responsable de l'étape en cours : simple mot gris */
-    if(v.resp) card.appendChild(el("div","v-resp","Responsable : "+RESP_LBL[v.resp]));
     /* Étape calculée : drag refusé + toast pédagogique */
     card.draggable = true;
     card.addEventListener("dragstart", ev=>{
