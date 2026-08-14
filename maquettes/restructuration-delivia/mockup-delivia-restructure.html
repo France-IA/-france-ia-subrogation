@@ -747,7 +747,7 @@ const VENTES = [
      directement en En attente, facture partie à l'engagement. ---- */
   {
     client:"bellamy", offre:"Formation Niveau 1", montant:1650, paye:0, col:0,
-    profil:"cpf", prev:"23/09 · Déclarer sortie EDOF (automatique)",
+    profil:"cpf", closer:"Karim", prev:"23/09 · Déclarer sortie EDOF (automatique)",
     why:"Dossier CPF en cours : la carte naît ici à l'inscription et y reste pendant toute la formation, jusqu'à la validation du service fait par la Caisse des Dépôts.",
     when:"Passera en « Envoyer facture » à la validation du service fait par la CDC (reçue automatiquement via Wedof), après la formation des 21-22 septembre.",
     tl:[
@@ -763,7 +763,7 @@ const VENTES = [
   },
   {
     client:"prandini", offre:"Formation Niveau 1", montant:1650, paye:0, col:0,
-    profil:"cpf", prev:"Service fait à valider (CDC)",
+    profil:"cpf", closer:"Karim", prev:"Service fait à valider (CDC)",
     why:"Formation suivie, sortie et service fait déclarés sur EDOF le lendemain du J2. La carte ne bouge pas encore : on attend la validation du service fait par la Caisse des Dépôts.",
     when:"Passera automatiquement en « Envoyer facture » quand la CDC validera le service fait (reçu via Wedof).",
     tl:[
@@ -779,7 +779,7 @@ const VENTES = [
   },
   {
     client:"kerbrat", offre:"Formation Niveau 2", montant:1650, paye:0, col:0,
-    profil:"opco", prev:"Attente accord OPCO (opco)",
+    profil:"opco", closer:"Manon", prev:"Attente accord OPCO (opco)",
     why:"Dossier OPCO engagé : on attend l'accord de prise en charge de l'organisme. Aucune facture ne part avant l'accord.",
     when:"Passera en « Envoyer facture » à la réception de l'accord de prise en charge : le closer génèrera alors la facture.",
     tl:[
@@ -796,7 +796,7 @@ const VENTES = [
      + filet d'anomalie SDD/Virement ---- */
   {
     client:"feuillet", offre:"Formation Niveau 1", montant:1650, paye:0, col:1,
-    profil:"cpf", prev:"Transmettre EDOF + Bibby (admin)",
+    profil:"cpf", closer:"Manon", prev:"Transmettre EDOF + Bibby (admin)",
     why:"Service fait validé par la Caisse des Dépôts le 08/08 : la facturation CPF peut partir (seul moyen de paiement qui passe ici normalement).",
     when:"Passera en « En attente » quand la facture aura été transmise sur EDOF et à Bibby (les deux transmissions faites).",
     tl:[
@@ -812,7 +812,7 @@ const VENTES = [
   },
   {
     client:"verdoyer", offre:"Agent sur mesure", montant:3300, paye:0, col:1,
-    profil:"virement", prev:"Renvoyer la facture (closer)",
+    profil:"virement", closer:"Léa", prev:"Renvoyer la facture (closer)",
     alert:"L'envoi automatique de la facture a échoué le 05/08 (adresse de facturation manquante). L'envoyer à la main.",
     why:"Le devis signé le 04/08 vaut engagement : la facture part normalement toute seule. Ici l'envoi automatique a échoué, la carte est remontée en filet d'anomalie.",
     when:"Rejoindra le circuit normal en « En attente » dès que la facture aura été envoyée à la main (échéance à 30 jours).",
@@ -831,7 +831,7 @@ const VENTES = [
   },
   {
     client:"sologne", offre:"Formation Niveau 2", montant:1650, paye:0, col:1,
-    profil:"opco", prev:"Facture OPCO à générer (closer)",
+    profil:"opco", closer:"Manon", prev:"Facture OPCO à générer (closer)",
     why:"L'accord de prise en charge de l'OPCO est arrivé le 05/08 : la facture peut maintenant être générée et envoyée à l'organisme financeur.",
     when:"Passera en « En attente » dès l'envoi de la facture à l'OPCO (les délais de règlement longs sont normaux).",
     tl:[
@@ -848,7 +848,7 @@ const VENTES = [
      facture partie automatiquement à l'engagement ---- */
   {
     client:"tardieu", offre:"Formation Niveau 2", montant:1650, paye:0, col:2,
-    profil:"sdd", prev:"18/08 · Prélèvement 1/1 (automatique)",
+    profil:"sdd", closer:"Karim", prev:"18/08 · Prélèvement 1/1 (automatique)",
     why:"Mandat signé : la facture est partie automatiquement à la signature (non acquittée). Le prélèvement unique est programmé, rien n'est en retard.",
     when:"Passera en « Facture acquittée et transmise » à l'encaissement vérifié du prélèvement (fonds reçus environ 5 jours après le règlement).",
     tl:[
@@ -863,7 +863,7 @@ const VENTES = [
   },
   {
     client:"ohayon", offre:"Formation Niveau 1", montant:1650, paye:550, col:2,
-    profil:"sdd", prev:"05/09 · Prélèvement 2/3 (automatique)",
+    profil:"sdd", closer:"Léa", prev:"05/09 · Prélèvement 2/3 (automatique)",
     why:"Échéancier SDD en 3 fois : la facture est partie à la signature du mandat, 1 échéance encaissée sur 3, aucune en retard.",
     when:"Reste ici jusqu'à l'encaissement de la 3e échéance (05/10), puis passe en « Facture acquittée ». Un prélèvement refusé la ferait passer en « En retard ».",
     tl:[
@@ -879,7 +879,7 @@ const VENTES = [
   },
   {
     client:"prandini", offre:"Coaching", montant:550, paye:0, col:2,
-    profil:"sdd", prev:"24/08 · Prélèvement 1/1 (automatique)",
+    profil:"sdd", closer:"Karim", prev:"24/08 · Prélèvement 1/1 (automatique)",
     why:"Le coaching est une vente à part entière (1 carte = 1 offre), payée par prélèvement SDD unique à J+14, même pour un apprenant CPF.",
     when:"Passera en « Facture acquittée » à l'encaissement du prélèvement, prévu le 24/08.",
     tl:[
@@ -894,7 +894,7 @@ const VENTES = [
   /* ---- En retard ---- */
   {
     client:"marchetti", offre:"Formation Niveau 1", montant:1650, paye:550, col:3,
-    profil:"sdd", prev:"25/07 · Relancer le client (closer)", prevLate:true,
+    profil:"sdd", closer:"Léa", prev:"25/07 · Relancer le client (closer)", prevLate:true,
     alert:"Échéance 2 refusée le 25/07 : provision insuffisante. L'échéance 3 est suspendue tant que la 2 n'est pas régularisée.",
     why:"Un prélèvement a été refusé par la banque : la carte est passée automatiquement en retard, anneau rouge sur le kanban.",
     when:"Repassera en « En attente » si l'échéance 2 est représentée et acceptée ; le rejeu coûte des frais, il se décide au cas par cas, jamais automatiquement.",
@@ -916,7 +916,7 @@ const VENTES = [
   /* ---- Facture acquittée et transmise ---- */
   {
     client:"elfassi", offre:"Formation Niveau 1", montant:1650, paye:1650, col:4,
-    profil:"cpf",
+    profil:"cpf", closer:"Léa",
     why:"Paiement Bibby reçu et rapproché en banque : la totalité de la vente en un seul versement, le dossier CPF est soldé.",
     when:"Étape terminale : la carte ne bouge plus.",
     tl:[
@@ -931,7 +931,7 @@ const VENTES = [
   },
   {
     client:"deswarte", offre:"Agent sur mesure", montant:3300, paye:3300, col:4,
-    profil:"virement",
+    profil:"virement", closer:"Karim",
     why:"Virement reçu et rapproché en banque, facture acquittée et transmise à l'entreprise.",
     when:"Étape terminale : la carte ne bouge plus.",
     tl:[
@@ -1084,6 +1084,8 @@ function renderVentes(){
     l2.appendChild(el("span","offre",v.offre));
     l2.appendChild(el("span","total",fmt(v.montant)));
     card.appendChild(l2);
+    /* Closer, comme sur les cartes inscriptions */
+    card.appendChild(el("div","i-meta","Closer : "+v.closer));
     /* Prochaine action datée, porteur entre parenthèses : rouge si dépassée,
        rien sur les acquittées */
     if(v.prev) card.appendChild(el("div","v-prev"+(v.prevLate?" late":""), SVG_CAL+"<span>"+v.prev+"</span>"));
