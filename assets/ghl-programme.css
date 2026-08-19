@@ -1,0 +1,55 @@
+/* France IA — habillage du formulaire GHL « Demande programme » (oBcuG79krDx5mh9zv2fG),
+   embarqué sur la home et /preview-v2. Chargé par le champ Custom CSS du formulaire via :
+     @at-root{@import url("https://france-ia.github.io/-france-ia-subrogation/assets/ghl-programme.css");}
+   (l'éditeur GHL corrompt les collages longs : on n'y met QUE cette ligne d'import.)
+   Sélecteurs préfixés #_builder-form ici même (pas de compilation GHL sur ce fichier).
+   Même langage que ghl-rdv.css : champs arrondis 8px bordure douce, focus bleu marque,
+   bouton plein bleu #4379F2, carte GHL aplatie (le cadre vient du site). 2026-08-19. */
+
+#_builder-form {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 10px 24px 16px !important;
+}
+#_builder-form .form-field-wrapper {
+  margin-bottom: 14px !important;
+}
+#_builder-form .form-field-wrapper:has(.d-none.field-container),
+#_builder-form .form-field-wrapper:not(:has(input, textarea, select, .form-builder--btn-submit)) {
+  margin: 0 !important;
+}
+#_builder-form .payment-block {
+  display: none !important;
+}
+#_builder-form .fields-container .form-builder--item input.form-control:not(.multiselect__input),
+#_builder-form .fields-container .form-builder--item textarea.form-control,
+#_builder-form .fields-container .form-builder--item textarea,
+#_builder-form .fields-container .multiselect .multiselect__tags {
+  border-radius: 8px !important;
+  border: 1px solid rgba(28, 31, 53, 0.18) !important;
+  box-shadow: none !important;
+  font-size: 15px !important;
+}
+#_builder-form .fields-container .form-builder--item input.form-control:not(.multiselect__input):focus,
+#_builder-form .fields-container .form-builder--item textarea:focus,
+#_builder-form .fields-container .multiselect--active .multiselect__tags {
+  border-color: rgb(67, 121, 242) !important;
+  box-shadow: 0 0 0 3px rgba(67, 121, 242, 0.15) !important;
+  outline: none !important;
+}
+#_builder-form .form-builder--btn-submit {
+  margin-top: 6px !important;
+}
+#_builder-form .form-builder--btn-submit button {
+  background: rgb(67, 121, 242) !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  padding: 12px 16px !important;
+  box-shadow: none !important;
+}
+#_builder-form .form-builder--btn-submit button:hover {
+  background: rgb(48, 102, 224) !important;
+}
