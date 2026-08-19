@@ -1,0 +1,113 @@
+/* France IA — habillage du widget GHL de prise de RDV (calendrier xmUIlzi9RNmW0HreiTRe).
+   Chargé par le champ Custom CSS du formulaire « Prendre RDV - DIRECT SUR LP » via :
+     @at-root{@import url("https://france-ia.github.io/-france-ia-subrogation/assets/ghl-rdv.css");}
+   (l'éditeur GHL corrompt les gros collages : on n'y met QUE cette ligne d'import,
+   et tout le style vit ici — modifiable par simple deploy du site.)
+   Conçu et vérifié le 2026-08-18 ; source de travail : session ATLAS. */
+
+html, body, #__nuxt {
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+html {
+  --appointment_widgets-primary-color:#4379F2!important;
+}
+
+#__nuxt #appointment_widgets--revamp {
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+}
+#__nuxt #appointment_widgets--revamp .appointment_widgets--revamp--inner,
+#__nuxt #appointment_widgets--revamp .appointment_widgets--revamp--booking,
+#__nuxt #appointment_widgets--revamp .appointment_widgets--revamp--container {
+  height: auto !important;
+  min-height: 0 !important;
+}
+#__nuxt #appointment_widgets--revamp .appointment_widgets--revamp--steps {
+  height: auto !important;
+  max-height: none !important;
+}
+#__nuxt #appointment_widgets--revamp .appointment_widgets--revamp--inner:has(.form-step),
+#__nuxt #appointment_widgets--revamp .appointment_widgets--revamp--booking:has(> .form-step) {
+  flex-direction: column !important;
+}
+#__nuxt #appointment_widgets--revamp .form-step + .widgets-action-buttons {
+  position: static !important;
+  padding: 6px 23px 20px !important;
+}
+#__nuxt #appointment_widgets--revamp .appointment_widgets--revamp--inner {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+#__nuxt #appointment_widgets--revamp .form-builder--wrap {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+#__nuxt #appointment_widgets--revamp section.hl_form-builder--main {
+  padding: 0 !important;
+}
+#__nuxt #appointment_widgets--revamp .ghl-form-wrap {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#__nuxt #appointment_widgets--revamp .custom-form-title {
+  display: none !important;
+}
+#__nuxt #appointment_widgets--revamp .form-step .appointment_widgets--revamp--navigation-container {
+  display: none !important;
+}
+#__nuxt #appointment_widgets--revamp .appointment_widgets--revamp--steps.step-form {
+  padding: 0 10px !important;
+  overflow-x: clip !important;
+}
+#__nuxt #appointment_widgets--revamp .fields-container {
+  padding: 6px 12px 0 !important;
+}
+#__nuxt #appointment_widgets--revamp .form-field-wrapper {
+  margin-bottom: 14px !important;
+}
+#__nuxt #appointment_widgets--revamp .form-field-wrapper:has(.d-none.field-container),
+#__nuxt #appointment_widgets--revamp .form-field-wrapper:not(:has(input, textarea, select, .form-builder--btn-submit)) {
+  margin: 0 !important;
+}
+#__nuxt #appointment_widgets--revamp .payment-block {
+  display: none !important;
+}
+#__nuxt #appointment_widgets--revamp .fields-container input:not(.multiselect__input),
+#__nuxt #appointment_widgets--revamp .fields-container textarea,
+#__nuxt #appointment_widgets--revamp .multiselect__tags {
+  border-radius: 8px !important;
+  border: 1px solid rgba(28, 31, 53, 0.18) !important;
+  box-shadow: none !important;
+  font-size: 15px !important;
+}
+#__nuxt #appointment_widgets--revamp .fields-container input:not(.multiselect__input):focus,
+#__nuxt #appointment_widgets--revamp .fields-container textarea:focus,
+#__nuxt #appointment_widgets--revamp .multiselect--active .multiselect__tags {
+  border-color: rgb(67, 121, 242) !important;
+  box-shadow: 0 0 0 3px rgba(67, 121, 242, 0.15) !important;
+  outline: none !important;
+}
+#__nuxt #appointment_widgets--revamp .fields-container textarea {
+  min-height: 84px !important;
+}
+#__nuxt #appointment_widgets--revamp .widgets-action-buttons .btn-schedule {
+  background: rgb(67, 121, 242) !important;
+  border-color: rgb(67, 121, 242) !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  padding: 12px 16px !important;
+  width: 100% !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+#__nuxt #appointment_widgets--revamp .widgets-action-buttons .btn-schedule:hover {
+  background: rgb(48, 102, 224) !important;
+}
