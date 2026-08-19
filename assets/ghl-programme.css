@@ -16,9 +16,16 @@
 #_builder-form .form-field-wrapper {
   margin-bottom: 14px !important;
 }
-#_builder-form .form-field-wrapper:has(.d-none.field-container),
-#_builder-form .form-field-wrapper:not(:has(input, textarea, select, .form-builder--btn-submit)) {
+#_builder-form .form-field-wrapper:has(.d-none.field-container) {
   margin: 0 !important;
+}
+/* lignes de texte (titre, sous-titre) : respiration avant les champs */
+#_builder-form .form-field-wrapper:not(:has(input, textarea, select, .form-builder--btn-submit)):not(:has(.d-none.field-container)) {
+  margin-bottom: 18px !important;
+}
+/* tout ce qui suit le bouton (consentement, rangées cachées) : collé au bas */
+#_builder-form .form-field-wrapper:has(.form-builder--btn-submit) ~ .form-field-wrapper.form-field-wrapper.col-12 {
+  margin-bottom: 0 !important;
 }
 #_builder-form .payment-block {
   display: none !important;
