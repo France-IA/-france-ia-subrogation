@@ -77,6 +77,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .col-h h3{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500)}
 .col-h .n{margin-left:auto;font-size:11px;color:var(--ink-400);font-variant-numeric:tabular-nums}
 .col-open{font-size:10.5px;color:var(--info);background:var(--info-50);border-radius:6px;padding:4px 8px;margin:0 2px 8px;display:flex;align-items:center;gap:6px;line-height:1.35}
+.col-open a{color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:2px}
 .col.locked{background:repeating-linear-gradient(-45deg,#f8fafc 0 10px,#f4f6f9 10px 11px);border-style:dashed;border-color:var(--line-2)}
 .col.locked .col-h h3{color:var(--ink-400)}
 .col.locked .card{opacity:.55;filter:grayscale(.5)}
@@ -451,7 +452,7 @@ tasks:{
  termine:[]}},
 /* ── Inscription inter (N1 & N2) ── */
 insc:{cols:[
- {id:"recue",  label:"Inscription reçue", note:"Une carte naît ici dès l'ARD soumis par le client"},
+ {id:"recue",  label:"Inscription reçue", note:'Une carte apparaît dès <a href="https://formulaire.franceia-dev.com" target="_blank" rel="noopener">ARD</a> soumis par le client'},
  {id:"action", label:"Action de notre part"},
  {id:"attente",label:"En attente client"},
  {id:"validee",label:"Inscription validée", open:"J2+1 formation", rule:"j2+1", ghost:1},
@@ -489,7 +490,7 @@ tasks:{
  lost:[], termine:[]}},
 /* ── Inscription intra (une carte = la formation intra) ── */
 intra:{cols:[
- {id:"demande",   label:"Nouvelle demande"},
+ {id:"demande",   label:"Nouvelle demande", note:'Une carte apparaît dès <a href="https://formulaire.franceia-dev.com" target="_blank" rel="noopener">ARD</a> soumis par le client'},
  {id:"convention",label:"Signer convention"},
  {id:"preparer",  label:"Préparer formation"},
  {id:"enformation",label:"En formation", open:"J2 formation", rule:"j2"},
@@ -497,7 +498,6 @@ intra:{cols:[
  {id:"termine",   label:"Terminé"}],
 tasks:{
  demande:[
-  {t:"ARD soumis",p:"client",auto:1},
   {t:"Devis généré & signé",p:"client",auto:1,fin:["fp_ent_vir","fp_ent_man"],note:"puis session disponible au Shotgun formateur"},
   {t:"Formateur demande la session",p:"formateur"},
   {t:"Demande formateur validée par France IA",p:"fia"}],
@@ -525,7 +525,7 @@ tasks:{
  lost:[], termine:[]}},
 /* ── Inscription coaching ── */
 coaching:{cols:[
- {id:"demande", label:"Nouvelle demande"},
+ {id:"demande", label:"Nouvelle demande", note:'Une carte apparaît dès <a href="https://formulaire.franceia-dev.com" target="_blank" rel="noopener">ARD</a> soumis par le client'},
  {id:"valider", label:"Valider le formateur"},
  {id:"whatsapp",label:"Créer groupe WhatsApp"},
  {id:"preparer",label:"Préparer"},
@@ -534,7 +534,6 @@ coaching:{cols:[
  {id:"termine", label:"Terminé"}],
 tasks:{
  demande:[
-  {t:"ARD soumis",p:"client",auto:1},
   {t:"Générer le devis",p:"closer",auto:1,fin:["fp_ent_vir"],grp:"Entreprise fonds propres"},
   {t:"Signer convention",p:"client",auto:1,fin:["fp_ent_vir"]},
   {t:"Générer la facture et la transmettre au client",p:"auto",tpl:1,fin:["fp_ent_vir"],fx:"carte_client"},
