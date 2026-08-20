@@ -26,22 +26,20 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #app{display:flex;min-height:100vh}
 /* ── Sidebar plateforme ─────────────────────────── */
 #sidebar{width:248px;flex-shrink:0;background:#fff;box-shadow:1px 0 0 0 var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+#appzone{background:#0f172a;padding-bottom:10px}
 .brand{padding:18px 20px 14px}
-.brand .word{font-size:17px;font-weight:600;letter-spacing:-.02em;color:var(--ink-900)}
+.brand .word{font-size:17px;font-weight:600;letter-spacing:-.02em;color:#fff}
 .brand .word em{font-style:italic;font-weight:700}
 .brand .tri{display:flex;height:3px;width:64px;margin-top:5px;border-radius:2px;overflow:hidden}
 .brand .tri i{flex:1}.brand .tri i:nth-child(1){background:#4379f2}.brand .tri i:nth-child(2){background:#eef0f4}.brand .tri i:nth-child(3){background:#f21b1b}
-.brand .plt{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400);margin-top:7px;font-weight:500}
-.nav-label{padding:14px 20px 6px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400)}
-.apptab{display:flex;align-items:center;gap:10px;width:calc(100% - 16px);margin:1px 8px;padding:8px 12px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--ink-500);text-align:left;transition:background .12s,color .12s}
-.apptab:hover{background:var(--bg);color:var(--ink-700)}
+.brand .plt{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-top:7px;font-weight:500}
+.nav-label{padding:10px 20px 6px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35)}
+.apptab{display:flex;align-items:center;gap:10px;width:calc(100% - 16px);margin:1px 8px;padding:8px 12px;border-radius:8px;font-size:13.5px;font-weight:500;color:rgba(255,255,255,.65);text-align:left;transition:background .12s,color .12s}
+.apptab:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
 .apptab .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.apptab.active{background:var(--primary-50);color:var(--primary-dark);font-weight:600}
-.apptab.active[data-app="apprenant"]{background:#e0f2fe;color:#0369a1}
-.apptab.active[data-app="treso"]{background:#ecfdf5;color:#047857}
-.apptab.active[data-app="dash"]{background:#f3e8ff;color:#6d28d9}
-.apptab .lock{margin-left:auto;font-size:10px;color:var(--ink-300)}
-#subnav{padding-bottom:8px;border-top:1px solid var(--line);margin-top:8px;padding-top:4px}
+.apptab.active{background:rgba(255,255,255,.12);color:#fff;font-weight:600}
+.apptab .lock{margin-left:auto;font-size:10px;color:rgba(255,255,255,.3)}
+#subnav{padding-bottom:8px;padding-top:6px}
 #subnav .appctx{padding:10px 20px 2px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px}
 #subnav .appctx .dot{width:7px;height:7px;border-radius:50%}
 .subgrp{padding:12px 20px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400)}
@@ -138,6 +136,49 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tpl-body{background:#f8fafc;border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.65;color:var(--ink-700);white-space:pre-line}
 .tpl-body .var{background:var(--primary-50);color:var(--primary-dark);border-radius:4px;padding:0 4px;font-size:12px;font-weight:500}
 .tpl-note{font-size:11px;color:var(--ink-400);margin-top:10px;line-height:1.5}
+/* fiches apprenant & client */
+.backbtn{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--ink-500);margin-bottom:12px;cursor:pointer;border-radius:6px;padding:4px 8px}
+.backbtn:hover{background:#f1f5f9;color:var(--ink-700)}
+.fichehead{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:18px 20px;margin-bottom:12px;max-width:880px}
+.fichehead .frow0{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.avat{width:42px;height:42px;border-radius:10px;background:var(--primary-50);color:var(--primary-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0}
+.fichehead h1{font-size:19px;font-weight:600;letter-spacing:-.01em;color:var(--ink-900)}
+.fh-meta{font-size:12px;color:var(--ink-500);margin-top:2px}
+.fh-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.fh-link{font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;white-space:nowrap}
+.fh-link:hover{text-decoration:underline;text-underline-offset:2px}
+.apercu{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:14px;border-top:1px solid var(--line);padding-top:13px}
+.apercu .k{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600}
+.apercu .v{font-size:13px;font-weight:600;color:var(--ink-900);margin-top:3px;line-height:1.4}
+.apercu .v .sm{font-weight:400;color:var(--ink-500);font-size:12px}
+.fsec{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:15px 20px;margin-bottom:12px;max-width:880px}
+.fsec>h2{font-size:13px;font-weight:600;color:var(--ink-900);display:flex;align-items:center;gap:7px}
+.fsec>h2 .n2{font-weight:400;color:var(--ink-400);font-size:11px}
+.frow{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:13px;color:var(--ink-700);flex-wrap:wrap}
+.frow:nth-of-type(1){border-top:none}
+.frow .tt{font-weight:500;color:var(--ink-900)}
+.frow .sm{font-size:11.5px;color:var(--ink-400)}
+.frow .go{margin-left:auto;color:var(--primary);font-weight:600;font-size:12px;cursor:pointer;white-space:nowrap}
+.frow .go:hover{text-decoration:underline;text-underline-offset:2px}
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1.5px 9px;font-size:11px;font-weight:500;background:#f1f5f9;color:var(--ink-500)}
+.chip.ok{background:var(--ok-50);color:var(--ok)}
+.chip.warn{background:var(--warn-50);color:var(--warn)}
+.mlinks{display:flex;gap:12px;margin-top:8px}
+.mlinks a{font-size:11.5px;font-weight:600;color:var(--primary);cursor:pointer}
+.mlinks a:hover{text-decoration:underline;text-underline-offset:2px}
+/* historique des to_do */
+.hist{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+.hist summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--ink-500);list-style:none;display:flex;align-items:center;gap:6px}
+.hist summary::before{content:"▸";font-size:10px;color:var(--ink-400);transition:transform .15s}
+.hist[open] summary::before{transform:rotate(90deg)}
+.hist summary:hover{color:var(--ink-700)}
+.hist summary .n2{font-weight:400;color:var(--ink-400);font-size:11px}
+.hrow{display:flex;gap:9px;font-size:11.5px;padding:3.5px 0;color:var(--ink-600,#475569);line-height:1.4;border-bottom:1px solid var(--line)}
+.hrow:last-child{border-bottom:none}
+.hrow .d{flex-shrink:0;width:118px;color:var(--ink-400);font-variant-numeric:tabular-nums}
+.hrow .ck{color:var(--ok);flex-shrink:0}
+.hrow .e{color:var(--ink-300);margin:0 2px}
+.hrow .w{color:var(--ink-400)}
 .task .fx{font-size:10px;color:#9d174d;background:#fdf2f8;border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
 .task .note{display:block;font-size:10.5px;color:var(--ink-400);margin-top:1px}
 .sub{margin:2px 0 2px 21px;display:flex;flex-direction:column;gap:1px}
@@ -257,13 +298,15 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 <body>
 <div id="app">
   <aside id="sidebar">
-    <div class="brand">
-      <div class="word">France <em>IA</em></div>
-      <div class="tri"><i></i><i></i><i></i></div>
-      <div class="plt">Plateforme France IA</div>
+    <div id="appzone">
+      <div class="brand">
+        <div class="word">France <em>IA</em></div>
+        <div class="tri"><i></i><i></i><i></i></div>
+        <div class="plt">Plateforme France IA</div>
+      </div>
+      <div class="nav-label">Applications</div>
+      <nav id="appTabs"></nav>
     </div>
-    <div class="nav-label">Applications</div>
-    <nav id="appTabs"></nav>
     <nav id="subnav"></nav>
     <div class="side-note">Mockup DELIV'IA 2.0 · données fictives.<br>Tout est cochable pour simuler l'enchaînement des process.</div>
   </aside>
@@ -639,10 +682,34 @@ let CARDS = [
    lines:[["Fixe mensuel","1 200 €"],["Set · Marie Dupont","30 €"],["Set · Karim Benali","30 €"],["Set · Studio Nova","30 €"],["Close · Awa Diallo","80 €"]]},
 ];
 
+/* Fiches : fausses identités reliées aux cartes */
+const CLIENTS=[
+ {id:"cl_acme",nom:"ACME Conseil",type:"Entreprise",siret:"842 391 557 00023",ref:"Jean Petit · jean.petit@acme.fr",mode:"Virement",mandat:null,
+  ventes:[{lbl:"Formation N1 · Jean Petit",m:"1 650 €",fin:"fp_ent_vir",factId:"f5"}],apprenants:["ap_jean"],docs:["Devis DE-2026-0412 · signé","Facture FA-2026-0533 · émise"]},
+ {id:"cl_btp",nom:"BTP Sud",type:"Entreprise",siret:"512 887 224 00011",ref:"Léa Costa · l.costa@btpsud.fr",mode:"Mandat SDD",mandat:"Actif · 2 échéances (1 refusée)",
+  ventes:[{lbl:"Formation N1 · 3 apprenants",m:"4 950 €",fin:"fp_ent_man",factId:"f6"}],apprenants:["ap_lea"],docs:["Devis DE-2026-0388 · signé","Facture FA-2026-0501 · émise"]},
+ {id:"cl_hotel",nom:"Hôtel du Parc",type:"Entreprise (OPCO)",siret:"399 120 448 00034",ref:"Sofia Ricci · s.ricci@hotelduparc.fr",mode:"OPCO (AKTO)",mandat:null,
+  ventes:[{lbl:"Formation N1 · Sofia Ricci",m:"1 650 €",fin:"opco",factId:"f3"}],apprenants:["ap_sofia"],docs:["Convention · signée","Facture FA-2026-0540 · à transmettre à l'OPCO"]},
+ {id:"cl_marie",nom:"Marie Dupont",type:"Particulier",siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
+  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_marie"],docs:["Dossier EDOF · validé"]},
+ {id:"cl_karim",nom:"Karim Benali",type:"Particulier",siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 3 échéances, première encaissée",
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_part",factId:"f4"}],apprenants:["ap_karim"],docs:["Facture FA-2026-0512 · émise (non acquittée)"]},
+ {id:"cl_hugo",nom:"Hugo Martin",type:"Particulier",siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
+  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f1"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée"]},
+];
+const APPRENANTS=[
+ {id:"ap_marie",nom:"Marie Dupont",email:"marie.dupont@gmail.com",tel:"06 12 45 78 90",client:"cl_marie",insc:["i1"],type:"Particulier",afaire:["Signer votre convention de formation","Préparer votre formation (9/13)","Répondre à votre questionnaire"]},
+ {id:"ap_karim",nom:"Karim Benali",email:"k.benali@outlook.fr",tel:"07 66 21 03 55",client:"cl_karim",insc:["i2"],type:"Particulier",afaire:["Préparer votre formation (2/13)","Questionnaire de positionnement"]},
+ {id:"ap_jean",nom:"Jean Petit",email:"jean.petit@acme.fr",tel:"06 78 41 20 19",client:"cl_acme",insc:["i3"],type:"Salarié ACME Conseil",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_lea",nom:"Léa Costa",email:"l.costa@btpsud.fr",tel:"06 51 88 34 02",client:"cl_btp",insc:["i4"],type:"Salariée BTP Sud",afaire:["Préparer votre formation (5/13)"]},
+ {id:"ap_sofia",nom:"Sofia Ricci",email:"s.ricci@hotelduparc.fr",tel:"07 81 55 60 43",client:"cl_hotel",insc:["i5"],type:"Salariée Hôtel du Parc",afaire:["Questionnaire de positionnement","Préparer votre formation (0/13)"]},
+ {id:"ap_hugo",nom:"Hugo Martin",email:"hugo.martin@gmail.com",tel:"06 02 93 47 66",client:"cl_hugo",insc:["i6"],type:"Particulier",afaire:["Répondre à votre questionnaire de satisfaction à froid"]},
+ {id:"ap_awa",nom:"Awa Diallo",email:"awa.diallo@gmail.com",tel:"07 45 09 12 87",client:null,insc:["c1"],type:"Particulière",afaire:["Signer votre convention de formation"]},
+];
 /* ════════════════════ ÉTAT ════════════════════ */
 const S = {role:"admin", app:"delivia", tab:"inscription",
   fSession:"n1", fInsc:"n1", fFact:"cpf",
-  checks:{}, sim:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null};
+  checks:{}, sim:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null};
 
 const $ = s=>document.querySelector(s);
 const el=(h)=>{const d=document.createElement("div");d.innerHTML=h;return d.firstElementChild};
@@ -710,6 +777,7 @@ function clickTask(cardId,colId,i){
   const k=key(card,colId,i);
   const owned = tk.p===ROLE_OWNS[S.role];
   S.checks[k]=!S.checks[k];
+  if(S.checks[k]) S.when[k]=new Date(); else delete S.when[k];
   if(S.checks[k] && !owned && !S.simWarned){
     S.simWarned=true;
     toast(`Simulation : tâche cochée à la place de « ${WHO[tk.p]} ». Dans DELIV'IA, seule cette personne (ou l'automate) pourra la cocher.`);
@@ -799,6 +867,35 @@ function cardHtml(card, colDef, opts={}){
   h+=`</div>`;
   return h;
 }
+function fmtWhen(d){
+  const today=new Date();
+  const sameDay=d.toDateString()===today.toDateString();
+  const dd=d.toLocaleDateString("fr-FR",{day:"numeric",month:"short"});
+  const hh=d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+  return (sameDay?"aujourd'hui":dd)+" · "+hh;
+}
+function historyFor(card){
+  const cols=KB[card.kb].cols;
+  const curIx=cols.findIndex(c=>c.id===card.col);
+  const past=cols.slice(0,curIx).filter(c=>!c.skip);
+  const rows=[];
+  past.forEach((col,j)=>{
+    const base=new Date(); base.setDate(base.getDate()-(past.length-j)*4);
+    tasksFor(card,col.id).forEach((tk,i)=>{
+      const k=key(card,col.id,i);
+      const d=S.when[k]?new Date(S.when[k]):(()=>{const x=new Date(base);x.setHours(9+((i*2)%8),(i*17)%60,0,0);return x})();
+      rows.push({d,t:tk.t,p:tk.p,e:col.label});
+    });
+  });
+  tasksFor(card,card.col).forEach((tk,i)=>{
+    if(taskState(card,card.col,i,tk)){
+      const k=key(card,card.col,i);
+      rows.push({d:S.when[k]?new Date(S.when[k]):new Date(),t:tk.t,p:tk.p,e:cols[curIx].label});
+    }
+  });
+  rows.sort((a,b)=>a.d-b.d);
+  return rows;
+}
 function tplFor(label){
   const l=label.toLowerCase();
   const W="WhatsApp", E="Email";
@@ -834,7 +931,9 @@ function modalHtml(){
   const tks=tasksFor(card,card.col);
   const done=tks.filter((tk,i)=>taskState(card,card.col,i,tk)).length;
   let h=`<div id="modal"><div class="mbox">`;
-  h+=`<div class="mhead"><div class="row"><div><div class="t">${card.title}</div><div class="s">${card.sub||""}</div></div><button class="mclose" data-close="1" aria-label="Fermer">✕</button></div>`;
+  const ap=APPRENANTS.find(a=>a.insc.includes(card.id));
+  const cl=ap&&ap.client ? CLIENTS.find(c=>c.id===ap.client) : CLIENTS.find(c=>(c.ventes||[]).some(v=>v.factId===card.id));
+  h+=`<div class="mhead"><div class="row"><div><div class="t">${card.title}</div><div class="s">${card.sub||""}</div>${(ap||cl)?`<div class="mlinks">${ap?`<a data-fiche="apprenant::${ap.id}">Fiche apprenant →</a>`:""}${cl?`<a data-fiche="client::${cl.id}">Fiche client →</a>`:""}</div>`:""}</div><button class="mclose" data-close="1" aria-label="Fermer">✕</button></div>`;
   h+=`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${badge(card.fin)}<span class="mstep"><span class="pill"></span>Étape · ${col.label}</span></div></div>`;
   h+=`<div class="mbody">`;
   if(card.lines){
@@ -852,6 +951,12 @@ function modalHtml(){
   if(card.waiting){
     const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
     h+=`<div class="openline">🔒 <span>Étape complète. <b>${nc.label}</b> ouvre ${openDateStr(card,nc)} (${nc.open}).</span><a data-unlock="${card.kb}::${nc.id}">Ouvrir en avance</a></div>`;
+  }
+  const hist=historyFor(card);
+  if(hist.length){
+    h+=`<details class="hist"${S.histOpen?" open":""}><summary>Historique des to_do <span class="n2">${hist.length} réalisée${hist.length>1?"s":""}</span></summary>`;
+    h+=hist.map(r=>`<div class="hrow"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.t} <span class="w">(${WHO[r.p]})</span><span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("");
+    h+=`</details>`;
   }
   h+=`</div></div></div>`;
   return h;
@@ -952,6 +1057,75 @@ function pageServices(){
   else h+=boardHtml("session_frm", CARDS.filter(c=>c.kb==="session_frm"&&c.offre===(S.fSession==="n2"?"n2":"n1")&&c.mine));
   return h;
 }
+function colLabel(card){ return (KB[card.kb].cols.find(c=>c.id===card.col)||{}).label||card.col; }
+function inscFilterFor(card){ return card.kb==="intra"?"intra":card.kb==="coaching"?"coaching":(card.offre||"n1"); }
+function initiales(nom){ return nom.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase(); }
+function ficheApprenantHtml(id){
+  const ap=APPRENANTS.find(a=>a.id===id); if(!ap) return "";
+  const cl=CLIENTS.find(c=>c.id===ap.client);
+  const cards=ap.insc.map(i=>CARDS.find(c=>c.id===i)).filter(Boolean);
+  const first=cards[0];
+  let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
+  h+=`<div class="fichehead"><div class="frow0"><div class="avat">${initiales(ap.nom)}</div>
+    <div><h1>${ap.nom}</h1><div class="fh-meta">${ap.email} · ${ap.tel}</div>
+    <div class="fh-meta" style="margin-top:5px"><span class="chip">${ap.type}</span></div></div>
+    <div class="fh-right">${cl?`<span class="fh-link" data-fiche="client::${cl.id}">Fiche client : ${cl.nom} →</span>`:""}
+    <button class="btn btn-s" data-app="apprenant">Ouvrir son espace apprenant</button></div></div>`;
+  h+=`<div class="apercu">
+    <div><div class="k">Session</div><div class="v">${first?first.sub:"Aucune"}</div></div>
+    <div><div class="k">Inscription</div><div class="v">${first?colLabel(first):""} <span class="sm">· kanban ${first?(inscFilterFor(first)==="coaching"?"Coaching":inscFilterFor(first).toUpperCase()):""}</span></div></div>
+    <div><div class="k">Financement</div><div class="v">${first&&first.fin?FIN[first.fin].lbl:""}</div></div>
+    <div><div class="k">Espace apprenant</div><div class="v">${ap.afaire.length} à faire</div></div>
+  </div></div>`;
+  h+=`<div class="fsec"><h2>Inscriptions <span class="n2">la carte kanban est la source de vérité de l'avancement</span></h2>`;
+  h+=cards.map(c=>`<div class="frow"><div><div class="tt">${c.kb==="coaching"?"Coaching":"Formation "+(c.offre||"").toUpperCase()}</div><div class="sm">${c.sub||""}</div></div>
+    <span class="chip ${c.col==="termine"||c.col==="terminee"?"ok":c.col==="absent"||c.col==="lost"?"warn":""}">${colLabel(c)}</span>
+    <span class="go" data-gotoinsc="${c.id}">Voir la carte inscription →</span></div>`).join("")||`<div class="frow sm">Aucune inscription.</div>`;
+  h+=`</div>`;
+  h+=`<div class="fsec"><h2>Espace apprenant <span class="n2">ses to_do, en lecture : elles font avancer sa carte</span></h2>`;
+  h+=ap.afaire.map(t=>`<div class="frow"><span class="chip warn">à faire</span> ${t}</div>`).join("");
+  h+=`</div>`;
+  h+=`<div class="fsec"><h2>Documents & preuves</h2><div style="margin-top:9px">
+    <span class="chip ok">Convocation</span> <span class="chip ok">Convention</span> <span class="chip">Émargements · pas encore</span> <span class="chip">Certificat · pas encore</span> <span class="chip">Attestation · pas encore</span></div></div>`;
+  h+=`<div class="fsec"><h2>Notes</h2><div class="frow sm" style="border:none">Rien à signaler. (Champ de notes internes, comme sur la fiche actuelle.)</div></div>`;
+  return h;
+}
+function ficheClientHtml(id){
+  const cl=CLIENTS.find(c=>c.id===id); if(!cl) return "";
+  const totD=cl.ventes.reduce((a,v)=>a+parseInt(v.m.replace(/\D/g,"")),0);
+  let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
+  h+=`<div class="fichehead"><div class="frow0"><div class="avat">${cl.type.startsWith("Particulier")?initiales(cl.nom):"🏢"}</div>
+    <div><h1>${cl.nom}</h1><div class="fh-meta">${cl.siret?`SIRET ${cl.siret}`:"Client particulier"}${cl.ref?` · Référent : ${cl.ref}`:""}</div>
+    <div class="fh-meta" style="margin-top:5px"><span class="chip">${cl.type}</span> <span class="chip">${cl.mode}</span></div></div></div>`;
+  h+=`<div class="apercu">
+    <div><div class="k">Ventes</div><div class="v">${cl.ventes.length}</div></div>
+    <div><div class="k">Montant dû</div><div class="v">${totD.toLocaleString("fr-FR")} €</div></div>
+    <div><div class="k">Mandat SDD</div><div class="v">${cl.mandat||"Aucun"}</div></div>
+    <div><div class="k">Apprenants</div><div class="v">${(cl.apprenants||[]).length}</div></div>
+  </div></div>`;
+  h+=`<div class="fsec"><h2>Ventes & facturation <span class="n2">1 vente = 1 offre + 1 moyen de paiement + 1 facture</span></h2>`;
+  h+=cl.ventes.map(v=>{
+    const f=v.factId?CARDS.find(c=>c.id===v.factId):null;
+    return `<div class="frow"><div><div class="tt">${v.lbl}</div><div class="sm">${FIN[v.fin].lbl}${v.note?` · ${v.note}`:""}</div></div>
+    <span style="font-weight:600;font-variant-numeric:tabular-nums">${v.m}</span>
+    ${f?`<span class="chip">${colLabel(f)}</span><span class="go" data-goto="${f.id}">Voir la carte facturation →</span>`:`<span class="chip">carte à venir</span>`}</div>`;
+  }).join("");
+  h+=`</div>`;
+  if((cl.apprenants||[]).length){
+    h+=`<div class="fsec"><h2>Apprenants</h2>`;
+    h+=cl.apprenants.map(aid=>{
+      const ap=APPRENANTS.find(a=>a.id===aid); if(!ap) return "";
+      const c0=CARDS.find(c=>c.id===ap.insc[0]);
+      return `<div class="frow"><div><div class="tt">${ap.nom}</div><div class="sm">${ap.email}</div></div>
+      ${c0?`<span class="chip">${colLabel(c0)}</span>`:""}
+      <span class="go" data-fiche="apprenant::${ap.id}">Fiche apprenant →</span>${c0?`<span class="go" data-gotoinsc="${c0.id}">Carte inscription →</span>`:""}</div>`;
+    }).join("");
+    h+=`</div>`;
+  }
+  h+=`<div class="fsec"><h2>Documents émis</h2><div style="margin-top:9px">${cl.docs.map(d=>`<span class="chip" style="margin:0 6px 6px 0">${d}</span>`).join("")}</div></div>`;
+  h+=`<div class="fsec"><h2>Notes</h2><div class="frow sm" style="border:none">Rien à signaler.</div></div>`;
+  return h;
+}
 const STUBS = {
  anomalies:["Anomalies","Les incohérences détectées automatiquement (dossier EDOF sans facture, mandat sans échéancier, carte sans vente…), avec leur statut de traitement."],
  actions:["Actions","Le journal des actions : qui a fait quoi, quand, depuis quelle carte."],
@@ -1041,13 +1215,19 @@ function render(){
   $("#subnav").innerHTML = `<div class="appctx" style="color:${APPS[S.app].accent}"><span class="dot" style="background:${APPS[S.app].accent}"></span>${APPS[S.app].name}</div>`
     + groups.map(([g,items])=>`<div class="subgrp">${g}</div>`+items.map(([id,lbl])=>`<button class="subtab ${S.tab===id?"active":""}" data-tab="${id}" style="--accent:${APPS[S.app].accent}">${lbl}</button>`).join("")).join("");
   /* crumb + role */
-  $("#crumb").innerHTML=`${APPS[S.app].name}<span class="sep">/</span><span style="color:var(--ink-500);font-weight:500">${(groups.flatMap(g=>g[1]).find(t=>t[0]===S.tab)||["",""])[1]||""}</span>`;
+  const crumbEnd = S.fiche
+    ? (S.fiche.t==="apprenant" ? "Fiche apprenant · "+(APPRENANTS.find(a=>a.id===S.fiche.id)||{}).nom : "Fiche client · "+(CLIENTS.find(c=>c.id===S.fiche.id)||{}).nom)
+    : ((groups.flatMap(g=>g[1]).find(t=>t[0]===S.tab)||["",""])[1]||"");
+  $("#crumb").innerHTML=`${APPS[S.app].name}<span class="sep">/</span><span style="color:var(--ink-500);font-weight:500">${crumbEnd}</span>`;
   $("#roleSel").innerHTML=Object.entries(ROLES).map(([id,lbl])=>`<button class="${S.role===id?"active":""}" data-role="${id}">${lbl}</button>`).join("");
   /* content */
   let h="";
   if(S.app==="apprenant") h=pageApprenant();
   else if(S.app==="treso") h=pageTreso();
   else if(S.app==="dash") h=pageDash();
+  else if(S.fiche){
+    h = S.fiche.t==="apprenant" ? ficheApprenantHtml(S.fiche.id) : ficheClientHtml(S.fiche.id);
+  }
   else {
     if(S.tab==="sessions") h=pageSessions();
     else if(S.tab==="inscription") h=pageInscription();
@@ -1076,9 +1256,13 @@ document.addEventListener("click",e=>{
   if(e.target.id==="tplmodal"||e.target.closest("[data-closetpl]")){S.tpl=null;document.getElementById("tplmodal")?.remove();return}
   const tplBtn=e.target.closest("[data-tpl]");
   if(tplBtn){e.stopPropagation();S.tpl=tplBtn.dataset.tpl;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
+  if(e.target.closest(".hist summary")){S.histOpen=!S.histOpen}
   if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;document.getElementById("modal")?.remove();return}
-  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],[data-unlock],.task,[data-goto],[data-resa],[data-open]");
+  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],[data-unlock],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc]");
   if(!t) return;
+  if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.fiche={t:ty,id:fid};S.app="delivia";render();return}
+  if(t.dataset.ficheback){S.fiche=null;render();return}
+  if(t.dataset.gotoinsc){const c=CARDS.find(x=>x.id===t.dataset.gotoinsc);S.fiche=null;S.modal=null;S.app="delivia";S.tab="inscription";S.fInsc=inscFilterFor(c);S.highlight=c.id;render();return}
   if(t.dataset.app){
     if(t.dataset.app===S.app) return;
     const a=t.dataset.app;
@@ -1086,22 +1270,22 @@ document.addEventListener("click",e=>{
     $("#authT1").textContent="Connexion à "+APPS[a].name;
     $("#auth").style.display="flex";
     setTimeout(()=>{ $("#auth").style.display="none";
-      S.app=a;
+      S.app=a; S.fiche=null;
       S.tab = a==="delivia" ? (DELIVIA_TABS[S.role][0][1][0][0]) : (APP_TABS[a]?APP_TABS[a][0][1][0][0]:"");
       render();
     },750);
     return;
   }
-  if(t.dataset.tab){S.tab=t.dataset.tab;render();return}
+  if(t.dataset.tab){S.tab=t.dataset.tab;S.fiche=null;render();return}
   if(t.dataset.role){
-    S.role=t.dataset.role; S.app="delivia";
+    S.role=t.dataset.role; S.app="delivia"; S.fiche=null;
     S.tab=DELIVIA_TABS[S.role][0][1][0][0];
     if(S.role==="setter"||S.role==="agence") S.tab="facturation";
     S.fFact = S.role==="closer"?"fp_ent":"cpf";
     render();return}
   if(t.dataset.chip){const [k,v]=t.dataset.chip.split("::");S[k]=v;render();return}
   if(t.dataset.unlock){const [kb,col]=t.dataset.unlock.split("::");unlockCol(kb,col);return}
-  if(t.dataset.goto){S.app="delivia";S.tab="facturation";
+  if(t.dataset.goto){S.app="delivia";S.tab="facturation";S.fiche=null;S.modal=null;
     const c=CARDS.find(x=>x.id===t.dataset.goto);
     S.fFact = c.kb==="fact_cpf"?"cpf":c.kb==="fact_opco"?"opco":(c.fin==="fp_part"?"fp_part":"fp_ent");
     S.highlight=c.id;render();return}
