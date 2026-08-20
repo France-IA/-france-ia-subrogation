@@ -26,20 +26,19 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #app{display:flex;min-height:100vh}
 /* ── Sidebar plateforme ─────────────────────────── */
 #sidebar{width:248px;flex-shrink:0;background:#fff;box-shadow:1px 0 0 0 var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
-#appzone{margin:4px 10px 2px;padding:7px 6px 6px;background:#e2e8f0;border-radius:14px}
+#appzone{margin:4px 10px 2px;padding:7px 6px 6px;background:#2b2e35;border-radius:14px}
 .brand{padding:18px 20px 10px}
 .brand .word{font-size:17px;font-weight:600;letter-spacing:-.02em;color:var(--ink-900)}
 .brand .word em{font-style:italic;font-weight:700}
 .brand .tri{display:flex;height:3px;width:64px;margin-top:5px;border-radius:2px;overflow:hidden}
 .brand .tri i{flex:1}.brand .tri i:nth-child(1){background:#4379f2}.brand .tri i:nth-child(2){background:#eef0f4}.brand .tri i:nth-child(3){background:#f21b1b}
 .brand .plt{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400);margin-top:7px;font-weight:500}
-.nav-label{padding:4px 12px 6px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400)}
-.apptab{display:flex;align-items:center;gap:10px;width:100%;margin:1px 0;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--ink-500);text-align:left;transition:background .12s,color .12s,box-shadow .12s}
-.apptab:hover{background:rgba(255,255,255,.55);color:var(--ink-700)}
-.apptab{color:var(--ink-700)}
+.nav-label{padding:4px 12px 6px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.35)}
+.apptab{display:flex;align-items:center;gap:10px;width:100%;margin:1px 0;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;color:rgba(255,255,255,.65);text-align:left;transition:background .12s,color .12s}
+.apptab:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.9)}
 .apptab .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.apptab.active{background:#fff;color:var(--ink-900);font-weight:600;box-shadow:var(--sh-carte)}
-.apptab .lock{margin-left:auto;font-size:10px;color:var(--ink-300)}
+.apptab.active{background:rgba(255,255,255,.13);color:#fff;font-weight:600}
+.apptab .lock{margin-left:auto;font-size:10px;color:rgba(255,255,255,.3)}
 #subnav{padding-bottom:8px;padding-top:6px}
 #subnav .appctx{padding:10px 20px 2px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px}
 #subnav .appctx .dot{width:7px;height:7px;border-radius:50%}
@@ -140,28 +139,46 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* fiches apprenant & client */
 .backbtn{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--ink-500);margin-bottom:12px;cursor:pointer;border-radius:6px;padding:4px 8px}
 .backbtn:hover{background:#f1f5f9;color:var(--ink-700)}
-.fichehead{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:18px 20px;margin-bottom:12px;max-width:880px}
-.fichehead .frow0{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
-.avat{width:42px;height:42px;border-radius:10px;background:var(--primary-50);color:var(--primary-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0}
-.fichehead h1{font-size:19px;font-weight:600;letter-spacing:-.01em;color:var(--ink-900)}
-.fh-meta{font-size:12px;color:var(--ink-500);margin-top:2px}
+.fichehead{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:20px 22px;margin-bottom:14px;max-width:880px}
+.fh-top{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.avat{width:40px;height:40px;border-radius:10px;background:var(--primary-50);color:var(--primary-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.avat svg{width:19px;height:19px}
+.fichehead h1{font-size:19px;font-weight:600;letter-spacing:-.015em;color:var(--ink-900);line-height:1.25}
+.fh-contact{display:flex;gap:14px;flex-wrap:wrap;margin-top:5px;font-size:12.5px;color:var(--ink-500)}
+.fh-contact span{display:inline-flex;align-items:center;gap:5px}
+.fh-contact svg{color:var(--ink-400)}
+.fh-badges{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .fh-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .fh-link{font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;white-space:nowrap}
 .fh-link:hover{text-decoration:underline;text-underline-offset:2px}
-.apercu{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:14px;border-top:1px solid var(--line);padding-top:13px}
+.apercu{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
 .apercu .k{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600}
-.apercu .v{font-size:13px;font-weight:600;color:var(--ink-900);margin-top:3px;line-height:1.4}
+.apercu .v{font-size:13px;font-weight:600;color:var(--ink-900);margin-top:4px;line-height:1.4}
 .apercu .v .sm{font-weight:400;color:var(--ink-500);font-size:12px}
-.fsec{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:15px 20px;margin-bottom:12px;max-width:880px}
+.idchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;border-top:1px solid var(--line);padding-top:12px;align-items:center}
+.idchips .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;margin-right:2px}
+.idchip{display:inline-flex;align-items:center;border-radius:6px;background:#f8fafc;border:1px solid var(--line);padding:2px 8px;font-size:10.5px;color:var(--ink-500);font-variant-numeric:tabular-nums}
+.perschip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:#f8fafc;border:1px solid var(--line);padding:3px 10px 3px 4px;font-size:12px;font-weight:500;color:var(--ink-700);cursor:pointer;margin:0 6px 4px 0}
+.perschip:hover{border-color:#c7d2fe;color:var(--primary-dark)}
+.perschip .avat{width:22px;height:22px;font-size:9px;border-radius:999px}
+.fsec{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:16px 20px;margin-bottom:12px;max-width:880px}
+.sect-h{display:flex;align-items:flex-start;gap:8px;font-size:13px;font-weight:600;color:var(--ink-900)}
+.sect-h svg{color:var(--ink-400);flex-shrink:0;margin-top:1px}
+.sect-h .n2{font-weight:400;color:var(--ink-400);font-size:11.5px}
+.sect-h .right{margin-left:auto;font-size:11.5px;font-weight:400;color:var(--ink-400);text-align:right;line-height:1.5}
 .fsec>h2{font-size:13px;font-weight:600;color:var(--ink-900);display:flex;align-items:center;gap:7px}
 .fsec>h2 .n2{font-weight:400;color:var(--ink-400);font-size:11px}
+.lrow{display:flex;align-items:center;gap:10px;padding:8px 2px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-700)}
+.subh+.lrow{border-top:none}
+.lrow .chip{margin-left:auto;flex-shrink:0}
+.subh{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;margin:14px 0 4px}
 .frow{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:13px;color:var(--ink-700);flex-wrap:wrap}
 .frow:nth-of-type(1){border-top:none}
 .frow .tt{font-weight:500;color:var(--ink-900)}
 .frow .sm{font-size:11.5px;color:var(--ink-400)}
 .frow .go{margin-left:auto;color:var(--primary);font-weight:600;font-size:12px;cursor:pointer;white-space:nowrap}
 .frow .go:hover{text-decoration:underline;text-underline-offset:2px}
-.chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1.5px 9px;font-size:11px;font-weight:500;background:#f1f5f9;color:var(--ink-500)}
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1.5px 9px;font-size:10.5px;font-weight:500;background:#f1f5f9;color:var(--ink-500)}
 .chip.ok{background:var(--ok-50);color:var(--ok)}
 .chip.warn{background:var(--warn-50);color:var(--warn)}
 .mlinks{display:flex;gap:12px;margin-top:8px}
@@ -898,11 +915,6 @@ function cardHtml(card, colDef, opts={}){
     h+=`<div class="cnt"><b>${remaining===0?"Étape complète":remaining+" tâche"+(remaining>1?"s":"")+" restante"+(remaining>1?"s":"")}</b> · ${done}/${tks.length}</div>`;
     if(nextTk) h+=`<div class="nextt"><span class="k">Next :</span><span class="v">${nextTk.t}${nextTk.p===ROLE_OWNS[S.role]?"":` <span class="who2">(${WHO[nextTk.p]})</span>`}</span></div>`;
   }
-  if(!isGhost){
-    const cap=APPRENANTS.find(a=>a.insc.includes(card.id));
-    const ccl=cap&&cap.client ? CLIENTS.find(c=>c.id===cap.client) : CLIENTS.find(c=>(c.ventes||[]).some(v=>v.factId===card.id));
-    if(cap||ccl) h+=`<div class="mlinks" style="margin-top:8px;font-size:10.5px">${cap?`<a data-fiche="apprenant::${cap.id}">Fiche apprenant</a>`:""}${ccl?`<a data-fiche="client::${ccl.id}">Fiche client</a>`:""}</div>`;
-  }
   h+=`</div>`;
   return h;
 }
@@ -972,7 +984,7 @@ function modalHtml(){
   let h=`<div id="modal"><div class="mbox">`;
   const ap=APPRENANTS.find(a=>a.insc.includes(card.id));
   const cl=ap&&ap.client ? CLIENTS.find(c=>c.id===ap.client) : CLIENTS.find(c=>(c.ventes||[]).some(v=>v.factId===card.id));
-  h+=`<div class="mhead"><div class="row"><div><div class="t">${card.title}</div><div class="s">${card.sub||""}</div>${(ap||cl)?`<div class="mlinks">${ap?`<a data-fiche="apprenant::${ap.id}">Fiche apprenant →</a>`:""}${cl?`<a data-fiche="client::${cl.id}">Fiche client →</a>`:""}</div>`:""}</div><button class="mclose" data-close="1" aria-label="Fermer">✕</button></div>`;
+  h+=`<div class="mhead"><div class="row"><div><div class="t">${card.title}</div><div class="s">${card.sub||""}</div>${(ap||cl)?`<div class="mlinks">${ap?`<a data-fiche="apprenant::${ap.id}">Fiche apprenant</a>`:""}${cl?`<a data-fiche="client::${cl.id}">Fiche client</a>`:""}</div>`:""}</div><button class="mclose" data-close="1" aria-label="Fermer">✕</button></div>`;
   h+=`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${badge(card.fin)}<span class="mstep"><span class="pill"></span>Étape · ${col.label}</span>${card.com?`<span style="font-size:11px;color:var(--ink-400)">${card.com}</span>`:""}</div></div>`;
   h+=`<div class="mbody">`;
   if(card.lines){
@@ -1116,6 +1128,15 @@ function pageAPrendre(){
   </div>`;
   return h;
 }
+const ICO={
+ mail:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>',
+ phone:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+ user:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+ building:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M12 10h.01M16 10h.01M8 10h.01M12 14h.01M16 14h.01M8 14h.01"/></svg>',
+ cap:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>',
+ wallet:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>',
+ file:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
+};
 function colLabel(card){ return (KB[card.kb].cols.find(c=>c.id===card.col)||{}).label||card.col; }
 function inscFilterFor(card){ return card.kb==="intra"?"intra":card.kb==="coaching"?"coaching":(card.offre||"n1"); }
 function initiales(nom){ return nom.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase(); }
@@ -1123,86 +1144,74 @@ function ficheApprenantHtml(id){
   const ap=APPRENANTS.find(a=>a.id===id); if(!ap) return "";
   const cl=CLIENTS.find(c=>c.id===ap.client);
   const cards=ap.insc.map(i=>CARDS.find(c=>c.id===i)).filter(Boolean);
+  const first=cards[0];
   let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
-  h+=`<div class="fsec"><h2>Identité</h2>
-    <div class="frow0" style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-top:10px">
-      <div class="avat">${initiales(ap.nom)}</div>
-      <div><div style="font-size:17px;font-weight:600;color:var(--ink-900)">${ap.nom}</div>
-        <div class="fh-meta">${ap.email} · ${ap.tel}</div>
-        <div style="margin-top:6px"><span class="chip">${ap.type}</span></div></div>
-      <div class="fh-right">${cl?`<span class="fh-link" data-fiche="client::${cl.id}">Client lié : ${cl.nom} →</span>`:""}
-        <button class="btn btn-s" data-app="apprenant">Ouvrir son espace apprenant</button></div>
-    </div>
-    <div class="frow" style="margin-top:12px"><span class="sm" style="width:150px">Identifiants techniques</span>
-      <span class="chip">GHL 88An…</span><span class="chip">WEDOF 5501…</span><span class="chip">Qualiobee apprenant 3c8f…</span></div>
+  h+=`<div class="fichehead"><div class="fh-top">
+    <div class="avat">${initiales(ap.nom)}</div>
+    <div><h1>${ap.nom}</h1>
+      <div class="fh-contact"><span>${ICO.mail}${ap.email}</span><span>${ICO.phone}${ap.tel}</span></div>
+      <div class="fh-badges"><span class="chip">${ap.type}</span></div></div>
+    <div class="fh-right"><button class="btn btn-s" data-app="apprenant">Ouvrir son espace apprenant</button></div>
+  </div>
+  <div class="apercu">
+    <div><div class="k">Session</div><div class="v">${first?first.sub:"Aucune"}</div></div>
+    <div><div class="k">Offre</div><div class="v">${first?(first.kb==="coaching"?"Coaching":"Formation "+(first.offre||"").toUpperCase()):""} <span class="sm">${first&&first.fin?"· "+FIN[first.fin].lbl:""}</span></div></div>
+    <div><div class="k">Espace apprenant</div><div class="v">${ap.afaire.length?ap.afaire.length+" à faire":"À jour"}</div></div>
+    <div><div class="k">Client lié</div><div class="v">${cl?`<span class="fh-link" data-fiche="client::${cl.id}">${cl.nom} →</span>`:'<span class="sm">Aucun</span>'}</div></div>
+  </div>
+  <div class="idchips"><span class="lbl">Identifiants</span><span class="idchip">GHL 88An…</span><span class="idchip">WEDOF 5501…</span><span class="idchip">Qualiobee 3c8f…</span></div>
   </div>`;
   cards.forEach(c=>{
     const offre=c.kb==="coaching"||c.kb==="coaching_frm"?"Coaching":"Formation "+(c.offre||"").toUpperCase();
-    h+=`<div class="fsec"><h2>${offre} <span class="n2">${c.sub||""}</span></h2>
-      <div class="frow"><span class="sm" style="width:150px">Espace apprenant</span><div style="flex:1">${ap.afaire.map(x=>`<span class="chip warn" style="margin:0 6px 4px 0">${x}</span>`).join("")||`<span class="chip ok">À jour</span>`}</div></div>
-      <div class="frow"><span class="sm" style="width:150px">Preuves individuelles</span><div style="flex:1">
-        <span class="chip ok" style="margin:0 6px 4px 0">Positionnement</span><span class="chip" style="margin:0 6px 4px 0">Émargement J1 · à venir</span><span class="chip" style="margin:0 6px 4px 0">Émargement J2 · à venir</span><span class="chip" style="margin:0 6px 4px 0">Satisfaction · à venir</span>
-        <div class="sm" style="margin-top:4px">Les preuves à l'échelle du client (devis, convention) vivent sur sa fiche client.</div></div></div>
+    h+=`<div class="fsec"><div class="sect-h">${ICO.cap}${offre} <span class="n2">${c.sub||""}</span></div>
+      <div class="subh">Espace apprenant · ses to_do font avancer sa carte</div>
+      ${ap.afaire.length?ap.afaire.map(x=>`<div class="lrow">${x}<span class="chip warn">à faire</span></div>`).join(""):`<div class="lrow">Tout est fait<span class="chip ok">à jour</span></div>`}
+      <div class="subh">Preuves individuelles</div>
+      <div class="lrow">Questionnaire de positionnement<span class="chip ok">fait</span></div>
+      <div class="lrow">Émargement J1<span class="chip">à venir</span></div>
+      <div class="lrow">Émargement J2<span class="chip">à venir</span></div>
+      <div class="lrow">Questionnaire de satisfaction<span class="chip">à venir</span></div>
+      <div class="lrow" style="border-top:none;padding-top:2px"><span class="sm">Les preuves à l'échelle du client (devis, convention) vivent sur sa fiche client.</span></div>
     </div>`;
   });
   return h;
 }
 function ficheClientHtml(id){
   const cl=CLIENTS.find(c=>c.id===id); if(!cl) return "";
+  const totD=cl.ventes.reduce((a,v)=>a+parseInt(v.m.replace(/\D/g,"")),0);
   let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
-  h+=`<div class="fsec"><h2>Identité</h2>
-    <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-top:10px">
-      <div class="avat">${cl.type.startsWith("Particulier")?initiales(cl.nom):"🏢"}</div>
-      <div><div style="font-size:17px;font-weight:600;color:var(--ink-900)">${cl.nom}</div>
-        <div class="fh-meta">${cl.siret?`SIRET ${cl.siret}`:"Client particulier"}${cl.ref?` · Référent : ${cl.ref}`:""}</div>
-        <div style="margin-top:6px"><span class="chip">${cl.type}</span> <span class="chip">${cl.mode}</span>${cl.mandat?` <span class="chip ok">Mandat SDD · ${cl.mandat}</span>`:""}</div></div>
-    </div>
-    <div class="frow" style="margin-top:12px"><span class="sm" style="width:150px">Identifiants techniques</span>
-      <span class="chip">Qonto cli_74…</span><span class="chip">GHL 91Bx…</span><span class="chip">Qualiobee client 7a21…</span></div>
-    <div class="frow"><span class="sm" style="width:150px">Apprenants liés</span><div style="flex:1">
-      ${(cl.apprenants||[]).map(aid=>{const a=APPRENANTS.find(x=>x.id===aid);return a?`<span class="fh-link" data-fiche="apprenant::${a.id}" style="display:inline-flex;align-items:center;gap:6px;margin:0 14px 6px 0"><span class="avat" style="width:24px;height:24px;font-size:10px;border-radius:7px">${initiales(a.nom)}</span>${a.nom} →</span>`:""}).join("")||`<span class="sm">Aucun</span>`}
-    </div></div>
+  h+=`<div class="fichehead"><div class="fh-top">
+    <div class="avat">${cl.type.startsWith("Particulier")?initiales(cl.nom):ICO.building}</div>
+    <div><h1>${cl.nom}</h1>
+      <div class="fh-contact">${cl.siret?`<span>${ICO.building}SIRET ${cl.siret}</span>`:`<span>${ICO.user}Client particulier</span>`}${cl.ref?`<span>${ICO.mail}${cl.ref}</span>`:""}</div>
+      <div class="fh-badges"><span class="chip">${cl.type}</span><span class="chip">${cl.mode}</span>${cl.mandat?`<span class="chip ok">Mandat SDD actif</span>`:""}</div></div>
+  </div>
+  <div class="apercu">
+    <div><div class="k">Ventes</div><div class="v">${cl.ventes.length}</div></div>
+    <div><div class="k">Montant dû</div><div class="v">${totD.toLocaleString("fr-FR")} €</div></div>
+    <div><div class="k">Mandat SDD</div><div class="v">${cl.mandat||'<span class="sm">Aucun</span>'}</div></div>
+    <div><div class="k">Apprenants</div><div class="v">${(cl.apprenants||[]).length}</div></div>
+  </div>
+  <div class="idchips"><span class="lbl">Identifiants</span><span class="idchip">Qonto cli_74…</span><span class="idchip">GHL 91Bx…</span><span class="idchip">Qualiobee 7a21…</span></div>
+  <div class="idchips" style="border-top:none;padding-top:4px"><span class="lbl">Apprenants liés</span>
+    ${(cl.apprenants||[]).map(aid=>{const a=APPRENANTS.find(x=>x.id===aid);return a?`<span class="perschip" data-fiche="apprenant::${a.id}"><span class="avat">${initiales(a.nom)}</span>${a.nom}</span>`:""}).join("")||'<span class="idchip">Aucun</span>'}
+  </div>
   </div>`;
   cl.ventes.forEach(v=>{
     const ic=v.inscId?CARDS.find(c=>c.id===v.inscId):null;
     const fc=v.factId?CARDS.find(c=>c.id===v.factId):null;
-    h+=`<div class="fsec"><h2>Offre · ${v.lbl} <span class="n2">${v.m} · ${FIN[v.fin].lbl}${ic&&ic.com?` · ${ic.com}`:""}</span></h2>
-      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px">
-        <div style="width:280px"><div class="apercu" style="border:none;padding:0;margin:0 0 6px"><span class="k">Carte inscription</span></div>
+    h+=`<div class="fsec"><div class="sect-h">${ICO.wallet}Offre · ${v.lbl}
+        <span class="right">${v.m} · ${FIN[v.fin].lbl}${ic&&ic.com?`<br>${ic.com}`:""}</span></div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:14px">
+        <div style="width:280px"><div class="subh" style="margin:0 0 6px">Carte inscription</div>
           ${ic?cardHtml(ic,KB[ic.kb].cols.find(x=>x.id===ic.col),{}):`<div class="card pointer"><div class="s">Pas de carte inscription individuelle.</div></div>`}</div>
-        <div style="width:280px"><div class="apercu" style="border:none;padding:0;margin:0 0 6px"><span class="k">Carte facturation</span></div>
+        <div style="width:280px"><div class="subh" style="margin:0 0 6px">Carte facturation</div>
           ${fc?cardHtml(fc,KB[fc.kb].cols.find(x=>x.id===fc.col),{}):`<div class="card pointer"><div class="t">Carte à venir</div><div class="s">${v.note||"Elle naîtra selon la règle de son rail."}</div></div>`}</div>
       </div>
-      <div class="frow" style="margin-top:8px"><span class="sm" style="width:150px">Preuves & documents de l'offre</span><div style="flex:1">${cl.docs.map(d=>`<span class="chip" style="margin:0 6px 4px 0">${d}</span>`).join("")}</div></div>
+      <div class="subh">Preuves & documents de l'offre</div>
+      <div style="padding-top:2px">${cl.docs.map(d=>`<span class="chip" style="margin:0 6px 6px 0">${ICO.file} ${d}</span>`).join("")}</div>
     </div>`;
   });
-  return h;
-}
-function pageAnnuaire(){
-  const f=S.fUsers||"apprenants";
-  let h=`<div class="pagehead"><h1>Annuaire</h1><p>Toutes les personnes du système : celles qui ont un compte (internes, formateurs, commerciaux) et celles qui ont une fiche (clients, apprenants).</p></div>`;
-  h+=chips([["",[["apprenants","Apprenants"],["clients","Clients"],["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["internes","Internes"]]]], f, "fUsers");
-  h+=`<div class="fsec">`;
-  if(f==="apprenants"){
-    h+=`<h2>Apprenants <span class="n2">${APPRENANTS.length}</span></h2>`;
-    h+=APPRENANTS.map(a=>{const cl=CLIENTS.find(c=>c.id===a.client);
-      return `<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(a.nom)}</span><div><div class="tt">${a.nom}</div><div class="sm">${a.email}</div></div><span class="chip">${a.type}</span><span class="go" data-fiche="apprenant::${a.id}">Fiche apprenant →</span>${cl?`<span class="go" data-fiche="client::${cl.id}">Client →</span>`:""}</div>`;}).join("");
-  } else if(f==="clients"){
-    h+=`<h2>Clients <span class="n2">${CLIENTS.length}</span></h2>`;
-    h+=CLIENTS.map(c=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${c.type.startsWith("Particulier")?initiales(c.nom):"🏢"}</span><div><div class="tt">${c.nom}</div><div class="sm">${c.siret?"SIRET "+c.siret:"Particulier"}</div></div><span class="chip">${c.mode}</span><span class="go" data-fiche="client::${c.id}">Fiche client →</span></div>`).join("");
-  } else if(f==="formateurs"){
-    h+=`<h2>Formateurs <span class="n2">qualifications, profil, onboarding</span></h2>`;
-    h+=[["Sarah K.","N1 · N2 · Coaching","Paris"],["Marc D.","N1","Bordeaux · Toulouse"],["Inès B.","N1 · Coaching","Lyon"]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div><div class="tt">${x[0]}</div><div class="sm">Villes : ${x[2]}</div></div><span class="chip">Offres : ${x[1]}</span><span class="chip ok">Onboarding complet</span></div>`).join("");
-  } else if(f==="closeurs"){
-    h+=`<h2>Closeurs <span class="n2">calendriers de closing</span></h2>`;
-    h+=[["Alex R."],["Chloé M."],["Yanis B."]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div class="tt">${x[0]}</div><span class="chip">Calendrier GHL relié</span></div>`).join("");
-  } else if(f==="setteurs"){
-    h+=`<h2>Setteurs</h2><div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">ST</span><div class="tt">Sam T.</div><span class="chip">Fixe + commissions</span></div>`;
-  } else {
-    h+=`<h2>Internes <span class="n2">comptes France IA et accès aux pages</span></h2>`;
-    h+=[["Jeanne D.","Admin · Customer Success"],["Côme A.","Admin · Process"],["Olivier R.","Admin"]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div class="tt">${x[0]}</div><span class="chip">${x[1]}</span><span class="chip">Accès : toutes les pages</span></div>`).join("");
-  }
-  h+=`</div>`;
   return h;
 }
 const STUBS = {
