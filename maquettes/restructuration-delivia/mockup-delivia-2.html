@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DELIV'IA 2.0 · Plateforme France IA (mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8fafc; --surface:#fff; --ink-900:#0f172a; --ink-800:#1e293b; --ink-700:#334155;
+  --ink-500:#64748b; --ink-400:#94a3b8; --ink-300:#cbd5e1;
+  --line:#f1f5f9; --line-2:#e2e8f0;
+  --primary:#4f46e5; --primary-dark:#4338ca; --primary-50:#eef2ff;
+  --ok:#059669; --ok-50:#ecfdf5; --warn:#d97706; --warn-50:#fffbeb;
+  --err:#e11d48; --err-50:#fff1f2; --info:#2563eb; --info-50:#eff6ff;
+  --sh-carte:0 1px 3px 0 rgb(0 0 0/.04),0 1px 2px -1px rgb(0 0 0/.04);
+  --sh-hover:0 4px 6px -1px rgb(0 0 0/.06),0 2px 4px -2px rgb(0 0 0/.04);
+  --app-delivia:#4f46e5; --app-apprenant:#0284c7; --app-treso:#059669; --app-dash:#7c3aed;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:Inter,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink-800);font-size:14px}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+#app{display:flex;min-height:100vh}
+/* ── Sidebar plateforme ─────────────────────────── */
+#sidebar{width:248px;flex-shrink:0;background:#fff;box-shadow:1px 0 0 0 var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{padding:18px 20px 14px}
+.brand .word{font-size:17px;font-weight:600;letter-spacing:-.02em;color:var(--ink-900)}
+.brand .word em{font-style:italic;font-weight:700}
+.brand .tri{display:flex;height:3px;width:64px;margin-top:5px;border-radius:2px;overflow:hidden}
+.brand .tri i{flex:1}.brand .tri i:nth-child(1){background:#4379f2}.brand .tri i:nth-child(2){background:#eef0f4}.brand .tri i:nth-child(3){background:#f21b1b}
+.brand .plt{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400);margin-top:7px;font-weight:500}
+.nav-label{padding:14px 20px 6px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400)}
+.apptab{display:flex;align-items:center;gap:10px;width:calc(100% - 16px);margin:1px 8px;padding:8px 12px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--ink-500);text-align:left;transition:background .12s,color .12s}
+.apptab:hover{background:var(--bg);color:var(--ink-700)}
+.apptab .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.apptab.active{background:var(--primary-50);color:var(--primary-dark);font-weight:600}
+.apptab.active[data-app="apprenant"]{background:#e0f2fe;color:#0369a1}
+.apptab.active[data-app="treso"]{background:#ecfdf5;color:#047857}
+.apptab.active[data-app="dash"]{background:#f3e8ff;color:#6d28d9}
+.apptab .lock{margin-left:auto;font-size:10px;color:var(--ink-300)}
+#subnav{padding-bottom:8px}
+.subgrp{padding:12px 20px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400)}
+.subtab{display:flex;align-items:center;gap:8px;width:calc(100% - 28px);margin:1px 8px 1px 20px;padding:6px 11px;border-radius:7px;font-size:13px;color:var(--ink-500);text-align:left}
+.subtab:hover{background:var(--bg);color:var(--ink-700)}
+.subtab.active{background:var(--bg);color:var(--ink-900);font-weight:600}
+.subtab.active::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--accent,#4f46e5);margin-left:-8px;margin-right:5px}
+.side-note{margin-top:auto;padding:14px 20px;font-size:11px;color:var(--ink-400);border-top:1px solid var(--line);line-height:1.5}
+/* ── Topbar ─────────────────────────────────────── */
+#main{flex:1;min-width:0;display:flex;flex-direction:column}
+#topbar{height:52px;background:#fff;box-shadow:0 1px 0 0 var(--line);display:flex;align-items:center;gap:12px;padding:0 20px;position:sticky;top:0;z-index:30}
+#crumb{font-size:14px;font-weight:600;color:var(--ink-900)}
+#crumb .sep{color:var(--ink-300);font-weight:400;margin:0 6px}
+#roleWrap{margin-left:auto;display:flex;align-items:center;gap:8px}
+#roleWrap .lbl{font-size:11px;color:var(--ink-400)}
+.rolesel{display:flex;gap:2px;background:#f1f5f9;padding:3px;border-radius:8px}
+.rolesel button{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:500;color:var(--ink-500)}
+.rolesel button.active{background:#fff;color:var(--ink-900);font-weight:600;box-shadow:var(--sh-carte)}
+#content{flex:1;padding:20px 24px 60px}
+.pagehead{margin-bottom:14px}
+.pagehead h1{font-size:20px;font-weight:600;letter-spacing:-.01em;color:var(--ink-900)}
+.pagehead p{font-size:13px;color:var(--ink-500);margin-top:3px;max-width:760px}
+/* filtres */
+.chips{display:inline-flex;align-items:center;gap:4px;background:#f1f5f9;padding:5px;border-radius:9px;margin:2px 10px 14px 0;flex-wrap:wrap}
+.chips .grp{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);font-weight:600;padding:0 6px}
+.chips button{padding:5px 12px;border-radius:6px;font-size:12.5px;font-weight:500;color:var(--ink-500)}
+.chips button.active{background:#fff;color:var(--ink-900);font-weight:600;box-shadow:var(--sh-carte)}
+/* ── Kanban ─────────────────────────────────────── */
+.kb-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink-900);margin:18px 0 10px}
+.kb-title .who{font-size:11px;font-weight:500;color:var(--ink-400)}
+.board{display:flex;gap:12px;overflow-x:auto;padding-bottom:14px;align-items:flex-start}
+.col{width:272px;flex-shrink:0;background:rgba(248,250,252,.9);border:1px solid var(--line);border-radius:12px;padding:10px}
+.col-h{display:flex;align-items:center;gap:7px;padding:2px 4px 8px}
+.col-h .pill{width:8px;height:8px;border-radius:50%;background:var(--ink-400);flex-shrink:0}
+.col-h h3{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500)}
+.col-h .n{margin-left:auto;font-size:11px;color:var(--ink-400);font-variant-numeric:tabular-nums}
+.col-open{font-size:10.5px;color:var(--warn);background:var(--warn-50);border-radius:6px;padding:4px 8px;margin:0 2px 8px;display:flex;align-items:center;gap:6px;line-height:1.35}
+.col-open button{margin-left:auto;font-size:10.5px;font-weight:600;color:var(--warn);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.card{background:#fff;border-radius:10px;box-shadow:var(--sh-carte);padding:11px 12px;margin-bottom:9px;position:relative;transition:box-shadow .15s,opacity .3s,transform .3s}
+.card:hover{box-shadow:var(--sh-hover)}
+.card.pop{animation:pop .45s ease}
+@keyframes pop{0%{transform:scale(.92);opacity:0}100%{transform:scale(1);opacity:1}}
+.card .t{font-size:13.5px;font-weight:600;color:var(--ink-900)}
+.card .s{font-size:11px;color:var(--ink-400);margin-top:2px}
+.finbar{position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:2px}
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1.5px 8px;font-size:10.5px;font-weight:500;font-variant-numeric:tabular-nums}
+.b-cpf{background:var(--info-50);color:var(--info)} .bar-cpf{background:#3b82f6}
+.b-opco{background:#fff7ed;color:#ea580c} .bar-opco{background:#f97316}
+.b-vir{background:var(--ok-50);color:var(--ok)} .bar-vir{background:#10b981}
+.b-mandat{background:#faf5ff;color:#9333ea} .bar-mandat{background:#a855f7}
+.b-wait{background:var(--warn-50);color:var(--warn)}
+.b-neutral{background:#f1f5f9;color:var(--ink-500)}
+.card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tasks{margin-top:9px;border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:2px}
+.tgrp{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin:5px 0 2px}
+.tor{display:flex;align-items:center;gap:8px;color:var(--ink-300);font-size:10px;font-weight:600;margin:4px 0}
+.tor::before,.tor::after{content:"";flex:1;height:1px;background:var(--line-2)}
+.task{display:flex;align-items:flex-start;gap:7px;padding:3px 2px;border-radius:6px;font-size:12px;line-height:1.4;color:var(--ink-700);cursor:pointer}
+.task:hover{background:var(--bg)}
+.task .box{width:14px;height:14px;border:1.5px solid var(--ink-300);border-radius:4px;flex-shrink:0;margin-top:1.5px;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.task.done .box{background:var(--primary);border-color:var(--primary)}
+.task.done .box::after{content:"";width:8px;height:4.5px;border-left:1.8px solid #fff;border-bottom:1.8px solid #fff;transform:rotate(-45deg) translate(0.5px,-1px)}
+.task.done .lbl{color:var(--ink-400);text-decoration:line-through}
+.task.other{color:var(--ink-400)}
+.task.other .box{border-color:var(--line-2);background:var(--bg)}
+.task.other.done .box{background:var(--ink-300);border-color:var(--ink-300)}
+.task .who{color:var(--ink-400);font-size:11px}
+.task .tag{font-size:10px;color:#92400e;background:var(--warn-50);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
+.task .fx{font-size:10px;color:#9d174d;background:#fdf2f8;border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
+.task .note{display:block;font-size:10.5px;color:var(--ink-400);margin-top:1px}
+.sub{margin:2px 0 2px 21px;display:flex;flex-direction:column;gap:1px}
+.waiting{margin-top:8px;font-size:11px;color:var(--warn);background:var(--warn-50);border-radius:6px;padding:5px 8px;line-height:1.4}
+/* carte grisée */
+.card.ghost{opacity:.62;background:#f8fafc}
+.card.ghost .t,.card.ghost .s{color:var(--ink-400)}
+.ghost-hint{margin-top:8px;font-size:11px;color:var(--ink-400);display:flex;align-items:center;gap:5px}
+.popover{display:none;position:absolute;z-index:40;left:8px;right:8px;top:calc(100% - 6px);background:var(--ink-900);color:#e2e8f0;font-size:11.5px;line-height:1.55;padding:10px 12px;border-radius:9px;box-shadow:0 8px 24px rgb(0 0 0/.18)}
+.card.ghost:hover .popover{display:block}
+.popover a{color:#a5b4fc;font-weight:600;text-decoration:none;display:inline-block;margin-top:5px;cursor:pointer}
+/* lignes facture mensuelle */
+.lines{margin-top:8px;border-top:1px solid var(--line);padding-top:7px}
+.lines .ln{display:flex;justify-content:space-between;font-size:11.5px;padding:2.5px 2px;color:var(--ink-700)}
+.lines .ln.new{animation:flash 1.6s ease}
+@keyframes flash{0%{background:#fdf2f8}100%{background:transparent}}
+.lines .ln .k{color:var(--ink-400)}
+.lines .tot{display:flex;justify-content:space-between;font-size:12px;font-weight:600;border-top:1px solid var(--line-2);margin-top:4px;padding-top:5px;color:var(--ink-900)}
+/* liste sessions closer */
+.slist{display:flex;flex-direction:column;gap:10px;max-width:680px}
+.srow{background:#fff;border-radius:10px;box-shadow:var(--sh-carte);padding:13px 16px;display:flex;align-items:center;gap:14px}
+.srow .d{font-size:13.5px;font-weight:600;color:var(--ink-900)}
+.srow .v{font-size:12px;color:var(--ink-500)}
+.srow .pl{margin-left:auto;font-size:12px;color:var(--ink-500);font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:7px;padding:7px 13px;font-size:12.5px;font-weight:500;transition:background .12s}
+.btn-p{background:var(--primary);color:#fff}.btn-p:hover{background:var(--primary-dark)}
+.btn-s{border:1px solid var(--line-2);color:var(--ink-700);background:#fff}.btn-s:hover{background:var(--bg)}
+/* stubs */
+.stub{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:22px;max-width:680px}
+.stub h2{font-size:14px;font-weight:600;color:var(--ink-900);margin-bottom:6px}
+.stub p{font-size:13px;color:var(--ink-500);line-height:1.6}
+.stub ul{margin:10px 0 0 18px;font-size:13px;color:var(--ink-700);line-height:1.9}
+.simnote{display:inline-flex;align-items:center;gap:6px;background:var(--warn-50);color:#92400e;font-size:11px;border-radius:999px;padding:3px 10px;margin-bottom:14px}
+/* ── Apps simulées ──────────────────────────────── */
+.appframe{border-radius:12px;overflow:hidden;box-shadow:var(--sh-carte);background:#fff;max-width:1060px}
+/* apprenant */
+.ap-head{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;border-bottom:1px solid var(--line-2);background:rgba(255,255,255,.95)}
+.ap-body{background:#f8fafc;padding:26px 22px;display:flex;flex-direction:column;gap:18px;align-items:center}
+.ap-card{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);width:100%;max-width:760px}
+.ap-card .h{display:flex;justify-content:space-between;align-items:center;padding:14px 22px}
+.ap-card .h h2{font-size:17px;font-weight:600;color:#0f172a}
+.ap-card .b{border-top:1px solid #f1f5f9;padding:16px 22px}
+.ap-tag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;background:#f1f5f9;padding:2px 10px;font-size:12px;font-weight:500;color:#334155;font-variant-numeric:tabular-nums;margin:0 6px 6px 0}
+.ap-chip{border-radius:999px;padding:2px 10px;font-size:12px;font-weight:500}
+.ap-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid #f1f5f9;font-size:14px;color:#0f172a}
+.ap-row:first-child{border-top:none}
+.ap-row .chev{margin-left:auto;color:#94a3b8}
+.ap-avatar{width:34px;height:34px;border-radius:50%;background:#4f46e5;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
+/* treso */
+.tr-frame{display:flex;min-height:430px}
+.tr-side{width:186px;background:#1a1a1a;color:#fff;padding:14px 10px;flex-shrink:0}
+.tr-logo{display:flex;gap:8px;align-items:center;padding:0 8px 14px}
+.tr-logo .sq{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.tr-grp{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);padding:10px 8px 4px;font-weight:600}
+.tr-it{padding:6px 10px;border-radius:8px;font-size:12.5px;color:rgba(255,255,255,.6);margin:1px 0}
+.tr-it.on{background:rgba(255,255,255,.1);color:#fff;font-weight:500}
+.tr-main{flex:1;background:#f5f5f5;padding:22px}
+.tr-main h2{font-size:20px;font-weight:700;color:#111827}
+.tr-main .sub{font-size:13px;color:#6b7280;margin:2px 0 16px;display:block}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;max-width:760px}
+.kpi{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:12px 14px;box-shadow:var(--sh-carte)}
+.kpi .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#737373;font-weight:500}
+.kpi .v{font-size:21px;font-weight:700;margin-top:3px;color:#111827;font-variant-numeric:tabular-nums}
+.kpi .d{font-size:11px;margin-top:2px;font-weight:500}
+.up{color:#059669}.down{color:#dc2626}.blue{color:#2563eb}
+/* dash */
+.dd-main{padding:22px;background:#fff}
+.dd-sec{border:1px solid rgba(196,181,253,.6);background:linear-gradient(90deg,rgba(245,243,255,.6),rgba(250,245,255,.6));border-radius:12px;padding:16px;margin-top:14px;max-width:860px}
+.dd-sec h3{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#5b21b6;display:flex;gap:7px;align-items:center;margin-bottom:10px}
+.dd-tbl{width:100%;font-size:12.5px;border-collapse:collapse;background:rgba(255,255,255,.6);border-radius:8px;overflow:hidden}
+.dd-tbl th{text-align:left;padding:7px 10px;background:rgba(237,233,254,.4);border-bottom:1px solid rgba(196,181,253,.6);color:#4c1d95;font-weight:600}
+.dd-tbl td{padding:7px 10px;border-bottom:1px solid rgba(237,233,254,.6);font-variant-numeric:tabular-nums;color:#334155}
+/* toasts / overlay */
+#toasts{position:fixed;right:18px;top:64px;z-index:100;display:flex;flex-direction:column;gap:8px;max-width:340px}
+.toast{background:var(--ink-900);color:#f1f5f9;font-size:12.5px;line-height:1.5;padding:10px 14px;border-radius:10px;box-shadow:0 10px 28px rgb(0 0 0/.22);animation:tin .25s ease}
+.toast b{color:#fff}
+.toast.pink{border-left:3px solid #ec4899}
+@keyframes tin{0%{transform:translateY(-8px);opacity:0}100%{transform:translateY(0);opacity:1}}
+#auth{position:fixed;inset:0;background:rgba(248,250,252,.92);backdrop-filter:blur(3px);z-index:200;display:none;align-items:center;justify-content:center}
+#auth .box{background:#fff;border-radius:14px;box-shadow:0 14px 40px rgb(0 0 0/.12);padding:30px 42px;text-align:center}
+#auth .sp{width:26px;height:26px;border:3px solid var(--line-2);border-top-color:var(--accent2,#4f46e5);border-radius:50%;margin:0 auto 12px;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#auth .t1{font-size:14px;font-weight:600;color:var(--ink-900)}
+#auth .t2{font-size:12px;color:var(--ink-400);margin-top:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="word">France <em>IA</em></div>
+      <div class="tri"><i></i><i></i><i></i></div>
+      <div class="plt">Plateforme France IA</div>
+    </div>
+    <div class="nav-label">Applications</div>
+    <nav id="appTabs"></nav>
+    <nav id="subnav"></nav>
+    <div class="side-note">Mockup DELIV'IA 2.0 · données fictives.<br>Tout est cochable pour simuler l'enchaînement des process.</div>
+  </aside>
+  <div id="main">
+    <header id="topbar">
+      <div id="crumb"></div>
+      <div id="roleWrap">
+        <span class="lbl">Vision</span>
+        <div class="rolesel" id="roleSel"></div>
+      </div>
+    </header>
+    <main id="content"></main>
+  </div>
+</div>
+<div id="toasts"></div>
+<div id="auth"><div class="box"><div class="sp"></div><div class="t1" id="authT1"></div><div class="t2">Authentification SSO France IA…</div></div></div>
+
+<script>
+"use strict";
+/* ════════════════════ CONFIG ════════════════════ */
+const APPS = {
+  delivia:  {name:"DELIV'IA",             color:"var(--app-delivia)",  accent:"#4f46e5"},
+  apprenant:{name:"Plateforme apprenant", color:"var(--app-apprenant)",accent:"#0284c7"},
+  treso:    {name:"Trésorerie",           color:"var(--app-treso)",    accent:"#059669"},
+  dash:     {name:"Data Dashboard",       color:"var(--app-dash)",     accent:"#7c3aed"},
+};
+const ROLES = {admin:"Admin", closer:"Closeur", formateur:"Formateur", setter:"Setteur", agence:"Agence"};
+const ROLE_APPS = {admin:["delivia","apprenant","treso","dash"], closer:["delivia","dash"], formateur:["delivia","apprenant"], setter:["delivia","dash"], agence:["delivia"]};
+const ROLE_OWNS = {admin:"fia", closer:"closer", formateur:"formateur", setter:"setter", agence:"agence"};
+const WHO = {fia:"France IA", closer:"closeur", formateur:"formateur", client:"client", agence:"agence", setter:"setteur", auto:"automatique"};
+
+const DELIVIA_TABS = {
+  admin:[["Processus",[["sessions","Sessions"],["inscription","Inscription"],["facturation","Facturation"]]],
+         ["Pilotage",[["anomalies","Anomalies"],["actions","Actions"]]],
+         ["Configuration",[["utilisateurs","Utilisateurs"],["automatisations","Automatisations"],["templates","Templates"]]],
+         ["Divers",[["faq","FAQ & Feedback"],["preuves","Preuves"]]]],
+  closer:[["Processus",[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]],
+          ["Outils",[["anomalies","Anomalies"],["generer","Générer"],["faq","FAQ & Feedback"]]]],
+  formateur:[["Mon activité",[["services","Mes services"],["aprendre","À prendre"]]],
+             ["Autre",[["profil","Mon profil"],["ressources","Ressources"]]]],
+  setter:[["Processus",[["facturation","Facturation"]]]],
+  agence:[["Processus",[["facturation","Facturation"]]]],
+};
+const APP_TABS = {
+  apprenant:[["Aperçu",[["espace","Espace apprenant"],["support","Support de formation"]]]],
+  treso:[["Dashboards",[["dashboard","Trésorerie"],["mensuel","Cash flow"],["projections","Projections"],["analyse","Data analyse"]]],
+         ["Transactions",[["transactions","Transactions"],["revenus","Revenus"],["sessions","Sessions"],["commissions","Commissions"],["rapprochements","Rapprochements"]]]],
+  dash:[["Funnel",[["northstar","North Star"],["equation","Equation"],["targeting","Targeting"],["leadgen","Lead Gen"],["setting","Setting"],["closing","Closing"]]],
+        ["Opérations",[["agendasetting","Agenda Setting"],["agenda","Agenda Closing"],["commissions","Commissions"]]]],
+};
+
+/* ════════════════════ KANBANS (source : page Notion DELIVIA 2.0 ALL) ════════════════════ */
+/* task: {t, p(porteur), auto, tpl, fx, fin:[...], note, sub:[...], grp} · fin absent = TOUS */
+const KB = {
+/* ── Session inter · rail France IA ── */
+session_fia:{cols:[
+ {id:"brouillon",  label:"Brouillon"},
+ {id:"prete",      label:"Prête", open:"Ouverture J-14 formation", note:"Sessions disponibles à l'inscription"},
+ {id:"demarree",   label:"Démarrée"},
+ {id:"enformation",label:"En formation", open:"Ouverture J2 formation"},
+ {id:"preuves",    label:"Récolter les preuves"},
+ {id:"terminee",   label:"Terminée"}],
+tasks:{
+ brouillon:[
+  {t:"Réserver & payer le lieu",p:"fia"},
+  {t:"Un formateur demande cette session",p:"formateur",note:"France IA ne peut pas la cocher"},
+  {t:"Valider la demande d'un formateur",p:"fia"},
+  {t:"Créer, ouvrir et lier session EDOF",p:"fia"}],
+ prete:[
+  {t:"Désactiver contrats Qualiobee (CPF)",p:"fia"},
+  {t:"Lancer session Qualiobee",p:"fia"},
+  {t:"Créer le groupe WhatsApp & envoyer le message de bienvenue",p:"fia",tpl:1},
+  {t:"Envoyer demande signature contrat / convention",p:"fia",tpl:1}],
+ demarree:[
+  {t:"Envoyer un message sur le groupe WhatsApp",p:"formateur",tpl:1},
+  {t:"Lire les besoins des apprenants (Qualiobee)",p:"formateur"},
+  {t:"Adapter le contenu de la formation",p:"formateur"},
+  {t:"Inviter apprenants sur HAL (2 jours)",p:"fia"},
+  {t:"Envoyer message WhatsApp veille J1",p:"fia",tpl:1}],
+ enformation:[
+  {t:"Vérifier que tous les émargements sont faits",p:"formateur"},
+  {t:"Vérifier que tous les CPF sont inscrits à la certification",p:"formateur"},
+  {t:"Envoyer message de fin sur WhatsApp",p:"formateur",tpl:1},
+  {t:"France IA confirme que tous les émargements sont faits + tous les CPF inscrits à la certification",p:"fia"},
+  {t:"Déclarer entrée WEDOF (J1, par émargement)",p:"fia"},
+  {t:"Déclarer sortie + service fait WEDOF (J2)",p:"fia"},
+  {t:"Formateur crée sa facture",p:"formateur"},
+  {t:"Formateur dépose sa facture",p:"formateur",fx:"carte_formateur"}],
+ preuves:[
+  {t:"Exporter la discussion WhatsApp",p:"fia"},
+  {t:"Téléverser toutes les preuves dans le drive",p:"fia"}],
+ terminee:[]}},
+/* ── Session inter · rail Formateur ── */
+session_frm:{cols:[
+ {id:"shotgun", label:"Shotgun"},
+ {id:"preparer",label:"Préparer", open:"Ouverture J-14 formation"},
+ {id:"animer",  label:"Animer", open:"Ouverture J2 formation"},
+ {id:"facturer",label:"Facturer"},
+ {id:"termine", label:"Terminé"}],
+tasks:{
+ shotgun:[
+  {t:"Faire une demande",p:"formateur"},
+  {t:"Validé par France IA",p:"fia",note:"le formateur ne peut pas la cocher"}],
+ preparer:[
+  {t:"Créer le groupe WhatsApp",p:"fia"},
+  {t:"Envoyer un message sur le groupe WhatsApp",p:"formateur",tpl:1},
+  {t:"Lire les besoins des apprenants (Qualiobee)",p:"formateur"},
+  {t:"Adapter le contenu de la formation",p:"formateur"},
+  {t:"Inviter apprenants sur HAL (2 jours)",p:"fia"},
+  {t:"Envoyer message WhatsApp veille J1",p:"fia",tpl:1}],
+ animer:[
+  {t:"Vérifier que tous les émargements sont faits",p:"formateur"},
+  {t:"Vérifier que tous les CPF sont inscrits à la certification",p:"formateur"},
+  {t:"Envoyer message de fin sur WhatsApp",p:"formateur",tpl:1},
+  {t:"France IA confirme que tous les émargements sont faits + tous les CPF inscrits à la certification",p:"fia"}],
+ facturer:[
+  {t:"Créer ma facture",p:"formateur"},
+  {t:"Déposer ma facture (input PJ)",p:"formateur",fx:"carte_formateur"},
+  {t:"Facture validée par France IA",p:"fia"},
+  {t:"Facture payée par France IA",p:"fia"}],
+ termine:[]}},
+/* ── Inscription inter (N1 & N2) ── */
+insc:{cols:[
+ {id:"recue",  label:"Inscription reçue"},
+ {id:"action", label:"Action de notre part"},
+ {id:"attente",label:"En attente client"},
+ {id:"validee",label:"Inscription validée", open:"Ouverture J2+1 formation", ghost:1},
+ {id:"absent", label:"Absent", skip:1},
+ {id:"lost",   label:"Lost", skip:1, ghost:1},
+ {id:"termine",label:"Terminé", ghost:1}],
+tasks:{
+ recue:[{t:"ARD soumis",p:"client",auto:1,grp:"Tous"}],
+ action:[
+  {t:"Valider demande de devis",p:"closer",auto:1,fin:["cpf"],grp:"CPF"},
+  {t:"Générer convention",p:"closer",auto:1,fin:["opco"],grp:"OPCO",note:"automatique, ARD à ajouter"},
+  {t:"Générer le devis",p:"closer",auto:1,fin:["fp_ent_vir"],grp:"Entreprise fonds propres"},
+  {t:"Générer convention",p:"closer",auto:1,fin:["fp_ent_vir"],note:"automatique, ARD à ajouter"},
+  {t:"Générer directement le lien mandat prélèvement (le client paie tout de suite)",p:"closer",auto:1,fin:["fp_ent_man"],grp:"Entreprise fonds propres · mandat"},
+  {t:"Générer mandat prélèvement (1 à 12 occurrences)",p:"closer",auto:1,fin:["fp_part"],grp:"Particulier fonds propres"}],
+ attente:[
+  {t:"Paiement du RAC",p:"client",auto:1,fin:["cpf"],grp:"CPF",note:"détecté automatiquement"},
+  {t:"Validation de l'OPCO",p:"client",fin:["opco"],grp:"OPCO"},
+  {t:"Signature convention (référent client)",p:"client",fin:["opco"]},
+  {t:"Générer la facture depuis la fiche client avec les informations de l'OPCO",p:"closer",fin:["opco"],fx:"carte_client",note:"ARD ne génère pas la facture : l'OPCO à facturer n'est pas encore connu"},
+  {t:"Signer le devis",p:"client",auto:1,fin:["fp_ent_vir"],grp:"Entreprise fonds propres · virement"},
+  {t:"Signer convention",p:"client",auto:1,fin:["fp_ent_vir"]},
+  {t:"Générer la facture",p:"auto",fin:["fp_ent_vir"],fx:"carte_client",note:"échéance J+30 du J2, transmise au client à J2+1 de la formation"},
+  {t:"Signature lien mandat prélèvement & générer la facture",p:"client",auto:1,fin:["fp_ent_man","fp_part"],grp:"Mandat de prélèvement"},
+  {t:"Transmettre la facture au client",p:"auto",tpl:1,fin:["fp_ent_man","fp_part"],fx:"carte_client",note:"non acquittée encore, échéance = dernier prélèvement programmé"}],
+ validee:[
+  {t:"L'apprenant a émargé J1 + J2 de la formation",p:"auto",grp:"Tous"},
+  {t:"Déclarer la sortie auprès de la CDC",p:"fia",fin:["cpf"],grp:"CPF",fx:"carte_client"}],
+ absent:[
+  {t:"Contacter le client pour déterminer si l'absence est justifiée ou non",p:"closer",tpl:1},
+  {t:"Absence justifiée : récupérer la pièce jointe justificative",p:"closer",grp:"Chemin 1 · absence justifiée"},
+  {t:"Abandonner ou replacer l'apprenant (depuis fiche apprenant)",p:"closer"},
+  {t:"Transmettre la PJ à la CDC",p:"fia"},
+  {t:"Absence injustifiée : replacer ou abandonner l'apprenant",p:"closer",grp:"Chemin 2 · absence injustifiée"}],
+ lost:[], termine:[]}},
+/* ── Inscription intra (une carte = la formation intra) ── */
+intra:{cols:[
+ {id:"demande",   label:"Nouvelle demande"},
+ {id:"convention",label:"Signer convention"},
+ {id:"preparer",  label:"Préparer formation"},
+ {id:"enformation",label:"En formation", open:"Ouverture J2 formation"},
+ {id:"lost",      label:"Lost", skip:1},
+ {id:"termine",   label:"Terminé"}],
+tasks:{
+ demande:[
+  {t:"ARD soumis",p:"client",auto:1},
+  {t:"Devis généré & signé",p:"client",auto:1,fin:["fp_ent_vir","fp_ent_man"],note:"puis session disponible au Shotgun formateur"},
+  {t:"Formateur demande la session",p:"formateur"},
+  {t:"Demande formateur validée par France IA",p:"fia"}],
+ convention:[
+  {t:"Confirmer lieu & date à choisir",p:"client",fin:["fp_ent_vir","fp_ent_man"],grp:"Fonds propres"},
+  {t:"Renseigner la liste des apprenants",p:"client",fin:["fp_ent_vir","fp_ent_man"]},
+  {t:"Générer depuis la fiche client la convention",p:"closer",fin:["fp_ent_vir","fp_ent_man"]},
+  {t:"Convention signée",p:"client",fin:["fp_ent_vir","fp_ent_man"]},
+  {t:"Générer la facture sans la transmettre, échéance J+30 du J2 formation",p:"closer",fin:["fp_ent_vir"],fx:"carte_client",note:"impossible à la signature du devis : date de prestation inconnue"},
+  {t:"Signature lien mandat prélèvement & générer la facture",p:"client",auto:1,fin:["fp_ent_man"]},
+  {t:"Transmettre la facture au client",p:"auto",tpl:1,fin:["fp_ent_man"],fx:"carte_client"},
+  {t:"Renseigner la liste des apprenants",p:"client",fin:["opco"],grp:"OPCO"},
+  {t:"Lieu & date à choisir",p:"client",fin:["opco"]},
+  {t:"Validation de l'OPCO & signature convention",p:"client",fin:["opco"]},
+  {t:"Générer la facture avec échéance J+30 du J2 formation",p:"closer",fin:["opco"],fx:"carte_client"}],
+ preparer:[
+  {t:"Envoyer un message par mail pour prendre rendez-vous en visio avec le client (olivier@franceia.com en copie)",p:"formateur",tpl:1},
+  {t:"Lire les besoins des apprenants (Qualiobee)",p:"formateur"},
+  {t:"Adapter le contenu de la formation",p:"formateur"}],
+ enformation:[
+  {t:"Vérifier que tous les émargements sont faits",p:"formateur"},
+  {t:"Envoyer message de fin par mail au client",p:"formateur",tpl:1},
+  {t:"Formateur crée sa facture",p:"formateur"},
+  {t:"Formateur dépose sa facture",p:"formateur",fx:"carte_formateur"}],
+ lost:[], termine:[]}},
+/* ── Inscription coaching ── */
+coaching:{cols:[
+ {id:"demande", label:"Nouvelle demande"},
+ {id:"valider", label:"Valider le formateur"},
+ {id:"whatsapp",label:"Créer groupe WhatsApp"},
+ {id:"preparer",label:"Préparer"},
+ {id:"jourj",   label:"Jour J", open:"Date prévue"},
+ {id:"lost",    label:"Lost", skip:1},
+ {id:"termine", label:"Terminé"}],
+tasks:{
+ demande:[
+  {t:"ARD soumis",p:"client",auto:1},
+  {t:"Générer le devis",p:"closer",auto:1,fin:["fp_ent_vir"],grp:"Entreprise fonds propres"},
+  {t:"Signer convention",p:"client",auto:1,fin:["fp_ent_vir"]},
+  {t:"Générer la facture et la transmettre au client",p:"auto",tpl:1,fin:["fp_ent_vir"],fx:"carte_client"},
+  {t:"Génération facture & lien mandat prélèvement",p:"auto",fin:["fp_ent_man","fp_part"],grp:"Mandat de prélèvement",fx:"carte_client"},
+  {t:"Transmettre la facture au client",p:"auto",tpl:1,fin:["fp_part"],note:"non acquittée encore, échéance = dernier prélèvement programmé"}],
+ valider:[
+  {t:"Le formateur naturel valide son coaching",p:"formateur",note:"le formateur du présentiel de l'apprenant a la priorité"},
+  {t:"Si refus : un autre formateur fait une demande spontanée",p:"formateur"},
+  {t:"Valider la demande du formateur",p:"fia"}],
+ whatsapp:[
+  {t:"Créer le groupe WhatsApp à 3 : apprenant + formateur + staff",p:"fia"},
+  {t:"Envoyer le message de bienvenue France IA",p:"fia",tpl:1}],
+ preparer:[
+  {t:"Envoyer le message de bienvenue Formateur",p:"formateur",tpl:1},
+  {t:"Caler la ou les séances avec l'apprenant via le groupe WhatsApp",p:"formateur",tpl:1},
+  {t:"Retranscrire le créneau choisi dans l'agenda formateur DELIV'IA",p:"formateur"},
+  {t:"Demander / lire les attentes de l'apprenant (champ attentes ARD)",p:"formateur",tpl:1},
+  {t:"Préparer le contenu de la séance",p:"formateur"}],
+ jourj:[
+  {t:"Ouvrir la salle le jour J (si Station F, rappel automatique)",p:"fia"},
+  {t:"Réaliser la séance (visio ou présentiel)",p:"formateur"},
+  {t:"Déposer le compte rendu de séance",p:"formateur"},
+  {t:"Recueillir et soumettre le témoignage de clôture",p:"formateur"},
+  {t:"Vérifier le compte rendu & témoignage soumis par le formateur",p:"fia"},
+  {t:"Créer ma facture (bouton Générer)",p:"formateur",grp:"Facturation formateur"},
+  {t:"Déposer ma facture (input PJ)",p:"formateur",fx:"carte_formateur"}],
+ lost:[], termine:[]}},
+/* ── Facturation CPF ── */
+fact_cpf:{cols:[
+ {id:"sortie",  label:"Sortie de formation déclarée"},
+ {id:"validee", label:"Sortie validée par EDOF"},
+ {id:"bibby",   label:"En attente de Bibby"},
+ {id:"retard",  label:"En retard à relancer", open:"Ouverture échéance facture", skip:1},
+ {id:"recu",    label:"Paiement Bibby reçu + facture acquittée"},
+ {id:"final",   label:"Paiement BBF & EDOF + facture acquittée"}],
+tasks:{
+ sortie:[{t:"Service fait validé par la CDC",p:"auto",note:"webhook Wedof, délai variable"}],
+ validee:[
+  {t:"Générer la facture Qonto au montant CDC",p:"auto"},
+  {t:"Transmettre le numéro de facture sur EDOF",p:"auto",tpl:1},
+  {t:"Envoyer le dossier à Bibby avec la facture, les émargements signés et le dossier EDOF complet",p:"fia"}],
+ bibby:[
+  {t:"Paiement Bibby détecté",p:"auto",note:"rapprochement bancaire, attendu sous 30 jours"},
+  {t:"Facture tamponnée acquittée",p:"auto",fx:"ligne_closer"}],
+ retard:[
+  {t:"Relancer Bibby",p:"fia",tpl:1},
+  {t:"Paiement Bibby détecté",p:"auto"},
+  {t:"Facture tamponnée acquittée",p:"auto",fx:"ligne_closer"}],
+ recu:[{t:"Paiement EDOF vers Bibby détecté",p:"auto",note:"webhook WEDOF"}],
+ final:[]}},
+/* ── Facturation OPCO ── */
+fact_opco:{cols:[
+ {id:"raf",    label:"RAF"},
+ {id:"transmettre",label:"Transmettre facture OPCO", open:"Ouverture J2+1 formation"},
+ {id:"attente",label:"En attente paiement"},
+ {id:"retard", label:"En retard à relancer", open:"Ouverture échéance facture", skip:1},
+ {id:"termine",label:"Terminé"}],
+tasks:{
+ raf:[{t:"Fin de la formation",p:"auto",note:"J2+1, automatique"}],
+ transmettre:[
+  {t:"Générer la facture à l'OPCO",p:"agence"},
+  {t:"Générer la feuille d'émargement",p:"agence"},
+  {t:"Uploader sur la plateforme de l'OPCO les émargements et la facture",p:"agence",note:"cf. Process OPCO"}],
+ attente:[
+  {t:"Règlement OPCO détecté",p:"auto"},
+  {t:"Facture tamponnée acquittée",p:"auto",fx:"ligne_closer",note:"passage automatique en En retard à échéance de la facture (J+30 du J2)"}],
+ retard:[
+  {t:"Relancer l'OPCO",p:"agence"},
+  {t:"Règlement OPCO détecté",p:"auto"},
+  {t:"Facture tamponnée acquittée",p:"auto",fx:"ligne_closer"}],
+ termine:[]}},
+/* ── Facturation fonds propres ── */
+fact_fp:{cols:[
+ {id:"raf",    label:"RAF · entreprise virement"},
+ {id:"attente",label:"En attente paiement"},
+ {id:"retard", label:"En retard à relancer", skip:1},
+ {id:"termine",label:"Terminé"}],
+tasks:{
+ raf:[{t:"Fin de la formation",p:"auto",note:"J2+1, automatique"}],
+ attente:[
+  {t:"Toutes les échéances encaissées",p:"auto",fin:["fp_part","fp_ent_man"],grp:"Particulier ou entreprise avec mandat",note:"relevé toutes les 30 minutes, premier prélèvement à J+14 de la vente",sub:1},
+  {t:"Facture tamponnée acquittée",p:"auto",fin:["fp_part","fp_ent_man"],fx:"ligne_closer"},
+  {t:"Transmettre la facture au client pour règlement à J2+1 de la formation",p:"auto",tpl:1,fin:["fp_ent_vir"],grp:"Entreprise virement"},
+  {t:"Paiement reçu détecté",p:"auto",fin:["fp_ent_vir"]},
+  {t:"Facture tamponnée acquittée",p:"auto",fin:["fp_ent_vir"],fx:"ligne_closer"}],
+ retard:[
+  {t:"Relancer le client pour comprendre",p:"closer",tpl:1,fin:["fp_part","fp_ent_man"],grp:"Mandat"},
+  {t:"Décider du rejeu du prélèvement refusé",p:"closer",fin:["fp_part","fp_ent_man"]},
+  {t:"Paiement reçu détecté",p:"auto",fin:["fp_part","fp_ent_man"]},
+  {t:"Facture tamponnée acquittée",p:"auto",fin:["fp_part","fp_ent_man"],fx:"ligne_closer"},
+  {t:"Relancer le client",p:"closer",tpl:1,fin:["fp_ent_vir"],grp:"Entreprise virement"},
+  {t:"Paiement reçu détecté",p:"auto",fin:["fp_ent_vir"]},
+  {t:"Facture tamponnée acquittée",p:"auto",fin:["fp_ent_vir"],fx:"ligne_closer"}],
+ termine:[]}},
+/* ── Facturation formateur ── */
+fact_frm:{cols:[
+ {id:"valider",label:"Valider facture"},
+ {id:"payer",  label:"À payer"},
+ {id:"termine",label:"Terminé"}],
+tasks:{
+ valider:[{t:"Valider la facture du formateur",p:"fia"}],
+ payer:[{t:"Régler la facture",p:"fia"}],
+ termine:[]}},
+/* ── Facturation closeur / setteur (facture mensuelle) ── */
+fact_com:{cols:[
+ {id:"valider",label:"Valider facture", open:"Ouverture dernier jour du mois"},
+ {id:"payer",  label:"À payer"},
+ {id:"termine",label:"Terminé"}],
+tasks:{
+ valider:[
+  {t:"Facture validée par le closeur",p:"closer",fin:["closer"]},
+  {t:"Facture validée par le setteur",p:"setter",fin:["setter"]},
+  {t:"Facture validée par France IA",p:"fia"},
+  {t:"Générer officiellement la facture sur Qonto",p:"auto"}],
+ payer:[{t:"Régler la facture",p:"fia"}],
+ termine:[]}},
+};
+
+/* ════════════════════ FAUSSES DONNÉES ════════════════════ */
+const FIN = {
+ cpf:       {lbl:"CPF",                cls:"cpf"},
+ opco:      {lbl:"OPCO",               cls:"opco"},
+ fp_ent_vir:{lbl:"Entreprise · virement", cls:"vir"},
+ fp_ent_man:{lbl:"Entreprise · mandat",   cls:"mandat"},
+ fp_part:   {lbl:"Particulier · mandat",  cls:"mandat"},
+ closer:    {lbl:"Closeur",  cls:"neutral"},
+ setter:    {lbl:"Setteur",  cls:"neutral"},
+};
+let CARDS = [
+ /* sessions N1/N2 : rail France IA + rail formateur (même session, deux cartes) */
+ {id:"s1", kb:"session_fia", offre:"n1", title:"Paris · 12-13 sept", sub:"Sarah K. · Station F · 9/12 places", col:"demarree"},
+ {id:"s2", kb:"session_fia", offre:"n1", title:"Bordeaux · 26-27 sept", sub:"Marc D. · Quai des Chartrons · 4/12 places", col:"prete"},
+ {id:"s3", kb:"session_fia", offre:"n1", title:"Lyon · 3-4 oct", sub:"Formateur à confirmer · 0/12 places", col:"brouillon"},
+ {id:"s4", kb:"session_fia", offre:"n2", title:"Paris N2 · 10-11 oct", sub:"Formateur à confirmer · 2/12 places", col:"brouillon"},
+ {id:"fs1",kb:"session_frm", offre:"n1", title:"Paris · 12-13 sept", sub:"Ma session · Station F", col:"preparer", mine:1},
+ {id:"fs2",kb:"session_frm", offre:"n1", title:"Bordeaux · 26-27 sept", sub:"Ma session · Quai des Chartrons", col:"shotgun", mine:1},
+ /* inscriptions N1 */
+ {id:"i1", kb:"insc", offre:"n1", title:"Marie Dupont", sub:"Session Paris 12-13 sept", fin:"cpf", col:"attente"},
+ {id:"i2", kb:"insc", offre:"n1", title:"Karim Benali", sub:"Session Paris 12-13 sept", fin:"fp_part", col:"action"},
+ {id:"i3", kb:"insc", offre:"n1", title:"Jean Petit · ACME Conseil", sub:"Session Bordeaux 26-27 sept", fin:"fp_ent_vir", col:"recue"},
+ {id:"i4", kb:"insc", offre:"n1", title:"Léa Costa · BTP Sud", sub:"Session Paris 12-13 sept", fin:"fp_ent_man", col:"attente"},
+ {id:"i5", kb:"insc", offre:"n1", title:"Sofia Ricci · Hôtel du Parc", sub:"Session Bordeaux 26-27 sept", fin:"opco", col:"attente"},
+ {id:"i6", kb:"insc", offre:"n1", title:"Hugo Martin", sub:"Session Paris 12-13 sept", fin:"cpf", col:"validee"},
+ {id:"i7", kb:"insc", offre:"n1", title:"Nadia Slimani", sub:"Session Paris 12-13 sept", fin:"cpf", col:"absent"},
+ {id:"i8", kb:"insc", offre:"n2", title:"Paul Fabre · Studio Nova", sub:"Session Paris N2 10-11 oct", fin:"fp_ent_vir", col:"action"},
+ /* intra (une carte = la formation) */
+ {id:"t1", kb:"intra", title:"Garage Moderne · 8 apprenants", sub:"Intra chez le client · Toulouse", fin:"opco", col:"convention"},
+ {id:"t2", kb:"intra", title:"Cabinet Verne & Associés · 5 apprenants", sub:"Intra Station F", fin:"fp_ent_vir", col:"demande"},
+ /* coaching */
+ {id:"c1", kb:"coaching", title:"Awa Diallo", sub:"Coaching 4 h · visio", fin:"fp_part", col:"preparer"},
+ {id:"c2", kb:"coaching", title:"Marc Leroy · Nexa Digital", sub:"Coaching 4 h · Station F", fin:"fp_ent_vir", col:"demande"},
+ /* facturation clients (stock existant) */
+ {id:"f1", kb:"fact_cpf", title:"Hugo Martin", sub:"Vente CPF · 1 650 €", fin:"cpf", col:"validee"},
+ {id:"f2", kb:"fact_cpf", title:"Emma Bianchi", sub:"Vente CPF · 1 650 €", fin:"cpf", col:"bibby"},
+ {id:"f3", kb:"fact_opco", title:"Hôtel du Parc · Sofia Ricci", sub:"Vente OPCO · 1 650 €", fin:"opco", col:"raf"},
+ {id:"f4", kb:"fact_fp", title:"Karim Benali", sub:"Mandat SDD · 1 650 € en 3 fois", fin:"fp_part", col:"attente",
+   ech:[["Échéance 1/3 · 550 € · 28/08",1],["Échéance 2/3 · 550 € · 28/09",0],["Échéance 3/3 · 550 € · 28/10",0]]},
+ {id:"f5", kb:"fact_fp", title:"ACME Conseil · Jean Petit", sub:"Virement · 1 650 €", fin:"fp_ent_vir", col:"raf"},
+ {id:"f6", kb:"fact_fp", title:"BTP Sud · Léa Costa", sub:"Mandat SDD · 4 950 € en 2 fois", fin:"fp_ent_man", col:"retard",
+   ech:[["Échéance 1/2 · 2 475 € · 10/08 · refusée",0],["Échéance 2/2 · 2 475 € · 10/09",0]]},
+ /* facturation externes */
+ {id:"f7", kb:"fact_frm", title:"Sarah K.", sub:"Session Paris N1 · 12-13 sept · 1 400 €", col:"valider"},
+ {id:"m1", kb:"fact_com", title:"Facture août 2026 · Alex R.", sub:"Closeur · une ligne par close acquitté", fin:"closer", col:"valider",
+   lines:[["Close · ACME Conseil","165 €"],["Close · Hôtel du Parc","165 €"]]},
+ {id:"m2", kb:"fact_com", title:"Facture août 2026 · Sam T.", sub:"Setteur · fixe + sets + closes", fin:"setter", col:"valider",
+   lines:[["Fixe mensuel","1 200 €"],["Set · Marie Dupont","30 €"],["Set · Karim Benali","30 €"],["Set · Studio Nova","30 €"],["Close · Awa Diallo","80 €"]]},
+];
+
+/* ════════════════════ ÉTAT ════════════════════ */
+const S = {role:"admin", app:"delivia", tab:"inscription",
+  fSession:"n1", fInsc:"n1", fFact:"cpf",
+  checks:{}, sim:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null};
+
+const $ = s=>document.querySelector(s);
+const el=(h)=>{const d=document.createElement("div");d.innerHTML=h;return d.firstElementChild};
+function toast(html,pink){const t=el(`<div class="toast${pink?" pink":""}">${html}</div>`);$("#toasts").append(t);setTimeout(()=>t.remove(),5200)}
+
+/* ════════════════════ MOTEUR ════════════════════ */
+function tasksFor(card, colId){
+  const def=KB[card.kb].tasks[colId]||[];
+  return def.filter(tk=>!tk.fin || tk.fin.includes(card.fin));
+}
+function key(card,colId,i){return card.id+"::"+colId+"::"+i}
+function allDone(card){
+  const tks=tasksFor(card,card.col);
+  if(!tks.length) return false;
+  return tks.every((tk,i)=>{
+    if(tk.sub && card.ech) return card.ech.every(e=>e[1]);
+    return S.checks[key(card,card.col,i)];
+  });
+}
+function nextCol(card){
+  const cols=KB[card.kb].cols;
+  let ix=cols.findIndex(c=>c.id===card.col);
+  for(let j=ix+1;j<cols.length;j++){ if(!cols[j].skip) return cols[j]; }
+  return null;
+}
+function colUnlocked(kb,col){ if(typeof col==="string") col=KB[kb].cols.find(c=>c.id===col); return !col.open || S.unlocked[kb+"::"+col.id]; }
+function tryAdvance(card){
+  if(!allDone(card)) return;
+  const nc=nextCol(card);
+  if(!nc) return;
+  if(!colUnlocked(card.kb,nc)){ card.waiting=nc.id; render(); return; }
+  card.waiting=null; card.col=nc.id; card.justMoved=true;
+  toast(`Carte avancée : <b>${card.title}</b> → ${nc.label}`);
+  render();
+}
+function runFx(card, tk, k){
+  if(!tk.fx || S.fxDone[k]) return;
+  S.fxDone[k]=true;
+  if(tk.fx==="carte_client"){
+    let kb,col;
+    if(card.fin==="cpf"){kb="fact_cpf";col="sortie"}
+    else if(card.fin==="opco"){kb="fact_opco";col="raf"}
+    else if(card.fin==="fp_ent_vir"){kb="fact_fp";col="raf"}
+    else {kb="fact_fp";col="attente"}
+    const nid="dyn"+Math.floor(performance.now());
+    CARDS.push({id:nid,kb,title:card.title,sub:"Vente "+(FIN[card.fin]?.lbl||"")+" · carte née du kanban Inscription",fin:card.fin,col,fresh:1,
+      ech:(card.fin==="fp_part"||card.fin==="fp_ent_man")?[["Échéance 1/1 · montant total · J+14 de la vente",0]]:null});
+    toast(`Création de la carte facturation : <b>${card.title}</b> (${FIN[card.fin]?.lbl||""})`,1);
+  }
+  if(tk.fx==="carte_formateur"){
+    const nid="dynf"+Math.floor(performance.now());
+    CARDS.push({id:nid,kb:"fact_frm",title:"Facture formateur · "+card.title,sub:"Née au dépôt de la facture",col:"valider",fresh:1});
+    toast(`Création de la carte <b>Facturation formateur</b> : ${card.title}`,1);
+  }
+  if(tk.fx==="ligne_closer"){
+    const m=CARDS.find(c=>c.id==="m1");
+    m.lines.push(["Close · "+card.title.split("·")[0].trim(),"165 €"]);
+    m.newLine=true;
+    toast(`Ligne de commission ajoutée à la <b>facture mensuelle du closeur</b> : ${card.title}`,1);
+  }
+}
+function clickTask(cardId,colId,i){
+  const card=CARDS.find(c=>c.id===cardId);
+  const tk=tasksFor(card,colId)[i];
+  const k=key(card,colId,i);
+  const owned = tk.p===ROLE_OWNS[S.role];
+  S.checks[k]=!S.checks[k];
+  if(S.checks[k] && !owned && !S.simWarned){
+    S.simWarned=true;
+    toast(`Simulation : tâche cochée à la place de « ${WHO[tk.p]} ». Dans DELIV'IA, seule cette personne (ou l'automate) pourra la cocher.`);
+  }
+  if(S.checks[k]) runFx(card,tk,k);
+  if(colId===card.col) tryAdvance(card); else render();
+}
+function clickEch(cardId,j){
+  const card=CARDS.find(c=>c.id===cardId);
+  card.ech[j][1]=card.ech[j][1]?0:1;
+  if(card.ech.every(e=>e[1])) toast(`Toutes les échéances encaissées : <b>${card.title}</b>`);
+  tryAdvance(card);
+}
+function unlockCol(kb,colId){
+  S.unlocked[kb+"::"+colId]=true;
+  toast(`Étape ouverte en avance : les cartes prêtes peuvent maintenant y entrer.`);
+  CARDS.filter(c=>c.kb===kb&&c.waiting===colId).forEach(c=>{c.waiting=null;tryAdvance(c)});
+  render();
+}
+
+/* ════════════════════ RENDU ════════════════════ */
+function badge(fin){ if(!fin) return ""; const f=FIN[fin]; return `<span class="badge b-${f.cls}">${f.lbl}</span>` }
+function taskHtml(card,colId,i,tk,ghost){
+  const k=key(card,colId,i);
+  const done=tk.sub&&card.ech ? card.ech.every(e=>e[1]) : !!S.checks[k];
+  const owned=tk.p===ROLE_OWNS[S.role];
+  const who=owned?"":` <span class="who">(${WHO[tk.p]})</span>`;
+  let h="";
+  if(tk.grp) h+=`<div class="tgrp">${tk.grp}</div>`;
+  h+=`<div class="task ${done?"done":""} ${owned?"":"other"}" data-c="${card.id}" data-col="${colId}" data-i="${i}" ${ghost?'style="pointer-events:none"':""}>
+    <span class="box"></span>
+    <span><span class="lbl">${tk.t}</span>${who}${tk.tpl?'<span class="tag">→ template</span>':""}${tk.fx==="carte_client"||tk.fx==="carte_formateur"?'<span class="fx">→ crée la carte facturation</span>':""}${tk.fx==="ligne_closer"?'<span class="fx">→ ligne facture closeur</span>':""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
+  </div>`;
+  if(tk.sub&&card.ech){
+    h+=`<div class="sub">`+card.ech.map((e,j)=>`<div class="task other ${e[1]?"done":""}" data-ech="${card.id}" data-j="${j}"><span class="box"></span><span class="lbl" style="font-size:11px">${e[0]}</span></div>`).join("")+`</div>`;
+  }
+  return h;
+}
+function cardHtml(card, colDef, opts={}){
+  const ghost = opts.ghostCols && colDef.ghost && card.kb.startsWith("insc")===false ? false : (opts.ghostCols && colDef.ghost);
+  const isGhost = opts.ghostCols && colDef.ghost;
+  const tks=tasksFor(card,colDef.id);
+  const factLink = isGhost ? findFactCard(card) : null;
+  let h=`<div class="card ${card.fresh?"pop":""} ${isGhost?"ghost":""}" id="card-${card.id}">`;
+  if(card.fin) h+=`<div class="finbar bar-${FIN[card.fin].cls}"></div>`;
+  h+=`<div class="t">${card.title}</div><div class="s">${card.sub||""}</div>`;
+  h+=`<div class="meta">${badge(card.fin)}${card.waiting?`<span class="badge b-wait">En attente d'ouverture</span>`:""}</div>`;
+  if(card.lines){
+    h+=`<div class="lines">`+card.lines.map((l,ix)=>`<div class="ln ${card.newLine&&ix===card.lines.length-1?"new":""}"><span class="k">${l[0]}</span><span>${l[1]}</span></div>`).join("");
+    const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
+    h+=`<div class="tot"><span>Total</span><span>${tot.toLocaleString("fr-FR")} €</span></div></div>`;
+  }
+  if(isGhost){
+    h+=`<div class="ghost-hint">🔒 Lecture seule · survoler pour le détail</div>
+      <div class="popover">« Inscription confirmée, veuillez revenir le lendemain du J2 pour vous assurer que votre client a bien participé à sa formation et poursuivre le processus sur la carte facturation du client. Le cas échéant, cette carte se déplacera à l'étape Absent. »
+      ${factLink?`<a data-goto="${factLink.id}">Voir la carte facturation →</a>`:""}</div>`;
+  } else if(tks.length){
+    h+=`<div class="tasks">`+tks.map((tk,i)=>taskHtml(card,colDef.id,i,tk,false)).join("")+`</div>`;
+  }
+  if(card.waiting){
+    const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
+    h+=`<div class="waiting">Toutes les tâches sont cochées. La carte attend l'ouverture de « ${nc.label} » (${nc.open}).</div>`;
+  }
+  h+=`</div>`;
+  return h;
+}
+function findFactCard(insc){
+  const kb = insc.fin==="cpf"?"fact_cpf":insc.fin==="opco"?"fact_opco":"fact_fp";
+  return CARDS.find(c=>c.kb===kb && c.title.includes(insc.title.split("·")[0].trim()));
+}
+function boardHtml(kbId, cards, opts={}){
+  const kb=KB[kbId];
+  let h=`<div class="board">`;
+  for(const col of kb.cols){
+    const inCol=cards.filter(c=>c.col===col.id);
+    h+=`<div class="col"><div class="col-h"><span class="pill"></span><h3>${col.label}</h3><span class="n">${inCol.length}</span></div>`;
+    if(col.note) h+=`<div class="col-open" style="background:var(--info-50);color:var(--info)">${col.note}</div>`;
+    if(col.open && !colUnlocked(kbId,col.id)){
+      h+=`<div class="col-open">🕒 ${col.open}<button data-unlock="${kbId}::${col.id}">Ouvrir cette étape en avance</button></div>`;
+    } else if(col.open){
+      h+=`<div class="col-open" style="background:var(--ok-50);color:var(--ok)">Étape ouverte (${col.open})</div>`;
+    }
+    h+=inCol.map(c=>cardHtml(c,col,opts)).join("");
+    h+=`</div>`;
+  }
+  return h+`</div>`;
+}
+function chips(list, active, onKey, groups){
+  let h=`<div class="chips">`;
+  for(const [grp,items] of list){
+    if(grp) h+=`<span class="grp">${grp}</span>`;
+    h+=items.map(([id,lbl])=>`<button class="${active===id?"active":""}" data-chip="${onKey}::${id}">${lbl}</button>`).join("");
+  }
+  return h+`</div>`;
+}
+
+/* ── pages DELIV'IA ── */
+function pageSessions(){
+  if(S.role==="closer"){
+    return `<div class="pagehead"><h1>Session</h1><p>Les sessions ouvertes à l'inscription, en lecture. Réservez une place à votre client : elle est bloquée 48 h.</p></div>`
+      + chips([["",[["n1","Formation N1"],["n2","Formation N2"]]]], S.fSession, "fSession")
+      + `<div class="slist">`
+      + CARDS.filter(c=>c.kb==="session_fia"&&c.offre===S.fSession&&["prete","demarree"].includes(c.col)).map(s=>`
+        <div class="srow"><div><div class="d">${s.title}</div><div class="v">${s.sub}</div></div>
+        <span class="pl">Places restantes</span>
+        <button class="btn btn-p" data-resa="${s.id}">Réserver une place (réservation 48 h)</button></div>`).join("")
+      + (CARDS.filter(c=>c.kb==="session_fia"&&c.offre===S.fSession&&["prete","demarree"].includes(c.col)).length?"":`<div class="stub"><p>Aucune session ouverte à l'inscription pour cette offre.</p></div>`)
+      + `</div>`;
+  }
+  const f=["n1","n2","param"].includes(S.fSession)?S.fSession:"n1";
+  let h=`<div class="pagehead"><h1>Sessions</h1><p>Deux rails parallèles : la préparation France IA et le parcours formateur, qui avancent ensemble dès la publication au Shotgun. Une carte avance seule quand toutes les tâches de son étape sont cochées.</p></div>`;
+  h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]],["Paramétrage",[["param","Lieux & Salles · Ressources"]]]], f, "fSession");
+  if(f==="param"){
+    return h+`<div class="stub"><h2>Paramétrage des sessions</h2><p>Par offre : le référentiel <b>Lieux & Salles</b> (aujourd'hui dans Staff) et les <b>Ressources</b> formateur (aujourd'hui dans BookMySessions) sont rapatriés ici.</p><ul><li>Lieux & Salles : catalogue des salles, capacité, accès HAL Station F</li><li>Ressources : vidéos, canvas et supports mis à disposition des formateurs</li></ul></div>`;
+  }
+  h+=`<div class="kb-title">Kanban Session <span class="who">rail France IA</span></div>`;
+  h+=boardHtml("session_fia", CARDS.filter(c=>c.kb==="session_fia"&&c.offre===f));
+  h+=`<div class="kb-title">Kanban Mes sessions <span class="who">rail formateur, en miroir : l'admin surveille sans cocher à sa place</span></div>`;
+  h+=boardHtml("session_frm", CARDS.filter(c=>c.kb==="session_frm"&&c.offre===f));
+  return h;
+}
+function pageInscription(){
+  const f=S.fInsc;
+  let h=`<div class="pagehead"><h1>Inscription</h1><p>Un kanban par offre. Les tâches varient selon le mode de paiement de la vente ; les événements roses créent la carte facturation correspondante.</p></div>`;
+  h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"],["intra","Formation Intra"],["coaching","Coaching"]]]], f, "fInsc");
+  const ghost = S.role==="closer";
+  if(f==="n1"||f==="n2") h+=boardHtml("insc", CARDS.filter(c=>c.kb==="insc"&&c.offre===f), {ghostCols:ghost});
+  else if(f==="intra")   h+=boardHtml("intra", CARDS.filter(c=>c.kb==="intra"), {ghostCols:ghost});
+  else                   h+=boardHtml("coaching", CARDS.filter(c=>c.kb==="coaching"), {ghostCols:ghost});
+  return h;
+}
+function pageFacturation(){
+  let f=S.fFact;
+  const isCloser=S.role==="closer", isSetter=S.role==="setter", isAgence=S.role==="agence";
+  if(isAgence) f="opco";
+  if(isSetter) f="setteur";
+  let h=`<div class="pagehead"><h1>Facturation</h1><p>Quatre kanbans côté clients (par moyen de paiement) et trois côté externes. Chaque facturation client acquittée ajoute sa ligne de commission à la facture mensuelle du closeur.</p></div>`;
+  if(!isAgence && !isSetter){
+    const clientChips=[["Clients", isCloser?[["cpf","CPF"],["fp_part","FP Particulier"],["fp_ent","FP Entreprise"]]:[["cpf","CPF"],["fp_part","FP Particulier"],["fp_ent","FP Entreprise"],["opco","OPCO"]]],
+      ["Externes", isCloser?[["closeur","Mes facturations"]]:[["formateur","Formateur"],["closeur","Closeur"],["setteur","Setteur"]]]];
+    h+=chips(clientChips, f, "fFact");
+  }
+  const roCpf = isCloser && f==="cpf";
+  if(f==="cpf"){
+    if(roCpf) h+=`<div class="simnote">Visibilité closeur sur le CPF : lecture, sans la main (le rail est porté par France IA).</div>`;
+    h+=boardHtml("fact_cpf", CARDS.filter(c=>c.kb==="fact_cpf"));
+  }
+  else if(f==="opco") h+=boardHtml("fact_opco", CARDS.filter(c=>c.kb==="fact_opco"));
+  else if(f==="fp_part") h+=boardHtml("fact_fp", CARDS.filter(c=>c.kb==="fact_fp"&&c.fin==="fp_part"));
+  else if(f==="fp_ent") h+=boardHtml("fact_fp", CARDS.filter(c=>c.kb==="fact_fp"&&(c.fin==="fp_ent_vir"||c.fin==="fp_ent_man")));
+  else if(f==="formateur") h+=boardHtml("fact_frm", CARDS.filter(c=>c.kb==="fact_frm"));
+  else if(f==="closeur") h+=`<div class="simnote">La carte naît chaque 1er du mois ; une ligne s'ajoute automatiquement à chaque close acquitté. L'étape Valider facture ne s'ouvre que le dernier jour du mois.</div>`
+    + boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="closer"));
+  else if(f==="setteur") h+=`<div class="simnote">La carte naît chaque 1er du mois : le fixe, puis une ligne par set et par close.</div>`
+    + boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="setter"));
+  return h;
+}
+function pageServices(){
+  const f=S.fSession==="param"?"n1":S.fSession;
+  let h=`<div class="pagehead"><h1>Mes services</h1><p>Vos sessions et coachings, du Shotgun à la facturation. La carte avance seule quand toutes les tâches de l'étape sont cochées.</p></div>`;
+  h+=chips([["",[["n1","Sessions N1"],["n2","Sessions N2"],["coaching","Coachings"]]]], S.fSession==="n2"?"n2":(S.fSession==="coaching"?"coaching":"n1"), "fSession");
+  if(S.fSession==="coaching") h+=boardHtml("coaching", CARDS.filter(c=>c.kb==="coaching"), {});
+  else h+=boardHtml("session_frm", CARDS.filter(c=>c.kb==="session_frm"&&c.offre===(S.fSession==="n2"?"n2":"n1")&&c.mine));
+  return h;
+}
+const STUBS = {
+ anomalies:["Anomalies","Les incohérences détectées automatiquement (dossier EDOF sans facture, mandat sans échéancier, carte sans vente…), avec leur statut de traitement."],
+ actions:["Actions","Le journal des actions : qui a fait quoi, quand, depuis quelle carte."],
+ utilisateurs:["Utilisateurs","La gestion des comptes et des accès : internes, formateurs (qualifications, profil, onboarding), closeurs (calendriers), setteurs, et les droits d'accès aux pages."],
+ automatisations:["Automatisations","Les interrupteurs des automates : détection de paiements, relances, tampons acquittés, création des cartes."],
+ templates:["Templates","Les modèles de messages (WhatsApp, email) référencés par les tâches « → template » des kanbans."],
+ faq:["FAQ & Feedback","La FAQ interne et la remontée de feedback produit."],
+ preuves:["Preuves","La collecte et le stockage des preuves de réalisation (exports WhatsApp, émargements, documents), à l'échelle de la session et de l'apprenant."],
+ generer:["Générer","Génération à la demande : devis, convention, lien de mandat, facture depuis la fiche client."],
+ aprendre:["À prendre","Les sessions et coachings publiés au Shotgun, disponibles à la demande. Le formateur du présentiel garde la priorité sur les coachings de ses apprenants."],
+ profil:["Mon profil","Vos informations, qualifications, villes de notification et offres autorisées."],
+ ressources:["Ressources","Vidéos, canvas et supports de formation, plus la FAQ formateur."],
+};
+function pageStub(id){
+  const s=STUBS[id]||["Page",""];
+  return `<div class="pagehead"><h1>${s[0]}</h1></div><div class="stub"><p>${s[1]}</p><p style="margin-top:8px;color:var(--ink-400);font-size:12px">Écran non détaillé dans cette maquette : seuls les trois process (Sessions, Inscription, Facturation) sont interactifs.</p></div>`;
+}
+
+/* ── pages autres applications ── */
+function pageApprenant(){
+  return `<div class="simnote">Simulation de la Plateforme apprenant : aperçu dans son style réel (Inter, indigo, fond slate).</div>
+  <div class="appframe" style="font-family:Inter,sans-serif">
+    <div class="ap-head"><div class="brand" style="padding:0"><span class="word" style="font-size:15px">France <em>IA</em></span><div class="tri" style="width:52px"><i></i><i></i><i></i></div></div><div class="ap-avatar">MD</div></div>
+    <div class="ap-body">
+      <div class="ap-card"><div class="h"><h2>Information</h2></div><div class="b">
+        <span class="ap-tag">Session · Paris N1</span><span class="ap-tag">Dates · 12 et 13 sept</span><span class="ap-tag">Horaires · 9h à 17h30</span><span class="ap-tag">Lieu · Station F</span><span class="ap-tag">Adresse · 5 parvis Alan Turing, Paris 13e</span>
+      </div></div>
+      <div class="ap-card"><div class="h"><h2>À faire</h2><span class="ap-chip" style="background:#fffbeb;color:#b45309">3 à faire</span></div><div class="b" style="padding-top:6px">
+        <div class="ap-row">Signer votre convention de formation<span class="chev">›</span></div>
+        <div class="ap-row">Préparer votre formation (9/13)<span class="chev">›</span></div>
+        <div class="ap-row">Répondre à votre questionnaire<span class="chev">›</span></div>
+        <div class="ap-row" style="color:#94a3b8;text-decoration:line-through">Vous inscrire à votre certification</div>
+      </div></div>
+      <div class="ap-card"><div class="h"><h2>Documents</h2><span class="ap-chip" style="background:#f1f5f9;color:#64748b">2/5</span></div><div class="b">
+        <span class="ap-tag">Convocation · disponible</span><span class="ap-tag">Convention · disponible</span><span class="ap-tag" style="opacity:.55">Certificat · pas encore disponible</span><span class="ap-tag" style="opacity:.55">Attestation · pas encore disponible</span><span class="ap-tag" style="opacity:.55">Facture · pas encore disponible</span>
+      </div></div>
+    </div>
+  </div>`;
+}
+function pageTreso(){
+  return `<div class="simnote">Simulation de la Trésorerie : aperçu dans son style réel (Geist, sidebar sombre, accents bleu et émeraude).</div>
+  <div class="appframe"><div class="tr-frame">
+    <div class="tr-side">
+      <div class="tr-logo"><span class="sq">T</span><div><div style="font-size:12.5px;font-weight:600">Tresorerie</div><div style="font-size:10px;color:rgba(255,255,255,.6)">Suivi financier</div></div></div>
+      <div class="tr-grp">Dashboards</div>
+      <div class="tr-it on">Trésorerie</div><div class="tr-it">Cash flow</div><div class="tr-it">Projections</div><div class="tr-it">Data analyse</div>
+      <div class="tr-grp">Transactions</div>
+      <div class="tr-it">Transactions</div><div class="tr-it">Revenus</div><div class="tr-it">Sessions</div><div class="tr-it">Commissions</div><div class="tr-it">Rapprochements</div>
+    </div>
+    <div class="tr-main"><h2>Tresorerie</h2><span class="sub">Solde, encaissements et reconnaissance de revenu</span>
+      <div class="kpis">
+        <div class="kpi"><div class="l">Solde Qonto</div><div class="v blue">312 480 €</div><div class="d up">+8,2 % vs juillet</div></div>
+        <div class="kpi"><div class="l">Encaissé ce mois</div><div class="v">96 350 €</div><div class="d up">+12 dossiers</div></div>
+        <div class="kpi"><div class="l">Acquitté non encaissé</div><div class="v">41 200 €</div><div class="d down">à surveiller</div></div>
+        <div class="kpi"><div class="l">Revenu reconnu</div><div class="v">88 900 €</div><div class="d up">+6,1 %</div></div>
+      </div>
+    </div>
+  </div></div>`;
+}
+function pageDash(){
+  return `<div class="simnote">Simulation du Data Dashboard : aperçu dans son style réel (cartes KPI, sections pastel, tableaux violets).</div>
+  <div class="appframe"><div class="dd-main">
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px"><span style="width:28px;height:28px;border-radius:8px;background:#171717;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">F</span><div><div style="font-weight:600;font-size:13px">France IA</div><div style="font-size:11px;color:#737373">Dashboard Commercial</div></div></div>
+    <div class="kpis" style="margin-top:12px">
+      <div class="kpi"><div class="l">CA closing août</div><div class="v">184 250 €</div><div class="d up">↑ 14 % vs juillet</div></div>
+      <div class="kpi"><div class="l">Closes</div><div class="v">112</div><div class="d up">↑ 9</div></div>
+      <div class="kpi"><div class="l">Taux de close</div><div class="v">31 %</div><div class="d up">↑ 2 pts</div></div>
+      <div class="kpi"><div class="l">No-show</div><div class="v">18 %</div><div class="d down">↓ 3 pts</div></div>
+    </div>
+    <div class="dd-sec"><h3>👥 Closers · août</h3>
+      <table class="dd-tbl"><tr><th>Closer</th><th>RDV tenus</th><th>Closes</th><th>CA</th><th>Taux</th></tr>
+      <tr><td>Alex R.</td><td>64</td><td>22</td><td>36 300 €</td><td>34 %</td></tr>
+      <tr><td>Chloé M.</td><td>58</td><td>19</td><td>31 350 €</td><td>33 %</td></tr>
+      <tr><td>Yanis B.</td><td>61</td><td>17</td><td>28 050 €</td><td>28 %</td></tr></table>
+    </div>
+  </div></div>`;
+}
+
+/* ── rendu global ── */
+function render(){
+  /* app tabs */
+  const apps=ROLE_APPS[S.role];
+  $("#appTabs").innerHTML=apps.map(a=>`<button class="apptab ${S.app===a?"active":""}" data-app="${a}"><span class="dot" style="background:${APPS[a].color}"></span>${APPS[a].name}${S.app===a?"":'<span class="lock">SSO</span>'}</button>`).join("");
+  /* subnav */
+  const groups = S.app==="delivia" ? DELIVIA_TABS[S.role] : (APP_TABS[S.app]||[]);
+  document.documentElement.style.setProperty("--accent", APPS[S.app].accent);
+  $("#subnav").innerHTML = groups.map(([g,items])=>`<div class="subgrp">${g}</div>`+items.map(([id,lbl])=>`<button class="subtab ${S.tab===id?"active":""}" data-tab="${id}" style="--accent:${APPS[S.app].accent}">${lbl}</button>`).join("")).join("");
+  /* crumb + role */
+  $("#crumb").innerHTML=`${APPS[S.app].name}<span class="sep">/</span><span style="color:var(--ink-500);font-weight:500">${(groups.flatMap(g=>g[1]).find(t=>t[0]===S.tab)||["",""])[1]||""}</span>`;
+  $("#roleSel").innerHTML=Object.entries(ROLES).map(([id,lbl])=>`<button class="${S.role===id?"active":""}" data-role="${id}">${lbl}</button>`).join("");
+  /* content */
+  let h="";
+  if(S.app==="apprenant") h=pageApprenant();
+  else if(S.app==="treso") h=pageTreso();
+  else if(S.app==="dash") h=pageDash();
+  else {
+    if(S.tab==="sessions") h=pageSessions();
+    else if(S.tab==="inscription") h=pageInscription();
+    else if(S.tab==="facturation") h=pageFacturation();
+    else if(S.tab==="services") h=pageServices();
+    else h=pageStub(S.tab);
+  }
+  $("#content").innerHTML=h;
+  CARDS.forEach(c=>{c.fresh=0;c.newLine=0});
+  if(S.highlight){
+    const elc=document.getElementById("card-"+S.highlight);
+    if(elc){elc.scrollIntoView({block:"center",behavior:"smooth"});elc.style.boxShadow="0 0 0 2px var(--primary)";setTimeout(()=>{elc.style.boxShadow=""},2200)}
+    S.highlight=null;
+  }
+}
+/* ── interactions ── */
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],[data-unlock],.task,[data-goto],[data-resa]");
+  if(!t) return;
+  if(t.dataset.app){
+    if(t.dataset.app===S.app) return;
+    const a=t.dataset.app;
+    document.documentElement.style.setProperty("--accent2", APPS[a].accent);
+    $("#authT1").textContent="Connexion à "+APPS[a].name;
+    $("#auth").style.display="flex";
+    setTimeout(()=>{ $("#auth").style.display="none";
+      S.app=a;
+      S.tab = a==="delivia" ? (DELIVIA_TABS[S.role][0][1][0][0]) : (APP_TABS[a]?APP_TABS[a][0][1][0][0]:"");
+      render();
+    },750);
+    return;
+  }
+  if(t.dataset.tab){S.tab=t.dataset.tab;render();return}
+  if(t.dataset.role){
+    S.role=t.dataset.role; S.app="delivia";
+    S.tab=DELIVIA_TABS[S.role][0][1][0][0];
+    if(S.role==="setter"||S.role==="agence") S.tab="facturation";
+    S.fFact = S.role==="closer"?"fp_ent":"cpf";
+    render();return}
+  if(t.dataset.chip){const [k,v]=t.dataset.chip.split("::");S[k]=v;render();return}
+  if(t.dataset.unlock){const [kb,col]=t.dataset.unlock.split("::");unlockCol(kb,col);return}
+  if(t.dataset.goto){S.app="delivia";S.tab="facturation";
+    const c=CARDS.find(x=>x.id===t.dataset.goto);
+    S.fFact = c.kb==="fact_cpf"?"cpf":c.kb==="fact_opco"?"opco":(c.fin==="fp_part"?"fp_part":"fp_ent");
+    S.highlight=c.id;render();return}
+  if(t.dataset.resa){toast(`Place réservée pour votre client : elle est bloquée <b>48 h</b>. L'inscription ARD doit être soumise avant expiration.`);return}
+  if(t.dataset.ech!==undefined&&t.dataset.ech!==""){clickEch(t.dataset.ech,parseInt(t.dataset.j));return}
+  if(t.classList.contains("task")&&t.dataset.c){clickTask(t.dataset.c,t.dataset.col,parseInt(t.dataset.i));return}
+});
+render();
+toast("Bienvenue dans le mockup <b>DELIV'IA 2.0</b>. Changez de vision en haut à droite, cochez les tâches pour voir les cartes avancer et les cartes facturation naître.");
+</script>
+</body>
+</html>
