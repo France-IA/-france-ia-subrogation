@@ -184,6 +184,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .sub{margin:2px 0 2px 21px;display:flex;flex-direction:column;gap:1px}
 .waiting{margin-top:8px;font-size:11px;color:var(--warn);background:var(--warn-50);border-radius:6px;padding:5px 8px;line-height:1.4}
 /* carte compacte */
+.card.pointer{border:1.5px dashed var(--line-2);box-shadow:none;background:#fbfcfd}
+.card.pointer:hover{border-color:#c7d2fe;background:#fff}
+.card.pointer .t{color:var(--ink-700)}
 .card.clickable{cursor:pointer}
 .card.clickable:hover .t{color:var(--primary)}
 .prog{height:4px;background:#f1f5f9;border-radius:999px;margin-top:10px;overflow:hidden}
@@ -401,7 +404,7 @@ tasks:{
  terminee:[]}},
 /* ── Session inter · rail Formateur ── */
 session_frm:{cols:[
- {id:"shotgun", label:"Shotgun"},
+ {id:"shotgun", label:"À prendre"},
  {id:"preparer",label:"Préparer", open:"J-14 formation", rule:"j-14"},
  {id:"animer",  label:"Animer", open:"J2 formation", rule:"j2"},
  {id:"facturer",label:"Facturer"},
@@ -430,7 +433,7 @@ tasks:{
  termine:[]}},
 /* ── Inscription inter (N1 & N2) ── */
 insc:{cols:[
- {id:"recue",  label:"Inscription reçue"},
+ {id:"recue",  label:"Inscription reçue", note:"Une carte naît ici dès l'ARD soumis par le client"},
  {id:"action", label:"Action de notre part"},
  {id:"attente",label:"En attente client"},
  {id:"validee",label:"Inscription validée", open:"J2+1 formation", rule:"j2+1", ghost:1},
@@ -438,7 +441,7 @@ insc:{cols:[
  {id:"lost",   label:"Lost", skip:1, ghost:1},
  {id:"termine",label:"Terminé", ghost:1}],
 tasks:{
- recue:[{t:"ARD soumis",p:"client",auto:1,grp:"Tous"}],
+ recue:[{t:"Faire une demande de devis sur Mon CPF",p:"closer",auto:1,fin:["cpf"],grp:"CPF"}],
  action:[
   {t:"Valider demande de devis",p:"closer",auto:1,fin:["cpf"],grp:"CPF"},
   {t:"Générer convention",p:"closer",auto:1,fin:["opco"],grp:"OPCO",note:"automatique, ARD à ajouter"},
@@ -541,6 +544,33 @@ tasks:{
   {t:"Créer ma facture (bouton Générer)",p:"formateur",grp:"Facturation formateur"},
   {t:"Déposer ma facture (input PJ)",p:"formateur",fx:"carte_formateur"}],
  lost:[], termine:[]}},
+/* ── Coaching · rail formateur ── */
+coaching_frm:{cols:[
+ {id:"valider", label:"À valider"},
+ {id:"preparer",label:"Préparer"},
+ {id:"animer",  label:"Animer", open:"date prévue de la séance", rule:"prevue"},
+ {id:"facturer",label:"Facturer"},
+ {id:"termine", label:"Terminé"}],
+tasks:{
+ valider:[
+  {t:"Valider mon coaching",p:"formateur",note:"votre apprenant du présentiel : vous avez la main en premier ; en cas de refus, le coaching part au marketplace À prendre"}],
+ preparer:[
+  {t:"Envoyer le message de bienvenue Formateur",p:"formateur",tpl:1},
+  {t:"Caler la ou les séances avec l'apprenant via le groupe WhatsApp",p:"formateur",tpl:1},
+  {t:"Retranscrire le créneau choisi dans l'agenda formateur DELIV'IA",p:"formateur"},
+  {t:"Demander / lire les attentes de l'apprenant (champ attentes ARD)",p:"formateur",tpl:1},
+  {t:"Préparer le contenu de la séance",p:"formateur"}],
+ animer:[
+  {t:"Réaliser la séance (visio ou présentiel)",p:"formateur"},
+  {t:"Déposer le compte rendu de séance",p:"formateur"},
+  {t:"Recueillir et soumettre le témoignage de clôture",p:"formateur"},
+  {t:"Compte rendu & témoignage validés par France IA",p:"fia"}],
+ facturer:[
+  {t:"Créer ma facture (bouton Générer)",p:"formateur"},
+  {t:"Déposer ma facture (input PJ)",p:"formateur",fx:"carte_formateur"},
+  {t:"Facture validée par France IA",p:"fia"},
+  {t:"Facture payée par France IA",p:"fia"}],
+ termine:[]}},
 /* ── Facturation CPF ── */
 fact_cpf:{cols:[
  {id:"sortie",  label:"Sortie de formation déclarée"},
@@ -651,20 +681,23 @@ let CARDS = [
  {id:"fs1",kb:"session_frm", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Paris · 12-13 sept", sub:"Ma session · Station F", col:"preparer", mine:1},
  {id:"fs2",kb:"session_frm", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Bordeaux · 26-27 sept", sub:"Ma session · Quai des Chartrons", col:"shotgun", mine:1},
  /* inscriptions N1 */
- {id:"i1", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Marie Dupont", sub:"Session Paris 12-13 sept", fin:"cpf", col:"attente"},
- {id:"i2", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Karim Benali", sub:"Session Paris 12-13 sept", fin:"fp_part", col:"action"},
- {id:"i3", kb:"insc", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Jean Petit · ACME Conseil", sub:"Session Bordeaux 26-27 sept", fin:"fp_ent_vir", col:"recue"},
- {id:"i4", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Léa Costa · BTP Sud", sub:"Session Paris 12-13 sept", fin:"fp_ent_man", col:"attente"},
- {id:"i5", kb:"insc", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Sofia Ricci · Hôtel du Parc", sub:"Session Bordeaux 26-27 sept", fin:"opco", col:"attente"},
- {id:"i6", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Hugo Martin", sub:"Session Paris 12-13 sept", fin:"cpf", col:"validee"},
- {id:"i7", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Nadia Slimani", sub:"Session Paris 12-13 sept", fin:"cpf", col:"absent"},
- {id:"i8", kb:"insc", offre:"n2", dt:{j1:"2026-10-10",j2:"2026-10-11"}, title:"Paul Fabre · Studio Nova", sub:"Session Paris N2 10-11 oct", fin:"fp_ent_vir", col:"action"},
+ {id:"i1", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Marie Dupont", com:"Closeur : Alex R. · Setteur : Sam T.", sub:"Session Paris 12-13 sept", fin:"cpf", col:"attente"},
+ {id:"i2", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Karim Benali", com:"Closeur : Chloé M. · Setteur : Sam T.", sub:"Session Paris 12-13 sept", fin:"fp_part", col:"action"},
+ {id:"i3", kb:"insc", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Jean Petit · ACME Conseil", com:"Closeur : Alex R. · Setteur : Sam T.", sub:"Session Bordeaux 26-27 sept", fin:"fp_ent_vir", col:"action"},
+ {id:"i9", kb:"insc", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Lucas Moreau", com:"Closeur : Chloé M. · Setteur : Sam T.", sub:"Session Bordeaux 26-27 sept", fin:"cpf", col:"recue"},
+ {id:"i4", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Léa Costa · BTP Sud", com:"Closeur : Yanis B. · Setteur : Sam T.", sub:"Session Paris 12-13 sept", fin:"fp_ent_man", col:"attente"},
+ {id:"i5", kb:"insc", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Sofia Ricci · Hôtel du Parc", com:"Closeur : Alex R. · Setteur : Sam T.", sub:"Session Bordeaux 26-27 sept", fin:"opco", col:"attente"},
+ {id:"i6", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Hugo Martin", com:"Closeur : Chloé M. · Setteur : Sam T.", sub:"Session Paris 12-13 sept", fin:"cpf", col:"validee"},
+ {id:"i7", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Nadia Slimani", com:"Closeur : Alex R. · Setteur : Sam T.", sub:"Session Paris 12-13 sept", fin:"cpf", col:"absent"},
+ {id:"i8", kb:"insc", offre:"n2", dt:{j1:"2026-10-10",j2:"2026-10-11"}, title:"Paul Fabre · Studio Nova", com:"Closeur : Yanis B. · Setteur : Sam T.", sub:"Session Paris N2 10-11 oct", fin:"fp_ent_vir", col:"action"},
  /* intra (une carte = la formation) */
- {id:"t1", kb:"intra", title:"Garage Moderne · 8 apprenants", sub:"Intra chez le client · Toulouse", fin:"opco", col:"convention"},
- {id:"t2", kb:"intra", title:"Cabinet Verne & Associés · 5 apprenants", sub:"Intra Station F", fin:"fp_ent_vir", col:"demande"},
+ {id:"t1", kb:"intra", title:"Garage Moderne · 8 apprenants", com:"Closeur : Alex R.", sub:"Intra chez le client · Toulouse", fin:"opco", col:"convention"},
+ {id:"t2", kb:"intra", title:"Cabinet Verne & Associés · 5 apprenants", com:"Closeur : Chloé M.", sub:"Intra Station F", fin:"fp_ent_vir", col:"demande"},
  /* coaching */
- {id:"c1", kb:"coaching", dt:{prevue:"2026-09-05"}, title:"Awa Diallo", sub:"Coaching 4 h · visio", fin:"fp_part", col:"preparer"},
- {id:"c2", kb:"coaching", title:"Marc Leroy · Nexa Digital", sub:"Coaching 4 h · Station F", fin:"fp_ent_vir", col:"demande"},
+ {id:"cf1",kb:"coaching_frm", dt:{prevue:"2026-09-05"}, title:"Awa Diallo", sub:"Coaching 4 h · visio · votre apprenante du présentiel", col:"preparer", mine:1},
+ {id:"cf2",kb:"coaching_frm", title:"Sami Rezgui", sub:"Coaching 4 h · Station F · votre apprenant du présentiel", col:"valider", mine:1},
+ {id:"c1", kb:"coaching", dt:{prevue:"2026-09-05"}, title:"Awa Diallo", com:"Closeur : Alex R. · Setteur : Sam T.", sub:"Coaching 4 h · visio", fin:"fp_part", col:"preparer"},
+ {id:"c2", kb:"coaching", title:"Marc Leroy · Nexa Digital", com:"Closeur : Yanis B.", sub:"Coaching 4 h · Station F", fin:"fp_ent_vir", col:"demande"},
  /* facturation clients (stock existant) */
  {id:"f1", kb:"fact_cpf", title:"Hugo Martin", sub:"Vente CPF · 1 650 €", fin:"cpf", col:"validee"},
  {id:"f2", kb:"fact_cpf", dt:{echeance:"2026-09-15"}, title:"Emma Bianchi", sub:"Vente CPF · 1 650 €", fin:"cpf", col:"bibby"},
@@ -685,17 +718,17 @@ let CARDS = [
 /* Fiches : fausses identités reliées aux cartes */
 const CLIENTS=[
  {id:"cl_acme",nom:"ACME Conseil",type:"Entreprise",siret:"842 391 557 00023",ref:"Jean Petit · jean.petit@acme.fr",mode:"Virement",mandat:null,
-  ventes:[{lbl:"Formation N1 · Jean Petit",m:"1 650 €",fin:"fp_ent_vir",factId:"f5"}],apprenants:["ap_jean"],docs:["Devis DE-2026-0412 · signé","Facture FA-2026-0533 · émise"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_ent_vir",factId:"f5",inscId:"i3"}],apprenants:["ap_jean"],docs:["Devis DE-2026-0412 · signé","Facture FA-2026-0533 · émise"]},
  {id:"cl_btp",nom:"BTP Sud",type:"Entreprise",siret:"512 887 224 00011",ref:"Léa Costa · l.costa@btpsud.fr",mode:"Mandat SDD",mandat:"Actif · 2 échéances (1 refusée)",
-  ventes:[{lbl:"Formation N1 · 3 apprenants",m:"4 950 €",fin:"fp_ent_man",factId:"f6"}],apprenants:["ap_lea"],docs:["Devis DE-2026-0388 · signé","Facture FA-2026-0501 · émise"]},
+  ventes:[{lbl:"Formation N1 · 3 apprenants",m:"4 950 €",fin:"fp_ent_man",factId:"f6",inscId:"i4"}],apprenants:["ap_lea"],docs:["Devis DE-2026-0388 · signé","Facture FA-2026-0501 · émise"]},
  {id:"cl_hotel",nom:"Hôtel du Parc",type:"Entreprise (OPCO)",siret:"399 120 448 00034",ref:"Sofia Ricci · s.ricci@hotelduparc.fr",mode:"OPCO (AKTO)",mandat:null,
-  ventes:[{lbl:"Formation N1 · Sofia Ricci",m:"1 650 €",fin:"opco",factId:"f3"}],apprenants:["ap_sofia"],docs:["Convention · signée","Facture FA-2026-0540 · à transmettre à l'OPCO"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"opco",factId:"f3",inscId:"i5"}],apprenants:["ap_sofia"],docs:["Convention · signée","Facture FA-2026-0540 · à transmettre à l'OPCO"]},
  {id:"cl_marie",nom:"Marie Dupont",type:"Particulier",siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
-  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_marie"],docs:["Dossier EDOF · validé"]},
+  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i1",note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_marie"],docs:["Dossier EDOF · validé"]},
  {id:"cl_karim",nom:"Karim Benali",type:"Particulier",siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 3 échéances, première encaissée",
-  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_part",factId:"f4"}],apprenants:["ap_karim"],docs:["Facture FA-2026-0512 · émise (non acquittée)"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_part",factId:"f4",inscId:"i2"}],apprenants:["ap_karim"],docs:["Facture FA-2026-0512 · émise (non acquittée)"]},
  {id:"cl_hugo",nom:"Hugo Martin",type:"Particulier",siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
-  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f1"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée"]},
+  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f1",inscId:"i6"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée"]},
 ];
 const APPRENANTS=[
  {id:"ap_marie",nom:"Marie Dupont",email:"marie.dupont@gmail.com",tel:"06 12 45 78 90",client:"cl_marie",insc:["i1"],type:"Particulier",afaire:["Signer votre convention de formation","Préparer votre formation (9/13)","Répondre à votre questionnaire"]},
@@ -934,7 +967,7 @@ function modalHtml(){
   const ap=APPRENANTS.find(a=>a.insc.includes(card.id));
   const cl=ap&&ap.client ? CLIENTS.find(c=>c.id===ap.client) : CLIENTS.find(c=>(c.ventes||[]).some(v=>v.factId===card.id));
   h+=`<div class="mhead"><div class="row"><div><div class="t">${card.title}</div><div class="s">${card.sub||""}</div>${(ap||cl)?`<div class="mlinks">${ap?`<a data-fiche="apprenant::${ap.id}">Fiche apprenant →</a>`:""}${cl?`<a data-fiche="client::${cl.id}">Fiche client →</a>`:""}</div>`:""}</div><button class="mclose" data-close="1" aria-label="Fermer">✕</button></div>`;
-  h+=`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${badge(card.fin)}<span class="mstep"><span class="pill"></span>Étape · ${col.label}</span></div></div>`;
+  h+=`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${badge(card.fin)}<span class="mstep"><span class="pill"></span>Étape · ${col.label}</span>${card.com?`<span style="font-size:11px;color:var(--ink-400)">${card.com}</span>`:""}</div></div>`;
   h+=`<div class="mbody">`;
   if(card.lines){
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
@@ -976,7 +1009,8 @@ function boardHtml(kbId, cards, opts={}){
     if(col.open && !locked){
       h+=`<div class="lockbar" style="background:var(--ok-50);color:var(--ok)">Étape ouverte (${col.open})</div>`;
     }
-    h+=inCol.map(c=>cardHtml(c,col,Object.assign({},opts,{lockedCol:locked}))).join("");
+    if(opts.aPrendre && col.id==="shotgun") h+=pointerCard();
+    else h+=inCol.map(c=>cardHtml(c,col,Object.assign({},opts,{lockedCol:locked}))).join("");
     h+=`</div>`;
   }
   return h+`</div>`;
@@ -1049,12 +1083,31 @@ function pageFacturation(){
     + boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="setter"));
   return h;
 }
+function pointerCard(){
+  return `<div class="card pointer clickable" data-tab="aprendre"><div class="t">📥 Sessions et coachings disponibles</div><div class="s">Publiés au shotgun, à la demande</div><div class="nextt" style="margin-top:9px"><span class="v" style="color:var(--primary);font-weight:600">Rendez-vous sur la page À prendre →</span></div></div>`;
+}
 function pageServices(){
-  const f=S.fSession==="param"?"n1":S.fSession;
-  let h=`<div class="pagehead"><h1>Mes services</h1><p>Vos sessions et coachings, du Shotgun à la facturation. La carte avance seule quand toutes les tâches de l'étape sont cochées.</p></div>`;
+  let h=`<div class="pagehead"><h1>Mes services</h1><p>Vos sessions et coachings, de la prise à la facturation. La carte avance seule quand toutes les tâches de l'étape sont cochées.</p></div>`;
   h+=chips([["",[["n1","Sessions N1"],["n2","Sessions N2"],["coaching","Coachings"]]]], S.fSession==="n2"?"n2":(S.fSession==="coaching"?"coaching":"n1"), "fSession");
-  if(S.fSession==="coaching") h+=boardHtml("coaching", CARDS.filter(c=>c.kb==="coaching"), {});
-  else h+=boardHtml("session_frm", CARDS.filter(c=>c.kb==="session_frm"&&c.offre===(S.fSession==="n2"?"n2":"n1")&&c.mine));
+  if(S.fSession==="coaching"){
+    h+=`<div class="kb-title">Mes coachings prioritaires <span class="who">vos apprenants du présentiel : vous avez la main en premier, à valider ou refuser</span></div>`;
+    h+=boardHtml("coaching_frm", CARDS.filter(c=>c.kb==="coaching_frm"&&c.mine));
+    h+=`<div class="kb-title" style="margin-top:22px">Coachings libres <span class="who">refusés par le formateur prioritaire ou sans formateur naturel : à prendre spontanément</span></div>`;
+    h+=`<div style="max-width:280px">${pointerCard()}</div>`;
+  }
+  else h+=boardHtml("session_frm", CARDS.filter(c=>c.kb==="session_frm"&&c.offre===(S.fSession==="n2"?"n2":"n1")&&c.mine), {aPrendre:1});
+  return h;
+}
+function pageAPrendre(){
+  let h=`<div class="pagehead"><h1>À prendre</h1><p>Les sessions et coachings publiés au shotgun, disponibles à la demande. France IA valide chaque demande ; pour un coaching, le formateur du présentiel de l'apprenant garde la priorité.</p></div>`;
+  h+=`<div class="fsec"><h2>Sessions à prendre</h2>
+    <div class="frow"><div><div class="tt">Lyon · 3-4 oct · Formation N1</div><div class="sm">0/12 places · 700 € la journée</div></div><button class="btn btn-p" data-demande="Lyon 3-4 oct">Faire une demande</button></div>
+    <div class="frow"><div><div class="tt">Paris N2 · 10-11 oct · Formation N2</div><div class="sm">2/12 places · 700 € la journée</div></div><button class="btn btn-p" data-demande="Paris N2 10-11 oct">Faire une demande</button></div>
+    <div class="frow"><div><div class="tt">Bordeaux · 26-27 sept · Formation N1</div><div class="sm">Votre demande du 18/08</div></div><span class="chip warn">Demande envoyée · en attente de validation France IA</span></div>
+  </div>`;
+  h+=`<div class="fsec"><h2>Coachings libres <span class="n2">refusés par le formateur prioritaire ou sans formateur naturel</span></h2>
+    <div class="frow"><div><div class="tt">Marc Leroy · Nexa Digital</div><div class="sm">Coaching 4 h · Station F</div></div><button class="btn btn-p" data-demande="coaching Marc Leroy">Faire une demande</button></div>
+  </div>`;
   return h;
 }
 function colLabel(card){ return (KB[card.kb].cols.find(c=>c.id===card.col)||{}).label||card.col; }
@@ -1064,66 +1117,61 @@ function ficheApprenantHtml(id){
   const ap=APPRENANTS.find(a=>a.id===id); if(!ap) return "";
   const cl=CLIENTS.find(c=>c.id===ap.client);
   const cards=ap.insc.map(i=>CARDS.find(c=>c.id===i)).filter(Boolean);
-  const first=cards[0];
   let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
-  h+=`<div class="fichehead"><div class="frow0"><div class="avat">${initiales(ap.nom)}</div>
-    <div><h1>${ap.nom}</h1><div class="fh-meta">${ap.email} · ${ap.tel}</div>
-    <div class="fh-meta" style="margin-top:5px"><span class="chip">${ap.type}</span></div></div>
-    <div class="fh-right">${cl?`<span class="fh-link" data-fiche="client::${cl.id}">Fiche client : ${cl.nom} →</span>`:""}
-    <button class="btn btn-s" data-app="apprenant">Ouvrir son espace apprenant</button></div></div>`;
-  h+=`<div class="apercu">
-    <div><div class="k">Session</div><div class="v">${first?first.sub:"Aucune"}</div></div>
-    <div><div class="k">Inscription</div><div class="v">${first?colLabel(first):""} <span class="sm">· kanban ${first?(inscFilterFor(first)==="coaching"?"Coaching":inscFilterFor(first).toUpperCase()):""}</span></div></div>
-    <div><div class="k">Financement</div><div class="v">${first&&first.fin?FIN[first.fin].lbl:""}</div></div>
-    <div><div class="k">Espace apprenant</div><div class="v">${ap.afaire.length} à faire</div></div>
-  </div></div>`;
-  h+=`<div class="fsec"><h2>Inscriptions <span class="n2">la carte kanban est la source de vérité de l'avancement</span></h2>`;
-  h+=cards.map(c=>`<div class="frow"><div><div class="tt">${c.kb==="coaching"?"Coaching":"Formation "+(c.offre||"").toUpperCase()}</div><div class="sm">${c.sub||""}</div></div>
-    <span class="chip ${c.col==="termine"||c.col==="terminee"?"ok":c.col==="absent"||c.col==="lost"?"warn":""}">${colLabel(c)}</span>
-    <span class="go" data-gotoinsc="${c.id}">Voir la carte inscription →</span></div>`).join("")||`<div class="frow sm">Aucune inscription.</div>`;
-  h+=`</div>`;
-  h+=`<div class="fsec"><h2>Espace apprenant <span class="n2">ses to_do, en lecture : elles font avancer sa carte</span></h2>`;
-  h+=ap.afaire.map(t=>`<div class="frow"><span class="chip warn">à faire</span> ${t}</div>`).join("");
-  h+=`</div>`;
-  h+=`<div class="fsec"><h2>Documents & preuves</h2><div style="margin-top:9px">
-    <span class="chip ok">Convocation</span> <span class="chip ok">Convention</span> <span class="chip">Émargements · pas encore</span> <span class="chip">Certificat · pas encore</span> <span class="chip">Attestation · pas encore</span></div></div>`;
-  h+=`<div class="fsec"><h2>Notes</h2><div class="frow sm" style="border:none">Rien à signaler. (Champ de notes internes, comme sur la fiche actuelle.)</div></div>`;
+  h+=`<div class="fsec"><h2>Identité</h2>
+    <div class="frow0" style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-top:10px">
+      <div class="avat">${initiales(ap.nom)}</div>
+      <div><div style="font-size:17px;font-weight:600;color:var(--ink-900)">${ap.nom}</div>
+        <div class="fh-meta">${ap.email} · ${ap.tel}</div>
+        <div style="margin-top:6px"><span class="chip">${ap.type}</span></div></div>
+      <div class="fh-right">${cl?`<span class="fh-link" data-fiche="client::${cl.id}">Client lié : ${cl.nom} →</span>`:""}
+        <button class="btn btn-s" data-app="apprenant">Ouvrir son espace apprenant</button></div>
+    </div>
+    <div class="frow" style="margin-top:12px"><span class="sm" style="width:150px">Identifiants techniques</span>
+      <span class="chip">GHL 88An…</span><span class="chip">WEDOF 5501…</span><span class="chip">Qualiobee apprenant 3c8f…</span></div>
+  </div>`;
+  cards.forEach(c=>{
+    const offre=c.kb==="coaching"||c.kb==="coaching_frm"?"Coaching":"Formation "+(c.offre||"").toUpperCase();
+    h+=`<div class="fsec"><h2>${offre} <span class="n2">${c.sub||""}</span></h2>
+      <div class="frow"><span class="sm" style="width:150px">Avancement</span><span class="chip ${["termine","terminee"].includes(c.col)?"ok":["absent","lost"].includes(c.col)?"warn":""}">${colLabel(c)}</span>
+        <span class="go" data-fiche="client::${cl?cl.id:""}">Cartes inscription et facturation : sur la fiche client →</span></div>
+      <div class="frow"><span class="sm" style="width:150px">Espace apprenant</span><div style="flex:1">${ap.afaire.map(x=>`<span class="chip warn" style="margin:0 6px 4px 0">${x}</span>`).join("")||`<span class="chip ok">À jour</span>`}</div></div>
+      <div class="frow"><span class="sm" style="width:150px">Preuves individuelles</span><div style="flex:1">
+        <span class="chip ok" style="margin:0 6px 4px 0">Positionnement</span><span class="chip" style="margin:0 6px 4px 0">Émargement J1 · à venir</span><span class="chip" style="margin:0 6px 4px 0">Émargement J2 · à venir</span><span class="chip" style="margin:0 6px 4px 0">Satisfaction · à venir</span>
+        <div class="sm" style="margin-top:4px">Les preuves à l'échelle du client (devis, convention) vivent sur sa fiche client.</div></div></div>
+    </div>`;
+  });
   return h;
 }
 function ficheClientHtml(id){
   const cl=CLIENTS.find(c=>c.id===id); if(!cl) return "";
-  const totD=cl.ventes.reduce((a,v)=>a+parseInt(v.m.replace(/\D/g,"")),0);
   let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
-  h+=`<div class="fichehead"><div class="frow0"><div class="avat">${cl.type.startsWith("Particulier")?initiales(cl.nom):"🏢"}</div>
-    <div><h1>${cl.nom}</h1><div class="fh-meta">${cl.siret?`SIRET ${cl.siret}`:"Client particulier"}${cl.ref?` · Référent : ${cl.ref}`:""}</div>
-    <div class="fh-meta" style="margin-top:5px"><span class="chip">${cl.type}</span> <span class="chip">${cl.mode}</span></div></div></div>`;
-  h+=`<div class="apercu">
-    <div><div class="k">Ventes</div><div class="v">${cl.ventes.length}</div></div>
-    <div><div class="k">Montant dû</div><div class="v">${totD.toLocaleString("fr-FR")} €</div></div>
-    <div><div class="k">Mandat SDD</div><div class="v">${cl.mandat||"Aucun"}</div></div>
-    <div><div class="k">Apprenants</div><div class="v">${(cl.apprenants||[]).length}</div></div>
-  </div></div>`;
-  h+=`<div class="fsec"><h2>Ventes & facturation <span class="n2">1 vente = 1 offre + 1 moyen de paiement + 1 facture</span></h2>`;
-  h+=cl.ventes.map(v=>{
-    const f=v.factId?CARDS.find(c=>c.id===v.factId):null;
-    return `<div class="frow"><div><div class="tt">${v.lbl}</div><div class="sm">${FIN[v.fin].lbl}${v.note?` · ${v.note}`:""}</div></div>
-    <span style="font-weight:600;font-variant-numeric:tabular-nums">${v.m}</span>
-    ${f?`<span class="chip">${colLabel(f)}</span><span class="go" data-goto="${f.id}">Voir la carte facturation →</span>`:`<span class="chip">carte à venir</span>`}</div>`;
-  }).join("");
-  h+=`</div>`;
-  if((cl.apprenants||[]).length){
-    h+=`<div class="fsec"><h2>Apprenants</h2>`;
-    h+=cl.apprenants.map(aid=>{
-      const ap=APPRENANTS.find(a=>a.id===aid); if(!ap) return "";
-      const c0=CARDS.find(c=>c.id===ap.insc[0]);
-      return `<div class="frow"><div><div class="tt">${ap.nom}</div><div class="sm">${ap.email}</div></div>
-      ${c0?`<span class="chip">${colLabel(c0)}</span>`:""}
-      <span class="go" data-fiche="apprenant::${ap.id}">Fiche apprenant →</span>${c0?`<span class="go" data-gotoinsc="${c0.id}">Carte inscription →</span>`:""}</div>`;
-    }).join("");
-    h+=`</div>`;
-  }
-  h+=`<div class="fsec"><h2>Documents émis</h2><div style="margin-top:9px">${cl.docs.map(d=>`<span class="chip" style="margin:0 6px 6px 0">${d}</span>`).join("")}</div></div>`;
-  h+=`<div class="fsec"><h2>Notes</h2><div class="frow sm" style="border:none">Rien à signaler.</div></div>`;
+  h+=`<div class="fsec"><h2>Identité</h2>
+    <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-top:10px">
+      <div class="avat">${cl.type.startsWith("Particulier")?initiales(cl.nom):"🏢"}</div>
+      <div><div style="font-size:17px;font-weight:600;color:var(--ink-900)">${cl.nom}</div>
+        <div class="fh-meta">${cl.siret?`SIRET ${cl.siret}`:"Client particulier"}${cl.ref?` · Référent : ${cl.ref}`:""}</div>
+        <div style="margin-top:6px"><span class="chip">${cl.type}</span> <span class="chip">${cl.mode}</span>${cl.mandat?` <span class="chip ok">Mandat SDD · ${cl.mandat}</span>`:""}</div></div>
+    </div>
+    <div class="frow" style="margin-top:12px"><span class="sm" style="width:150px">Identifiants techniques</span>
+      <span class="chip">Qonto cli_74…</span><span class="chip">GHL 91Bx…</span><span class="chip">Qualiobee client 7a21…</span></div>
+    <div class="frow"><span class="sm" style="width:150px">Apprenants liés</span><div style="flex:1">
+      ${(cl.apprenants||[]).map(aid=>{const a=APPRENANTS.find(x=>x.id===aid);return a?`<span class="fh-link" data-fiche="apprenant::${a.id}" style="display:inline-flex;align-items:center;gap:6px;margin:0 14px 6px 0"><span class="avat" style="width:24px;height:24px;font-size:10px;border-radius:7px">${initiales(a.nom)}</span>${a.nom} →</span>`:""}).join("")||`<span class="sm">Aucun</span>`}
+    </div></div>
+  </div>`;
+  cl.ventes.forEach(v=>{
+    const ic=v.inscId?CARDS.find(c=>c.id===v.inscId):null;
+    const fc=v.factId?CARDS.find(c=>c.id===v.factId):null;
+    h+=`<div class="fsec"><h2>Offre · ${v.lbl} <span class="n2">${v.m} · ${FIN[v.fin].lbl}${ic&&ic.com?` · ${ic.com}`:""}</span></h2>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px">
+        <div style="width:280px"><div class="apercu" style="border:none;padding:0;margin:0 0 6px"><span class="k">Carte inscription</span></div>
+          ${ic?cardHtml(ic,KB[ic.kb].cols.find(x=>x.id===ic.col),{}):`<div class="card pointer"><div class="s">Pas de carte inscription individuelle.</div></div>`}</div>
+        <div style="width:280px"><div class="apercu" style="border:none;padding:0;margin:0 0 6px"><span class="k">Carte facturation</span></div>
+          ${fc?cardHtml(fc,KB[fc.kb].cols.find(x=>x.id===fc.col),{}):`<div class="card pointer"><div class="t">Carte à venir</div><div class="s">${v.note||"Elle naîtra selon la règle de son rail."}</div></div>`}</div>
+      </div>
+      <div class="frow" style="margin-top:8px"><span class="sm" style="width:150px">Documents</span><div style="flex:1">${cl.docs.map(d=>`<span class="chip" style="margin:0 6px 4px 0">${d}</span>`).join("")}</div></div>
+    </div>`;
+  });
   return h;
 }
 const STUBS = {
@@ -1233,6 +1281,7 @@ function render(){
     else if(S.tab==="inscription") h=pageInscription();
     else if(S.tab==="facturation") h=pageFacturation();
     else if(S.tab==="services") h=pageServices();
+    else if(S.tab==="aprendre") h=pageAPrendre();
     else h=pageStub(S.tab);
   }
   $("#content").innerHTML=h;
@@ -1258,7 +1307,7 @@ document.addEventListener("click",e=>{
   if(tplBtn){e.stopPropagation();S.tpl=tplBtn.dataset.tpl;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
   if(e.target.closest(".hist summary")){S.histOpen=!S.histOpen}
   if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;document.getElementById("modal")?.remove();return}
-  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],[data-unlock],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc]");
+  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],[data-unlock],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.fiche={t:ty,id:fid};S.app="delivia";render();return}
   if(t.dataset.ficheback){S.fiche=null;render();return}
@@ -1290,6 +1339,7 @@ document.addEventListener("click",e=>{
     S.fFact = c.kb==="fact_cpf"?"cpf":c.kb==="fact_opco"?"opco":(c.fin==="fp_part"?"fp_part":"fp_ent");
     S.highlight=c.id;render();return}
   if(t.dataset.resa){toast(`Place réservée pour votre client : elle est bloquée <b>48 h</b>. L'inscription ARD doit être soumise avant expiration.`);return}
+  if(t.dataset.demande){toast(`Demande envoyée pour <b>${t.dataset.demande}</b> : France IA doit la valider. Vous serez notifié.`);return}
   if(t.dataset.ech!==undefined&&t.dataset.ech!==""){clickEch(t.dataset.ech,parseInt(t.dataset.j));return}
   if(t.classList.contains("task")&&t.dataset.c){clickTask(t.dataset.c,t.dataset.col,parseInt(t.dataset.i));return}
   if(t.dataset.open){S.modal=t.dataset.open;render();return}
