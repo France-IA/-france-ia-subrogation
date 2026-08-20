@@ -345,7 +345,7 @@ const WHO = {fia:"France IA", closer:"closeur", formateur:"formateur", client:"c
 const DELIVIA_TABS = {
   admin:[["Processus",[["sessions","Sessions"],["inscription","Inscription"],["facturation","Facturation"]]],
          ["Pilotage",[["anomalies","Anomalies"],["actions","Actions"]]],
-         ["Configuration",[["utilisateurs","Utilisateurs"],["automatisations","Automatisations"],["templates","Templates"]]],
+         ["Configuration",[["utilisateurs","Annuaire"],["automatisations","Automatisations"],["templates","Templates"]]],
          ["Divers",[["faq","FAQ & Feedback"],["preuves","Preuves"]]]],
   closer:[["Processus",[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]],
           ["Outils",[["anomalies","Anomalies"],["generer","Générer"],["faq","FAQ & Feedback"]]]],
@@ -898,6 +898,11 @@ function cardHtml(card, colDef, opts={}){
     h+=`<div class="cnt"><b>${remaining===0?"Étape complète":remaining+" tâche"+(remaining>1?"s":"")+" restante"+(remaining>1?"s":"")}</b> · ${done}/${tks.length}</div>`;
     if(nextTk) h+=`<div class="nextt"><span class="k">Next :</span><span class="v">${nextTk.t}${nextTk.p===ROLE_OWNS[S.role]?"":` <span class="who2">(${WHO[nextTk.p]})</span>`}</span></div>`;
   }
+  if(!isGhost){
+    const cap=APPRENANTS.find(a=>a.insc.includes(card.id));
+    const ccl=cap&&cap.client ? CLIENTS.find(c=>c.id===cap.client) : CLIENTS.find(c=>(c.ventes||[]).some(v=>v.factId===card.id));
+    if(cap||ccl) h+=`<div class="mlinks" style="margin-top:8px;font-size:10.5px">${cap?`<a data-fiche="apprenant::${cap.id}">Fiche apprenant</a>`:""}${ccl?`<a data-fiche="client::${ccl.id}">Fiche client</a>`:""}</div>`;
+  }
   h+=`</div>`;
   return h;
 }
@@ -1173,6 +1178,33 @@ function ficheClientHtml(id){
   });
   return h;
 }
+function pageAnnuaire(){
+  const f=S.fUsers||"apprenants";
+  let h=`<div class="pagehead"><h1>Annuaire</h1><p>Toutes les personnes du système : celles qui ont un compte (internes, formateurs, commerciaux) et celles qui ont une fiche (clients, apprenants).</p></div>`;
+  h+=chips([["",[["apprenants","Apprenants"],["clients","Clients"],["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["internes","Internes"]]]], f, "fUsers");
+  h+=`<div class="fsec">`;
+  if(f==="apprenants"){
+    h+=`<h2>Apprenants <span class="n2">${APPRENANTS.length}</span></h2>`;
+    h+=APPRENANTS.map(a=>{const cl=CLIENTS.find(c=>c.id===a.client);
+      return `<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(a.nom)}</span><div><div class="tt">${a.nom}</div><div class="sm">${a.email}</div></div><span class="chip">${a.type}</span><span class="go" data-fiche="apprenant::${a.id}">Fiche apprenant →</span>${cl?`<span class="go" data-fiche="client::${cl.id}">Client →</span>`:""}</div>`;}).join("");
+  } else if(f==="clients"){
+    h+=`<h2>Clients <span class="n2">${CLIENTS.length}</span></h2>`;
+    h+=CLIENTS.map(c=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${c.type.startsWith("Particulier")?initiales(c.nom):"🏢"}</span><div><div class="tt">${c.nom}</div><div class="sm">${c.siret?"SIRET "+c.siret:"Particulier"}</div></div><span class="chip">${c.mode}</span><span class="go" data-fiche="client::${c.id}">Fiche client →</span></div>`).join("");
+  } else if(f==="formateurs"){
+    h+=`<h2>Formateurs <span class="n2">qualifications, profil, onboarding</span></h2>`;
+    h+=[["Sarah K.","N1 · N2 · Coaching","Paris"],["Marc D.","N1","Bordeaux · Toulouse"],["Inès B.","N1 · Coaching","Lyon"]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div><div class="tt">${x[0]}</div><div class="sm">Villes : ${x[2]}</div></div><span class="chip">Offres : ${x[1]}</span><span class="chip ok">Onboarding complet</span></div>`).join("");
+  } else if(f==="closeurs"){
+    h+=`<h2>Closeurs <span class="n2">calendriers de closing</span></h2>`;
+    h+=[["Alex R."],["Chloé M."],["Yanis B."]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div class="tt">${x[0]}</div><span class="chip">Calendrier GHL relié</span></div>`).join("");
+  } else if(f==="setteurs"){
+    h+=`<h2>Setteurs</h2><div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">ST</span><div class="tt">Sam T.</div><span class="chip">Fixe + commissions</span></div>`;
+  } else {
+    h+=`<h2>Internes <span class="n2">comptes France IA et accès aux pages</span></h2>`;
+    h+=[["Jeanne D.","Admin · Customer Success"],["Côme A.","Admin · Process"],["Olivier R.","Admin"]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div class="tt">${x[0]}</div><span class="chip">${x[1]}</span><span class="chip">Accès : toutes les pages</span></div>`).join("");
+  }
+  h+=`</div>`;
+  return h;
+}
 const STUBS = {
  anomalies:["Anomalies","Les incohérences détectées automatiquement (dossier EDOF sans facture, mandat sans échéancier, carte sans vente…), avec leur statut de traitement."],
  actions:["Actions","Le journal des actions : qui a fait quoi, quand, depuis quelle carte."],
@@ -1281,6 +1313,7 @@ function render(){
     else if(S.tab==="facturation") h=pageFacturation();
     else if(S.tab==="services") h=pageServices();
     else if(S.tab==="aprendre") h=pageAPrendre();
+    else if(S.tab==="utilisateurs") h=pageAnnuaire();
     else h=pageStub(S.tab);
   }
   $("#content").innerHTML=h;
