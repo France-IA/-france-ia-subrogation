@@ -41,13 +41,15 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .apptab.active[data-app="treso"]{background:#ecfdf5;color:#047857}
 .apptab.active[data-app="dash"]{background:#f3e8ff;color:#6d28d9}
 .apptab .lock{margin-left:auto;font-size:10px;color:var(--ink-300)}
-#subnav{padding-bottom:8px}
+#subnav{margin-top:auto;padding-bottom:8px;border-top:1px solid var(--line);padding-top:6px}
+#subnav .appctx{padding:10px 20px 2px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px}
+#subnav .appctx .dot{width:7px;height:7px;border-radius:50%}
 .subgrp{padding:12px 20px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400)}
 .subtab{display:flex;align-items:center;gap:8px;width:calc(100% - 28px);margin:1px 8px 1px 20px;padding:6px 11px;border-radius:7px;font-size:13px;color:var(--ink-500);text-align:left}
 .subtab:hover{background:var(--bg);color:var(--ink-700)}
 .subtab.active{background:var(--bg);color:var(--ink-900);font-weight:600}
 .subtab.active::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--accent,#4f46e5);margin-left:-8px;margin-right:5px}
-.side-note{margin-top:auto;padding:14px 20px;font-size:11px;color:var(--ink-400);border-top:1px solid var(--line);line-height:1.5}
+.side-note{padding:14px 20px;font-size:11px;color:var(--ink-400);border-top:1px solid var(--line);line-height:1.5}
 /* ── Topbar ─────────────────────────────────────── */
 #main{flex:1;min-width:0;display:flex;flex-direction:column}
 #topbar{height:52px;background:#fff;box-shadow:0 1px 0 0 var(--line);display:flex;align-items:center;gap:12px;padding:0 20px;position:sticky;top:0;z-index:30}
@@ -76,8 +78,20 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .col-h .pill{width:8px;height:8px;border-radius:50%;background:var(--ink-400);flex-shrink:0}
 .col-h h3{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500)}
 .col-h .n{margin-left:auto;font-size:11px;color:var(--ink-400);font-variant-numeric:tabular-nums}
-.col-open{font-size:10.5px;color:var(--warn);background:var(--warn-50);border-radius:6px;padding:4px 8px;margin:0 2px 8px;display:flex;align-items:center;gap:6px;line-height:1.35}
-.col-open button{margin-left:auto;font-size:10.5px;font-weight:600;color:var(--warn);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.col-open{font-size:10.5px;color:var(--info);background:var(--info-50);border-radius:6px;padding:4px 8px;margin:0 2px 8px;display:flex;align-items:center;gap:6px;line-height:1.35}
+.col.locked{background:repeating-linear-gradient(-45deg,#f8fafc 0 10px,#f4f6f9 10px 11px);border-style:dashed;border-color:var(--line-2)}
+.col.locked .col-h h3{color:var(--ink-400)}
+.col.locked .card{opacity:.55;filter:grayscale(.5)}
+.col.locked .card:hover{opacity:.8}
+.lockbar{font-size:10.5px;color:var(--ink-500);background:#eef1f5;border-radius:6px;padding:5px 8px;margin:0 2px 8px;display:flex;align-items:center;gap:6px;line-height:1.35}
+.lockbar button{margin-left:auto;font-size:10.5px;font-weight:600;color:var(--primary);white-space:nowrap}
+.lockbar button:hover{text-decoration:underline;text-underline-offset:2px}
+.card.waitlock{opacity:.7;background:#f8fafc}
+.card.waitlock .t{color:var(--ink-500)}
+.openline{margin-top:9px;font-size:11px;color:var(--ink-500);background:#eef1f5;border-radius:6px;padding:5px 8px;display:flex;gap:6px;align-items:center;line-height:1.4}
+.openline b{color:var(--ink-700);font-weight:600}
+.openline a{color:var(--primary);font-weight:600;cursor:pointer;margin-left:auto;font-size:10.5px;white-space:nowrap}
+.openline a:hover{text-decoration:underline;text-underline-offset:2px}
 .card{background:#fff;border-radius:10px;box-shadow:var(--sh-carte);padding:11px 12px;margin-bottom:9px;position:relative;transition:box-shadow .15s,opacity .3s,transform .3s}
 .card:hover{box-shadow:var(--sh-hover)}
 .card.pop{animation:pop .45s ease}
@@ -112,6 +126,34 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .task .note{display:block;font-size:10.5px;color:var(--ink-400);margin-top:1px}
 .sub{margin:2px 0 2px 21px;display:flex;flex-direction:column;gap:1px}
 .waiting{margin-top:8px;font-size:11px;color:var(--warn);background:var(--warn-50);border-radius:6px;padding:5px 8px;line-height:1.4}
+/* carte compacte */
+.card.clickable{cursor:pointer}
+.card.clickable:hover .t{color:var(--primary)}
+.prog{height:4px;background:#f1f5f9;border-radius:999px;margin-top:10px;overflow:hidden}
+.prog i{display:block;height:100%;border-radius:999px;background:#818cf8;transition:width .3s}
+.prog i.full{background:#34d399}
+.cnt{display:flex;align-items:center;gap:6px;margin-top:7px;font-size:11px;color:var(--ink-500);font-variant-numeric:tabular-nums}
+.cnt b{font-weight:600;color:var(--ink-700)}
+.nextt{display:flex;gap:6px;margin-top:5px;font-size:11.5px;color:var(--ink-700);line-height:1.35}
+.nextt .k{flex-shrink:0;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400);margin-top:1px}
+.nextt .v{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.nextt .who2{color:var(--ink-400)}
+.opendetail{margin-top:8px;font-size:10.5px;color:var(--ink-400)}
+.card.clickable:hover .opendetail{color:var(--primary)}
+/* modal détail de carte */
+#modal{position:fixed;inset:0;background:rgba(15,23,42,.35);z-index:150;display:flex;align-items:flex-start;justify-content:center;padding:6vh 16px}
+.mbox{background:#fff;border-radius:14px;box-shadow:0 20px 50px rgb(0 0 0/.2);width:100%;max-width:520px;max-height:86vh;overflow-y:auto}
+.mhead{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:16px 20px 12px;border-radius:14px 14px 0 0}
+.mhead .row{display:flex;align-items:flex-start;gap:10px}
+.mhead .t{font-size:16px;font-weight:600;color:var(--ink-900);letter-spacing:-.01em}
+.mhead .s{font-size:12px;color:var(--ink-400);margin-top:2px}
+.mclose{margin-left:auto;width:28px;height:28px;border-radius:7px;color:var(--ink-400);font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center}
+.mclose:hover{background:var(--bg);color:var(--ink-700)}
+.mstep{display:inline-flex;align-items:center;gap:6px;margin-top:9px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500)}
+.mstep .pill{width:8px;height:8px;border-radius:50%;background:#818cf8}
+.mbody{padding:14px 20px 20px}
+.msec{font-size:12px;font-weight:600;color:var(--ink-900);margin:12px 0 6px;display:flex;align-items:center;gap:6px}
+.msec .n2{font-weight:400;color:var(--ink-400);font-size:11px}
 /* carte grisée */
 .card.ghost{opacity:.62;background:#f8fafc}
 .card.ghost .t,.card.ghost .s{color:var(--ink-400)}
@@ -263,9 +305,9 @@ const KB = {
 /* ── Session inter · rail France IA ── */
 session_fia:{cols:[
  {id:"brouillon",  label:"Brouillon"},
- {id:"prete",      label:"Prête", open:"Ouverture J-14 formation", note:"Sessions disponibles à l'inscription"},
+ {id:"prete",      label:"Prête", open:"J-14 formation", rule:"j-14", note:"Sessions disponibles à l'inscription"},
  {id:"demarree",   label:"Démarrée"},
- {id:"enformation",label:"En formation", open:"Ouverture J2 formation"},
+ {id:"enformation",label:"En formation", open:"J2 formation", rule:"j2"},
  {id:"preuves",    label:"Récolter les preuves"},
  {id:"terminee",   label:"Terminée"}],
 tasks:{
@@ -301,8 +343,8 @@ tasks:{
 /* ── Session inter · rail Formateur ── */
 session_frm:{cols:[
  {id:"shotgun", label:"Shotgun"},
- {id:"preparer",label:"Préparer", open:"Ouverture J-14 formation"},
- {id:"animer",  label:"Animer", open:"Ouverture J2 formation"},
+ {id:"preparer",label:"Préparer", open:"J-14 formation", rule:"j-14"},
+ {id:"animer",  label:"Animer", open:"J2 formation", rule:"j2"},
  {id:"facturer",label:"Facturer"},
  {id:"termine", label:"Terminé"}],
 tasks:{
@@ -332,7 +374,7 @@ insc:{cols:[
  {id:"recue",  label:"Inscription reçue"},
  {id:"action", label:"Action de notre part"},
  {id:"attente",label:"En attente client"},
- {id:"validee",label:"Inscription validée", open:"Ouverture J2+1 formation", ghost:1},
+ {id:"validee",label:"Inscription validée", open:"J2+1 formation", rule:"j2+1", ghost:1},
  {id:"absent", label:"Absent", skip:1},
  {id:"lost",   label:"Lost", skip:1, ghost:1},
  {id:"termine",label:"Terminé", ghost:1}],
@@ -370,7 +412,7 @@ intra:{cols:[
  {id:"demande",   label:"Nouvelle demande"},
  {id:"convention",label:"Signer convention"},
  {id:"preparer",  label:"Préparer formation"},
- {id:"enformation",label:"En formation", open:"Ouverture J2 formation"},
+ {id:"enformation",label:"En formation", open:"J2 formation", rule:"j2"},
  {id:"lost",      label:"Lost", skip:1},
  {id:"termine",   label:"Terminé"}],
 tasks:{
@@ -407,7 +449,7 @@ coaching:{cols:[
  {id:"valider", label:"Valider le formateur"},
  {id:"whatsapp",label:"Créer groupe WhatsApp"},
  {id:"preparer",label:"Préparer"},
- {id:"jourj",   label:"Jour J", open:"Date prévue"},
+ {id:"jourj",   label:"Jour J", open:"date prévue de la séance", rule:"prevue"},
  {id:"lost",    label:"Lost", skip:1},
  {id:"termine", label:"Terminé"}],
 tasks:{
@@ -445,7 +487,7 @@ fact_cpf:{cols:[
  {id:"sortie",  label:"Sortie de formation déclarée"},
  {id:"validee", label:"Sortie validée par EDOF"},
  {id:"bibby",   label:"En attente de Bibby"},
- {id:"retard",  label:"En retard à relancer", open:"Ouverture échéance facture", skip:1},
+ {id:"retard",  label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1},
  {id:"recu",    label:"Paiement Bibby reçu + facture acquittée"},
  {id:"final",   label:"Paiement BBF & EDOF + facture acquittée"}],
 tasks:{
@@ -466,9 +508,9 @@ tasks:{
 /* ── Facturation OPCO ── */
 fact_opco:{cols:[
  {id:"raf",    label:"RAF"},
- {id:"transmettre",label:"Transmettre facture OPCO", open:"Ouverture J2+1 formation"},
+ {id:"transmettre",label:"Transmettre facture OPCO", open:"J2+1 formation", rule:"j2+1"},
  {id:"attente",label:"En attente paiement"},
- {id:"retard", label:"En retard à relancer", open:"Ouverture échéance facture", skip:1},
+ {id:"retard", label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1},
  {id:"termine",label:"Terminé"}],
 tasks:{
  raf:[{t:"Fin de la formation",p:"auto",note:"J2+1, automatique"}],
@@ -518,7 +560,7 @@ tasks:{
  termine:[]}},
 /* ── Facturation closeur / setteur (facture mensuelle) ── */
 fact_com:{cols:[
- {id:"valider",label:"Valider facture", open:"Ouverture dernier jour du mois"},
+ {id:"valider",label:"Valider facture", open:"dernier jour du mois", rule:"fin_mois"},
  {id:"payer",  label:"À payer"},
  {id:"termine",label:"Terminé"}],
 tasks:{
@@ -543,35 +585,35 @@ const FIN = {
 };
 let CARDS = [
  /* sessions N1/N2 : rail France IA + rail formateur (même session, deux cartes) */
- {id:"s1", kb:"session_fia", offre:"n1", title:"Paris · 12-13 sept", sub:"Sarah K. · Station F · 9/12 places", col:"demarree"},
- {id:"s2", kb:"session_fia", offre:"n1", title:"Bordeaux · 26-27 sept", sub:"Marc D. · Quai des Chartrons · 4/12 places", col:"prete"},
- {id:"s3", kb:"session_fia", offre:"n1", title:"Lyon · 3-4 oct", sub:"Formateur à confirmer · 0/12 places", col:"brouillon"},
- {id:"s4", kb:"session_fia", offre:"n2", title:"Paris N2 · 10-11 oct", sub:"Formateur à confirmer · 2/12 places", col:"brouillon"},
- {id:"fs1",kb:"session_frm", offre:"n1", title:"Paris · 12-13 sept", sub:"Ma session · Station F", col:"preparer", mine:1},
- {id:"fs2",kb:"session_frm", offre:"n1", title:"Bordeaux · 26-27 sept", sub:"Ma session · Quai des Chartrons", col:"shotgun", mine:1},
+ {id:"s1", kb:"session_fia", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Paris · 12-13 sept", sub:"Sarah K. · Station F · 9/12 places", col:"demarree"},
+ {id:"s2", kb:"session_fia", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Bordeaux · 26-27 sept", sub:"Marc D. · Quai des Chartrons · 4/12 places", col:"prete"},
+ {id:"s3", kb:"session_fia", offre:"n1", dt:{j1:"2026-10-03",j2:"2026-10-04"}, title:"Lyon · 3-4 oct", sub:"Formateur à confirmer · 0/12 places", col:"brouillon"},
+ {id:"s4", kb:"session_fia", offre:"n2", dt:{j1:"2026-10-10",j2:"2026-10-11"}, title:"Paris N2 · 10-11 oct", sub:"Formateur à confirmer · 2/12 places", col:"brouillon"},
+ {id:"fs1",kb:"session_frm", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Paris · 12-13 sept", sub:"Ma session · Station F", col:"preparer", mine:1},
+ {id:"fs2",kb:"session_frm", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Bordeaux · 26-27 sept", sub:"Ma session · Quai des Chartrons", col:"shotgun", mine:1},
  /* inscriptions N1 */
- {id:"i1", kb:"insc", offre:"n1", title:"Marie Dupont", sub:"Session Paris 12-13 sept", fin:"cpf", col:"attente"},
- {id:"i2", kb:"insc", offre:"n1", title:"Karim Benali", sub:"Session Paris 12-13 sept", fin:"fp_part", col:"action"},
- {id:"i3", kb:"insc", offre:"n1", title:"Jean Petit · ACME Conseil", sub:"Session Bordeaux 26-27 sept", fin:"fp_ent_vir", col:"recue"},
- {id:"i4", kb:"insc", offre:"n1", title:"Léa Costa · BTP Sud", sub:"Session Paris 12-13 sept", fin:"fp_ent_man", col:"attente"},
- {id:"i5", kb:"insc", offre:"n1", title:"Sofia Ricci · Hôtel du Parc", sub:"Session Bordeaux 26-27 sept", fin:"opco", col:"attente"},
- {id:"i6", kb:"insc", offre:"n1", title:"Hugo Martin", sub:"Session Paris 12-13 sept", fin:"cpf", col:"validee"},
- {id:"i7", kb:"insc", offre:"n1", title:"Nadia Slimani", sub:"Session Paris 12-13 sept", fin:"cpf", col:"absent"},
- {id:"i8", kb:"insc", offre:"n2", title:"Paul Fabre · Studio Nova", sub:"Session Paris N2 10-11 oct", fin:"fp_ent_vir", col:"action"},
+ {id:"i1", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Marie Dupont", sub:"Session Paris 12-13 sept", fin:"cpf", col:"attente"},
+ {id:"i2", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Karim Benali", sub:"Session Paris 12-13 sept", fin:"fp_part", col:"action"},
+ {id:"i3", kb:"insc", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Jean Petit · ACME Conseil", sub:"Session Bordeaux 26-27 sept", fin:"fp_ent_vir", col:"recue"},
+ {id:"i4", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Léa Costa · BTP Sud", sub:"Session Paris 12-13 sept", fin:"fp_ent_man", col:"attente"},
+ {id:"i5", kb:"insc", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Sofia Ricci · Hôtel du Parc", sub:"Session Bordeaux 26-27 sept", fin:"opco", col:"attente"},
+ {id:"i6", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Hugo Martin", sub:"Session Paris 12-13 sept", fin:"cpf", col:"validee"},
+ {id:"i7", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Nadia Slimani", sub:"Session Paris 12-13 sept", fin:"cpf", col:"absent"},
+ {id:"i8", kb:"insc", offre:"n2", dt:{j1:"2026-10-10",j2:"2026-10-11"}, title:"Paul Fabre · Studio Nova", sub:"Session Paris N2 10-11 oct", fin:"fp_ent_vir", col:"action"},
  /* intra (une carte = la formation) */
  {id:"t1", kb:"intra", title:"Garage Moderne · 8 apprenants", sub:"Intra chez le client · Toulouse", fin:"opco", col:"convention"},
  {id:"t2", kb:"intra", title:"Cabinet Verne & Associés · 5 apprenants", sub:"Intra Station F", fin:"fp_ent_vir", col:"demande"},
  /* coaching */
- {id:"c1", kb:"coaching", title:"Awa Diallo", sub:"Coaching 4 h · visio", fin:"fp_part", col:"preparer"},
+ {id:"c1", kb:"coaching", dt:{prevue:"2026-09-05"}, title:"Awa Diallo", sub:"Coaching 4 h · visio", fin:"fp_part", col:"preparer"},
  {id:"c2", kb:"coaching", title:"Marc Leroy · Nexa Digital", sub:"Coaching 4 h · Station F", fin:"fp_ent_vir", col:"demande"},
  /* facturation clients (stock existant) */
  {id:"f1", kb:"fact_cpf", title:"Hugo Martin", sub:"Vente CPF · 1 650 €", fin:"cpf", col:"validee"},
- {id:"f2", kb:"fact_cpf", title:"Emma Bianchi", sub:"Vente CPF · 1 650 €", fin:"cpf", col:"bibby"},
- {id:"f3", kb:"fact_opco", title:"Hôtel du Parc · Sofia Ricci", sub:"Vente OPCO · 1 650 €", fin:"opco", col:"raf"},
- {id:"f4", kb:"fact_fp", title:"Karim Benali", sub:"Mandat SDD · 1 650 € en 3 fois", fin:"fp_part", col:"attente",
+ {id:"f2", kb:"fact_cpf", dt:{echeance:"2026-09-15"}, title:"Emma Bianchi", sub:"Vente CPF · 1 650 €", fin:"cpf", col:"bibby"},
+ {id:"f3", kb:"fact_opco", dt:{j2:"2026-09-27",echeance:"2026-10-27"}, title:"Hôtel du Parc · Sofia Ricci", sub:"Vente OPCO · 1 650 €", fin:"opco", col:"raf"},
+ {id:"f4", kb:"fact_fp", dt:{j2:"2026-09-13",echeance:"2026-10-28"}, title:"Karim Benali", sub:"Mandat SDD · 1 650 € en 3 fois", fin:"fp_part", col:"attente",
    ech:[["Échéance 1/3 · 550 € · 28/08",1],["Échéance 2/3 · 550 € · 28/09",0],["Échéance 3/3 · 550 € · 28/10",0]]},
- {id:"f5", kb:"fact_fp", title:"ACME Conseil · Jean Petit", sub:"Virement · 1 650 €", fin:"fp_ent_vir", col:"raf"},
- {id:"f6", kb:"fact_fp", title:"BTP Sud · Léa Costa", sub:"Mandat SDD · 4 950 € en 2 fois", fin:"fp_ent_man", col:"retard",
+ {id:"f5", kb:"fact_fp", dt:{j2:"2026-09-27",echeance:"2026-10-27"}, title:"ACME Conseil · Jean Petit", sub:"Virement · 1 650 €", fin:"fp_ent_vir", col:"raf"},
+ {id:"f6", kb:"fact_fp", dt:{j2:"2026-09-13",echeance:"2026-09-10"}, title:"BTP Sud · Léa Costa", sub:"Mandat SDD · 4 950 € en 2 fois", fin:"fp_ent_man", col:"retard",
    ech:[["Échéance 1/2 · 2 475 € · 10/08 · refusée",0],["Échéance 2/2 · 2 475 € · 10/09",0]]},
  /* facturation externes */
  {id:"f7", kb:"fact_frm", title:"Sarah K.", sub:"Session Paris N1 · 12-13 sept · 1 400 €", col:"valider"},
@@ -657,13 +699,15 @@ function clickTask(cardId,colId,i){
     toast(`Simulation : tâche cochée à la place de « ${WHO[tk.p]} ». Dans DELIV'IA, seule cette personne (ou l'automate) pourra la cocher.`);
   }
   if(S.checks[k]) runFx(card,tk,k);
-  if(colId===card.col) tryAdvance(card); else render();
+  if(colId===card.col) tryAdvance(card);
+  render();
 }
 function clickEch(cardId,j){
   const card=CARDS.find(c=>c.id===cardId);
   card.ech[j][1]=card.ech[j][1]?0:1;
   if(card.ech.every(e=>e[1])) toast(`Toutes les échéances encaissées : <b>${card.title}</b>`);
   tryAdvance(card);
+  render();
 }
 function unlockCol(kb,colId){
   S.unlocked[kb+"::"+colId]=true;
@@ -690,32 +734,85 @@ function taskHtml(card,colId,i,tk,ghost){
   }
   return h;
 }
+function openDateStr(card,col){
+  if(!col||!col.rule) return null;
+  const d=card.dt||{}; let base=null,off=0;
+  if(col.rule==="j-14"){base=d.j1;off=-14}
+  else if(col.rule==="j2"){base=d.j2}
+  else if(col.rule==="j2+1"){base=d.j2;off=1}
+  else if(col.rule==="prevue"){base=d.prevue}
+  else if(col.rule==="echeance"){base=d.echeance}
+  else if(col.rule==="fin_mois"){base="2026-08-31"}
+  if(!base) return "date à confirmer";
+  const dt=new Date(base+"T12:00:00"); dt.setDate(dt.getDate()+off);
+  return "le "+dt.toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
+}
+function taskState(card,colId,i,tk){
+  if(tk.sub&&card.ech) return card.ech.every(e=>e[1]);
+  return !!S.checks[key(card,colId,i)];
+}
 function cardHtml(card, colDef, opts={}){
-  const ghost = opts.ghostCols && colDef.ghost && card.kb.startsWith("insc")===false ? false : (opts.ghostCols && colDef.ghost);
   const isGhost = opts.ghostCols && colDef.ghost;
   const tks=tasksFor(card,colDef.id);
   const factLink = isGhost ? findFactCard(card) : null;
-  let h=`<div class="card ${card.fresh?"pop":""} ${isGhost?"ghost":""}" id="card-${card.id}">`;
+  const done=tks.filter((tk,i)=>taskState(card,colDef.id,i,tk)).length;
+  const remaining=tks.length-done;
+  const nextTk=tks.find((tk,i)=>!taskState(card,colDef.id,i,tk));
+  let h=`<div class="card ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
   if(card.fin) h+=`<div class="finbar bar-${FIN[card.fin].cls}"></div>`;
   h+=`<div class="t">${card.title}</div><div class="s">${card.sub||""}</div>`;
   h+=`<div class="meta">${badge(card.fin)}${card.waiting?`<span class="badge b-wait">En attente d'ouverture</span>`:""}</div>`;
   if(card.lines){
-    h+=`<div class="lines">`+card.lines.map((l,ix)=>`<div class="ln ${card.newLine&&ix===card.lines.length-1?"new":""}"><span class="k">${l[0]}</span><span>${l[1]}</span></div>`).join("");
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
-    h+=`<div class="tot"><span>Total</span><span>${tot.toLocaleString("fr-FR")} €</span></div></div>`;
+    h+=`<div class="cnt"><b>${card.lines.length} ligne${card.lines.length>1?"s":""}</b> · total ${tot.toLocaleString("fr-FR")} €</div>`;
   }
   if(isGhost){
     h+=`<div class="ghost-hint">🔒 Lecture seule · survoler pour le détail</div>
       <div class="popover">« Inscription confirmée, veuillez revenir le lendemain du J2 pour vous assurer que votre client a bien participé à sa formation et poursuivre le processus sur la carte facturation du client. Le cas échéant, cette carte se déplacera à l'étape Absent. »
       ${factLink?`<a data-goto="${factLink.id}">Voir la carte facturation →</a>`:""}</div>`;
   } else if(tks.length){
-    h+=`<div class="tasks">`+tks.map((tk,i)=>taskHtml(card,colDef.id,i,tk,false)).join("")+`</div>`;
+    h+=`<div class="prog"><i class="${remaining===0?"full":""}" style="width:${tks.length?Math.round(done/tks.length*100):0}%"></i></div>`;
+    h+=`<div class="cnt"><b>${remaining===0?"Étape complète":remaining+" tâche"+(remaining>1?"s":"")+" restante"+(remaining>1?"s":"")}</b> · ${done}/${tks.length}</div>`;
+    if(nextTk) h+=`<div class="nextt"><span class="k">Next :</span><span class="v">${nextTk.t}${nextTk.p===ROLE_OWNS[S.role]?"":` <span class="who2">(${WHO[nextTk.p]})</span>`}</span></div>`;
+    h+=`<div class="opendetail">Cliquer pour ouvrir le détail des tâches</div>`;
   }
   if(card.waiting){
     const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
-    h+=`<div class="waiting">Toutes les tâches sont cochées. La carte attend l'ouverture de « ${nc.label} » (${nc.open}).</div>`;
+    h+=`<div class="openline">🔒 <span><b>${nc.label}</b> · ouverture ${openDateStr(card,nc)} (${nc.open})</span><a data-unlock="${card.kb}::${nc.id}">Ouvrir en avance</a></div>`;
+  }
+  if(opts.lockedCol){
+    h+=`<div class="openline">🔒 <span>Ouverture ${openDateStr(card,colDef)||""} (${colDef.open})</span></div>`;
   }
   h+=`</div>`;
+  return h;
+}
+function modalHtml(){
+  const card=CARDS.find(c=>c.id===S.modal);
+  if(!card) return "";
+  const col=KB[card.kb].cols.find(c=>c.id===card.col);
+  const tks=tasksFor(card,card.col);
+  const done=tks.filter((tk,i)=>taskState(card,card.col,i,tk)).length;
+  let h=`<div id="modal"><div class="mbox">`;
+  h+=`<div class="mhead"><div class="row"><div><div class="t">${card.title}</div><div class="s">${card.sub||""}</div></div><button class="mclose" data-close="1" aria-label="Fermer">✕</button></div>`;
+  h+=`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${badge(card.fin)}<span class="mstep"><span class="pill"></span>Étape · ${col.label}</span></div></div>`;
+  h+=`<div class="mbody">`;
+  if(card.lines){
+    const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
+    h+=`<div class="msec">Lignes de la facture <span class="n2">une ligne par fixe, set ou close</span></div><div class="lines" style="border-top:none;padding-top:0">`
+      +card.lines.map((l,ix)=>`<div class="ln ${card.newLine&&ix===card.lines.length-1?"new":""}"><span class="k">${l[0]}</span><span>${l[1]}</span></div>`).join("")
+      +`<div class="tot"><span>Total</span><span>${tot.toLocaleString("fr-FR")} €</span></div></div>`;
+  }
+  if(tks.length){
+    h+=`<div class="msec">Tâches de l'étape <span class="n2">${done}/${tks.length} · la carte avance seule quand tout est coché</span></div>`;
+    h+=`<div class="tasks" style="border-top:none;padding-top:0">`+tks.map((tk,i)=>taskHtml(card,card.col,i,tk,false)).join("")+`</div>`;
+  } else {
+    h+=`<div class="msec">Tâches de l'étape</div><p style="font-size:12.5px;color:var(--ink-400)">Aucune tâche à cette étape.</p>`;
+  }
+  if(card.waiting){
+    const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
+    h+=`<div class="openline">🔒 <span>Étape complète. <b>${nc.label}</b> ouvre ${openDateStr(card,nc)} (${nc.open}).</span><a data-unlock="${card.kb}::${nc.id}">Ouvrir en avance</a></div>`;
+  }
+  h+=`</div></div></div>`;
   return h;
 }
 function findFactCard(insc){
@@ -727,14 +824,15 @@ function boardHtml(kbId, cards, opts={}){
   let h=`<div class="board">`;
   for(const col of kb.cols){
     const inCol=cards.filter(c=>c.col===col.id);
-    h+=`<div class="col"><div class="col-h"><span class="pill"></span><h3>${col.label}</h3><span class="n">${inCol.length}</span></div>`;
-    if(col.note) h+=`<div class="col-open" style="background:var(--info-50);color:var(--info)">${col.note}</div>`;
-    if(col.open && !colUnlocked(kbId,col.id)){
-      h+=`<div class="col-open">🕒 ${col.open}<button data-unlock="${kbId}::${col.id}">Ouvrir cette étape en avance</button></div>`;
+    const locked=col.open && !colUnlocked(kbId,col.id);
+    h+=`<div class="col ${locked?"locked":""}"><div class="col-h"><span class="pill" ${locked?'style="background:#cbd5e1"':""}></span><h3>${locked?"🔒 ":""}${col.label}</h3><span class="n">${inCol.length}</span></div>`;
+    if(col.note) h+=`<div class="col-open">${col.note}</div>`;
+    if(locked){
+      h+=`<div class="lockbar">Ouvre à ${col.open}<button data-unlock="${kbId}::${col.id}">Ouvrir en avance</button></div>`;
     } else if(col.open){
-      h+=`<div class="col-open" style="background:var(--ok-50);color:var(--ok)">Étape ouverte (${col.open})</div>`;
+      h+=`<div class="lockbar" style="background:var(--ok-50);color:var(--ok)">Étape ouverte (${col.open})</div>`;
     }
-    h+=inCol.map(c=>cardHtml(c,col,opts)).join("");
+    h+=inCol.map(c=>cardHtml(c,col,Object.assign({},opts,{lockedCol:locked}))).join("");
     h+=`</div>`;
   }
   return h+`</div>`;
@@ -767,10 +865,8 @@ function pageSessions(){
   if(f==="param"){
     return h+`<div class="stub"><h2>Paramétrage des sessions</h2><p>Par offre : le référentiel <b>Lieux & Salles</b> (aujourd'hui dans Staff) et les <b>Ressources</b> formateur (aujourd'hui dans BookMySessions) sont rapatriés ici.</p><ul><li>Lieux & Salles : catalogue des salles, capacité, accès HAL Station F</li><li>Ressources : vidéos, canvas et supports mis à disposition des formateurs</li></ul></div>`;
   }
-  h+=`<div class="kb-title">Kanban Session <span class="who">rail France IA</span></div>`;
+  h+=`<div class="kb-title">Kanban Session <span class="who">rail France IA · le rail formateur se consulte en changeant de vision</span></div>`;
   h+=boardHtml("session_fia", CARDS.filter(c=>c.kb==="session_fia"&&c.offre===f));
-  h+=`<div class="kb-title">Kanban Mes sessions <span class="who">rail formateur, en miroir : l'admin surveille sans cocher à sa place</span></div>`;
-  h+=boardHtml("session_frm", CARDS.filter(c=>c.kb==="session_frm"&&c.offre===f));
   return h;
 }
 function pageInscription(){
@@ -903,7 +999,8 @@ function render(){
   /* subnav */
   const groups = S.app==="delivia" ? DELIVIA_TABS[S.role] : (APP_TABS[S.app]||[]);
   document.documentElement.style.setProperty("--accent", APPS[S.app].accent);
-  $("#subnav").innerHTML = groups.map(([g,items])=>`<div class="subgrp">${g}</div>`+items.map(([id,lbl])=>`<button class="subtab ${S.tab===id?"active":""}" data-tab="${id}" style="--accent:${APPS[S.app].accent}">${lbl}</button>`).join("")).join("");
+  $("#subnav").innerHTML = `<div class="appctx" style="color:${APPS[S.app].accent}"><span class="dot" style="background:${APPS[S.app].accent}"></span>${APPS[S.app].name}</div>`
+    + groups.map(([g,items])=>`<div class="subgrp">${g}</div>`+items.map(([id,lbl])=>`<button class="subtab ${S.tab===id?"active":""}" data-tab="${id}" style="--accent:${APPS[S.app].accent}">${lbl}</button>`).join("")).join("");
   /* crumb + role */
   $("#crumb").innerHTML=`${APPS[S.app].name}<span class="sep">/</span><span style="color:var(--ink-500);font-weight:500">${(groups.flatMap(g=>g[1]).find(t=>t[0]===S.tab)||["",""])[1]||""}</span>`;
   $("#roleSel").innerHTML=Object.entries(ROLES).map(([id,lbl])=>`<button class="${S.role===id?"active":""}" data-role="${id}">${lbl}</button>`).join("");
@@ -920,6 +1017,12 @@ function render(){
     else h=pageStub(S.tab);
   }
   $("#content").innerHTML=h;
+  document.getElementById("modal")?.remove();
+  if(S.modal){
+    const mc=CARDS.find(c=>c.id===S.modal);
+    if(mc) document.body.insertAdjacentHTML("beforeend", modalHtml());
+    else S.modal=null;
+  }
   CARDS.forEach(c=>{c.fresh=0;c.newLine=0});
   if(S.highlight){
     const elc=document.getElementById("card-"+S.highlight);
@@ -929,7 +1032,8 @@ function render(){
 }
 /* ── interactions ── */
 document.addEventListener("click",e=>{
-  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],[data-unlock],.task,[data-goto],[data-resa]");
+  if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;document.getElementById("modal")?.remove();return}
+  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],[data-unlock],.task,[data-goto],[data-resa],[data-open]");
   if(!t) return;
   if(t.dataset.app){
     if(t.dataset.app===S.app) return;
@@ -960,7 +1064,9 @@ document.addEventListener("click",e=>{
   if(t.dataset.resa){toast(`Place réservée pour votre client : elle est bloquée <b>48 h</b>. L'inscription ARD doit être soumise avant expiration.`);return}
   if(t.dataset.ech!==undefined&&t.dataset.ech!==""){clickEch(t.dataset.ech,parseInt(t.dataset.j));return}
   if(t.classList.contains("task")&&t.dataset.c){clickTask(t.dataset.c,t.dataset.col,parseInt(t.dataset.i));return}
+  if(t.dataset.open){S.modal=t.dataset.open;render();return}
 });
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.modal){S.modal=null;document.getElementById("modal")?.remove()}});
 render();
 toast("Bienvenue dans le mockup <b>DELIV'IA 2.0</b>. Changez de vision en haut à droite, cochez les tâches pour voir les cartes avancer et les cartes facturation naître.");
 </script>
