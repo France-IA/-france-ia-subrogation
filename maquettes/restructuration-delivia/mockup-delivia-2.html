@@ -744,10 +744,30 @@ const CLIENTS=[
   ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i1",note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_marie"],docs:["Dossier EDOF · validé","Certificat de réalisation · à venir"]},
  {id:"cl_karim",nom:"Karim Benali",type:"Particulier",siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 3 échéances, première encaissée",
   ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_part",factId:"f4",inscId:"i2"}],apprenants:["ap_karim"],docs:["Facture FA-2026-0512 · émise (non acquittée)","Certificat de réalisation · à venir"]},
+
+ {id:"cl_lucas",nom:"Lucas Moreau",type:"Particulier",siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
+  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i9",note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_lucas"],docs:["Dossier EDOF · en cours"]},
+ {id:"cl_nadia",nom:"Nadia Slimani",type:"Particulier",siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
+  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i7"}],apprenants:["ap_nadia"],docs:["Dossier EDOF · validé"]},
+ {id:"cl_nova",nom:"Studio Nova",type:"Entreprise",siret:"901 254 883 00019",ref:"Paul Fabre · p.fabre@studionova.fr",mode:"Virement",mandat:null,
+  ventes:[{lbl:"Formation N2",m:"1 650 €",fin:"fp_ent_vir",factId:null,inscId:"i8",note:"facture générée à l'ARD, carte au fil du rail"}],apprenants:["ap_paul"],docs:["Devis DE-2026-0455 · en attente de signature"]},
+ {id:"cl_nexa",nom:"Nexa Digital",type:"Entreprise",siret:"753 209 118 00027",ref:"Marc Leroy · m.leroy@nexa.digital",mode:"Virement",mandat:null,
+  ventes:[{lbl:"Coaching 4 h",m:"1 200 €",fin:"fp_ent_vir",factId:null,inscId:"c2"}],apprenants:["ap_marc"],docs:["Devis DE-2026-0461 · en attente"]},
+ {id:"cl_garage",nom:"Garage Moderne",type:"Entreprise (OPCO)",siret:"482 664 905 00016",ref:"D. Fontan · contact@garagemoderne.fr",mode:"OPCO (OPCO Mobilités)",mandat:null,
+  ventes:[{lbl:"Formation intra · 8 apprenants",m:"7 900 €",fin:"opco",factId:null,inscId:"t1"}],apprenants:[],docs:["Convention · en signature"]},
+ {id:"cl_verne",nom:"Cabinet Verne & Associés",type:"Entreprise",siret:"330 481 227 00052",ref:"A. Verne · averne@cabinetverne.fr",mode:"Virement",mandat:null,
+  ventes:[{lbl:"Formation intra · 5 apprenants",m:"7 900 €",fin:"fp_ent_vir",factId:null,inscId:"t2"}],apprenants:[],docs:["Devis DE-2026-0470 · signé"]},
+ {id:"cl_emma",nom:"Emma Bianchi",type:"Particulier",siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
+  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f2",inscId:null}],apprenants:["ap_emma"],docs:["Dossier EDOF · sortie validée"]},
  {id:"cl_hugo",nom:"Hugo Martin",type:"Particulier",siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
   ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f1",inscId:"i6"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée","Certificat de réalisation · émis"]},
 ];
 const APPRENANTS=[
+ {id:"ap_lucas",nom:"Lucas Moreau",email:"lucas.moreau@gmail.com",tel:"06 31 77 20 84",client:"cl_lucas",insc:["i9"],type:"Particulier",afaire:["Signer votre convention de formation","Questionnaire de positionnement"]},
+ {id:"ap_nadia",nom:"Nadia Slimani",email:"n.slimani@gmail.com",tel:"07 22 90 15 63",client:"cl_nadia",insc:["i7"],type:"Particulière",afaire:["Répondre à votre questionnaire"]},
+ {id:"ap_paul",nom:"Paul Fabre",email:"p.fabre@studionova.fr",tel:"06 84 12 55 71",client:"cl_nova",insc:["i8"],type:"Salarié Studio Nova",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_marc",nom:"Marc Leroy",email:"m.leroy@nexa.digital",tel:"06 09 33 48 12",client:"cl_nexa",insc:["c2"],type:"Salarié Nexa Digital",afaire:["Signer votre convention de formation"]},
+ {id:"ap_emma",nom:"Emma Bianchi",email:"emma.bianchi@gmail.com",tel:"07 15 62 09 30",client:"cl_emma",insc:[],type:"Particulière",afaire:[]},
  {id:"ap_marie",nom:"Marie Dupont",email:"marie.dupont@gmail.com",tel:"06 12 45 78 90",client:"cl_marie",insc:["i1"],type:"Particulier",afaire:["Signer votre convention de formation","Préparer votre formation (9/13)","Répondre à votre questionnaire"]},
  {id:"ap_karim",nom:"Karim Benali",email:"k.benali@outlook.fr",tel:"07 66 21 03 55",client:"cl_karim",insc:["i2"],type:"Particulier",afaire:["Préparer votre formation (2/13)","Questionnaire de positionnement"]},
  {id:"ap_jean",nom:"Jean Petit",email:"jean.petit@acme.fr",tel:"06 78 41 20 19",client:"cl_acme",insc:["i3"],type:"Salarié ACME Conseil",afaire:["Questionnaire de positionnement"]},
@@ -982,7 +1002,7 @@ function modalHtml(){
   const done=tks.filter((tk,i)=>taskState(card,card.col,i,tk)).length;
   let h=`<div id="modal"><div class="mbox">`;
   const ap=APPRENANTS.find(a=>a.insc.includes(card.id));
-  const cl=ap&&ap.client ? CLIENTS.find(c=>c.id===ap.client) : CLIENTS.find(c=>(c.ventes||[]).some(v=>v.factId===card.id));
+  const cl=ap&&ap.client ? CLIENTS.find(c=>c.id===ap.client) : CLIENTS.find(c=>(c.ventes||[]).some(v=>v.factId===card.id||v.inscId===card.id));
   h+=`<div class="mhead"><div class="row"><div><div class="t">${card.title}</div><div class="s">${card.sub||""}</div>${(ap||cl)?`<div class="mlinks">${ap?`<a data-fiche="apprenant::${ap.id}">Fiche apprenant</a>`:""}${cl?`<a data-fiche="client::${cl.id}">Fiche client</a>`:""}</div>`:""}</div><button class="mclose" data-close="1" aria-label="Fermer">✕</button></div>`;
   h+=`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${badge(card.fin)}<span class="mstep"><span class="pill"></span>Étape · ${col.label}</span>${card.com?`<span style="font-size:11px;color:var(--ink-400)">${card.com}</span>`:""}</div></div>`;
   h+=`<div class="mbody">`;
@@ -1211,6 +1231,33 @@ function ficheClientHtml(id){
       <div style="padding-top:2px">${cl.docs.map(d=>`<span class="chip" style="margin:0 6px 6px 0">${ICO.file} ${d}</span>`).join("")}</div>
     </div>`;
   });
+  return h;
+}
+function pageAnnuaire(){
+  const f=S.fUsers||"apprenants";
+  let h=`<div class="pagehead"><h1>Annuaire</h1><p>Toutes les personnes du système : celles qui ont un compte (internes, formateurs, commerciaux) et celles qui ont une fiche (clients, apprenants).</p></div>`;
+  h+=chips([["",[["apprenants","Apprenants"],["clients","Clients"],["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["internes","Internes"]]]], f, "fUsers");
+  h+=`<div class="fsec">`;
+  if(f==="apprenants"){
+    h+=`<h2>Apprenants <span class="n2">${APPRENANTS.length}</span></h2>`;
+    h+=APPRENANTS.map(a=>{const cl=CLIENTS.find(c=>c.id===a.client);
+      return `<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(a.nom)}</span><div><div class="tt">${a.nom}</div><div class="sm">${a.email}</div></div><span class="chip">${a.type}</span><span class="go" data-fiche="apprenant::${a.id}">Fiche apprenant</span>${cl?`<span class="go" data-fiche="client::${cl.id}">Client</span>`:""}</div>`;}).join("");
+  } else if(f==="clients"){
+    h+=`<h2>Clients <span class="n2">${CLIENTS.length}</span></h2>`;
+    h+=CLIENTS.map(c=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${c.type.startsWith("Particulier")?initiales(c.nom):"🏢"}</span><div><div class="tt">${c.nom}</div><div class="sm">${c.siret?"SIRET "+c.siret:"Particulier"}</div></div><span class="chip">${c.mode}</span><span class="go" data-fiche="client::${c.id}">Fiche client</span></div>`).join("");
+  } else if(f==="formateurs"){
+    h+=`<h2>Formateurs <span class="n2">qualifications, profil, onboarding</span></h2>`;
+    h+=[["Sarah K.","N1 · N2 · Coaching","Paris"],["Marc D.","N1","Bordeaux · Toulouse"],["Inès B.","N1 · Coaching","Lyon"]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div><div class="tt">${x[0]}</div><div class="sm">Villes : ${x[2]}</div></div><span class="chip">Offres : ${x[1]}</span><span class="chip ok">Onboarding complet</span></div>`).join("");
+  } else if(f==="closeurs"){
+    h+=`<h2>Closeurs <span class="n2">calendriers de closing</span></h2>`;
+    h+=[["Alex R."],["Chloé M."],["Yanis B."]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div class="tt">${x[0]}</div><span class="chip">Calendrier GHL relié</span></div>`).join("");
+  } else if(f==="setteurs"){
+    h+=`<h2>Setteurs</h2><div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">ST</span><div class="tt">Sam T.</div><span class="chip">Fixe + commissions</span></div>`;
+  } else {
+    h+=`<h2>Internes <span class="n2">comptes France IA et accès aux pages</span></h2>`;
+    h+=[["Jeanne D.","Admin · Customer Success"],["Côme A.","Admin · Process"],["Olivier R.","Admin"]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div class="tt">${x[0]}</div><span class="chip">${x[1]}</span><span class="chip">Accès : toutes les pages</span></div>`).join("");
+  }
+  h+=`</div>`;
   return h;
 }
 const STUBS = {
