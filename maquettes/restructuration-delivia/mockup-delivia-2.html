@@ -86,8 +86,16 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .lockbar{font-size:10.5px;color:var(--ink-500);background:#eef1f5;border-radius:6px;padding:5px 8px;margin:0 2px 8px;display:flex;align-items:center;gap:6px;line-height:1.35}
 .lockbar button{margin-left:auto;font-size:10.5px;font-weight:600;color:var(--primary);white-space:nowrap}
 .lockbar button:hover{text-decoration:underline;text-underline-offset:2px}
-.card.waitlock{opacity:.7;background:#f8fafc}
+.card.waitlock{background:#fbfcfd}
 .card.waitlock .t{color:var(--ink-500)}
+.lockstrip{margin:-11px -12px 10px;padding:6px 12px;background:#f1f5f9;border-radius:10px 10px 0 0;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--ink-500);line-height:1.35}
+.lockstrip b{color:var(--ink-700);font-weight:600}
+.lockstrip .dim{color:var(--ink-400)}
+.lockstrip a{margin-left:auto;color:var(--primary);font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.lockstrip a:hover{text-decoration:underline;text-underline-offset:2px}
+.card.haslock .finbar{top:36px}
+.card.haslock > *:not(.lockstrip){opacity:.72}
+.card.haslock > .finbar{opacity:.72}
 .openline{margin-top:9px;font-size:11px;color:var(--ink-500);background:#eef1f5;border-radius:6px;padding:5px 8px;display:flex;gap:6px;align-items:center;line-height:1.4}
 .openline b{color:var(--ink-700);font-weight:600}
 .openline a{color:var(--primary);font-weight:600;cursor:pointer;margin-left:auto;font-size:10.5px;white-space:nowrap}
@@ -121,7 +129,15 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .task.other .box{border-color:var(--line-2);background:var(--bg)}
 .task.other.done .box{background:var(--ink-300);border-color:var(--ink-300)}
 .task .who{color:var(--ink-400);font-size:11px}
-.task .tag{font-size:10px;color:#92400e;background:var(--warn-50);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
+.task .tag{font-size:10px;color:#92400e;background:var(--warn-50);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap;cursor:pointer;border:1px solid transparent}
+.task .tag:hover{border-color:#fcd34d;text-decoration:underline;text-underline-offset:2px}
+/* popup template */
+#tplmodal{position:fixed;inset:0;background:rgba(15,23,42,.3);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+#tplmodal .mbox{max-width:430px}
+.tpl-canal{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:10.5px;font-weight:600;background:var(--ok-50);color:var(--ok)}
+.tpl-body{background:#f8fafc;border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.65;color:var(--ink-700);white-space:pre-line}
+.tpl-body .var{background:var(--primary-50);color:var(--primary-dark);border-radius:4px;padding:0 4px;font-size:12px;font-weight:500}
+.tpl-note{font-size:11px;color:var(--ink-400);margin-top:10px;line-height:1.5}
 .task .fx{font-size:10px;color:#9d174d;background:#fdf2f8;border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
 .task .note{display:block;font-size:10.5px;color:var(--ink-400);margin-top:1px}
 .sub{margin:2px 0 2px 21px;display:flex;flex-direction:column;gap:1px}
@@ -727,7 +743,7 @@ function taskHtml(card,colId,i,tk,ghost){
   if(tk.grp) h+=`<div class="tgrp">${tk.grp}</div>`;
   h+=`<div class="task ${done?"done":""} ${owned?"":"other"}" data-c="${card.id}" data-col="${colId}" data-i="${i}" ${ghost?'style="pointer-events:none"':""}>
     <span class="box"></span>
-    <span><span class="lbl">${tk.t}</span>${who}${tk.tpl?'<span class="tag">→ template</span>':""}${tk.fx==="carte_client"||tk.fx==="carte_formateur"?'<span class="fx">→ crée la carte facturation</span>':""}${tk.fx==="ligne_closer"?'<span class="fx">→ ligne facture closeur</span>':""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
+    <span><span class="lbl">${tk.t}</span>${who}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.fx==="carte_client"||tk.fx==="carte_formateur"?'<span class="fx">→ crée la carte facturation</span>':""}${tk.fx==="ligne_closer"?'<span class="fx">→ ligne facture closeur</span>':""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
   </div>`;
   if(tk.sub&&card.ech){
     h+=`<div class="sub">`+card.ech.map((e,j)=>`<div class="task other ${e[1]?"done":""}" data-ech="${card.id}" data-j="${j}"><span class="box"></span><span class="lbl" style="font-size:11px">${e[0]}</span></div>`).join("")+`</div>`;
@@ -758,10 +774,15 @@ function cardHtml(card, colDef, opts={}){
   const done=tks.filter((tk,i)=>taskState(card,colDef.id,i,tk)).length;
   const remaining=tks.length-done;
   const nextTk=tks.find((tk,i)=>!taskState(card,colDef.id,i,tk));
-  let h=`<div class="card ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
+  const lockInfo = opts.lockedCol ? {c:colDef,pref:false} : (card.waiting ? {c:KB[card.kb].cols.find(x=>x.id===card.waiting),pref:true} : null);
+  let h=`<div class="card ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${lockInfo?"haslock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
+  if(lockInfo){
+    const lc=lockInfo.c;
+    h+=`<div class="lockstrip">🔒 <span>${lockInfo.pref?`<b>${lc.label}</b> · `:""}Ouverture ${openDateStr(card,lc)} <span class="dim">(${lc.open})</span></span><a data-unlock="${card.kb}::${lc.id}">Ouvrir en avance</a></div>`;
+  }
   if(card.fin) h+=`<div class="finbar bar-${FIN[card.fin].cls}"></div>`;
   h+=`<div class="t">${card.title}</div><div class="s">${card.sub||""}</div>`;
-  h+=`<div class="meta">${badge(card.fin)}${card.waiting?`<span class="badge b-wait">En attente d'ouverture</span>`:""}</div>`;
+  h+=`<div class="meta">${badge(card.fin)}</div>`;
   if(card.lines){
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
     h+=`<div class="cnt"><b>${card.lines.length} ligne${card.lines.length>1?"s":""}</b> · total ${tot.toLocaleString("fr-FR")} €</div>`;
@@ -775,15 +796,36 @@ function cardHtml(card, colDef, opts={}){
     h+=`<div class="cnt"><b>${remaining===0?"Étape complète":remaining+" tâche"+(remaining>1?"s":"")+" restante"+(remaining>1?"s":"")}</b> · ${done}/${tks.length}</div>`;
     if(nextTk) h+=`<div class="nextt"><span class="k">Next :</span><span class="v">${nextTk.t}${nextTk.p===ROLE_OWNS[S.role]?"":` <span class="who2">(${WHO[nextTk.p]})</span>`}</span></div>`;
   }
-  if(card.waiting){
-    const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
-    h+=`<div class="openline">🔒 <span><b>${nc.label}</b> · ouverture ${openDateStr(card,nc)} (${nc.open})</span><a data-unlock="${card.kb}::${nc.id}">Ouvrir en avance</a></div>`;
-  }
-  if(opts.lockedCol){
-    h+=`<div class="openline">🔒 <span>Ouverture ${openDateStr(card,colDef)||""} (${colDef.open})</span></div>`;
-  }
   h+=`</div>`;
   return h;
+}
+function tplFor(label){
+  const l=label.toLowerCase();
+  const W="WhatsApp", E="Email";
+  if(l.includes("bienvenue")&&l.includes("france ia")) return {n:"Message de bienvenue France IA",c:W,b:"Bonjour {{prenom}} 👋 Bienvenue ! Ce groupe réunit votre formateur {{formateur}} et l'équipe France IA. Il servira à caler le lieu, la date et à échanger sur le contenu de votre accompagnement. À très vite !"};
+  if(l.includes("bienvenue")&&l.includes("formateur")) return {n:"Message de bienvenue Formateur",c:W,b:"Bonjour {{prenom}}, je suis {{formateur}}, votre formateur. Ravi de vous accompagner ! Pour caler notre première séance, quelles sont vos disponibilités la semaine du {{semaine}} ?"};
+  if(l.includes("bienvenue")||(l.includes("groupe whatsapp")&&l.includes("message"))) return {n:"Message de bienvenue",c:W,b:"Bonjour à toutes et à tous 👋 Bienvenue dans le groupe de votre formation {{session}} ! Vous y recevrez toutes les informations pratiques : adresse, horaires, accès. J1 le {{date_j1}} à 9h. À très vite !"};
+  if(l.includes("veille j1")) return {n:"Rappel veille de J1",c:W,b:"Bonjour {{prenom}}, petit rappel : votre formation {{session}} commence demain à 9h, au {{adresse}}. Pensez à apporter votre ordinateur portable. Bonne soirée !"};
+  if(l.includes("message de fin")) return {n:"Message de fin de formation",c:W,b:"Un grand merci à tous pour ces deux journées ! 🎉 Pensez à compléter votre questionnaire de satisfaction depuis votre espace apprenant : {{lien_espace}}. Vos documents (certificat, attestation) y seront déposés sous peu."};
+  if(l.includes("signature contrat")||l.includes("convention")&&l.includes("demande")) return {n:"Demande de signature de convention",c:E,b:"Bonjour {{prenom}},\nVeuillez trouver votre convention de formation pour la session {{session}}. Vous pouvez la signer en ligne via ce lien sécurisé : {{lien_signature}}.\nBien cordialement,\nL'équipe France IA"};
+  if(l.includes("transmettre la facture")||l.includes("transmettre le numéro")) return {n:"Transmission de facture",c:E,b:"Bonjour {{prenom}},\nVeuillez trouver ci-joint la facture {{numero_facture}} d'un montant de {{montant}} € TTC, relative à la formation {{session}}. Échéance de règlement : {{echeance}}.\nBien cordialement,\nL'équipe France IA"};
+  if(l.includes("relancer bibby")) return {n:"Relance Bibby",c:E,b:"Bonjour,\nSauf erreur de notre part, le règlement du dossier {{remise_ref}} (facture {{numero_facture}}, transmis le {{date_envoi}}) n'a pas encore été reçu. Pouvez-vous nous indiquer la date de versement prévue ?\nMerci d'avance."};
+  if(l.includes("relancer l'opco")) return {n:"Relance OPCO",c:E,b:"Bonjour,\nLa facture {{numero_facture}} relative à la formation de {{apprenant}} (dossier {{dossier}}) est arrivée à échéance le {{echeance}}. Pouvez-vous nous confirmer sa mise en règlement ?\nBien cordialement."};
+  if(l.includes("relancer le client")) return {n:"Relance client",c:E,b:"Bonjour {{prenom}},\nSauf erreur de notre part, la facture {{numero_facture}} ({{montant}} €) est arrivée à échéance le {{echeance}} et reste en attente de règlement. N'hésitez pas à revenir vers nous en cas de difficulté.\nBien cordialement,\n{{closer}}"};
+  if(l.includes("absence")) return {n:"Contact client absent",c:E,b:"Bonjour {{prenom}},\nNous avons constaté votre absence lors de la formation du {{date_j1}}. Pouvez-vous nous en indiquer la raison ? Si elle est justifiée (certificat médical...), merci de nous transmettre le justificatif : nous pourrons vous replacer sur une prochaine session.\nBien cordialement."};
+  if(l.includes("rendez-vous en visio")) return {n:"Prise de rendez-vous client intra",c:E,b:"Bonjour,\nJe suis {{formateur}}, votre formateur pour la formation intra {{session}}. Je vous propose un point en visio pour préparer le contenu : {{lien_calendrier}}.\nBien à vous."};
+  if(l.includes("caler la ou les séances")) return {n:"Proposition de créneaux",c:W,b:"Bonjour {{prenom}} 👋 Pour votre coaching de {{nb_heures}} h, je vous propose ces créneaux : {{creneaux}}. Lequel vous conviendrait ?"};
+  if(l.includes("attentes")) return {n:"Demande des attentes",c:W,b:"Bonjour {{prenom}}, avant notre séance, pouvez-vous me préciser en quelques lignes vos attentes et le cas d'usage sur lequel vous aimeriez avancer ?"};
+  return {n:"Modèle de message",c:E,b:"Bonjour {{prenom}},\n[Contenu du template à rédiger dans l'onglet Templates.]\nBien cordialement,\nL'équipe France IA"};
+}
+function tplModalHtml(){
+  const label=decodeURIComponent(S.tpl);
+  const tp=tplFor(label);
+  const body=tp.b.replace(/\{\{([a-z_0-9]+)\}\}/g,'<span class="var">{{$1}}</span>');
+  return `<div id="tplmodal"><div class="mbox"><div class="mhead"><div class="row"><div><div class="t">${tp.n}</div><div class="s">Template lié à la tâche : ${label}</div></div><button class="mclose" data-closetpl="1" aria-label="Fermer">✕</button></div>
+  <div style="margin-top:9px"><span class="tpl-canal">${tp.c==="WhatsApp"?"💬 WhatsApp":"✉️ Email"}</span></div></div>
+  <div class="mbody"><div class="tpl-body">${body}</div>
+  <div class="tpl-note">Exemple fictif. Les vrais modèles vivent dans l'onglet Templates (table message_templates) : les variables surlignées sont remplies automatiquement à l'envoi.</div></div></div></div>`;
 }
 function modalHtml(){
   const card=CARDS.find(c=>c.id===S.modal);
@@ -826,9 +868,7 @@ function boardHtml(kbId, cards, opts={}){
     const locked=col.open && !colUnlocked(kbId,col.id);
     h+=`<div class="col ${locked?"locked":""}"><div class="col-h"><span class="pill" ${locked?'style="background:#cbd5e1"':""}></span><h3>${locked?"🔒 ":""}${col.label}</h3><span class="n">${inCol.length}</span></div>`;
     if(col.note) h+=`<div class="col-open">${col.note}</div>`;
-    if(locked){
-      h+=`<div class="lockbar">Ouvre à ${col.open}<button data-unlock="${kbId}::${col.id}">Ouvrir en avance</button></div>`;
-    } else if(col.open){
+    if(col.open && !locked){
       h+=`<div class="lockbar" style="background:var(--ok-50);color:var(--ok)">Étape ouverte (${col.open})</div>`;
     }
     h+=inCol.map(c=>cardHtml(c,col,Object.assign({},opts,{lockedCol:locked}))).join("");
@@ -1017,11 +1057,13 @@ function render(){
   }
   $("#content").innerHTML=h;
   document.getElementById("modal")?.remove();
+  document.getElementById("tplmodal")?.remove();
   if(S.modal){
     const mc=CARDS.find(c=>c.id===S.modal);
     if(mc) document.body.insertAdjacentHTML("beforeend", modalHtml());
     else S.modal=null;
   }
+  if(S.tpl) document.body.insertAdjacentHTML("beforeend", tplModalHtml());
   CARDS.forEach(c=>{c.fresh=0;c.newLine=0});
   if(S.highlight){
     const elc=document.getElementById("card-"+S.highlight);
@@ -1031,6 +1073,9 @@ function render(){
 }
 /* ── interactions ── */
 document.addEventListener("click",e=>{
+  if(e.target.id==="tplmodal"||e.target.closest("[data-closetpl]")){S.tpl=null;document.getElementById("tplmodal")?.remove();return}
+  const tplBtn=e.target.closest("[data-tpl]");
+  if(tplBtn){e.stopPropagation();S.tpl=tplBtn.dataset.tpl;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
   if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;document.getElementById("modal")?.remove();return}
   const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],[data-unlock],.task,[data-goto],[data-resa],[data-open]");
   if(!t) return;
@@ -1065,7 +1110,9 @@ document.addEventListener("click",e=>{
   if(t.classList.contains("task")&&t.dataset.c){clickTask(t.dataset.c,t.dataset.col,parseInt(t.dataset.i));return}
   if(t.dataset.open){S.modal=t.dataset.open;render();return}
 });
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S.modal){S.modal=null;document.getElementById("modal")?.remove()}});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;
+  if(S.tpl){S.tpl=null;document.getElementById("tplmodal")?.remove();return}
+  if(S.modal){S.modal=null;document.getElementById("modal")?.remove()}});
 render();
 toast("Bienvenue dans le mockup <b>DELIV'IA 2.0</b>. Changez de vision en haut à droite, cochez les tâches pour voir les cartes avancer et les cartes facturation naître.");
 </script>
