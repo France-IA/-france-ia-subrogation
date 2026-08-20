@@ -41,7 +41,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .apptab.active[data-app="treso"]{background:#ecfdf5;color:#047857}
 .apptab.active[data-app="dash"]{background:#f3e8ff;color:#6d28d9}
 .apptab .lock{margin-left:auto;font-size:10px;color:var(--ink-300)}
-#subnav{margin-top:auto;padding-bottom:8px;border-top:1px solid var(--line);padding-top:6px}
+#subnav{padding-bottom:8px;border-top:1px solid var(--line);margin-top:8px;padding-top:4px}
 #subnav .appctx{padding:10px 20px 2px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px}
 #subnav .appctx .dot{width:7px;height:7px;border-radius:50%}
 .subgrp{padding:12px 20px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400)}
@@ -49,7 +49,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .subtab:hover{background:var(--bg);color:var(--ink-700)}
 .subtab.active{background:var(--bg);color:var(--ink-900);font-weight:600}
 .subtab.active::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--accent,#4f46e5);margin-left:-8px;margin-right:5px}
-.side-note{padding:14px 20px;font-size:11px;color:var(--ink-400);border-top:1px solid var(--line);line-height:1.5}
+.side-note{margin-top:auto;padding:14px 20px;font-size:11px;color:var(--ink-400);border-top:1px solid var(--line);line-height:1.5}
 /* ── Topbar ─────────────────────────────────────── */
 #main{flex:1;min-width:0;display:flex;flex-direction:column}
 #topbar{height:52px;background:#fff;box-shadow:0 1px 0 0 var(--line);display:flex;align-items:center;gap:12px;padding:0 20px;position:sticky;top:0;z-index:30}
@@ -774,7 +774,6 @@ function cardHtml(card, colDef, opts={}){
     h+=`<div class="prog"><i class="${remaining===0?"full":""}" style="width:${tks.length?Math.round(done/tks.length*100):0}%"></i></div>`;
     h+=`<div class="cnt"><b>${remaining===0?"Étape complète":remaining+" tâche"+(remaining>1?"s":"")+" restante"+(remaining>1?"s":"")}</b> · ${done}/${tks.length}</div>`;
     if(nextTk) h+=`<div class="nextt"><span class="k">Next :</span><span class="v">${nextTk.t}${nextTk.p===ROLE_OWNS[S.role]?"":` <span class="who2">(${WHO[nextTk.p]})</span>`}</span></div>`;
-    h+=`<div class="opendetail">Cliquer pour ouvrir le détail des tâches</div>`;
   }
   if(card.waiting){
     const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
