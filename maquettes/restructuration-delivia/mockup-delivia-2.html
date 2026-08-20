@@ -718,17 +718,17 @@ let CARDS = [
 /* Fiches : fausses identités reliées aux cartes */
 const CLIENTS=[
  {id:"cl_acme",nom:"ACME Conseil",type:"Entreprise",siret:"842 391 557 00023",ref:"Jean Petit · jean.petit@acme.fr",mode:"Virement",mandat:null,
-  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_ent_vir",factId:"f5",inscId:"i3"}],apprenants:["ap_jean"],docs:["Devis DE-2026-0412 · signé","Facture FA-2026-0533 · émise"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_ent_vir",factId:"f5",inscId:"i3"}],apprenants:["ap_jean"],docs:["Devis DE-2026-0412 · signé","Convention · signée","Facture FA-2026-0533 · émise","Certificat de réalisation · à venir"]},
  {id:"cl_btp",nom:"BTP Sud",type:"Entreprise",siret:"512 887 224 00011",ref:"Léa Costa · l.costa@btpsud.fr",mode:"Mandat SDD",mandat:"Actif · 2 échéances (1 refusée)",
-  ventes:[{lbl:"Formation N1 · 3 apprenants",m:"4 950 €",fin:"fp_ent_man",factId:"f6",inscId:"i4"}],apprenants:["ap_lea"],docs:["Devis DE-2026-0388 · signé","Facture FA-2026-0501 · émise"]},
+  ventes:[{lbl:"Formation N1 · 3 apprenants",m:"4 950 €",fin:"fp_ent_man",factId:"f6",inscId:"i4"}],apprenants:["ap_lea"],docs:["Devis DE-2026-0388 · signé","Convention · signée","Facture FA-2026-0501 · émise","Certificat de réalisation · à venir"]},
  {id:"cl_hotel",nom:"Hôtel du Parc",type:"Entreprise (OPCO)",siret:"399 120 448 00034",ref:"Sofia Ricci · s.ricci@hotelduparc.fr",mode:"OPCO (AKTO)",mandat:null,
-  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"opco",factId:"f3",inscId:"i5"}],apprenants:["ap_sofia"],docs:["Convention · signée","Facture FA-2026-0540 · à transmettre à l'OPCO"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"opco",factId:"f3",inscId:"i5"}],apprenants:["ap_sofia"],docs:["Convention · signée","Facture FA-2026-0540 · à transmettre à l'OPCO","Feuille d'émargement collective · à venir","Certificat de réalisation · à venir"]},
  {id:"cl_marie",nom:"Marie Dupont",type:"Particulier",siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
-  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i1",note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_marie"],docs:["Dossier EDOF · validé"]},
+  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i1",note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_marie"],docs:["Dossier EDOF · validé","Certificat de réalisation · à venir"]},
  {id:"cl_karim",nom:"Karim Benali",type:"Particulier",siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 3 échéances, première encaissée",
-  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_part",factId:"f4",inscId:"i2"}],apprenants:["ap_karim"],docs:["Facture FA-2026-0512 · émise (non acquittée)"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_part",factId:"f4",inscId:"i2"}],apprenants:["ap_karim"],docs:["Facture FA-2026-0512 · émise (non acquittée)","Certificat de réalisation · à venir"]},
  {id:"cl_hugo",nom:"Hugo Martin",type:"Particulier",siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
-  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f1",inscId:"i6"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée"]},
+  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f1",inscId:"i6"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée","Certificat de réalisation · émis"]},
 ];
 const APPRENANTS=[
  {id:"ap_marie",nom:"Marie Dupont",email:"marie.dupont@gmail.com",tel:"06 12 45 78 90",client:"cl_marie",insc:["i1"],type:"Particulier",afaire:["Signer votre convention de formation","Préparer votre formation (9/13)","Répondre à votre questionnaire"]},
@@ -1133,8 +1133,6 @@ function ficheApprenantHtml(id){
   cards.forEach(c=>{
     const offre=c.kb==="coaching"||c.kb==="coaching_frm"?"Coaching":"Formation "+(c.offre||"").toUpperCase();
     h+=`<div class="fsec"><h2>${offre} <span class="n2">${c.sub||""}</span></h2>
-      <div class="frow"><span class="sm" style="width:150px">Avancement</span><span class="chip ${["termine","terminee"].includes(c.col)?"ok":["absent","lost"].includes(c.col)?"warn":""}">${colLabel(c)}</span>
-        <span class="go" data-fiche="client::${cl?cl.id:""}">Cartes inscription et facturation : sur la fiche client →</span></div>
       <div class="frow"><span class="sm" style="width:150px">Espace apprenant</span><div style="flex:1">${ap.afaire.map(x=>`<span class="chip warn" style="margin:0 6px 4px 0">${x}</span>`).join("")||`<span class="chip ok">À jour</span>`}</div></div>
       <div class="frow"><span class="sm" style="width:150px">Preuves individuelles</span><div style="flex:1">
         <span class="chip ok" style="margin:0 6px 4px 0">Positionnement</span><span class="chip" style="margin:0 6px 4px 0">Émargement J1 · à venir</span><span class="chip" style="margin:0 6px 4px 0">Émargement J2 · à venir</span><span class="chip" style="margin:0 6px 4px 0">Satisfaction · à venir</span>
@@ -1169,7 +1167,7 @@ function ficheClientHtml(id){
         <div style="width:280px"><div class="apercu" style="border:none;padding:0;margin:0 0 6px"><span class="k">Carte facturation</span></div>
           ${fc?cardHtml(fc,KB[fc.kb].cols.find(x=>x.id===fc.col),{}):`<div class="card pointer"><div class="t">Carte à venir</div><div class="s">${v.note||"Elle naîtra selon la règle de son rail."}</div></div>`}</div>
       </div>
-      <div class="frow" style="margin-top:8px"><span class="sm" style="width:150px">Documents</span><div style="flex:1">${cl.docs.map(d=>`<span class="chip" style="margin:0 6px 4px 0">${d}</span>`).join("")}</div></div>
+      <div class="frow" style="margin-top:8px"><span class="sm" style="width:150px">Preuves & documents de l'offre</span><div style="flex:1">${cl.docs.map(d=>`<span class="chip" style="margin:0 6px 4px 0">${d}</span>`).join("")}</div></div>
     </div>`;
   });
   return h;
