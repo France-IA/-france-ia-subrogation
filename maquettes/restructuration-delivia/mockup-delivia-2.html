@@ -140,7 +140,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* fiches apprenant & client */
 .backbtn{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--ink-500);margin-bottom:12px;cursor:pointer;border-radius:6px;padding:4px 8px}
 .backbtn:hover{background:#f1f5f9;color:var(--ink-700)}
-.fichehead{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:20px 22px;margin-bottom:14px;max-width:880px}
+.fichehead{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:20px 22px;margin-bottom:14px}
 .fh-top{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
 .avat{width:40px;height:40px;border-radius:10px;background:var(--primary-50);color:var(--primary-dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
 .avat svg{width:19px;height:19px}
@@ -162,7 +162,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .perschip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:#f8fafc;border:1px solid var(--line);padding:3px 10px 3px 4px;font-size:12px;font-weight:500;color:var(--ink-700);cursor:pointer;margin:0 6px 4px 0}
 .perschip:hover{border-color:#c7d2fe;color:var(--primary-dark)}
 .perschip .avat{width:22px;height:22px;font-size:9px;border-radius:999px}
-.fsec{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:16px 20px;margin-bottom:12px;max-width:880px}
+.fsec{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:16px 20px;margin-bottom:12px}
 .sect-h{display:flex;align-items:flex-start;gap:8px;font-size:13px;font-weight:600;color:var(--ink-900)}
 .sect-h svg{color:var(--ink-400);flex-shrink:0;margin-top:1px}
 .sect-h .n2{font-weight:400;color:var(--ink-400);font-size:11.5px}
@@ -797,6 +797,8 @@ const APPRENANTS=[
  {id:"ap_hugo",nom:"Hugo Martin",email:"hugo.martin@gmail.com",tel:"06 02 93 47 66",prenom:"Hugo",fam:"Martin",dom:"Design",adr:"40 rue Oberkampf",cp:"75011",ville:"Paris",spro:"Demandeur d'emploi",nais:"23/01/1996",client:"cl_hugo",insc:["i6"],type:"Particulier",afaire:["Répondre à votre questionnaire de satisfaction à froid"]},
  {id:"ap_awa",nom:"Awa Diallo",email:"awa.diallo@gmail.com",tel:"07 45 09 12 87",prenom:"Awa",fam:"Diallo",dom:"Ressources humaines",adr:"5 rue de la Paix",cp:"69002",ville:"Lyon",spro:"Salariée",nais:"15/06/1992",client:null,insc:["c1"],type:"Particulière",afaire:["Signer votre convention de formation"]},
 ];
+APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } });
+CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
 /* ════════════════════ ÉTAT ════════════════════ */
 const S = {role:"admin", app:"delivia", tab:"inscription",
   fSession:"n1", fInsc:"n1", fFact:"cpf",
@@ -1186,6 +1188,10 @@ function fld(label,val,editKey,obj){
   }
   return `<div class="fld"><div class="k">${label}</div><div class="v">${val??'<span class="muted">non renseigné</span>'}</div></div>`;
 }
+function idFld(label,key,obj){
+  if(S.editing) return `<span style="min-width:190px"><span class="fld"><span class="k">${label}</span><input class="edin" data-f="${key}" value="${(obj[key]??"").toString().replace(/"/g,"&quot;")}" style="margin-top:3px"></span></span>`;
+  return `<span class="idchip">${label} · ${obj[key]??"…"}</span>`;
+}
 function editBtns(kind,id){
   if(S.editing) return `<button class="btn btn-p" data-editsave="${kind}::${id}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`;
   return `<button class="btn btn-s" data-editstart="${kind}::${id}">Modifier</button>`;
@@ -1220,7 +1226,7 @@ function ficheApprenantHtml(id){
     ${fld("Date de naissance",ap.nais,"nais",ap)}
   </div>
   <div class="idchips"><span class="lbl">Identifiants techniques</span>
-    <span class="idchip">wedof_dossier_id · 5501…</span><span class="idchip">qualiobee_learner_id · 3c8f…</span><span class="idchip">apolearn_id · 88An…</span><span class="idchip">wedof_certification_id · c917…</span></div>
+    ${idFld("wedof_dossier_id","wdi",ap)}${idFld("qualiobee_learner_id","qli",ap)}${idFld("apolearn_id","apo",ap)}${idFld("wedof_certification_id","wci",ap)}</div>
   </div>`;
   /* ── Notes ── */
   h+=notesCard();
@@ -1273,7 +1279,7 @@ function ficheClientHtml(id){
     ${fld("Téléphone responsable",cl.resp?cl.resp.t:null)}
   </div>
   <div class="idchips"><span class="lbl">Identifiants techniques</span>
-    <span class="idchip">ghl_contact_id · 91Bx…</span><span class="idchip">qonto_client_id · cli_74…</span><span class="idchip">qualiobee_customer_id · 7a21…</span></div>
+    ${idFld("ghl_contact_id","ghl",cl)}${idFld("qonto_client_id","qonto",cl)}${idFld("qualiobee_customer_id","qlb",cl)}</div>
   <div class="idchips" style="border-top:none;padding-top:4px"><span class="lbl">Apprenants liés</span>
     ${(cl.apprenants||[]).map(aid=>{const a=APPRENANTS.find(x=>x.id===aid);return a?`<span class="perschip" data-fiche="apprenant::${a.id}"><span class="avat">${initiales(a.nom)}</span>${a.nom}</span>`:""}).join("")||'<span class="idchip">Aucun</span>'}
   </div>
