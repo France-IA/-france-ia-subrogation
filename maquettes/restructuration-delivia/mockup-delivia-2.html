@@ -372,6 +372,29 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .ftask.none{color:var(--ink-300);font-style:italic}
 .frow2 .tgrp{margin-left:2px}
 
+/* ── preuves ── */
+.plegend{display:flex;gap:14px;align-items:center;font-size:11.5px;color:var(--ink-500);margin:-4px 0 12px}
+.plegend span{display:inline-flex;align-items:center;gap:5px}
+.pst{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-size:11px;font-weight:700;font-style:normal;flex-shrink:0}
+.pst.ok{background:var(--ok-50);color:var(--ok)}.pst.later{background:#f1f5f9;color:var(--ink-300)}.pst.na{background:transparent;color:var(--ink-300)}.pst.ko{background:var(--err-50);color:var(--err)}
+.prow{display:flex;align-items:flex-start;gap:10px;padding:8px 2px;border-top:1px solid var(--line);font-size:13px}
+.subh+.prow{border-top:none}
+.prow>div{flex:1}
+.prow .chip{flex-shrink:0}
+.pn{font-weight:500;color:var(--ink-900);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pn .chip,.pn .badge{font-weight:500}
+.pd{font-size:11.5px;color:var(--ink-400);margin-top:2px;line-height:1.45}
+.pmat{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+.pmat th{text-align:center;padding:6px 6px 8px;vertical-align:top;font-weight:500}
+.pmat th.pl,.pmat td.pl{text-align:left;min-width:320px}
+.pmat td{padding:7px 6px;border-top:1px solid var(--line);text-align:center;vertical-align:top}
+.pmat .pgrp td{background:#f8fafc;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500);padding:7px 8px;border-top:none}
+.pav{width:30px;height:30px;font-size:11px;border-radius:9px;margin:0 auto;cursor:pointer}
+.pname{font-size:11px;color:var(--ink-700);margin:4px 0 3px}
+.tbtn{display:inline-flex;align-items:center;border-radius:6px;padding:2px 9px;font-size:11px;font-weight:600;background:var(--primary);color:#fff;margin-left:6px;vertical-align:middle}
+.tbtn:hover{background:var(--primary-dark)}
+.task.done .tbtn{display:none}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}}
 </style>
@@ -525,7 +548,7 @@ insc:{cols:[
  {id:"lost",   label:"Lost", skip:1, ghost:1},
  {id:"termine",label:"Terminé", ghost:1}],
 tasks:{
- recue:[{t:"DELIV'IA fait la demande de devis sur Mon CPF",p:"auto",fin:["cpf"]}],
+ recue:[{t:"Client fait la demande de devis sur Mon CPF",p:"client",fin:["cpf"],note:"DELIV'IA la récupère automatiquement"}],
  action:[
   {t:"DELIV'IA valide la demande de devis",p:"auto",fin:["cpf"]},
   {t:"ARD génère le lien de mandat de prélèvement",p:"ard",fin:["fp_ent_man"],note:"paiement direct (solution 1) ou à J+30 (solution 2)"},
@@ -547,7 +570,7 @@ tasks:{
   {t:"Admin France IA transmet le dossier à l'agence pour analyser la faisabilité du financement",p:"fia",fin:["opco"]},
   {t:"Client transmet l'accord de prise en charge de l'OPCO",p:"client",fin:["opco"]},
   {t:"Client signe la convention",p:"client",fin:["opco"]},
-  {t:"Closeur génère la facture sans la transmettre",p:"closer",fin:["opco"],fx:"carte_client",note:"échéance J+30 du J2 ; transmise à l'OPCO à J2+1 de la formation"},
+  {t:"Closeur génère la facture depuis la carte inscription",p:"closer",fin:["opco"],fx:"carte_client",btn:"Générer la facture",note:"non transmise ; échéance J+30 du J2, transmise à l'OPCO à J2+1 de la formation"},
   {t:"Client signe le lien de mandat de prélèvement",p:"client",fin:["fp_part"]},
   {t:"Client signe le contrat de formation",p:"client",fin:["fp_part"]},
   {t:"ARD transmet la facture au client",p:"ard",tpl:1,fin:["fp_part"],fx:"carte_client",note:"non acquittée ; échéance = dernier prélèvement programmé"}],
@@ -584,12 +607,12 @@ tasks:{
   {t:"Client confirme le lieu et la date",p:"client"},
   {t:"Client renseigne la liste des apprenants",p:"client"},
   {t:"Client génère et signe sa convention",p:"client",fin:["fp_ent_man","fp_ent_vir"]},
-  {t:"Closeur génère la facture sans la transmettre",p:"closer",fin:["fp_ent_vir"],fx:"carte_client",note:"échéance J+30 du J2 de la formation"},
+  {t:"Closeur génère la facture depuis la carte inscription",p:"closer",fin:["fp_ent_vir"],fx:"carte_client",btn:"Générer la facture",note:"non transmise ; échéance J+30 du J2 de la formation"},
   {t:"Client génère sa convention",p:"client",fin:["opco"]},
   {t:"Client transmet la convention et la demande de prise en charge à son OPCO",p:"client",fin:["opco"]},
   {t:"Client transmet l'accord de prise en charge de l'OPCO",p:"client",fin:["opco"]},
   {t:"Client signe la convention",p:"client",fin:["opco"]},
-  {t:"Closeur génère la facture sans la transmettre",p:"closer",fin:["opco"],fx:"carte_client",note:"échéance J+30 du J2 ; transmise à l'OPCO à J2+1 de la formation"}],
+  {t:"Closeur génère la facture depuis la carte inscription",p:"closer",fin:["opco"],fx:"carte_client",btn:"Générer la facture",note:"non transmise ; échéance J+30 du J2, transmise à l'OPCO à J2+1 de la formation"}],
  preparer:[
   {t:"Formateur envoie un mail au client pour prendre rendez-vous en visio (olivier@franceia.com en copie)",p:"formateur",tpl:1},
   {t:"Formateur lit les besoins des apprenants (Qualiobee)",p:"formateur"},
@@ -904,7 +927,7 @@ const APPRENANTS=[
 APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } });
 CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
 const S = {role:"admin", app:"delivia", tab:"inscription",
-  fSession:"n1", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all",
+  fSession:"n1", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, futOpen:false};
 
 const $ = s=>document.querySelector(s);
@@ -1021,7 +1044,7 @@ function taskHtml(card,colId,i,tk,ghost){
   if(tk.grp) h+=`<div class="tgrp">${tk.grp}</div>`;
   h+=`<div class="task ${done?"done":""} ${owned?"":"other"}" data-c="${card.id}" data-col="${colId}" data-i="${i}" ${ghost?'style="pointer-events:none"':""}>
     <span class="box"></span>
-    <span><span class="lbl">${tk.t}</span>${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
+    <span><span class="lbl">${tk.t}</span>${tk.btn&&!done&&!ghost?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
   </div>`;
   if(tk.sub&&card.ech){
     h+=`<div class="sub">`+card.ech.map((e,j)=>`<div class="task other ${e[1]?"done":""}" data-ech="${card.id}" data-j="${j}"><span class="box"></span><span class="lbl" style="font-size:11px">${e[0]}</span></div>`).join("")+`</div>`;
@@ -1454,10 +1477,7 @@ function ficheApprenantHtml(id){
         <div class="subh">Espace apprenant</div>
         ${ap.afaire.length?ap.afaire.map(x=>`<div class="lrow">${x}<span class="chip warn">à faire</span></div>`).join(""):`<div class="lrow">Tout est fait<span class="chip ok">à jour</span></div>`}
         <div class="subh">Preuves individuelles</div>
-        <div class="lrow">Questionnaire de positionnement<span class="chip ok">fait</span></div>
-        <div class="lrow">Émargement J1<span class="chip">à venir</span></div>
-        <div class="lrow">Émargement J2<span class="chip">à venir</span></div>
-        <div class="lrow">Questionnaire de satisfaction<span class="chip">à venir</span></div>
+        ${preuvesApprenantHtml(c)}
       </div></details>`;
   }).join("")||`<div class="lrow"><span class="sm">Aucune offre.</span></div>`;
   h+=`</div>`;
@@ -1552,6 +1572,82 @@ function pageAnnuaire(){
   h+=`</div>`;
   return h;
 }
+/* ════════════════════ PREUVES (noms officiels, regroupées par niveau puis par lieu) ════════════════════ */
+/* at = étape de la session à partir de laquelle la preuve existe : 0 avant la formation, 1 session démarrée, 2 en formation, 3 après la formation */
+const PREUVES = {
+ session:[
+  {lieu:"DELIV'IA", items:[
+    {n:"CV du formateur", d:"Un seul document pour toute la session, récupéré automatiquement depuis le coffre DELIV'IA du formateur. Vert dès que le CV est validé.", src:"DELIV'IA", at:0},
+    {n:"Contrat de collaboration formateur", d:"Contrat liant le formateur à l'organisme : un seul document pour toute la session, récupéré automatiquement depuis son coffre DELIV'IA. Un formateur qui dispense a systématiquement un contrat.", src:"DELIV'IA", at:0}]},
+  {lieu:"WhatsApp", items:[
+    {n:"Conversation WhatsApp de la session", d:"Groupe WhatsApp de la session (animation, suivi, accompagnement), exporté à l'étape Récolter les preuves. Tous les apprenants y sont in fine.", src:"WhatsApp", at:3}]}],
+ apprenant:[
+  {lieu:"Formulaire ARD", items:[
+    {n:"Attestation sur l'honneur des prérequis CPF (Bac+2)", d:"Regroupée dans le questionnaire ARD : justificatif du diplôme Bac+2 minimum ou attestation sur l'honneur.", src:"DELIV'IA", at:0, cpf:1},
+    {n:"Questionnaire de positionnement et recueil du besoin", d:"Rempli par l'apprenant dans le formulaire d'inscription.", src:"DELIV'IA", at:0},
+    {n:"Justificatif du parcours professionnel", d:"CV téléversé ou profil LinkedIn attesté.", src:"DELIV'IA", at:0}]},
+  {lieu:"Mail", items:[
+    {n:"Email de confirmation d'inscription", d:"Mail d'envoi des codes de l'espace apprenant.", src:"Mail", at:0},
+    {n:"Mail d'ajout au groupe WhatsApp", d:"Notification d'ajout au groupe WhatsApp de la session.", src:"Mail", at:1},
+    {n:"Questionnaire de satisfaction", d:"Évaluation à chaud par l'apprenant et le client, puis à froid (J+30). Certains apprenants ne répondent pas.", src:"Mail", at:3}]},
+  {lieu:"Espace apprenant", items:[
+    {n:"Infos pratiques et accès", d:"Page Notion reliée à la session.", src:"Notion", at:1},
+    {n:"Livret d'accueil", d:"Déposé dans l'espace apprenant.", src:"Espace apprenant", at:1},
+    {n:"Convocation", d:"Convocation officielle à la formation (dates, lieu, horaires).", src:"Qualiobee", at:1},
+    {n:"Émargement J1", d:"Réponse d'émargement du jour 1 : présence signée OU absence justifiée / injustifiée référencée.", src:"Qualiobee", at:2},
+    {n:"Émargement J2", d:"Réponse d'émargement du jour 2 : présence signée OU absence justifiée / injustifiée référencée.", src:"Qualiobee", at:2},
+    {n:"Invitation à s'inscrire à la certification", d:"Anciennement par email, maintenant dans les to do de la plateforme.", src:"Espace apprenant", at:1},
+    {n:"Certificat de réalisation", d:"Attestation de réalisation propre à chaque apprenant ayant terminé, disponible dans l'espace apprenant.", src:"Qualiobee", at:3},
+    {n:"Demande d'inscription à la certification et relances", d:"Voie d'inscription (relance CPF, onglet Certification de l'espace) systématiquement offerte à tous. Justificatif généré automatiquement depuis le miroir CertifIAG.", src:"DELIV'IA", at:2},
+    {n:"Convention ou contrat de formation signé", d:"Convention (B2C) ou contrat de formation signé par l'apprenant ou le client, récupéré signé depuis Qualiobee. Non applicable au CPF (financé par la CDC, sans convention).", src:"Qualiobee", at:0, noncpf:1}]},
+  {lieu:"CertifIAG", items:[
+    {n:"Preuve d'inscription à la certification", d:"Justificatif d'inscription de l'apprenant à la certification, généré automatiquement depuis le miroir CertifIAG.", src:"DELIV'IA", at:2, cpf:1}]}],
+};
+function sessStage(sess){
+  const s=CARDS.find(c=>c.kb==="session_fia"&&c.sess===sess); if(!s) return 0;
+  return {brouillon:0,prete:0,demarree:1,enformation:2,preuves:3,terminee:3}[s.col]??0;
+}
+function preuveState(item, insc, stage){
+  if(insc){ if(item.cpf&&insc.fin!=="cpf") return "na"; if(item.noncpf&&insc.fin==="cpf") return "na"; if(insc.col==="absent"&&item.at>=2) return "ko"; }
+  return stage>=item.at ? "ok" : "later";
+}
+const PSTATE={ok:["✓","ok","disponible"],later:["○","later","à venir"],na:["–","na","non applicable"],ko:["✕","ko","absent"]};
+function pagePreuves(){
+  const sess=SESS[S.fPreuves]?S.fPreuves:"paris";
+  const stage=sessStage(sess);
+  const sCard=CARDS.find(c=>c.kb==="session_fia"&&c.sess===sess);
+  const inscs=CARDS.filter(c=>c.kb==="insc"&&c.sess===sess&&c.col!=="lost");
+  const aps=inscs.map(i=>({insc:i,ap:peopleFor(i).aps[0]})).filter(x=>x.ap);
+  let h=`<div class="pagehead"><h1>Preuves</h1><p>Où se trouve chaque preuve de réalisation, regroupée par niveau (session ou apprenant) puis par lieu.</p></div>`;
+  h+=chips([["Session",Object.entries(SESS).map(([k,v])=>[k,v.lbl])]], sess, "fPreuves");
+  h+=`<div class="plegend">${Object.values(PSTATE).map(p=>`<span><i class="pst ${p[1]}">${p[0]}</i>${p[2]}</span>`).join("")}<span class="chip" style="margin-left:auto">${sCard?colLabel(sCard):""}</span></div>`;
+  /* niveau session */
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Preuves de la session <span class="n2">un document pour toute la session</span></div>`;
+  PREUVES.session.forEach(g=>{
+    h+=`<div class="subh">${g.lieu}</div>`;
+    g.items.forEach(it=>{const st=preuveState(it,null,stage);const p=PSTATE[st];
+      h+=`<div class="prow"><i class="pst ${p[1]}">${p[0]}</i><div><div class="pn">${it.n}<span class="chip">${it.src}</span></div><div class="pd">${it.d}</div></div><span class="chip ${st==="ok"?"ok":""}">${p[2]}</span></div>`;});
+  });
+  h+=`</div>`;
+  /* niveau apprenant : matrice */
+  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Preuves de l'apprenant <span class="n2">${aps.length} apprenant${aps.length>1?"s":""} sur cette session · une colonne par apprenant</span></div>`;
+  h+=`<div style="overflow-x:auto"><table class="pmat"><thead><tr><th class="pl">Preuve</th>`+aps.map(x=>`<th><span class="avat pav" title="${x.ap.nom}" data-fiche="apprenant::${x.ap.id}">${initiales(x.ap.nom)}</span><div class="pname">${x.ap.prenom}</div>${badge(x.insc.fin)}</th>`).join("")+`</tr></thead><tbody>`;
+  PREUVES.apprenant.forEach(g=>{
+    h+=`<tr class="pgrp"><td colspan="${aps.length+1}">${g.lieu}</td></tr>`;
+    g.items.forEach(it=>{
+      h+=`<tr><td class="pl"><div class="pn">${it.n}<span class="chip">${it.src}</span>${it.cpf?'<span class="badge b-cpf">CPF</span>':""}${it.noncpf?'<span class="badge b-neutral">hors CPF</span>':""}</div><div class="pd">${it.d}</div></td>`;
+      h+=aps.map(x=>{const st=preuveState(it,x.insc,stage);const p=PSTATE[st];return `<td><i class="pst ${p[1]}" title="${x.ap.nom} · ${p[2]}">${p[0]}</i></td>`}).join("");
+      h+=`</tr>`;
+    });
+  });
+  h+=`</tbody></table></div></div>`;
+  return h;
+}
+function preuvesApprenantHtml(insc){
+  const stage=insc.sess?sessStage(insc.sess):0;
+  return PREUVES.apprenant.flatMap(g=>g.items.map(it=>{const st=preuveState(it,insc,stage);if(st==="na")return "";const p=PSTATE[st];
+    return `<div class="lrow"><i class="pst ${p[1]}">${p[0]}</i>${it.n}<span class="sm" style="margin-left:4px">${g.lieu}</span><span class="chip ${st==="ok"?"ok":""}">${p[2]}</span></div>`})).join("");
+}
 const STUBS = {
  anomalies:["Anomalies","Les incohérences détectées automatiquement (dossier EDOF sans facture, mandat sans échéancier, carte sans vente…), avec leur statut de traitement."],
  actions:["Actions","Le journal des actions : qui a fait quoi, quand, depuis quelle carte."],
@@ -1641,6 +1737,7 @@ function render(){
     else if(S.tab==="services") h=pageServices();
     else if(S.tab==="aprendre") h=pageAPrendre();
     else if(S.tab==="utilisateurs") h=pageAnnuaire();
+    else if(S.tab==="preuves") h=pagePreuves();
     else h=pageStub(S.tab);
   }
   $("#content").innerHTML=h;
@@ -1665,6 +1762,8 @@ document.addEventListener("click",e=>{
   if(e.target.id==="tplmodal"||e.target.closest("[data-closetpl]")){S.tpl=null;document.getElementById("tplmodal")?.remove();return}
   const tplBtn=e.target.closest("[data-tpl]");
   if(tplBtn){e.stopPropagation();S.tpl=tplBtn.dataset.tpl;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
+  const tb=e.target.closest("[data-tbtn]");
+  if(tb){e.stopPropagation();const [c,col,i]=tb.dataset.tbtn.split("::");const cd=CARDS.find(x=>x.id===c);if(!taskState(cd,col,parseInt(i),tasksFor(cd,col)[parseInt(i)])){toast(`Facture générée depuis la carte inscription : <b>${cd.title}</b>`);clickTask(c,col,parseInt(i));}return}
   if(e.target.closest(".hist summary")){S.histOpen=!S.histOpen}
   if(e.target.closest(".fut summary")){S.futOpen=!S.futOpen}
   if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;document.getElementById("modal")?.remove();return}
