@@ -1229,7 +1229,7 @@ function infoFor(card){
   const rows=[];
   const {cl,aps}=peopleFor(card);
   const clName = cl ? `<a class="ilink" data-fiche="client::${cl.id}">${cl.nom}</a>` : null;
-  const apsHtml = aps.map(a=>`<span class="perschip" data-fiche="apprenant::${a.id}"><span class="avat">${initiales(a.nom)}</span>${a.nom}</span>`);
+  const apsHtml = aps.map(a=>`<a class="ilink" data-fiche="apprenant::${a.id}">${a.nom}</a>`);
   if(card.kb==="fact_com"){
     rows.push([card.fin==="closer"?"Closeur":"Setteur",card.who],["Mois",card.mois]);
     return rows;
@@ -1248,7 +1248,7 @@ function infoFor(card){
   }
   /* inscription et facturation client */
   rows.push(["Client",clName||card.title]);
-  if(apsHtml.length) rows.push([aps.length>1?"Apprenants · "+aps.length:"Apprenant",`<div class="apslist">${apsHtml.join("")}</div>`,"wide"]);
+  if(apsHtml.length) rows.push([aps.length>1?"Apprenants · "+aps.length:"Apprenant",apsHtml.join(", "),aps.length>2?"wide":""]);
   else rows.push(["Apprenants","À renseigner par le client"]);
   if(isFact(card)) rows.push(["Mode de paiement",FIN[card.fin]?FIN[card.fin].lbl:""]);
   else rows.push(["Offre",OFFRES[card.offre]+(card.nb?" · "+card.nb:"")]);
