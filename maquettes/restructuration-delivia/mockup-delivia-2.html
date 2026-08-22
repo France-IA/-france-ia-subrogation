@@ -442,9 +442,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal .msec2{border-top:1px solid var(--line)}
 #modal .msec2:first-of-type{border-top:none}
 #modal .msec2>summary{padding:15px 0;font-size:14.5px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink-900);gap:11px}
-#modal .msec2>summary .chev{width:24px;height:24px;border-radius:50%;background:#f1f5f9;display:inline-flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink-500)}
+#modal .msec2>summary .chev{width:20px;height:20px;border-radius:50%;background:#f1f5f9;display:inline-flex;align-items:center;justify-content:center;font-size:14px;line-height:1;color:var(--ink-600,#475569)}
 #modal .msec2>summary .n2{font-size:12px;font-weight:600;color:var(--ink-500);background:#f1f5f9;border-radius:999px;padding:2px 9px}
-#modal .minner{padding:0 0 12px 35px}
+#modal .minner{padding:0 0 12px 31px}
 #modal .task{padding:5px 2px;font-size:12.5px}
 #modal .task .box{border-radius:5px;width:15px;height:15px}
 #modal .task.other .box{background:#f8fafc}
@@ -1407,13 +1407,10 @@ function pageSessions(){
 }
 function pageInscription(){
   const f=S.fInsc;
-  const modes=modesForOffre(f);
-  const mode=modes.includes(S.fInscMode)?S.fInscMode:"all";
   let h=`<div class="pagehead"><h1>Inscription</h1></div>`;
   h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"],["intra","Formation Intra"],["coaching","Coaching"]]]], f, "fInsc");
-  h+=chips([["Mode de paiement",[["all","Tous"]].concat(modes.map(m=>[m,FIN[m].lbl]))]], mode, "fInscMode");
   const ghost = S.role==="closer";
-  const byMode=c=>mode==="all"||c.fin===mode;
+  const byMode=c=>true;
   if(f==="n1"||f==="n2") h+=boardHtml("insc", CARDS.filter(c=>c.kb==="insc"&&c.offre===f&&byMode(c)), {ghostCols:ghost});
   else if(f==="intra")   h+=boardHtml("intra", CARDS.filter(c=>c.kb==="intra"&&byMode(c)), {ghostCols:ghost});
   else                   h+=boardHtml("coaching", CARDS.filter(c=>c.kb==="coaching"&&byMode(c)), {ghostCols:ghost});
@@ -1433,13 +1430,7 @@ function pageFacturation(){
     h+=chips(clientChips, f, "fFact");
   }
   const view=FACT_VIEWS[f];
-  let offre="all";
-  if(view){
-    const offres=[...new Set(view.fins.flatMap(m=>FIN[m].offres))];
-    offre=offres.includes(S.fFactOffre)?S.fFactOffre:"all";
-    h+=chips([["Offre",[["all","Toutes"]].concat(offres.map(o=>[o,OFFRES[o]]))]], offre, "fFactOffre");
-  }
-  const byOffre=c=>offre==="all"||c.offre===offre;
+  const byOffre=c=>true;
   if(f==="cpf") h+=boardHtml("fact_cpf", CARDS.filter(c=>c.kb==="fact_cpf"&&byOffre(c)));
   else if(f==="opco") h+=boardHtml("fact_opco", CARDS.filter(c=>c.kb==="fact_opco"&&byOffre(c)));
   else if(view) h+=boardHtml("fact_fp", CARDS.filter(c=>c.kb==="fact_fp"&&view.fins.includes(c.fin)&&byOffre(c)), {fin:view.fins[0]});
