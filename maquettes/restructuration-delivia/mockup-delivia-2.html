@@ -87,25 +87,22 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .lockbar button:hover{text-decoration:underline;text-underline-offset:2px}
 .card.waitlock{background:#fbfcfd}
 .card.waitlock .t{color:var(--ink-500)}
-.lockstrip{margin:-11px -12px 10px;padding:6px 12px;background:#f1f5f9;border-radius:10px 10px 0 0;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--ink-500);line-height:1.35}
+.lockstrip{margin:-9px -11px 9px;padding:6px 12px;background:#f1f5f9;border-radius:10px 10px 0 0;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--ink-500);line-height:1.35}
 .lockstrip b{color:var(--ink-700);font-weight:600}
 .lockstrip .dim{color:var(--ink-400)}
 .lockstrip a{margin-left:auto;color:var(--primary);font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0}
 .lockstrip a:hover{text-decoration:underline;text-underline-offset:2px}
-.card.haslock .finbar{top:36px}
 .card.haslock > *:not(.lockstrip){opacity:.72}
-.card.haslock > .finbar{opacity:.72}
 .openline{margin-top:9px;font-size:11px;color:var(--ink-500);background:#eef1f5;border-radius:6px;padding:5px 8px;display:flex;gap:6px;align-items:center;line-height:1.4}
 .openline b{color:var(--ink-700);font-weight:600}
 .openline a{color:var(--primary);font-weight:600;cursor:pointer;margin-left:auto;font-size:10.5px;white-space:nowrap}
 .openline a:hover{text-decoration:underline;text-underline-offset:2px}
-.card{background:#fff;border-radius:10px;box-shadow:var(--sh-carte);padding:11px 12px;margin-bottom:9px;position:relative;transition:box-shadow .15s,opacity .3s,transform .3s}
+.card{background:#fff;border-radius:10px;box-shadow:var(--sh-carte);padding:9px 11px;margin-bottom:9px;position:relative;transition:box-shadow .15s,opacity .3s,transform .3s}
 .card:hover{box-shadow:var(--sh-hover)}
 .card.pop{animation:pop .45s ease}
 @keyframes pop{0%{transform:scale(.92);opacity:0}100%{transform:scale(1);opacity:1}}
 .card .t{font-size:13.5px;font-weight:600;color:var(--ink-900)}
 .card .s{font-size:11px;color:var(--ink-400);margin-top:2px}
-.finbar{position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:2px}
 .badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1.5px 8px;font-size:10.5px;font-weight:500;font-variant-numeric:tabular-nums}
 .b-cpf{background:var(--info-50);color:var(--info)} .bar-cpf{background:#3b82f6}
 .b-opco{background:#fff7ed;color:#ea580c} .bar-opco{background:#f97316}
@@ -127,7 +124,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .task.other{color:var(--ink-400)}
 .task.other .box{border-color:var(--line-2);background:var(--bg)}
 .task.other.done .box{background:var(--ink-300);border-color:var(--ink-300)}
-.task .who{color:var(--ink-400);font-size:11px}
 .task .tag{font-size:10px;color:#92400e;background:var(--warn-50);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap;cursor:pointer;border:1px solid transparent}
 .task .tag:hover{border-color:#fcd34d;text-decoration:underline;text-underline-offset:2px}
 /* popup template */
@@ -298,17 +294,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .ap-row:first-child{border-top:none}
 .ap-row .chev{margin-left:auto;color:#94a3b8}
 .ap-avatar{width:34px;height:34px;border-radius:50%;background:#4f46e5;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
-/* treso */
-.tr-frame{display:flex;min-height:430px}
-.tr-side{width:186px;background:#1a1a1a;color:#fff;padding:14px 10px;flex-shrink:0}
-.tr-logo{display:flex;gap:8px;align-items:center;padding:0 8px 14px}
-.tr-logo .sq{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
-.tr-grp{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);padding:10px 8px 4px;font-weight:600}
-.tr-it{padding:6px 10px;border-radius:8px;font-size:12.5px;color:rgba(255,255,255,.6);margin:1px 0}
-.tr-it.on{background:rgba(255,255,255,.1);color:#fff;font-weight:500}
-.tr-main{flex:1;background:#f5f5f5;padding:22px}
-.tr-main h2{font-size:20px;font-weight:700;color:#111827}
-.tr-main .sub{font-size:13px;color:#6b7280;margin:2px 0 16px;display:block}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;max-width:760px}
 .kpi{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:12px 14px;box-shadow:var(--sh-carte)}
 .kpi .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#737373;font-weight:500}
@@ -334,6 +319,59 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 @keyframes spin{to{transform:rotate(360deg)}}
 #auth .t1{font-size:14px;font-weight:600;color:var(--ink-900)}
 #auth .t2{font-size:12px;color:var(--ink-400);margin-top:3px}
+/* ── v20 : cartes épurées, popup process, sections de colonne ── */
+.ct{display:flex;align-items:flex-start;gap:8px}
+.ct .t{flex:1;min-width:0;line-height:1.3}
+.ct .badge{flex-shrink:0;margin-top:1px}
+.b-offre{background:var(--primary-50);color:var(--primary-dark)}
+.cnt{align-items:flex-start;margin-top:6px}
+.cnt .nx{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--ink-600,#475569);line-height:1.35}
+.cnt .nx .k{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400);margin-right:5px}
+.cnt .nx.ok{color:var(--ok)}
+.prog{margin-top:8px}
+.colsec{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500);margin:10px 2px 6px;padding-top:8px;border-top:1px dashed var(--line-2)}
+.colsec span{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-400);margin-left:4px}
+.colempty{font-size:11px;color:var(--ink-300);padding:2px 4px 6px}
+.mhead .row{align-items:center}
+.mhead .row .badge{margin-left:4px}
+.igrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px 16px}
+.ifld .k{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600}
+.ifld .v{font-size:12.5px;color:var(--ink-800);margin-top:2px;line-height:1.4}
+.ifld .v .muted{color:var(--ink-300)}
+.ilink{color:var(--primary);font-weight:600;cursor:pointer}
+.ilink:hover{text-decoration:underline;text-underline-offset:2px}
+.stepline{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-500);margin:0 0 8px}
+.stepline .pill{width:8px;height:8px;border-radius:50%;background:#818cf8}
+.stepline b{color:var(--ink-900);font-weight:600}
+.hist{margin-top:0;border-top:none;padding-top:0;margin-bottom:8px}
+.hrow{color:var(--ink-400)}
+.hrow.ev{color:#9d174d}
+.hrow .dot{width:7px;height:7px;border-radius:50%;background:#ec4899;flex-shrink:0;margin-top:5px}
+.cur{background:var(--primary-50);border:1px solid #e0e7ff;border-radius:10px;padding:10px 12px}
+.curh{font-size:12px;font-weight:600;color:var(--primary-dark);display:flex;gap:6px;align-items:center}
+.curh .n2{font-weight:500;color:var(--primary);font-size:11px}
+.cur .tasks{margin-top:6px;border-top:none;padding-top:0}
+.cur .task:hover{background:#fff}
+.cur .empty{font-size:12px;color:var(--ink-400);margin-top:4px}
+.evrow{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:600;color:#9d174d;margin:3px 0 4px 21px}
+.evrow .dot{width:7px;height:7px;border-radius:50%;background:#ec4899;flex-shrink:0}
+.evrow.later{color:var(--ink-400);font-weight:500}.evrow.later .dot{background:var(--ink-300)}
+.evrow.done{opacity:.75}
+.fut{margin-top:10px}
+.fut summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--ink-500);list-style:none;display:flex;align-items:center;gap:6px}
+.fut summary::-webkit-details-marker{display:none}
+.fut summary::before{content:"▸";font-size:10px;color:var(--ink-400);transition:transform .15s}
+.fut[open] summary::before{transform:rotate(90deg)}
+.fut summary .n2{font-weight:400;color:var(--ink-400);font-size:11px}
+.futcol{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-500);margin:10px 0 3px}
+.futcol .pill{width:7px;height:7px;border-radius:50%;background:var(--ink-300)}
+.futcol .n2{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-400);font-size:10.5px}
+.ftask{display:flex;align-items:flex-start;gap:7px;padding:3px 2px;font-size:12px;line-height:1.4;color:var(--ink-400)}
+.ftask .box{width:14px;height:14px;border:1.5px solid var(--line-2);border-radius:4px;flex-shrink:0;margin-top:1.5px;background:var(--bg)}
+.ftask .tag{font-size:10px;color:#b45309;background:var(--warn-50);border-radius:4px;padding:0 5px;margin-left:4px;opacity:.7}
+.ftask.none{color:var(--ink-300);font-style:italic}
+.frow2 .tgrp{margin-left:2px}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}}
 </style>
@@ -351,8 +389,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
       <nav id="appTabs"></nav>
     </div>
     <nav id="subnav"></nav>
-    <div class="side-note">Mockup DELIV'IA 2.0 · données fictives.<br>Tout est cochable pour simuler l'enchaînement des process.</div>
-  </aside>
+      </aside>
   <div id="main">
     <header id="topbar">
       <div id="crumb"></div>
@@ -373,13 +410,21 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 const APPS = {
   delivia:  {name:"DELIV'IA",             color:"var(--app-delivia)",  accent:"#4f46e5"},
   apprenant:{name:"Plateforme apprenant", color:"var(--app-apprenant)",accent:"#0284c7"},
-  treso:    {name:"Trésorerie",           color:"var(--app-treso)",    accent:"#059669"},
   dash:     {name:"Data Dashboard",       color:"var(--app-dash)",     accent:"#7c3aed"},
 };
-const ROLES = {admin:"Admin", closer:"Closeur", formateur:"Formateur", setter:"Setteur", agence:"Agence"};
-const ROLE_APPS = {admin:["delivia","apprenant","treso","dash"], closer:["delivia","dash"], formateur:["delivia","apprenant"], setter:["delivia","dash"], agence:["delivia"]};
-const ROLE_OWNS = {admin:"fia", closer:"closer", formateur:"formateur", setter:"setter", agence:"agence"};
-const WHO = {fia:"France IA", closer:"closeur", formateur:"formateur", client:"client", agence:"agence", setter:"setteur", auto:"automatique"};
+const ROLES = {admin:"Admin", closer:"Closeur", formateur:"Formateur", setter:"Setteur"};
+const ROLE_APPS = {admin:["delivia","apprenant","dash"], closer:["delivia","dash"], formateur:["delivia","apprenant"], setter:["delivia","dash"]};
+const ROLE_OWNS = {admin:"fia", closer:"closer", formateur:"formateur", setter:"setter"};
+/* acteurs : qui FAIT la tâche (le libellé commence toujours par lui) */
+const WHO = {fia:"Admin France IA", closer:"Closeur", formateur:"Formateur", client:"Client", setter:"Setteur", auto:"DELIV'IA", ard:"ARD"};
+/* événements clés du process (affichés dans l'enchaînement, entre deux tâches) */
+const EV = {
+ carte_client:"Création de la carte facturation client",
+ carte_formateur:"Création de la carte facturation formateur",
+ ligne_closer:"Ajout d'une ligne à la facture mensuelle du closeur",
+ shotgun:"Session disponible au Shotgun formateur",
+};
+const OFFRES = {n1:"Niveau 1", n2:"Niveau 2", intra:"Intra", coaching:"Coaching"};
 
 const DELIVIA_TABS = {
   admin:[["Processus",[["sessions","Sessions"],["inscription","Inscription"],["facturation","Facturation"]]],
@@ -390,18 +435,16 @@ const DELIVIA_TABS = {
   formateur:[["Mon activité",[["services","Mes services"],["aprendre","À prendre"]]],
              ["Divers",[["profil","Mon profil"],["ressources","Ressources & FAQ"]]]],
   setter:[["Processus",[["facturation","Facturation"]]]],
-  agence:[["Processus",[["facturation","Facturation"]]]],
 };
 const APP_TABS = {
   apprenant:[["Aperçu",[["espace","Espace apprenant"],["support","Support de formation"]]]],
-  treso:[["Dashboards",[["dashboard","Trésorerie"],["mensuel","Cash flow"],["projections","Projections"],["analyse","Data analyse"]]],
-         ["Transactions",[["transactions","Transactions"],["revenus","Revenus"],["sessions","Sessions"],["commissions","Commissions"],["rapprochements","Rapprochements"]]]],
   dash:[["Funnel",[["northstar","North Star"],["equation","Equation"],["targeting","Targeting"],["leadgen","Lead Gen"],["setting","Setting"],["closing","Closing"]]],
         ["Opérations",[["agendasetting","Agenda Setting"],["agenda","Agenda Closing"],["commissions","Commissions"]]]],
 };
 
-/* ════════════════════ KANBANS (source : page Notion DELIVIA 2.0 ALL) ════════════════════ */
-/* task: {t, p(porteur), auto, tpl, fx, fin:[...], note, sub:[...], grp} · fin absent = TOUS */
+/* ════════════════════ KANBANS (source : page Notion DELIVIA 2.0 ALL, version du 22/08) ════════════════════ */
+/* tâche : {t, p(acteur), tpl, fx(effet moteur), ev(événement affiché), fin:[modes], kind:[prio|libre], note, sub, grp}
+   fin absent = tous les modes de paiement. */
 const KB = {
 /* ── Session inter · rail France IA ── */
 session_fia:{cols:[
@@ -413,62 +456,64 @@ session_fia:{cols:[
  {id:"terminee",   label:"Terminée"}],
 tasks:{
  brouillon:[
-  {t:"Réserver & payer le lieu",p:"fia"},
-  {t:"Un formateur demande cette session",p:"formateur",note:"France IA ne peut pas la cocher"},
-  {t:"Valider la demande d'un formateur",p:"fia"},
-  {t:"Créer, ouvrir et lier session EDOF",p:"fia"}],
+  {t:"Admin France IA réserve et paie le lieu",p:"fia"},
+  {t:"Formateur demande cette session",p:"formateur"},
+  {t:"Admin France IA valide la demande du formateur",p:"fia"},
+  {t:"Admin France IA crée, ouvre et lie la session EDOF",p:"fia"}],
  prete:[
-  {t:"Désactiver contrats Qualiobee (CPF)",p:"fia"},
-  {t:"Lancer session Qualiobee",p:"fia"},
-  {t:"Créer le groupe WhatsApp & envoyer le message de bienvenue",p:"fia",tpl:1},
-  {t:"Envoyer demande signature contrat / convention",p:"fia",tpl:1}],
+  {t:"Admin France IA désactive les contrats Qualiobee (CPF)",p:"fia"},
+  {t:"Admin France IA lance la session Qualiobee",p:"fia"},
+  {t:"Admin France IA crée le groupe WhatsApp et envoie le message de bienvenue",p:"fia",tpl:1},
+  {t:"Admin France IA envoie la demande de signature contrat / convention au client",p:"fia",tpl:1}],
  demarree:[
-  {t:"Envoyer un message sur le groupe WhatsApp",p:"formateur",tpl:1},
-  {t:"Lire les besoins des apprenants (Qualiobee)",p:"formateur"},
-  {t:"Adapter le contenu de la formation",p:"formateur"},
-  {t:"Inviter apprenants sur HAL (2 jours)",p:"fia"},
-  {t:"Envoyer message WhatsApp veille J1",p:"fia",tpl:1}],
+  {t:"Formateur envoie un message sur le groupe WhatsApp",p:"formateur",tpl:1},
+  {t:"Formateur lit les besoins des apprenants (Qualiobee)",p:"formateur"},
+  {t:"Formateur adapte le contenu de la formation",p:"formateur"},
+  {t:"Admin France IA invite les apprenants sur HAL (2 jours)",p:"fia"},
+  {t:"Admin France IA envoie le message WhatsApp de la veille du J1",p:"fia",tpl:1}],
  enformation:[
-  {t:"Vérifier que tous les émargements sont faits",p:"formateur"},
-  {t:"Vérifier que tous les CPF sont inscrits à la certification",p:"formateur"},
-  {t:"Envoyer message de fin sur WhatsApp",p:"formateur",tpl:1},
-  {t:"France IA confirme que tous les émargements sont faits + tous les CPF inscrits à la certification",p:"fia"},
-  {t:"Déclarer entrée WEDOF (J1, par émargement)",p:"fia"},
-  {t:"Déclarer sortie + service fait WEDOF (J2)",p:"fia"},
+  {t:"Formateur vérifie que tous les émargements sont faits",p:"formateur",note:"si un apprenant n'a pas émargé mais que c'est justifié, le formateur saisit la raison"},
+  {t:"Formateur vérifie que tous les CPF sont inscrits à la certification",p:"formateur"},
+  {t:"Formateur envoie le message de fin sur WhatsApp",p:"formateur",tpl:1},
+  {t:"Formateur renseigne le compte rendu de sa session sur Qualiobee",p:"formateur",tpl:1,note:"remarques et questions par défaut"},
+  {t:"Admin France IA confirme que tous les émargements sont faits et tous les CPF inscrits à la certification",p:"fia"},
+  {t:"Admin France IA déclare l'entrée WEDOF (J1, par émargement)",p:"fia"},
+  {t:"Admin France IA déclare la sortie et le service fait WEDOF (J2)",p:"fia"},
   {t:"Formateur crée sa facture",p:"formateur"},
   {t:"Formateur dépose sa facture",p:"formateur",fx:"carte_formateur"}],
  preuves:[
-  {t:"Exporter la discussion WhatsApp",p:"fia"},
-  {t:"Téléverser toutes les preuves dans le drive",p:"fia"}],
+  {t:"Admin France IA exporte la discussion WhatsApp",p:"fia"},
+  {t:"Admin France IA téléverse toutes les preuves dans le Drive",p:"fia"}],
  terminee:[]}},
 /* ── Session inter · rail Formateur ── */
 session_frm:{cols:[
  {id:"shotgun", label:"À prendre"},
- {id:"preparer",label:"Préparer", open:"J-14 formation", rule:"j-14"},
+ {id:"preparer",label:"Préparer", open:"J-14 formation", rule:"j-14", note:"Sessions disponibles à l'inscription"},
  {id:"animer",  label:"Animer", open:"J2 formation", rule:"j2"},
  {id:"facturer",label:"Facturer"},
  {id:"termine", label:"Terminé"}],
 tasks:{
  shotgun:[
-  {t:"Faire une demande",p:"formateur"},
-  {t:"Validé par France IA",p:"fia",note:"le formateur ne peut pas la cocher"}],
+  {t:"Formateur fait une demande",p:"formateur"},
+  {t:"Admin France IA valide la demande",p:"fia"}],
  preparer:[
-  {t:"Créer le groupe WhatsApp",p:"fia"},
-  {t:"Envoyer un message sur le groupe WhatsApp",p:"formateur",tpl:1},
-  {t:"Lire les besoins des apprenants (Qualiobee)",p:"formateur"},
-  {t:"Adapter le contenu de la formation",p:"formateur"},
-  {t:"Inviter apprenants sur HAL (2 jours)",p:"fia"},
-  {t:"Envoyer message WhatsApp veille J1",p:"fia",tpl:1}],
+  {t:"Admin France IA crée le groupe WhatsApp",p:"fia"},
+  {t:"Formateur envoie un message sur le groupe WhatsApp",p:"formateur",tpl:1},
+  {t:"Formateur lit les besoins des apprenants (Qualiobee)",p:"formateur"},
+  {t:"Formateur adapte le contenu de la formation",p:"formateur"},
+  {t:"Admin France IA invite les apprenants sur HAL (2 jours)",p:"fia"},
+  {t:"Admin France IA envoie le message WhatsApp de la veille du J1",p:"fia",tpl:1}],
  animer:[
-  {t:"Vérifier que tous les émargements sont faits",p:"formateur"},
-  {t:"Vérifier que tous les CPF sont inscrits à la certification",p:"formateur"},
-  {t:"Envoyer message de fin sur WhatsApp",p:"formateur",tpl:1},
-  {t:"France IA confirme que tous les émargements sont faits + tous les CPF inscrits à la certification",p:"fia"}],
+  {t:"Formateur vérifie que tous les émargements sont faits",p:"formateur",note:"si un apprenant n'a pas émargé mais que c'est justifié, je saisis la raison"},
+  {t:"Formateur vérifie que tous les CPF sont inscrits à la certification",p:"formateur"},
+  {t:"Formateur envoie le message de fin sur WhatsApp",p:"formateur",tpl:1},
+  {t:"Formateur renseigne le compte rendu de sa session sur Qualiobee",p:"formateur",tpl:1,note:"remarques et questions par défaut"},
+  {t:"Admin France IA confirme que tous les émargements sont faits et tous les CPF inscrits à la certification",p:"fia"}],
  facturer:[
-  {t:"Créer ma facture",p:"formateur"},
-  {t:"Déposer ma facture (input PJ)",p:"formateur",fx:"carte_formateur"},
-  {t:"Facture validée par France IA",p:"fia"},
-  {t:"Facture payée par France IA",p:"fia"}],
+  {t:"Formateur crée sa facture",p:"formateur"},
+  {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",fx:"carte_formateur"},
+  {t:"Admin France IA valide la facture",p:"fia"},
+  {t:"Admin France IA paie la facture",p:"fia"}],
  termine:[]}},
 /* ── Inscription inter (N1 & N2) ── */
 insc:{cols:[
@@ -480,37 +525,46 @@ insc:{cols:[
  {id:"lost",   label:"Lost", skip:1, ghost:1},
  {id:"termine",label:"Terminé", ghost:1}],
 tasks:{
- recue:[{t:"Faire une demande de devis sur Mon CPF",p:"closer",auto:1,fin:["cpf"],grp:"CPF"}],
+ recue:[{t:"DELIV'IA fait la demande de devis sur Mon CPF",p:"auto",fin:["cpf"]}],
  action:[
-  {t:"Valider demande de devis",p:"closer",auto:1,fin:["cpf"],grp:"CPF"},
-  {t:"Générer convention",p:"closer",auto:1,fin:["opco"],grp:"OPCO",note:"automatique, ARD à ajouter"},
-  {t:"Générer le devis",p:"closer",auto:1,fin:["fp_ent_vir"],grp:"Entreprise fonds propres"},
-  {t:"Générer convention",p:"closer",auto:1,fin:["fp_ent_vir"],note:"automatique, ARD à ajouter"},
-  {t:"Générer directement le lien mandat prélèvement (le client paie tout de suite)",p:"closer",auto:1,fin:["fp_ent_man"],grp:"Entreprise fonds propres · mandat"},
-  {t:"Générer mandat prélèvement (1 à 12 occurrences)",p:"closer",auto:1,fin:["fp_part"],grp:"Particulier fonds propres"}],
+  {t:"DELIV'IA valide la demande de devis",p:"auto",fin:["cpf"]},
+  {t:"ARD génère le lien de mandat de prélèvement",p:"ard",fin:["fp_ent_man"],note:"paiement direct (solution 1) ou à J+30 (solution 2)"},
+  {t:"ARD génère la convention de formation",p:"ard",fin:["fp_ent_man"]},
+  {t:"ARD génère le devis",p:"ard",fin:["fp_ent_vir","opco"]},
+  {t:"ARD génère la convention de formation",p:"ard",fin:["fp_ent_vir","opco"]},
+  {t:"ARD génère le lien de mandat de prélèvement",p:"ard",fin:["fp_part"],note:"1, 3 ou 6 occurrences ; premier prélèvement à J+15 de la signature"},
+  {t:"ARD génère le contrat de formation",p:"ard",fin:["fp_part"]}],
  attente:[
-  {t:"Paiement du RAC",p:"client",auto:1,fin:["cpf"],grp:"CPF",note:"détecté automatiquement"},
-  {t:"Validation de l'OPCO",p:"client",fin:["opco"],grp:"OPCO"},
-  {t:"Signature convention (référent client)",p:"client",fin:["opco"]},
-  {t:"Générer la facture depuis la fiche client avec les informations de l'OPCO",p:"closer",fin:["opco"],fx:"carte_client",note:"ARD ne génère pas la facture : l'OPCO à facturer n'est pas encore connu"},
-  {t:"Signer le devis",p:"client",auto:1,fin:["fp_ent_vir"],grp:"Entreprise fonds propres · virement"},
-  {t:"Signer convention",p:"client",auto:1,fin:["fp_ent_vir"]},
-  {t:"Générer la facture",p:"auto",fin:["fp_ent_vir"],fx:"carte_client",note:"échéance J+30 du J2, transmise au client à J2+1 de la formation"},
-  {t:"Signature lien mandat prélèvement & générer la facture",p:"client",auto:1,fin:["fp_ent_man","fp_part"],grp:"Mandat de prélèvement"},
-  {t:"Transmettre la facture au client",p:"auto",tpl:1,fin:["fp_ent_man","fp_part"],fx:"carte_client",note:"non acquittée encore, échéance = dernier prélèvement programmé"}],
+  {t:"Client paie le reste à charge",p:"client",fin:["cpf"],note:"détecté automatiquement"},
+  {t:"Client signe le lien de mandat de prélèvement, ce qui génère la facture",p:"client",fin:["fp_ent_man"]},
+  {t:"Client signe la convention",p:"client",fin:["fp_ent_man"]},
+  {t:"ARD transmet la facture au client",p:"ard",tpl:1,fin:["fp_ent_man"],fx:"carte_client",note:"non acquittée ; en solution 2, échéance = dernier prélèvement programmé"},
+  {t:"Client signe le devis",p:"client",fin:["fp_ent_vir"]},
+  {t:"Client signe la convention",p:"client",fin:["fp_ent_vir"]},
+  {t:"ARD génère la facture sans la transmettre",p:"ard",fin:["fp_ent_vir"],fx:"carte_client",note:"échéance J+30 du J2 ; transmise au client à J2+1 de la formation"},
+  {t:"Client signe le devis",p:"client",fin:["opco"]},
+  {t:"Client transmet la convention et la demande de prise en charge à son OPCO",p:"client",fin:["opco"]},
+  {t:"Admin France IA transmet le dossier à l'agence pour analyser la faisabilité du financement",p:"fia",fin:["opco"]},
+  {t:"Client transmet l'accord de prise en charge de l'OPCO",p:"client",fin:["opco"]},
+  {t:"Client signe la convention",p:"client",fin:["opco"]},
+  {t:"Closeur génère la facture sans la transmettre",p:"closer",fin:["opco"],fx:"carte_client",note:"échéance J+30 du J2 ; transmise à l'OPCO à J2+1 de la formation"},
+  {t:"Client signe le lien de mandat de prélèvement",p:"client",fin:["fp_part"]},
+  {t:"Client signe le contrat de formation",p:"client",fin:["fp_part"]},
+  {t:"ARD transmet la facture au client",p:"ard",tpl:1,fin:["fp_part"],fx:"carte_client",note:"non acquittée ; échéance = dernier prélèvement programmé"}],
  validee:[
-  {t:"L'apprenant a émargé J1 + J2 de la formation",p:"auto",grp:"Tous"},
-  {t:"Déclarer la sortie auprès de la CDC",p:"fia",fin:["cpf"],grp:"CPF",fx:"carte_client"}],
+  {t:"DELIV'IA constate que l'apprenant a émargé J1 et J2",p:"auto"},
+  {t:"Admin France IA déclare la sortie auprès de la CDC",p:"fia",fin:["cpf"],fx:"carte_client"}],
  absent:[
-  {t:"Contacter le client pour déterminer si l'absence est justifiée ou non",p:"closer",tpl:1},
-  {t:"Absence justifiée : récupérer la pièce jointe justificative",p:"closer",grp:"Chemin 1 · absence justifiée"},
-  {t:"Abandonner ou replacer l'apprenant (depuis fiche apprenant)",p:"closer"},
-  {t:"Transmettre la PJ à la CDC",p:"fia"},
-  {t:"Absence injustifiée : replacer ou abandonner l'apprenant",p:"closer",grp:"Chemin 2 · absence injustifiée"}],
+  {t:"Closeur contacte le client pour déterminer si l'absence est justifiée",p:"closer",tpl:1,fin:["cpf"]},
+  {t:"Closeur récupère la pièce justificative de l'absence",p:"closer",fin:["cpf"],grp:"Chemin 1 · absence justifiée"},
+  {t:"Closeur abandonne ou replace l'apprenant (depuis la fiche apprenant)",p:"closer",fin:["cpf"]},
+  {t:"Admin France IA transmet la pièce justificative à la CDC",p:"fia",fin:["cpf"]},
+  {t:"Closeur replace ou abandonne l'apprenant",p:"closer",fin:["cpf"],grp:"Chemin 2 · absence injustifiée"}],
  lost:[], termine:[]}},
 /* ── Inscription intra (une carte = la formation intra) ── */
 intra:{cols:[
  {id:"demande",   label:"Nouvelle demande", note:'Une carte apparaît dès <a href="https://formulaire.franceia-dev.com" target="_blank" rel="noopener">ARD</a> soumis par le client'},
+ {id:"engage",    label:"Client engagé"},
  {id:"convention",label:"Signer convention"},
  {id:"preparer",  label:"Préparer formation"},
  {id:"enformation",label:"En formation", open:"J2 formation", rule:"j2"},
@@ -518,30 +572,61 @@ intra:{cols:[
  {id:"termine",   label:"Terminé"}],
 tasks:{
  demande:[
-  {t:"Devis généré & signé",p:"client",auto:1,fin:["fp_ent_vir","fp_ent_man"],note:"puis session disponible au Shotgun formateur"},
+  {t:"ARD génère le lien de mandat de prélèvement",p:"ard",fin:["fp_ent_man"],note:"paiement direct (solution 1) ou à J+30 (solution 2)"},
+  {t:"ARD génère le devis",p:"ard",fin:["fp_ent_vir","opco"]}],
+ engage:[
+  {t:"Client signe le lien de mandat de prélèvement, ce qui génère la facture",p:"client",fin:["fp_ent_man"]},
+  {t:"ARD transmet la facture au client",p:"ard",tpl:1,fin:["fp_ent_man"],ev:"shotgun",note:"non acquittée ; en solution 2, échéance = dernier prélèvement programmé"},
+  {t:"Client signe le devis",p:"client",fin:["fp_ent_vir","opco"],ev:"shotgun",note:"impossible de générer la facture : la date de formation n'est pas connue"},
   {t:"Formateur demande la session",p:"formateur"},
-  {t:"Demande formateur validée par France IA",p:"fia"}],
+  {t:"Admin France IA valide la demande du formateur",p:"fia",fxfin:["fp_ent_man"],fx:"carte_client"}],
  convention:[
-  {t:"Confirmer lieu & date à choisir",p:"client",fin:["fp_ent_vir","fp_ent_man"],grp:"Fonds propres"},
-  {t:"Renseigner la liste des apprenants",p:"client",fin:["fp_ent_vir","fp_ent_man"]},
-  {t:"Générer depuis la fiche client la convention",p:"closer",fin:["fp_ent_vir","fp_ent_man"]},
-  {t:"Convention signée",p:"client",fin:["fp_ent_vir","fp_ent_man"]},
-  {t:"Générer la facture sans la transmettre, échéance J+30 du J2 formation",p:"closer",fin:["fp_ent_vir"],fx:"carte_client",note:"impossible à la signature du devis : date de prestation inconnue"},
-  {t:"Signature lien mandat prélèvement & générer la facture",p:"client",auto:1,fin:["fp_ent_man"]},
-  {t:"Transmettre la facture au client",p:"auto",tpl:1,fin:["fp_ent_man"],fx:"carte_client"},
-  {t:"Renseigner la liste des apprenants",p:"client",fin:["opco"],grp:"OPCO"},
-  {t:"Lieu & date à choisir",p:"client",fin:["opco"]},
-  {t:"Validation de l'OPCO & signature convention",p:"client",fin:["opco"]},
-  {t:"Générer la facture avec échéance J+30 du J2 formation",p:"closer",fin:["opco"],fx:"carte_client"}],
+  {t:"Client confirme le lieu et la date",p:"client"},
+  {t:"Client renseigne la liste des apprenants",p:"client"},
+  {t:"Client génère et signe sa convention",p:"client",fin:["fp_ent_man","fp_ent_vir"]},
+  {t:"Closeur génère la facture sans la transmettre",p:"closer",fin:["fp_ent_vir"],fx:"carte_client",note:"échéance J+30 du J2 de la formation"},
+  {t:"Client génère sa convention",p:"client",fin:["opco"]},
+  {t:"Client transmet la convention et la demande de prise en charge à son OPCO",p:"client",fin:["opco"]},
+  {t:"Client transmet l'accord de prise en charge de l'OPCO",p:"client",fin:["opco"]},
+  {t:"Client signe la convention",p:"client",fin:["opco"]},
+  {t:"Closeur génère la facture sans la transmettre",p:"closer",fin:["opco"],fx:"carte_client",note:"échéance J+30 du J2 ; transmise à l'OPCO à J2+1 de la formation"}],
  preparer:[
-  {t:"Envoyer un message par mail pour prendre rendez-vous en visio avec le client (olivier@franceia.com en copie)",p:"formateur",tpl:1},
-  {t:"Lire les besoins des apprenants (Qualiobee)",p:"formateur"},
-  {t:"Adapter le contenu de la formation",p:"formateur"}],
+  {t:"Formateur envoie un mail au client pour prendre rendez-vous en visio (olivier@franceia.com en copie)",p:"formateur",tpl:1},
+  {t:"Formateur lit les besoins des apprenants (Qualiobee)",p:"formateur"},
+  {t:"Formateur adapte le contenu de la formation",p:"formateur"}],
  enformation:[
-  {t:"Vérifier que tous les émargements sont faits",p:"formateur"},
-  {t:"Envoyer message de fin par mail au client",p:"formateur",tpl:1},
+  {t:"Formateur vérifie que tous les émargements sont faits",p:"formateur"},
+  {t:"Formateur envoie le message de fin par mail au client",p:"formateur",tpl:1},
+  {t:"Admin France IA envoie la facture au client, échéance J+30 du J2",p:"fia",tpl:1,fin:["fp_ent_vir","opco"]},
   {t:"Formateur crée sa facture",p:"formateur"},
-  {t:"Formateur dépose sa facture",p:"formateur",fx:"carte_formateur"}],
+  {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",fx:"carte_formateur"}],
+ lost:[], termine:[]}},
+/* ── Intra · rail formateur ── */
+intra_frm:{cols:[
+ {id:"shotgun",   label:"À prendre"},
+ {id:"convention",label:"Signer convention"},
+ {id:"preparer",  label:"Préparer"},
+ {id:"animer",    label:"Animer", open:"J2 formation", rule:"j2"},
+ {id:"facturer",  label:"Facturer"},
+ {id:"lost",      label:"Lost", skip:1, note:"Le client n'a malheureusement pas souhaité donner suite"},
+ {id:"termine",   label:"Terminé"}],
+tasks:{
+ shotgun:[
+  {t:"Formateur fait une demande",p:"formateur"},
+  {t:"Admin France IA valide la demande",p:"fia"}],
+ convention:[{t:"Client signe la convention",p:"client"}],
+ preparer:[
+  {t:"Formateur envoie un mail au client pour prendre rendez-vous en visio (olivier@franceia.com en copie)",p:"formateur",tpl:1},
+  {t:"Formateur lit les besoins des apprenants (Qualiobee)",p:"formateur"},
+  {t:"Formateur adapte le contenu de la formation",p:"formateur"}],
+ animer:[
+  {t:"Formateur vérifie que tous les émargements sont faits",p:"formateur"},
+  {t:"Formateur envoie le message de fin par mail au client",p:"formateur",tpl:1}],
+ facturer:[
+  {t:"Formateur crée sa facture",p:"formateur"},
+  {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",fx:"carte_formateur"},
+  {t:"Admin France IA valide la facture",p:"fia"},
+  {t:"Admin France IA paie la facture",p:"fia"}],
  lost:[], termine:[]}},
 /* ── Inscription coaching ── */
 coaching:{cols:[
@@ -550,36 +635,37 @@ coaching:{cols:[
  {id:"whatsapp",label:"Créer groupe WhatsApp"},
  {id:"preparer",label:"Préparer"},
  {id:"jourj",   label:"Jour J", open:"date prévue de la séance", rule:"prevue"},
- {id:"lost",    label:"Lost", skip:1},
+ {id:"lost",    label:"Lost", skip:1, note:"Le client n'a malheureusement pas souhaité donner suite"},
  {id:"termine", label:"Terminé"}],
 tasks:{
  demande:[
-  {t:"Générer le devis",p:"closer",auto:1,fin:["fp_ent_vir"],grp:"Entreprise fonds propres"},
-  {t:"Signer convention",p:"client",auto:1,fin:["fp_ent_vir"]},
-  {t:"Générer la facture et la transmettre au client",p:"auto",tpl:1,fin:["fp_ent_vir"],fx:"carte_client"},
-  {t:"Génération facture & lien mandat prélèvement",p:"auto",fin:["fp_ent_man","fp_part"],grp:"Mandat de prélèvement",fx:"carte_client"},
-  {t:"Transmettre la facture au client",p:"auto",tpl:1,fin:["fp_part"],note:"non acquittée encore, échéance = dernier prélèvement programmé"}],
+  {t:"ARD génère le devis",p:"ard",fin:["fp_ent_vir"]},
+  {t:"Client signe la convention",p:"client",fin:["fp_ent_vir"]},
+  {t:"ARD génère la facture et la transmet au client",p:"ard",tpl:1,fin:["fp_ent_vir"],fx:"carte_client"},
+  {t:"ARD génère la facture et le lien de mandat de prélèvement",p:"ard",fin:["fp_ent_man"],fx:"carte_client",note:"la facture n'est pas transmise au client avant le J2"},
+  {t:"ARD génère la facture et le lien de mandat de prélèvement",p:"ard",fin:["fp_part"]},
+  {t:"ARD transmet la facture au client",p:"ard",tpl:1,fin:["fp_part"],fx:"carte_client",note:"non acquittée ; échéance = dernier prélèvement programmé"}],
  valider:[
-  {t:"Le formateur naturel valide son coaching",p:"formateur",note:"le formateur du présentiel de l'apprenant a la priorité"},
-  {t:"Si refus : un autre formateur fait une demande spontanée",p:"formateur"},
-  {t:"Valider la demande du formateur",p:"fia"}],
+  {t:"Formateur naturel valide son coaching",p:"formateur",note:"le formateur du présentiel de l'apprenant a la priorité"},
+  {t:"Formateur spontané fait une demande si le formateur naturel refuse",p:"formateur"},
+  {t:"Admin France IA valide la demande du formateur",p:"fia"}],
  whatsapp:[
-  {t:"Créer le groupe WhatsApp à 3 : apprenant + formateur + staff",p:"fia"},
-  {t:"Envoyer le message de bienvenue France IA",p:"fia",tpl:1}],
+  {t:"Admin France IA crée le groupe WhatsApp à 3 : apprenant, formateur, staff",p:"fia"},
+  {t:"Admin France IA envoie le message de bienvenue France IA",p:"fia",tpl:1}],
  preparer:[
-  {t:"Envoyer le message de bienvenue Formateur",p:"formateur",tpl:1},
-  {t:"Caler la ou les séances avec l'apprenant via le groupe WhatsApp",p:"formateur",tpl:1},
-  {t:"Retranscrire le créneau choisi dans l'agenda formateur DELIV'IA",p:"formateur"},
-  {t:"Demander / lire les attentes de l'apprenant (champ attentes ARD)",p:"formateur",tpl:1},
-  {t:"Préparer le contenu de la séance",p:"formateur"}],
+  {t:"Formateur envoie le message de bienvenue Formateur",p:"formateur",tpl:1},
+  {t:"Formateur cale la ou les séances avec l'apprenant via le groupe WhatsApp",p:"formateur",tpl:1},
+  {t:"Formateur retranscrit le créneau choisi dans son agenda DELIV'IA",p:"formateur"},
+  {t:"Formateur demande ou lit les attentes de l'apprenant (champ attentes ARD)",p:"formateur",tpl:1},
+  {t:"Formateur prépare le contenu de la séance",p:"formateur"}],
  jourj:[
-  {t:"Ouvrir la salle le jour J (si Station F, rappel automatique)",p:"fia"},
-  {t:"Réaliser la séance (visio ou présentiel)",p:"formateur"},
-  {t:"Déposer le compte rendu de séance",p:"formateur"},
-  {t:"Recueillir et soumettre le témoignage de clôture",p:"formateur"},
-  {t:"Vérifier le compte rendu & témoignage soumis par le formateur",p:"fia"},
-  {t:"Créer ma facture (bouton Générer)",p:"formateur",grp:"Facturation formateur"},
-  {t:"Déposer ma facture (input PJ)",p:"formateur",fx:"carte_formateur"}],
+  {t:"Admin France IA ouvre la salle le jour J",p:"fia",note:"si Station F ; rappel automatique"},
+  {t:"Formateur réalise la séance (visio ou présentiel)",p:"formateur"},
+  {t:"Formateur dépose le compte rendu de séance",p:"formateur"},
+  {t:"Formateur recueille et soumet le témoignage de clôture",p:"formateur"},
+  {t:"Admin France IA vérifie le compte rendu et le témoignage soumis par le formateur",p:"fia"},
+  {t:"Formateur crée sa facture (bouton Générer)",p:"formateur",grp:"Facturation formateur"},
+  {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",fx:"carte_formateur"}],
  lost:[], termine:[]}},
 /* ── Coaching · rail formateur ── */
 coaching_frm:{cols:[
@@ -587,27 +673,31 @@ coaching_frm:{cols:[
  {id:"preparer",label:"Préparer"},
  {id:"animer",  label:"Animer", open:"date prévue de la séance", rule:"prevue"},
  {id:"facturer",label:"Facturer"},
+ {id:"lost",    label:"Lost", skip:1, note:"Le client n'a malheureusement pas souhaité donner suite"},
  {id:"termine", label:"Terminé"}],
 tasks:{
  valider:[
-  {t:"Valider mon coaching",p:"formateur",note:"votre apprenant du présentiel : vous avez la main en premier ; en cas de refus, le coaching part au marketplace À prendre"}],
+  {t:"Formateur valide son coaching",p:"formateur",kind:["prio"],note:"votre apprenant du présentiel : vous avez la main en premier ; en cas de refus, le coaching part sur la page À prendre"},
+  {t:"Formateur fait une demande",p:"formateur",kind:["libre"]},
+  {t:"Admin France IA valide la demande",p:"fia",kind:["libre"]}],
  preparer:[
-  {t:"Envoyer le message de bienvenue Formateur",p:"formateur",tpl:1},
-  {t:"Caler la ou les séances avec l'apprenant via le groupe WhatsApp",p:"formateur",tpl:1},
-  {t:"Retranscrire le créneau choisi dans l'agenda formateur DELIV'IA",p:"formateur"},
-  {t:"Demander / lire les attentes de l'apprenant (champ attentes ARD)",p:"formateur",tpl:1},
-  {t:"Préparer le contenu de la séance",p:"formateur"}],
+  {t:"Admin France IA crée le groupe WhatsApp",p:"fia"},
+  {t:"Formateur envoie le message de bienvenue Formateur",p:"formateur",tpl:1},
+  {t:"Formateur cale la ou les séances avec l'apprenant via le groupe WhatsApp",p:"formateur",tpl:1},
+  {t:"Formateur retranscrit le créneau choisi dans son agenda DELIV'IA",p:"formateur"},
+  {t:"Formateur demande ou lit les attentes de l'apprenant (champ attentes ARD)",p:"formateur",tpl:1},
+  {t:"Formateur prépare le contenu de la séance",p:"formateur"}],
  animer:[
-  {t:"Réaliser la séance (visio ou présentiel)",p:"formateur"},
-  {t:"Déposer le compte rendu de séance",p:"formateur"},
-  {t:"Recueillir et soumettre le témoignage de clôture",p:"formateur"},
-  {t:"Compte rendu & témoignage validés par France IA",p:"fia"}],
+  {t:"Formateur réalise la séance (visio ou présentiel)",p:"formateur"},
+  {t:"Formateur dépose le compte rendu de séance",p:"formateur"},
+  {t:"Formateur recueille et soumet le témoignage de clôture",p:"formateur"},
+  {t:"Admin France IA valide le compte rendu et le témoignage",p:"fia"}],
  facturer:[
-  {t:"Créer ma facture (bouton Générer)",p:"formateur"},
-  {t:"Déposer ma facture (input PJ)",p:"formateur",fx:"carte_formateur"},
-  {t:"Facture validée par France IA",p:"fia"},
-  {t:"Facture payée par France IA",p:"fia"}],
- termine:[]}},
+  {t:"Formateur crée sa facture (bouton Générer)",p:"formateur"},
+  {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",fx:"carte_formateur"},
+  {t:"Admin France IA valide la facture",p:"fia"},
+  {t:"Admin France IA paie la facture",p:"fia"}],
+ lost:[], termine:[]}},
 /* ── Facturation CPF ── */
 fact_cpf:{cols:[
  {id:"sortie",  label:"Sortie de formation déclarée"},
@@ -617,19 +707,20 @@ fact_cpf:{cols:[
  {id:"recu",    label:"Paiement Bibby reçu + facture acquittée"},
  {id:"final",   label:"Paiement BBF & EDOF + facture acquittée"}],
 tasks:{
- sortie:[{t:"Service fait validé par la CDC",p:"auto",note:"webhook Wedof, délai variable"}],
+ sortie:[{t:"DELIV'IA reçoit la validation du service fait par la CDC",p:"auto",note:"webhook WEDOF, délai variable"}],
  validee:[
-  {t:"Générer la facture Qonto au montant CDC",p:"auto"},
-  {t:"Transmettre le numéro de facture sur EDOF",p:"auto",tpl:1},
-  {t:"Envoyer le dossier à Bibby avec la facture, les émargements signés et le dossier EDOF complet",p:"fia"}],
+  {t:"DELIV'IA génère la facture Qonto au montant CDC",p:"auto"},
+  {t:"DELIV'IA transmet le numéro de facture sur EDOF",p:"auto"},
+  {t:"DELIV'IA génère les émargements signés et le dossier EDOF",p:"auto",tpl:1},
+  {t:"Admin France IA envoie le dossier à Bibby avec la facture, les émargements signés et le dossier EDOF complet",p:"fia",tpl:1}],
  bibby:[
-  {t:"Paiement Bibby détecté",p:"auto",note:"rapprochement bancaire, attendu sous 30 jours"},
-  {t:"Facture tamponnée acquittée",p:"auto",fx:"ligne_closer"}],
+  {t:"DELIV'IA détecte le paiement Bibby",p:"auto",note:"rapprochement bancaire, attendu sous 30 jours ; passage automatique en En retard à l'échéance de la facture"},
+  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fx:"ligne_closer"}],
  retard:[
-  {t:"Relancer Bibby",p:"fia",tpl:1},
-  {t:"Paiement Bibby détecté",p:"auto"},
-  {t:"Facture tamponnée acquittée",p:"auto",fx:"ligne_closer"}],
- recu:[{t:"Paiement EDOF vers Bibby détecté",p:"auto",note:"webhook WEDOF"}],
+  {t:"Admin France IA relance Bibby",p:"fia",tpl:1},
+  {t:"DELIV'IA détecte le paiement Bibby",p:"auto"},
+  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fx:"ligne_closer"}],
+ recu:[{t:"DELIV'IA détecte le paiement EDOF vers Bibby",p:"auto",note:"webhook WEDOF"}],
  final:[]}},
 /* ── Facturation OPCO ── */
 fact_opco:{cols:[
@@ -639,50 +730,49 @@ fact_opco:{cols:[
  {id:"retard", label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1},
  {id:"termine",label:"Terminé"}],
 tasks:{
- raf:[{t:"Fin de la formation",p:"auto",note:"J2+1, automatique"}],
+ raf:[{t:"DELIV'IA constate la fin de la formation",p:"auto",note:"J2+1"}],
  transmettre:[
-  {t:"Générer la facture à l'OPCO",p:"agence"},
-  {t:"Générer la feuille d'émargement",p:"agence"},
-  {t:"Uploader sur la plateforme de l'OPCO les émargements et la facture",p:"agence",note:"cf. Process OPCO"}],
+  {t:"Admin France IA génère la feuille d'émargement",p:"fia"},
+  {t:"Admin France IA transmet à l'OPCO les émargements et la facture, avec l'agence en copie",p:"fia",note:"cf. Process OPCO"}],
  attente:[
-  {t:"Règlement OPCO détecté",p:"auto"},
-  {t:"Facture tamponnée acquittée",p:"auto",fx:"ligne_closer",note:"passage automatique en En retard à échéance de la facture (J+30 du J2)"}],
+  {t:"DELIV'IA détecte le règlement de l'OPCO",p:"auto",note:"passage automatique en En retard à l'échéance de la facture (J+30 du J2)"},
+  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fx:"ligne_closer"}],
  retard:[
-  {t:"Relancer l'OPCO",p:"agence"},
-  {t:"Règlement OPCO détecté",p:"auto"},
-  {t:"Facture tamponnée acquittée",p:"auto",fx:"ligne_closer"}],
+  {t:"Admin France IA relance l'OPCO via l'agence",p:"fia",tpl:1},
+  {t:"DELIV'IA détecte le règlement de l'OPCO",p:"auto"},
+  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fx:"ligne_closer"}],
  termine:[]}},
-/* ── Facturation fonds propres ── */
+/* ── Facturation fonds propres (Entreprise Virement, Entreprise Mandat, Particulier Mandat) ── */
 fact_fp:{cols:[
- {id:"raf",    label:"RAF · entreprise virement"},
+ {id:"raf",    label:"RAF", fin:["fp_ent_vir"]},
  {id:"attente",label:"En attente paiement"},
- {id:"retard", label:"En retard à relancer", skip:1},
+ {id:"retard", label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1, note:"Facture non acquittée après J2+30 ; échéancier SDD : prélèvement refusé, non parti ou irrégulier"},
  {id:"termine",label:"Terminé"}],
 tasks:{
- raf:[{t:"Fin de la formation",p:"auto",note:"J2+1, automatique"}],
+ raf:[{t:"DELIV'IA constate la fin de la formation",p:"auto",note:"J2+1",fin:["fp_ent_vir"]}],
  attente:[
-  {t:"Toutes les échéances encaissées",p:"auto",fin:["fp_part","fp_ent_man"],grp:"Particulier ou entreprise avec mandat",note:"relevé toutes les 30 minutes, premier prélèvement à J+14 de la vente",sub:1},
-  {t:"Facture tamponnée acquittée",p:"auto",fin:["fp_part","fp_ent_man"],fx:"ligne_closer"},
-  {t:"Transmettre la facture au client pour règlement à J2+1 de la formation",p:"auto",tpl:1,fin:["fp_ent_vir"],grp:"Entreprise virement"},
-  {t:"Paiement reçu détecté",p:"auto",fin:["fp_ent_vir"]},
-  {t:"Facture tamponnée acquittée",p:"auto",fin:["fp_ent_vir"],fx:"ligne_closer"}],
+  {t:"DELIV'IA encaisse toutes les échéances",p:"auto",fin:["fp_part","fp_ent_man"],note:"relevé toutes les 30 minutes ; premier prélèvement à J+14 de la vente",sub:1},
+  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fin:["fp_part","fp_ent_man"],fx:"ligne_closer"},
+  {t:"DELIV'IA transmet la facture au client pour règlement à J2+1 de la formation",p:"auto",tpl:1,fin:["fp_ent_vir"]},
+  {t:"DELIV'IA détecte le paiement reçu",p:"auto",fin:["fp_ent_vir"]},
+  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fin:["fp_ent_vir"],fx:"ligne_closer"}],
  retard:[
-  {t:"Relancer le client pour comprendre",p:"closer",tpl:1,fin:["fp_part","fp_ent_man"],grp:"Mandat"},
-  {t:"Décider du rejeu du prélèvement refusé",p:"closer",fin:["fp_part","fp_ent_man"]},
-  {t:"Paiement reçu détecté",p:"auto",fin:["fp_part","fp_ent_man"]},
-  {t:"Facture tamponnée acquittée",p:"auto",fin:["fp_part","fp_ent_man"],fx:"ligne_closer"},
-  {t:"Relancer le client",p:"closer",tpl:1,fin:["fp_ent_vir"],grp:"Entreprise virement"},
-  {t:"Paiement reçu détecté",p:"auto",fin:["fp_ent_vir"]},
-  {t:"Facture tamponnée acquittée",p:"auto",fin:["fp_ent_vir"],fx:"ligne_closer"}],
+  {t:"Closeur relance le client pour comprendre",p:"closer",tpl:1,fin:["fp_part","fp_ent_man"]},
+  {t:"Closeur décide du rejeu du prélèvement refusé",p:"closer",fin:["fp_part","fp_ent_man"]},
+  {t:"DELIV'IA détecte le paiement reçu",p:"auto",fin:["fp_part","fp_ent_man"]},
+  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fin:["fp_part","fp_ent_man"],fx:"ligne_closer"},
+  {t:"Closeur relance le client",p:"closer",tpl:1,fin:["fp_ent_vir"]},
+  {t:"DELIV'IA détecte le paiement reçu",p:"auto",fin:["fp_ent_vir"]},
+  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fin:["fp_ent_vir"],fx:"ligne_closer"}],
  termine:[]}},
 /* ── Facturation formateur ── */
 fact_frm:{cols:[
  {id:"valider",label:"Valider facture"},
- {id:"payer",  label:"À payer"},
+ {id:"payer",  label:"Mettre en paiement"},
  {id:"termine",label:"Terminé"}],
 tasks:{
- valider:[{t:"Valider la facture du formateur",p:"fia"}],
- payer:[{t:"Régler la facture",p:"fia"}],
+ valider:[{t:"Admin France IA valide la facture du formateur",p:"fia"}],
+ payer:[{t:"Admin France IA règle la facture",p:"fia"}],
  termine:[]}},
 /* ── Facturation closeur / setteur (facture mensuelle) ── */
 fact_com:{cols:[
@@ -691,66 +781,79 @@ fact_com:{cols:[
  {id:"termine",label:"Terminé"}],
 tasks:{
  valider:[
-  {t:"Facture validée par le closeur",p:"closer",fin:["closer"]},
-  {t:"Facture validée par le setteur",p:"setter",fin:["setter"]},
-  {t:"Facture validée par France IA",p:"fia"},
-  {t:"Générer officiellement la facture sur Qonto",p:"auto"}],
- payer:[{t:"Régler la facture",p:"fia"}],
+  {t:"Closeur valide sa facture",p:"closer",fin:["closer"]},
+  {t:"Setteur valide sa facture",p:"setter",fin:["setter"]},
+  {t:"Admin France IA valide la facture",p:"fia"},
+  {t:"DELIV'IA génère officiellement la facture sur Qonto",p:"auto"}],
+ payer:[{t:"Admin France IA règle la facture",p:"fia"}],
  termine:[]}},
 };
 
 /* ════════════════════ FAUSSES DONNÉES ════════════════════ */
+/* modes de paiement et offres où ils sont possibles */
 const FIN = {
- cpf:       {lbl:"CPF",                cls:"cpf"},
- opco:      {lbl:"OPCO",               cls:"opco"},
- fp_ent_vir:{lbl:"Entreprise · virement", cls:"vir"},
- fp_ent_man:{lbl:"Entreprise · mandat",   cls:"mandat"},
- fp_part:   {lbl:"Particulier · mandat",  cls:"mandat"},
+ cpf:       {lbl:"CPF",                 cls:"cpf",    offres:["n1"]},
+ fp_ent_vir:{lbl:"Entreprise Virement", cls:"vir",    offres:["n1","n2","intra","coaching"]},
+ fp_ent_man:{lbl:"Entreprise Mandat",   cls:"mandat", offres:["n1","n2","intra","coaching"]},
+ opco:      {lbl:"Entreprise OPCO",     cls:"opco",   offres:["n1","n2","intra"]},
+ fp_part:   {lbl:"Particulier Mandat",  cls:"mandat", offres:["n1","n2","coaching"]},
  closer:    {lbl:"Closeur",  cls:"neutral"},
  setter:    {lbl:"Setteur",  cls:"neutral"},
 };
+const MODES_CLIENT = ["cpf","fp_ent_vir","fp_ent_man","opco","fp_part"];
+const SESS = {
+ paris:   {lbl:"Paris · 12-13 sept",    lieu:"Station F, Paris 13e",            dt:{j1:"2026-09-12",j2:"2026-09-13"}, frm:"Sarah K."},
+ bordeaux:{lbl:"Bordeaux · 26-27 sept", lieu:"Quai des Chartrons, Bordeaux",    dt:{j1:"2026-09-26",j2:"2026-09-27"}, frm:"Marc D."},
+ lyon:    {lbl:"Lyon · 3-4 oct",        lieu:"Part-Dieu, Lyon",                 dt:{j1:"2026-10-03",j2:"2026-10-04"}, frm:null},
+ parisn2: {lbl:"Paris N2 · 10-11 oct",  lieu:"Station F, Paris 13e",            dt:{j1:"2026-10-10",j2:"2026-10-11"}, frm:null},
+};
 let CARDS = [
  /* sessions N1/N2 : rail France IA + rail formateur (même session, deux cartes) */
- {id:"s1", kb:"session_fia", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Paris · 12-13 sept", sub:"Sarah K. · Station F · 9/12 places", col:"demarree"},
- {id:"s2", kb:"session_fia", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Bordeaux · 26-27 sept", sub:"Marc D. · Quai des Chartrons · 4/12 places", col:"prete"},
- {id:"s3", kb:"session_fia", offre:"n1", dt:{j1:"2026-10-03",j2:"2026-10-04"}, title:"Lyon · 3-4 oct", sub:"Formateur à confirmer · 0/12 places", col:"brouillon"},
- {id:"s4", kb:"session_fia", offre:"n2", dt:{j1:"2026-10-10",j2:"2026-10-11"}, title:"Paris N2 · 10-11 oct", sub:"Formateur à confirmer · 2/12 places", col:"brouillon"},
- {id:"fs1",kb:"session_frm", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Paris · 12-13 sept", sub:"Ma session · Station F", col:"preparer", mine:1},
- {id:"fs2",kb:"session_frm", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Bordeaux · 26-27 sept", sub:"Ma session · Quai des Chartrons", col:"shotgun", mine:1},
- /* inscriptions N1 */
- {id:"i1", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Marie Dupont", com:"Closeur : Alex R. · Setteur : Sam T.", sub:"Session Paris 12-13 sept", fin:"cpf", col:"attente"},
- {id:"i2", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Karim Benali", com:"Closeur : Chloé M. · Setteur : Sam T.", sub:"Session Paris 12-13 sept", fin:"fp_part", col:"action"},
- {id:"i3", kb:"insc", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Jean Petit · ACME Conseil", com:"Closeur : Alex R. · Setteur : Sam T.", sub:"Session Bordeaux 26-27 sept", fin:"fp_ent_vir", col:"action"},
- {id:"i9", kb:"insc", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Lucas Moreau", com:"Closeur : Chloé M. · Setteur : Sam T.", sub:"Session Bordeaux 26-27 sept", fin:"cpf", col:"recue"},
- {id:"i4", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Léa Costa · BTP Sud", com:"Closeur : Yanis B. · Setteur : Sam T.", sub:"Session Paris 12-13 sept", fin:"fp_ent_man", col:"attente"},
- {id:"i5", kb:"insc", offre:"n1", dt:{j1:"2026-09-26",j2:"2026-09-27"}, title:"Sofia Ricci · Hôtel du Parc", com:"Closeur : Alex R. · Setteur : Sam T.", sub:"Session Bordeaux 26-27 sept", fin:"opco", col:"attente"},
- {id:"i6", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Hugo Martin", com:"Closeur : Chloé M. · Setteur : Sam T.", sub:"Session Paris 12-13 sept", fin:"cpf", col:"validee"},
- {id:"i7", kb:"insc", offre:"n1", dt:{j1:"2026-09-12",j2:"2026-09-13"}, title:"Nadia Slimani", com:"Closeur : Alex R. · Setteur : Sam T.", sub:"Session Paris 12-13 sept", fin:"cpf", col:"absent"},
- {id:"i8", kb:"insc", offre:"n2", dt:{j1:"2026-10-10",j2:"2026-10-11"}, title:"Paul Fabre · Studio Nova", com:"Closeur : Yanis B. · Setteur : Sam T.", sub:"Session Paris N2 10-11 oct", fin:"fp_ent_vir", col:"action"},
+ {id:"s1", kb:"session_fia", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"9/12", col:"demarree"},
+ {id:"s2", kb:"session_fia", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:SESS.bordeaux.lbl, lieu:SESS.bordeaux.lieu, frm:"Marc D.",  places:"4/12", col:"prete"},
+ {id:"s3", kb:"session_fia", offre:"n1", sess:"lyon",     dt:SESS.lyon.dt,     title:SESS.lyon.lbl,     lieu:SESS.lyon.lieu,     frm:null,       places:"0/12", col:"brouillon"},
+ {id:"s4", kb:"session_fia", offre:"n2", sess:"parisn2",  dt:SESS.parisn2.dt,  title:SESS.parisn2.lbl,  lieu:SESS.parisn2.lieu,  frm:null,       places:"2/12", col:"brouillon"},
+ {id:"fs1",kb:"session_frm", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"9/12", col:"preparer", mine:1},
+ {id:"fs2",kb:"session_frm", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:SESS.bordeaux.lbl, lieu:SESS.bordeaux.lieu, frm:"Sarah K.", places:"4/12", col:"shotgun", mine:1},
+ /* inscriptions N1 / N2 */
+ {id:"i1", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Marie Dupont",              closer:"Alex R.",  setter:"Sam T.", ard:"2026-08-11T10:42", fin:"cpf",        col:"attente"},
+ {id:"i2", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Karim Benali",              closer:"Chloé M.", setter:"Sam T.", ard:"2026-08-12T16:05", fin:"fp_part",    col:"action"},
+ {id:"i3", kb:"insc", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:"ACME Conseil",              closer:"Alex R.",  setter:"Sam T.", ard:"2026-08-13T09:18", fin:"fp_ent_vir", col:"action"},
+ {id:"i9", kb:"insc", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:"Lucas Moreau",              closer:"Chloé M.", setter:"Sam T.", ard:"2026-08-21T18:30", fin:"cpf",        col:"recue"},
+ {id:"i4", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"BTP Sud",                   closer:"Yanis B.", setter:"Sam T.", ard:"2026-08-05T11:27", fin:"fp_ent_man", col:"attente"},
+ {id:"i5", kb:"insc", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:"Hôtel du Parc",             closer:"Alex R.",  setter:"Sam T.", ard:"2026-08-07T14:50", fin:"opco",       col:"attente"},
+ {id:"i6", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Hugo Martin",               closer:"Chloé M.", setter:"Sam T.", ard:"2026-07-29T09:03", fin:"cpf",        col:"validee"},
+ {id:"i7", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Nadia Slimani",             closer:"Alex R.",  setter:"Sam T.", ard:"2026-07-30T17:12", fin:"cpf",        col:"absent"},
+ {id:"i8", kb:"insc", offre:"n2", sess:"parisn2",  dt:SESS.parisn2.dt,  title:"Studio Nova",               closer:"Yanis B.", setter:"Sam T.", ard:"2026-08-19T12:40", fin:"fp_ent_vir", col:"action"},
  /* intra (une carte = la formation) */
- {id:"t1", kb:"intra", title:"Garage Moderne · 8 apprenants", com:"Closeur : Alex R.", sub:"Intra chez le client · Toulouse", fin:"opco", col:"convention"},
- {id:"t2", kb:"intra", title:"Cabinet Verne & Associés · 5 apprenants", com:"Closeur : Chloé M.", sub:"Intra Station F", fin:"fp_ent_vir", col:"demande"},
+ {id:"t1", kb:"intra", offre:"intra", title:"Garage Moderne",            closer:"Alex R.",  setter:null, ard:"2026-08-03T15:22", fin:"opco",       col:"convention", lieu:"Chez le client, Toulouse", nb:"8 apprenants"},
+ {id:"t2", kb:"intra", offre:"intra", title:"Cabinet Verne & Associés",  closer:"Chloé M.", setter:null, ard:"2026-08-20T10:08", fin:"fp_ent_vir", col:"demande",    lieu:"Station F, Paris 13e",     nb:"5 apprenants"},
+ {id:"ti1",kb:"intra_frm", offre:"intra", title:"Garage Moderne",        lieu:"Chez le client, Toulouse", nb:"8 apprenants", col:"convention", mine:1},
  /* coaching */
- {id:"cf1",kb:"coaching_frm", dt:{prevue:"2026-09-05"}, title:"Awa Diallo", sub:"Coaching 4 h · visio · votre apprenante du présentiel", col:"preparer", mine:1},
- {id:"cf2",kb:"coaching_frm", title:"Sami Rezgui", sub:"Coaching 4 h · Station F · votre apprenant du présentiel", col:"valider", mine:1},
- {id:"c1", kb:"coaching", dt:{prevue:"2026-09-05"}, title:"Awa Diallo", com:"Closeur : Alex R. · Setteur : Sam T.", sub:"Coaching 4 h · visio", fin:"fp_part", col:"preparer"},
- {id:"c2", kb:"coaching", title:"Marc Leroy · Nexa Digital", com:"Closeur : Yanis B.", sub:"Coaching 4 h · Station F", fin:"fp_ent_vir", col:"demande"},
+ {id:"cf1",kb:"coaching_frm", offre:"coaching", dt:{prevue:"2026-09-05"}, title:"Awa Diallo",     lieu:"Visio",      col:"preparer", mine:1, kind:"prio"},
+ {id:"cf2",kb:"coaching_frm", offre:"coaching", title:"Sami Rezgui",    lieu:"Station F, Paris 13e", col:"valider", mine:1, kind:"prio"},
+ {id:"cf3",kb:"coaching_frm", offre:"coaching", title:"Marc Leroy",     lieu:"Station F, Paris 13e", col:"valider", mine:1, kind:"libre"},
+ {id:"c1", kb:"coaching", offre:"coaching", dt:{prevue:"2026-09-05"}, title:"Awa Diallo",  closer:"Alex R.",  setter:"Sam T.", ard:"2026-08-08T19:14", fin:"fp_part",    col:"preparer", lieu:"Visio"},
+ {id:"c2", kb:"coaching", offre:"coaching", title:"Nexa Digital",                          closer:"Yanis B.", setter:null,     ard:"2026-08-18T08:56", fin:"fp_ent_vir", col:"demande",  lieu:"Station F, Paris 13e"},
  /* facturation clients (stock existant) */
- {id:"f1", kb:"fact_cpf", title:"Hugo Martin", sub:"Vente CPF · 1 650 €", fin:"cpf", col:"validee"},
- {id:"f2", kb:"fact_cpf", dt:{echeance:"2026-09-15"}, title:"Emma Bianchi", sub:"Vente CPF · 1 650 €", fin:"cpf", col:"bibby"},
- {id:"f3", kb:"fact_opco", dt:{j2:"2026-09-27",echeance:"2026-10-27"}, title:"Hôtel du Parc · Sofia Ricci", sub:"Vente OPCO · 1 650 €", fin:"opco", col:"raf"},
- {id:"f4", kb:"fact_fp", dt:{j2:"2026-09-13",echeance:"2026-10-28"}, title:"Karim Benali", sub:"Mandat SDD · 1 650 € en 3 fois", fin:"fp_part", col:"attente",
+ {id:"f1", kb:"fact_cpf",  offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Hugo Martin",   fin:"cpf",        m:"1 650 €", src:"i6", col:"validee"},
+ {id:"f2", kb:"fact_cpf",  offre:"n1", sess:"bordeaux", dt:{j1:"2026-06-20",j2:"2026-06-21",echeance:"2026-09-15"}, title:"Emma Bianchi", fin:"cpf", m:"1 650 €", col:"bibby", lieu:"Quai des Chartrons, Bordeaux"},
+ {id:"f3", kb:"fact_opco", offre:"n1", sess:"bordeaux", dt:{j1:"2026-09-26",j2:"2026-09-27",echeance:"2026-10-27"}, title:"Hôtel du Parc", fin:"opco", m:"1 650 €", src:"i5", col:"raf"},
+ {id:"f4", kb:"fact_fp",   offre:"n1", sess:"paris",    dt:{j1:"2026-09-12",j2:"2026-09-13",echeance:"2026-10-28"}, title:"Karim Benali",  fin:"fp_part", m:"1 650 € en 3 fois", src:"i2", col:"attente",
    ech:[["Échéance 1/3 · 550 € · 28/08",1],["Échéance 2/3 · 550 € · 28/09",0],["Échéance 3/3 · 550 € · 28/10",0]]},
- {id:"f5", kb:"fact_fp", dt:{j2:"2026-09-27",echeance:"2026-10-27"}, title:"ACME Conseil · Jean Petit", sub:"Virement · 1 650 €", fin:"fp_ent_vir", col:"raf"},
- {id:"f6", kb:"fact_fp", dt:{j2:"2026-09-13",echeance:"2026-09-10"}, title:"BTP Sud · Léa Costa", sub:"Mandat SDD · 4 950 € en 2 fois", fin:"fp_ent_man", col:"retard",
+ {id:"f5", kb:"fact_fp",   offre:"n1", sess:"bordeaux", dt:{j1:"2026-09-26",j2:"2026-09-27",echeance:"2026-10-27"}, title:"ACME Conseil",  fin:"fp_ent_vir", m:"1 650 €", src:"i3", col:"raf"},
+ {id:"f6", kb:"fact_fp",   offre:"n1", sess:"paris",    dt:{j1:"2026-09-12",j2:"2026-09-13",echeance:"2026-09-10"}, title:"BTP Sud",       fin:"fp_ent_man", m:"4 950 € en 2 fois", src:"i4", col:"retard",
    ech:[["Échéance 1/2 · 2 475 € · 10/08 · refusée",0],["Échéance 2/2 · 2 475 € · 10/09",0]]},
+ {id:"f8", kb:"fact_fp",   offre:"coaching", dt:{prevue:"2026-09-05",echeance:"2026-09-22"}, title:"Awa Diallo", fin:"fp_part", m:"1 200 € en 1 fois", src:"c1", col:"attente", lieu:"Visio",
+   ech:[["Échéance 1/1 · 1 200 € · 22/08",0]]},
  /* facturation externes */
- {id:"f7", kb:"fact_frm", title:"Sarah K.", sub:"Session Paris N1 · 12-13 sept · 1 400 €", col:"valider"},
- {id:"m1", kb:"fact_com", title:"Facture août 2026 · Alex R.", sub:"Closeur · une ligne par close acquitté", fin:"closer", col:"valider",
+ {id:"f7", kb:"fact_frm", offre:"n1", sess:"paris", dt:SESS.paris.dt, title:"Sarah K.", frm:"Sarah K.", m:"1 400 €", col:"valider"},
+ {id:"m1", kb:"fact_com", title:"Alex R. · août 2026", who:"Alex R.", mois:"Août 2026", fin:"closer", col:"valider",
    lines:[["Close · ACME Conseil","165 €"],["Close · Hôtel du Parc","165 €"]]},
- {id:"m2", kb:"fact_com", title:"Facture août 2026 · Sam T.", sub:"Setteur · fixe + sets + closes", fin:"setter", col:"valider",
+ {id:"m2", kb:"fact_com", title:"Sam T. · août 2026", who:"Sam T.", mois:"Août 2026", fin:"setter", col:"valider",
    lines:[["Fixe mensuel","1 200 €"],["Set · Marie Dupont","30 €"],["Set · Karim Benali","30 €"],["Set · Studio Nova","30 €"],["Close · Awa Diallo","80 €"]]},
 ];
+CARDS.forEach(c=>{ if(c.sess&&!c.lieu) c.lieu=SESS[c.sess].lieu; });
 
 /* Fiches : fausses identités reliées aux cartes */
 const CLIENTS=[
@@ -779,6 +882,8 @@ const CLIENTS=[
   ventes:[{lbl:"Formation intra · 5 apprenants",m:"7 900 €",fin:"fp_ent_vir",factId:null,inscId:"t2"}],apprenants:[],docs:["Devis DE-2026-0470 · signé"]},
  {id:"cl_emma",nom:"Emma Bianchi",type:"Particulier",adr:"6 rue Sainte-Catherine, 33000 Bordeaux",vat:null,resp:{n:"Emma Bianchi",e:"emma.bianchi@gmail.com",t:"07 15 62 09 30",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
   ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f2",inscId:null}],apprenants:["ap_emma"],docs:["Dossier EDOF · sortie validée"]},
+ {id:"cl_awa",nom:"Awa Diallo",type:"Particulier",adr:"5 rue de la Paix, 69002 Lyon",vat:null,resp:{n:"Awa Diallo",e:"awa.diallo@gmail.com",t:"07 45 09 12 87",app:1},siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 1 échéance",
+  ventes:[{lbl:"Coaching 4 h",m:"1 200 €",fin:"fp_part",factId:"f8",inscId:"c1"}],apprenants:["ap_awa"],docs:["Facture FA-2026-0548 · émise (non acquittée)","Convention · signée"]},
  {id:"cl_hugo",nom:"Hugo Martin",type:"Particulier",adr:"40 rue Oberkampf, 75011 Paris",vat:null,resp:{n:"Hugo Martin",e:"hugo.martin@gmail.com",t:"06 02 93 47 66",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
   ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f1",inscId:"i6"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée","Certificat de réalisation · émis"]},
 ];
@@ -794,14 +899,13 @@ const APPRENANTS=[
  {id:"ap_lea",nom:"Léa Costa",email:"l.costa@btpsud.fr",tel:"06 51 88 34 02",prenom:"Léa",fam:"Costa",dom:"BTP",adr:"8 avenue Jean Jaurès",cp:"31000",ville:"Toulouse",spro:"Salariée",nais:"19/11/1993",client:"cl_btp",insc:["i4"],type:"Salariée BTP Sud",afaire:["Préparer votre formation (5/13)"]},
  {id:"ap_sofia",nom:"Sofia Ricci",email:"s.ricci@hotelduparc.fr",tel:"07 81 55 60 43",prenom:"Sofia",fam:"Ricci",dom:"Hôtellerie",adr:"1 place du Marché",cp:"33300",ville:"Bordeaux",spro:"Salariée",nais:"07/07/1990",client:"cl_hotel",insc:["i5"],type:"Salariée Hôtel du Parc",afaire:["Questionnaire de positionnement","Préparer votre formation (0/13)"]},
  {id:"ap_hugo",nom:"Hugo Martin",email:"hugo.martin@gmail.com",tel:"06 02 93 47 66",prenom:"Hugo",fam:"Martin",dom:"Design",adr:"40 rue Oberkampf",cp:"75011",ville:"Paris",spro:"Demandeur d'emploi",nais:"23/01/1996",client:"cl_hugo",insc:["i6"],type:"Particulier",afaire:["Répondre à votre questionnaire de satisfaction à froid"]},
- {id:"ap_awa",nom:"Awa Diallo",email:"awa.diallo@gmail.com",tel:"07 45 09 12 87",prenom:"Awa",fam:"Diallo",dom:"Ressources humaines",adr:"5 rue de la Paix",cp:"69002",ville:"Lyon",spro:"Salariée",nais:"15/06/1992",client:null,insc:["c1"],type:"Particulière",afaire:["Signer votre convention de formation"]},
+ {id:"ap_awa",nom:"Awa Diallo",email:"awa.diallo@gmail.com",tel:"07 45 09 12 87",prenom:"Awa",fam:"Diallo",dom:"Ressources humaines",adr:"5 rue de la Paix",cp:"69002",ville:"Lyon",spro:"Salariée",nais:"15/06/1992",client:"cl_awa",insc:["c1"],type:"Particulière",afaire:["Signer votre convention de formation"]},
 ];
 APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } });
 CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
-/* ════════════════════ ÉTAT ════════════════════ */
 const S = {role:"admin", app:"delivia", tab:"inscription",
-  fSession:"n1", fInsc:"n1", fFact:"cpf",
-  checks:{}, sim:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null};
+  fSession:"n1", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all",
+  checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, futOpen:false};
 
 const $ = s=>document.querySelector(s);
 const el=(h)=>{const d=document.createElement("div");d.innerHTML=h;return d.firstElementChild};
@@ -810,8 +914,9 @@ function toast(html,pink){const t=el(`<div class="toast${pink?" pink":""}">${htm
 /* ════════════════════ MOTEUR ════════════════════ */
 function tasksFor(card, colId){
   const def=KB[card.kb].tasks[colId]||[];
-  return def.filter(tk=>!tk.fin || tk.fin.includes(card.fin));
+  return def.filter(tk=>(!tk.fin || tk.fin.includes(card.fin)) && (!tk.kind || tk.kind.includes(card.kind)));
 }
+function colsFor(card){ return KB[card.kb].cols.filter(c=>!c.fin || c.fin.includes(card.fin)); }
 function key(card,colId,i){return card.id+"::"+colId+"::"+i}
 function allDone(card){
   const tks=tasksFor(card,card.col);
@@ -822,7 +927,7 @@ function allDone(card){
   });
 }
 function nextCol(card){
-  const cols=KB[card.kb].cols;
+  const cols=colsFor(card);
   let ix=cols.findIndex(c=>c.id===card.col);
   for(let j=ix+1;j<cols.length;j++){ if(!cols[j].skip) return cols[j]; }
   return null;
@@ -839,6 +944,7 @@ function tryAdvance(card){
 }
 function runFx(card, tk, k){
   if(!tk.fx || S.fxDone[k]) return;
+  if(tk.fxfin && !tk.fxfin.includes(card.fin)) return;
   S.fxDone[k]=true;
   if(tk.fx==="carte_client"){
     let kb,col;
@@ -847,20 +953,22 @@ function runFx(card, tk, k){
     else if(card.fin==="fp_ent_vir"){kb="fact_fp";col="raf"}
     else {kb="fact_fp";col="attente"}
     const nid="dyn"+Math.floor(performance.now());
-    CARDS.push({id:nid,kb,title:card.title,sub:"Vente "+(FIN[card.fin]?.lbl||"")+" · carte née du kanban Inscription",fin:card.fin,col,fresh:1,
+    const m = card.kb==="coaching"?"1 200 €":card.kb==="intra"?"7 900 €":"1 650 €";
+    CARDS.push({id:nid,kb,offre:card.offre,sess:card.sess,dt:card.dt,lieu:card.lieu,title:card.title,fin:card.fin,m,src:card.id,col,fresh:1,
       ech:(card.fin==="fp_part"||card.fin==="fp_ent_man")?[["Échéance 1/1 · montant total · J+14 de la vente",0]]:null});
-    toast(`Création de la carte facturation : <b>${card.title}</b> (${FIN[card.fin]?.lbl||""})`,1);
+    toast(`${EV.carte_client} : <b>${card.title}</b> (${FIN[card.fin]?.lbl||""})`,1);
   }
   if(tk.fx==="carte_formateur"){
     const nid="dynf"+Math.floor(performance.now());
-    CARDS.push({id:nid,kb:"fact_frm",title:"Facture formateur · "+card.title,sub:"Née au dépôt de la facture",col:"valider",fresh:1});
-    toast(`Création de la carte <b>Facturation formateur</b> : ${card.title}`,1);
+    const frm=card.frm||"Sarah K.";
+    CARDS.push({id:nid,kb:"fact_frm",offre:card.offre,sess:card.sess,dt:card.dt,lieu:card.lieu,title:frm,frm,m:card.kb.startsWith("coaching")?"400 €":"1 400 €",srcTitle:card.title,col:"valider",fresh:1});
+    toast(`${EV.carte_formateur} : <b>${frm}</b> · ${card.title}`,1);
   }
   if(tk.fx==="ligne_closer"){
     const m=CARDS.find(c=>c.id==="m1");
-    m.lines.push(["Close · "+card.title.split("·")[0].trim(),"165 €"]);
+    m.lines.push(["Close · "+card.title,"165 €"]);
     m.newLine=true;
-    toast(`Ligne de commission ajoutée à la <b>facture mensuelle du closeur</b> : ${card.title}`,1);
+    toast(`${EV.ligne_closer} : <b>${card.title}</b>`,1);
   }
 }
 function clickTask(cardId,colId,i){
@@ -872,7 +980,7 @@ function clickTask(cardId,colId,i){
   if(S.checks[k]) S.when[k]=new Date(); else delete S.when[k];
   if(S.checks[k] && !owned && !S.simWarned){
     S.simWarned=true;
-    toast(`Simulation : tâche cochée à la place de « ${WHO[tk.p]} ». Dans DELIV'IA, seule cette personne (ou l'automate) pourra la cocher.`);
+    toast(`Simulation : tâche cochée à la place de « ${WHO[tk.p]} ». Dans DELIV'IA, seul cet acteur (ou l'automate) pourra la cocher.`);
   }
   if(S.checks[k]) runFx(card,tk,k);
   if(colId===card.col) tryAdvance(card);
@@ -893,21 +1001,33 @@ function unlockCol(kb,colId){
 }
 
 /* ════════════════════ RENDU ════════════════════ */
-function badge(fin){ if(!fin) return ""; const f=FIN[fin]; return `<span class="badge b-${f.cls}">${f.lbl}</span>` }
+function badge(fin){ if(!fin||!FIN[fin]) return ""; const f=FIN[fin]; return `<span class="badge b-${f.cls}">${f.lbl}</span>` }
+function badgeOffre(offre){ if(!offre) return ""; return `<span class="badge b-offre">${OFFRES[offre]||offre}</span>` }
+function isFact(card){ return card.kb.startsWith("fact_"); }
+function cardBadge(card){
+  if(card.kb==="fact_com") return "";
+  if(isFact(card)) return badgeOffre(card.offre);
+  if(card.kb.startsWith("session")||card.kb==="intra_frm"||card.kb==="coaching_frm") return card.places?`<span class="badge b-neutral">${card.places} places</span>`:"";
+  return badge(card.fin);
+}
+function evRow(ev,state){ /* state : done | now | later */
+  return `<div class="evrow ${state}"><span class="dot"></span>${EV[ev]||ev}</div>`;
+}
 function taskHtml(card,colId,i,tk,ghost){
   const k=key(card,colId,i);
   const done=tk.sub&&card.ech ? card.ech.every(e=>e[1]) : !!S.checks[k];
   const owned=tk.p===ROLE_OWNS[S.role];
-  const who=owned?"":` <span class="who">(${WHO[tk.p]})</span>`;
   let h="";
   if(tk.grp) h+=`<div class="tgrp">${tk.grp}</div>`;
   h+=`<div class="task ${done?"done":""} ${owned?"":"other"}" data-c="${card.id}" data-col="${colId}" data-i="${i}" ${ghost?'style="pointer-events:none"':""}>
     <span class="box"></span>
-    <span><span class="lbl">${tk.t}</span>${who}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.fx==="carte_client"||tk.fx==="carte_formateur"?'<span class="fx">→ crée la carte facturation</span>':""}${tk.fx==="ligne_closer"?'<span class="fx">→ ligne facture closeur</span>':""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
+    <span><span class="lbl">${tk.t}</span>${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
   </div>`;
   if(tk.sub&&card.ech){
     h+=`<div class="sub">`+card.ech.map((e,j)=>`<div class="task other ${e[1]?"done":""}" data-ech="${card.id}" data-j="${j}"><span class="box"></span><span class="lbl" style="font-size:11px">${e[0]}</span></div>`).join("")+`</div>`;
   }
+  const ev = tk.ev || ((tk.fx && (!tk.fxfin || tk.fxfin.includes(card.fin))) ? tk.fx : null);
+  if(ev) h+=evRow(ev, done?"done":"now");
   return h;
 }
 function openDateStr(card,col){
@@ -932,7 +1052,6 @@ function cardHtml(card, colDef, opts={}){
   const tks=tasksFor(card,colDef.id);
   const factLink = isGhost ? findFactCard(card) : null;
   const done=tks.filter((tk,i)=>taskState(card,colDef.id,i,tk)).length;
-  const remaining=tks.length-done;
   const nextTk=tks.find((tk,i)=>!taskState(card,colDef.id,i,tk));
   const lockInfo = opts.lockedCol ? {c:colDef,pref:false} : (card.waiting ? {c:KB[card.kb].cols.find(x=>x.id===card.waiting),pref:true} : null);
   let h=`<div class="card ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${lockInfo?"haslock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
@@ -940,21 +1059,18 @@ function cardHtml(card, colDef, opts={}){
     const lc=lockInfo.c;
     h+=`<div class="lockstrip">🔒 <span>${lockInfo.pref?`<b>${lc.label}</b> · `:""}Ouverture ${openDateStr(card,lc)} <span class="dim">(${lc.open})</span></span><a data-unlock="${card.kb}::${lc.id}">Ouvrir en avance</a></div>`;
   }
-  if(card.fin) h+=`<div class="finbar bar-${FIN[card.fin].cls}"></div>`;
-  h+=`<div class="t">${card.title}</div><div class="s">${card.sub||""}</div>`;
-  h+=`<div class="meta">${badge(card.fin)}</div>`;
+  h+=`<div class="ct"><span class="t">${card.title}</span>${cardBadge(card)}</div>`;
   if(card.lines){
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
-    h+=`<div class="cnt"><b>${card.lines.length} ligne${card.lines.length>1?"s":""}</b> · total ${tot.toLocaleString("fr-FR")} €</div>`;
+    h+=`<div class="cnt"><b>${card.lines.length} ligne${card.lines.length>1?"s":""}</b> · ${tot.toLocaleString("fr-FR")} €</div>`;
   }
   if(isGhost){
-    h+=`<div class="ghost-hint">🔒 Lecture seule · survoler pour le détail</div>
-      <div class="popover">« Inscription confirmée, veuillez revenir le lendemain du J2 pour vous assurer que votre client a bien participé à sa formation et poursuivre le processus sur la carte facturation du client. Le cas échéant, cette carte se déplacera à l'étape Absent. »
+    h+=`<div class="ghost-hint">🔒 Lecture seule</div>
+      <div class="popover">Inscription confirmée : revenez le lendemain du J2 pour vous assurer que votre client a bien participé à sa formation (sinon la carte passera en Absent). D'ici là, poursuivez sur la carte facturation du client.
       ${factLink?`<a data-goto="${factLink.id}">Voir la carte facturation →</a>`:""}</div>`;
   } else if(tks.length){
-    h+=`<div class="prog"><i class="${remaining===0?"full":""}" style="width:${tks.length?Math.round(done/tks.length*100):0}%"></i></div>`;
-    h+=`<div class="cnt"><b>${remaining===0?"Étape complète":remaining+" tâche"+(remaining>1?"s":"")+" restante"+(remaining>1?"s":"")}</b> · ${done}/${tks.length}</div>`;
-    if(nextTk) h+=`<div class="nextt"><span class="k">Next :</span><span class="v">${nextTk.t}${nextTk.p===ROLE_OWNS[S.role]?"":` <span class="who2">(${WHO[nextTk.p]})</span>`}</span></div>`;
+    h+=`<div class="prog"><i class="${done===tks.length?"full":""}" style="width:${Math.round(done/tks.length*100)}%"></i></div>`;
+    h+=`<div class="cnt"><b>${done}/${tks.length}</b>${nextTk?`<span class="nx"><span class="k">Next</span>${nextTk.t}</span>`:`<span class="nx ok">Étape complète</span>`}</div>`;
   }
   h+=`</div>`;
   return h;
@@ -966,27 +1082,53 @@ function fmtWhen(d){
   const hh=d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
   return (sameDay?"aujourd'hui":dd)+" · "+hh;
 }
+function fmtDT(iso){ const d=new Date(iso); return d.toLocaleDateString("fr-FR",{day:"numeric",month:"long"})+" à "+d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}); }
+function fmtDates(card){
+  const d=card.dt||{};
+  const f=x=>new Date(x+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
+  if(d.j1&&d.j2) return f(d.j1)+" et "+f(d.j2);
+  if(d.prevue) return f(d.prevue);
+  return null;
+}
+function evFor(card,tk){ return tk.ev || ((tk.fx && (!tk.fxfin || tk.fxfin.includes(card.fin))) ? tk.fx : null); }
+function birthRow(card){
+  if(["insc","intra","coaching"].includes(card.kb)) return {d:card.ard?new Date(card.ard):null, t:"Carte créée : ARD soumis par le client", ev:1};
+  if(isFact(card)&&card.kb!=="fact_com") return {d:null, t:card.kb==="fact_frm"?"Carte créée au dépôt de la facture du formateur":"Carte créée par le kanban Inscription", ev:1};
+  if(card.kb==="fact_com") return {d:null, t:"Carte créée le 1er du mois", ev:1};
+  return null;
+}
 function historyFor(card){
-  const cols=KB[card.kb].cols;
+  const cols=colsFor(card);
   const curIx=cols.findIndex(c=>c.id===card.col);
   const past=cols.slice(0,curIx).filter(c=>!c.skip);
   const rows=[];
+  const b=birthRow(card);
+  const origin=new Date(); origin.setDate(origin.getDate()-(past.length+1)*4);
+  if(b) rows.push({d:b.d||origin,t:b.t,ev:1,e:cols[0].label});
   past.forEach((col,j)=>{
     const base=new Date(); base.setDate(base.getDate()-(past.length-j)*4);
     tasksFor(card,col.id).forEach((tk,i)=>{
       const k=key(card,col.id,i);
       const d=S.when[k]?new Date(S.when[k]):(()=>{const x=new Date(base);x.setHours(9+((i*2)%8),(i*17)%60,0,0);return x})();
-      rows.push({d,t:tk.t,p:tk.p,e:col.label});
+      rows.push({d,t:tk.t,e:col.label});
+      const ev=evFor(card,tk); if(ev) rows.push({d:new Date(d.getTime()+60000),t:EV[ev],ev:1,e:col.label});
     });
   });
   tasksFor(card,card.col).forEach((tk,i)=>{
     if(taskState(card,card.col,i,tk)){
       const k=key(card,card.col,i);
-      rows.push({d:S.when[k]?new Date(S.when[k]):new Date(),t:tk.t,p:tk.p,e:cols[curIx].label});
+      const d=S.when[k]?new Date(S.when[k]):new Date();
+      rows.push({d,t:tk.t,e:cols[curIx].label});
+      const ev=evFor(card,tk); if(ev) rows.push({d:new Date(d.getTime()+60000),t:EV[ev],ev:1,e:cols[curIx].label});
     }
   });
   rows.sort((a,b)=>a.d-b.d);
   return rows;
+}
+function futureFor(card){
+  const cols=colsFor(card);
+  const curIx=cols.findIndex(c=>c.id===card.col);
+  return cols.slice(curIx+1).filter(c=>!c.skip).map(col=>({col,tasks:tasksFor(card,col.id)}));
 }
 function tplFor(label){
   const l=label.toLowerCase();
@@ -1016,51 +1158,102 @@ function tplModalHtml(){
   <div class="mbody"><div class="tpl-body">${body}</div>
   <div class="tpl-note">Exemple fictif. Les vrais modèles vivent dans l'onglet Templates (table message_templates) : les variables surlignées sont remplies automatiquement à l'envoi.</div></div></div></div>`;
 }
+function peopleFor(card){
+  const srcId = card.src || card.id;
+  let cl = CLIENTS.find(c=>(c.ventes||[]).some(v=>v.inscId===srcId||v.factId===card.id||v.inscId===card.id));
+  let aps = APPRENANTS.filter(a=>a.insc.includes(srcId)||a.insc.includes(card.id));
+  if(!cl && aps.length && aps[0].client) cl=CLIENTS.find(c=>c.id===aps[0].client);
+  if(!aps.length && cl) aps=(cl.apprenants||[]).map(id=>APPRENANTS.find(a=>a.id===id)).filter(Boolean);
+  return {cl,aps};
+}
+function infoFor(card){
+  const rows=[];
+  const {cl,aps}=peopleFor(card);
+  const clName = cl ? `<a class="ilink" data-fiche="client::${cl.id}">${cl.nom}</a>` : null;
+  const apsHtml = aps.filter(a=>!cl||a.nom!==cl.nom).map(a=>`<a class="ilink" data-fiche="apprenant::${a.id}">${a.nom}</a>`);
+  if(card.kb==="fact_com"){
+    rows.push([card.fin==="closer"?"Closeur":"Setteur",card.who],["Mois",card.mois]);
+    return rows;
+  }
+  if(card.kb==="fact_frm"){
+    rows.push(["Formateur",card.frm],["Session",card.srcTitle||(card.sess?SESS[card.sess].lbl:"")],["Offre",OFFRES[card.offre]],["Date",fmtDates(card)],["Lieu",card.lieu],["Montant",card.m]);
+    return rows;
+  }
+  if(card.kb.startsWith("session")){
+    rows.push(["Offre",OFFRES[card.offre]],["Dates",fmtDates(card)],["Lieu",card.lieu],["Formateur",card.frm||"À confirmer"],["Places",card.places]);
+    return rows;
+  }
+  if(card.kb==="intra_frm"||card.kb==="coaching_frm"){
+    rows.push(["Client",clName||card.title],["Offre",OFFRES[card.offre]+(card.nb?" · "+card.nb:"")],["Date",fmtDates(card)||"À caler"],["Lieu",card.lieu]);
+    return rows;
+  }
+  /* inscription et facturation client */
+  rows.push(["Client",clName||card.title]);
+  if(apsHtml.length) rows.push([aps.length>1?"Apprenants":"Apprenant",apsHtml.join(", ")]);
+  else if(card.nb) rows.push(["Apprenants",card.nb+" · renseignés par le client"]);
+  if(isFact(card)) rows.push(["Mode de paiement",FIN[card.fin]?FIN[card.fin].lbl:""]);
+  else rows.push(["Offre",OFFRES[card.offre]+(card.nb?" · "+card.nb:"")]);
+  rows.push(["Date",fmtDates(card)||"À caler"],["Lieu",card.lieu||"À confirmer"]);
+  const src = card.src ? CARDS.find(c=>c.id===card.src) : card;
+  rows.push(["Closeur / Setteur",[src&&src.closer,src&&src.setter].filter(Boolean).join(" / ")||"Sans setteur"]);
+  if(isFact(card)) rows.push(["Montant",card.m]);
+  else rows.push(["Transmission ARD",card.ard?fmtDT(card.ard):null]);
+  return rows;
+}
 function modalHtml(){
   const card=CARDS.find(c=>c.id===S.modal);
   if(!card) return "";
   const col=KB[card.kb].cols.find(c=>c.id===card.col);
   const tks=tasksFor(card,card.col);
   const done=tks.filter((tk,i)=>taskState(card,card.col,i,tk)).length;
+  const topBadge = isFact(card) ? (card.kb==="fact_com"?badge(card.fin):badgeOffre(card.offre)) : (card.fin?badge(card.fin):"");
   let h=`<div id="modal"><div class="mbox">`;
-  const ap=APPRENANTS.find(a=>a.insc.includes(card.id));
-  const cl=ap&&ap.client ? CLIENTS.find(c=>c.id===ap.client) : CLIENTS.find(c=>(c.ventes||[]).some(v=>v.factId===card.id||v.inscId===card.id));
-  h+=`<div class="mhead"><div class="row"><div><div class="t">${card.title}</div><div class="s">${card.sub||""}</div>${(ap||cl)?`<div class="mlinks">${ap?`<a data-fiche="apprenant::${ap.id}">Fiche apprenant</a>`:""}${cl?`<a data-fiche="client::${cl.id}">Fiche client</a>`:""}</div>`:""}</div><button class="mclose" data-close="1" aria-label="Fermer">✕</button></div>`;
-  h+=`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${badge(card.fin)}<span class="mstep"><span class="pill"></span>Étape · ${col.label}</span>${card.com?`<span style="font-size:11px;color:var(--ink-400)">${card.com}</span>`:""}</div></div>`;
+  h+=`<div class="mhead"><div class="row"><div class="t">${card.title}</div>${topBadge}<button class="mclose" data-close="1" aria-label="Fermer">✕</button></div></div>`;
   h+=`<div class="mbody">`;
+  /* Informations */
+  h+=`<div class="msec">Informations</div><div class="igrid">`+infoFor(card).map(([k,v])=>`<div class="ifld"><div class="k">${k}</div><div class="v">${v??'<span class="muted">non renseigné</span>'}</div></div>`).join("")+`</div>`;
   if(card.lines){
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
     h+=`<div class="msec">Lignes de la facture <span class="n2">une ligne par fixe, set ou close</span></div><div class="lines" style="border-top:none;padding-top:0">`
       +card.lines.map((l,ix)=>`<div class="ln ${card.newLine&&ix===card.lines.length-1?"new":""}"><span class="k">${l[0]}</span><span>${l[1]}</span></div>`).join("")
       +`<div class="tot"><span>Total</span><span>${tot.toLocaleString("fr-FR")} €</span></div></div>`;
   }
-  if(tks.length){
-    h+=`<div class="msec">Tâches de l'étape <span class="n2">${done}/${tks.length} · la carte avance seule quand tout est coché</span></div>`;
-    h+=`<div class="tasks" style="border-top:none;padding-top:0">`+tks.map((tk,i)=>taskHtml(card,card.col,i,tk,false)).join("")+`</div>`;
-  } else {
-    h+=`<div class="msec">Tâches de l'étape</div><p style="font-size:12.5px;color:var(--ink-400)">Aucune tâche à cette étape.</p>`;
-  }
+  /* Tâches */
+  h+=`<div class="msec" style="margin-top:18px">Tâches</div>`;
+  h+=`<div class="stepline"><span class="pill"></span>Étape en cours · <b>${col.label}</b></div>`;
+  const hist=historyFor(card);
+  const nHist=hist.filter(r=>!r.ev).length;
+  h+=`<details class="hist"${S.histOpen?" open":""}><summary>Historique des tâches réalisées <span class="n2">${nHist}/${nHist}</span></summary>`;
+  h+=hist.map(r=>r.ev
+    ?`<div class="hrow ev"><span class="d">${fmtWhen(r.d)}</span><span class="dot"></span><span>${r.t}</span></div>`
+    :`<div class="hrow"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.t}<span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("")||`<div class="hrow"><span class="w">Aucune tâche réalisée pour l'instant.</span></div>`;
+  h+=`</details>`;
+  h+=`<div class="cur"><div class="curh">Tâches de l'étape <span class="n2">${done}/${tks.length}</span></div>`;
+  if(tks.length) h+=`<div class="tasks">`+tks.map((tk,i)=>taskHtml(card,card.col,i,tk,false)).join("")+`</div>`;
+  else h+=`<p class="empty">Aucune tâche à cette étape.</p>`;
   if(card.waiting){
     const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
     h+=`<div class="openline">🔒 <span>Étape complète. <b>${nc.label}</b> ouvre ${openDateStr(card,nc)} (${nc.open}).</span><a data-unlock="${card.kb}::${nc.id}">Ouvrir en avance</a></div>`;
   }
-  const hist=historyFor(card);
-  if(hist.length){
-    h+=`<details class="hist"${S.histOpen?" open":""}><summary>Historique des to_do <span class="n2">${hist.length} réalisée${hist.length>1?"s":""}</span></summary>`;
-    h+=hist.map(r=>`<div class="hrow"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.t} <span class="w">(${WHO[r.p]})</span><span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("");
-    h+=`</details>`;
-  }
+  h+=`</div>`;
+  const fut=futureFor(card);
+  const nFut=fut.reduce((a,f)=>a+f.tasks.length,0);
+  h+=`<details class="fut"${S.futOpen?" open":""}><summary>Tâches à venir <span class="n2">0/${nFut}</span></summary>`;
+  h+=fut.map(f=>`<div class="futcol"><span class="pill"></span>${f.col.label}${f.col.open?`<span class="n2">ouverture ${openDateStr(card,f.col)} · ${f.col.open}</span>`:""}</div>`
+    +(f.tasks.length?f.tasks.map(tk=>`<div class="frow2">${tk.grp?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${tk.t}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
+      :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
+  h+=`</details>`;
   h+=`</div></div></div>`;
   return h;
 }
 function findFactCard(insc){
-  const kb = insc.fin==="cpf"?"fact_cpf":insc.fin==="opco"?"fact_opco":"fact_fp";
-  return CARDS.find(c=>c.kb===kb && c.title.includes(insc.title.split("·")[0].trim()));
+  return CARDS.find(c=>isFact(c) && (c.src===insc.id || (c.title===insc.title && c.fin===insc.fin)));
 }
 function boardHtml(kbId, cards, opts={}){
   const kb=KB[kbId];
   let h=`<div class="board">`;
   for(const col of kb.cols){
+    if(col.fin && opts.fin && !col.fin.includes(opts.fin)) continue;
     const inCol=cards.filter(c=>c.col===col.id);
     const locked=col.open && !colUnlocked(kbId,col.id);
     h+=`<div class="col ${locked?"locked":""}"><div class="col-h"><span class="pill" ${locked?'style="background:#cbd5e1"':""}></span><h3>${locked?"🔒 ":""}${col.label}</h3><span class="n">${inCol.length}</span></div>`;
@@ -1068,13 +1261,20 @@ function boardHtml(kbId, cards, opts={}){
     if(col.open && !locked){
       h+=`<div class="lockbar" style="background:var(--ok-50);color:var(--ok)">Étape ouverte (${col.open})</div>`;
     }
+    const render1=c=>cardHtml(c,col,Object.assign({},opts,{lockedCol:locked}));
     if(opts.aPrendre && col.id==="shotgun") h+=pointerCard();
-    else h+=inCol.map(c=>cardHtml(c,col,Object.assign({},opts,{lockedCol:locked}))).join("");
+    else if(opts.sections && col.id==="valider"){
+      h+=pointerCard();
+      const prio=inCol.filter(c=>c.kind==="prio"), libre=inCol.filter(c=>c.kind!=="prio");
+      h+=`<div class="colsec">Coachings prioritaires <span>vos apprenants du présentiel</span></div>`+(prio.map(render1).join("")||`<div class="colempty">Aucun</div>`);
+      h+=`<div class="colsec">Coachings libres <span>demandés spontanément</span></div>`+(libre.map(render1).join("")||`<div class="colempty">Aucun</div>`);
+    }
+    else h+=inCol.map(render1).join("");
     h+=`</div>`;
   }
   return h+`</div>`;
 }
-function chips(list, active, onKey, groups){
+function chips(list, active, onKey){
   let h=`<div class="chips">`;
   for(const [grp,items] of list){
     if(grp) h+=`<span class="grp">${grp}</span>`;
@@ -1082,79 +1282,83 @@ function chips(list, active, onKey, groups){
   }
   return h+`</div>`;
 }
+function modesForOffre(offre){ return MODES_CLIENT.filter(m=>FIN[m].offres.includes(offre)); }
 
 /* ── pages DELIV'IA ── */
 function pageSessions(){
   if(S.role==="closer"){
-    return `<div class="pagehead"><h1>Session</h1><p>Les sessions ouvertes à l'inscription, en lecture. Réservez une place à votre client : elle est bloquée 48 h.</p></div>`
-      + chips([["",[["n1","Formation N1"],["n2","Formation N2"]]]], S.fSession, "fSession")
+    const f=S.fSession==="n2"?"n2":"n1";
+    const open=CARDS.filter(c=>c.kb==="session_fia"&&c.offre===f&&["prete","demarree"].includes(c.col));
+    return `<div class="pagehead"><h1>Session</h1></div>`
+      + chips([["",[["n1","Formation N1"],["n2","Formation N2"]]]], f, "fSession")
       + `<div class="slist">`
-      + CARDS.filter(c=>c.kb==="session_fia"&&c.offre===S.fSession&&["prete","demarree"].includes(c.col)).map(s=>`
-        <div class="srow"><div><div class="d">${s.title}</div><div class="v">${s.sub}</div></div>
-        <span class="pl">Places restantes</span>
-        <button class="btn btn-p" data-resa="${s.id}">Réserver une place (réservation 48 h)</button></div>`).join("")
-      + (CARDS.filter(c=>c.kb==="session_fia"&&c.offre===S.fSession&&["prete","demarree"].includes(c.col)).length?"":`<div class="stub"><p>Aucune session ouverte à l'inscription pour cette offre.</p></div>`)
+      + open.map(s=>`
+        <div class="srow"><div><div class="d">${s.title}</div><div class="v">${s.lieu} · ${s.frm||"formateur à confirmer"}</div></div>
+        <span class="pl">${s.places} places</span>
+        <button class="btn btn-p" data-resa="${s.id}">Réserver une place (48 h)</button></div>`).join("")
+      + (open.length?"":`<div class="stub"><p>Aucune session ouverte à l'inscription pour cette offre.</p></div>`)
       + `</div>`;
   }
   const f=["n1","n2","param"].includes(S.fSession)?S.fSession:"n1";
-  let h=`<div class="pagehead"><h1>Sessions</h1><p>Deux rails parallèles : la préparation France IA et le parcours formateur, qui avancent ensemble dès la publication au Shotgun. Une carte avance seule quand toutes les tâches de son étape sont cochées.</p></div>`;
+  let h=`<div class="pagehead"><h1>Sessions</h1></div>`;
   h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]],["Paramétrage",[["param","Lieux & Salles · Ressources"]]]], f, "fSession");
   if(f==="param"){
     return h+`<div class="stub"><h2>Paramétrage des sessions</h2><p>Par offre : le référentiel <b>Lieux & Salles</b> (aujourd'hui dans Staff) et les <b>Ressources</b> formateur (aujourd'hui dans BookMySessions) sont rapatriés ici.</p><ul><li>Lieux & Salles : catalogue des salles, capacité, accès HAL Station F</li><li>Ressources : vidéos, canvas et supports mis à disposition des formateurs</li></ul></div>`;
   }
-  h+=`<div class="kb-title">Kanban Session <span class="who">rail France IA · le rail formateur se consulte en changeant de vision</span></div>`;
   h+=boardHtml("session_fia", CARDS.filter(c=>c.kb==="session_fia"&&c.offre===f));
   return h;
 }
 function pageInscription(){
   const f=S.fInsc;
-  let h=`<div class="pagehead"><h1>Inscription</h1><p>Un kanban par offre. Les tâches varient selon le mode de paiement de la vente ; les événements roses créent la carte facturation correspondante.</p></div>`;
+  const modes=modesForOffre(f);
+  const mode=modes.includes(S.fInscMode)?S.fInscMode:"all";
+  let h=`<div class="pagehead"><h1>Inscription</h1></div>`;
   h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"],["intra","Formation Intra"],["coaching","Coaching"]]]], f, "fInsc");
+  h+=chips([["Mode de paiement",[["all","Tous"]].concat(modes.map(m=>[m,FIN[m].lbl]))]], mode, "fInscMode");
   const ghost = S.role==="closer";
-  if(f==="n1"||f==="n2") h+=boardHtml("insc", CARDS.filter(c=>c.kb==="insc"&&c.offre===f), {ghostCols:ghost});
-  else if(f==="intra")   h+=boardHtml("intra", CARDS.filter(c=>c.kb==="intra"), {ghostCols:ghost});
-  else                   h+=boardHtml("coaching", CARDS.filter(c=>c.kb==="coaching"), {ghostCols:ghost});
+  const byMode=c=>mode==="all"||c.fin===mode;
+  if(f==="n1"||f==="n2") h+=boardHtml("insc", CARDS.filter(c=>c.kb==="insc"&&c.offre===f&&byMode(c)), {ghostCols:ghost});
+  else if(f==="intra")   h+=boardHtml("intra", CARDS.filter(c=>c.kb==="intra"&&byMode(c)), {ghostCols:ghost});
+  else                   h+=boardHtml("coaching", CARDS.filter(c=>c.kb==="coaching"&&byMode(c)), {ghostCols:ghost});
   return h;
 }
 function pageFacturation(){
   let f=S.fFact;
-  const isCloser=S.role==="closer", isSetter=S.role==="setter", isAgence=S.role==="agence";
-  if(isAgence) f="opco";
+  const isCloser=S.role==="closer", isSetter=S.role==="setter";
   if(isSetter) f="setteur";
-  let h=`<div class="pagehead"><h1>Facturation</h1><p>Quatre kanbans côté clients (par moyen de paiement) et trois côté externes. Chaque facturation client acquittée ajoute sa ligne de commission à la facture mensuelle du closeur.</p></div>`;
-  if(!isAgence && !isSetter){
-    const clientChips=[["Clients", isCloser?[["cpf","CPF"],["fp_part","FP Particulier"],["fp_ent","FP Entreprise"]]:[["cpf","CPF"],["fp_part","FP Particulier"],["fp_ent","FP Entreprise"],["opco","OPCO"]]],
-      ["Externes", isCloser?[["closeur","Mes facturations"]]:[["formateur","Formateur"],["closeur","Closeur"],["setteur","Setteur"]]]];
+  if(isCloser && (f==="cpf"||f==="formateur"||f==="setteur")) f="fp_ent_vir";
+  let h=`<div class="pagehead"><h1>Facturation</h1></div>`;
+  if(!isSetter){
+    const clientModes = isCloser?["fp_ent_vir","fp_ent_man","fp_part","opco"]:MODES_CLIENT;
+    const clientChips=[["Clients", clientModes.map(m=>[m,FIN[m].lbl])],
+      ["Externes", isCloser?[["closeur","Ma facture"]]:[["formateur","Formateur"],["closeur","Closeur"],["setteur","Setteur"]]]];
     h+=chips(clientChips, f, "fFact");
   }
-  const roCpf = isCloser && f==="cpf";
-  if(f==="cpf"){
-    if(roCpf) h+=`<div class="simnote">Visibilité closeur sur le CPF : lecture, sans la main (le rail est porté par France IA).</div>`;
-    h+=boardHtml("fact_cpf", CARDS.filter(c=>c.kb==="fact_cpf"));
+  const isClientMode=MODES_CLIENT.includes(f);
+  let offre="all";
+  if(isClientMode){
+    offre=FIN[f].offres.includes(S.fFactOffre)?S.fFactOffre:"all";
+    h+=chips([["Offre",[["all","Toutes"]].concat(FIN[f].offres.map(o=>[o,OFFRES[o]]))]], offre, "fFactOffre");
   }
-  else if(f==="opco") h+=boardHtml("fact_opco", CARDS.filter(c=>c.kb==="fact_opco"));
-  else if(f==="fp_part") h+=boardHtml("fact_fp", CARDS.filter(c=>c.kb==="fact_fp"&&c.fin==="fp_part"));
-  else if(f==="fp_ent") h+=boardHtml("fact_fp", CARDS.filter(c=>c.kb==="fact_fp"&&(c.fin==="fp_ent_vir"||c.fin==="fp_ent_man")));
+  const byOffre=c=>offre==="all"||c.offre===offre;
+  if(f==="cpf") h+=boardHtml("fact_cpf", CARDS.filter(c=>c.kb==="fact_cpf"&&byOffre(c)));
+  else if(f==="opco") h+=boardHtml("fact_opco", CARDS.filter(c=>c.kb==="fact_opco"&&byOffre(c)));
+  else if(isClientMode) h+=boardHtml("fact_fp", CARDS.filter(c=>c.kb==="fact_fp"&&c.fin===f&&byOffre(c)), {fin:f});
   else if(f==="formateur") h+=boardHtml("fact_frm", CARDS.filter(c=>c.kb==="fact_frm"));
-  else if(f==="closeur") h+=`<div class="simnote">La carte naît chaque 1er du mois ; une ligne s'ajoute automatiquement à chaque close acquitté. L'étape Valider facture ne s'ouvre que le dernier jour du mois.</div>`
-    + boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="closer"));
-  else if(f==="setteur") h+=`<div class="simnote">La carte naît chaque 1er du mois : le fixe, puis une ligne par set et par close.</div>`
-    + boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="setter"));
+  else if(f==="closeur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="closer"));
+  else if(f==="setteur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="setter"));
   return h;
 }
 function pointerCard(){
   return `<div class="card pointer clickable" data-tab="aprendre"><div class="t">📥 Sessions et coachings disponibles</div><div class="s">Publiés au shotgun, à la demande</div><div class="nextt" style="margin-top:9px"><span class="v" style="color:var(--primary);font-weight:600">Rendez-vous sur la page À prendre →</span></div></div>`;
 }
 function pageServices(){
-  let h=`<div class="pagehead"><h1>Mes services</h1><p>Vos sessions et coachings, de la prise à la facturation. La carte avance seule quand toutes les tâches de l'étape sont cochées.</p></div>`;
-  h+=chips([["",[["n1","Sessions N1"],["n2","Sessions N2"],["coaching","Coachings"]]]], S.fSession==="n2"?"n2":(S.fSession==="coaching"?"coaching":"n1"), "fSession");
-  if(S.fSession==="coaching"){
-    h+=`<div class="kb-title">Mes coachings prioritaires <span class="who">vos apprenants du présentiel : vous avez la main en premier, à valider ou refuser</span></div>`;
-    h+=boardHtml("coaching_frm", CARDS.filter(c=>c.kb==="coaching_frm"&&c.mine));
-    h+=`<div class="kb-title" style="margin-top:22px">Coachings libres <span class="who">refusés par le formateur prioritaire ou sans formateur naturel : à prendre spontanément</span></div>`;
-    h+=`<div style="max-width:280px">${pointerCard()}</div>`;
-  }
-  else h+=boardHtml("session_frm", CARDS.filter(c=>c.kb==="session_frm"&&c.offre===(S.fSession==="n2"?"n2":"n1")&&c.mine), {aPrendre:1});
+  const f=["n1","n2","intra","coaching"].includes(S.fSession)?S.fSession:"n1";
+  let h=`<div class="pagehead"><h1>Mes services</h1></div>`;
+  h+=chips([["",[["n1","Sessions N1"],["n2","Sessions N2"],["intra","Intra"],["coaching","Mes coachings"]]]], f, "fSession");
+  if(f==="coaching") h+=boardHtml("coaching_frm", CARDS.filter(c=>c.kb==="coaching_frm"&&c.mine), {sections:1});
+  else if(f==="intra") h+=boardHtml("intra_frm", CARDS.filter(c=>c.kb==="intra_frm"&&c.mine), {aPrendre:1});
+  else h+=boardHtml("session_frm", CARDS.filter(c=>c.kb==="session_frm"&&c.offre===f&&c.mine), {aPrendre:1});
   return h;
 }
 function pageAPrendre(){
@@ -1164,8 +1368,11 @@ function pageAPrendre(){
     <div class="frow"><div><div class="tt">Paris N2 · 10-11 oct · Formation N2</div><div class="sm">2/12 places · 700 € la journée</div></div><button class="btn btn-p" data-demande="Paris N2 10-11 oct">Faire une demande</button></div>
     <div class="frow"><div><div class="tt">Bordeaux · 26-27 sept · Formation N1</div><div class="sm">Votre demande du 18/08</div></div><span class="chip warn">Demande envoyée · en attente de validation France IA</span></div>
   </div>`;
+  h+=`<div class="fsec"><h2>Intra à prendre</h2>
+    <div class="frow"><div><div class="tt">Cabinet Verne & Associés · 5 apprenants</div><div class="sm">Station F · dates à caler avec le client</div></div><button class="btn btn-p" data-demande="intra Cabinet Verne">Faire une demande</button></div>
+  </div>`;
   h+=`<div class="fsec"><h2>Coachings libres <span class="n2">refusés par le formateur prioritaire ou sans formateur naturel</span></h2>
-    <div class="frow"><div><div class="tt">Marc Leroy · Nexa Digital</div><div class="sm">Coaching 4 h · Station F</div></div><button class="btn btn-p" data-demande="coaching Marc Leroy">Faire une demande</button></div>
+    <div class="frow"><div><div class="tt">Marc Leroy · Nexa Digital</div><div class="sm">Coaching 4 h · Station F</div></div><span class="chip warn">Demande envoyée · en attente de validation France IA</span></div>
   </div>`;
   return h;
 }
@@ -1235,16 +1442,16 @@ function ficheApprenantHtml(id){
     const offre=c.kb==="coaching"||c.kb==="coaching_frm"?"Coaching":"Formation "+(c.offre||"").toUpperCase();
     const k="ap-"+c.id;
     return `<details class="acc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span>
-      <span class="tt">${offre}</span><span class="sm">${c.sub||""}</span>
+      <span class="tt">${offre}</span><span class="sm">${c.sess?SESS[c.sess].lbl:(c.lieu||"")}</span>
       <span class="end">${badge(c.fin)}<span class="chip">${colLabel(c)}</span></span></summary>
       <div class="inner">
         <div class="vgrid">
-          ${fld("Session",c.sub)}
+          ${fld("Session",c.sess?SESS[c.sess].lbl:(c.lieu||"À caler"))}
           ${fld("Dates",c.dt&&c.dt.j1?new Date(c.dt.j1+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"})+" et "+new Date(c.dt.j2+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"}):(c.dt&&c.dt.prevue?new Date(c.dt.prevue+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"}):"À confirmer"))}
           ${fld("Financement",c.fin?FIN[c.fin].lbl:"")}
-          ${fld("Formateur","Sarah K.")}
+          ${fld("Formateur",c.sess&&SESS[c.sess].frm?SESS[c.sess].frm:"À confirmer")}
         </div>
-        <div class="subh">Espace apprenant · ses to_do font avancer sa carte</div>
+        <div class="subh">Espace apprenant</div>
         ${ap.afaire.length?ap.afaire.map(x=>`<div class="lrow">${x}<span class="chip warn">à faire</span></div>`).join(""):`<div class="lrow">Tout est fait<span class="chip ok">à jour</span></div>`}
         <div class="subh">Preuves individuelles</div>
         <div class="lrow">Questionnaire de positionnement<span class="chip ok">fait</span></div>
@@ -1292,15 +1499,14 @@ function ficheClientHtml(id){
     const fc=v.factId?CARDS.find(c=>c.id===v.factId):null;
     const fcCol=fc?colLabel(fc):null;
     const k="cl-"+cl.id+"-"+ix;
-    const coms=ic&&ic.com?ic.com.split("·").map(s=>s.trim()):[];
     const appr=(cl.apprenants||[]).map(aid=>APPRENANTS.find(x=>x.id===aid)).filter(Boolean);
     return `<details class="acc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span>
       <span class="tt">${v.lbl}</span>
       <span class="end">${badge(v.fin)}<span style="font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums">${v.m}</span>${fcCol?`<span class="chip">${fcCol}</span>`:`<span class="chip">carte à venir</span>`}</span></summary>
       <div class="inner">
         <div class="vgrid">
-          ${fld("Closeur",coms[0]?coms[0].replace("Closeur : ",""):"Alex R.")}
-          ${fld("Setteur",coms[1]?coms[1].replace("Setteur : ",""):null)}
+          ${fld("Closeur",ic?ic.closer:"Alex R.")}
+          ${fld("Setteur",ic?ic.setter:null)}
           ${fld("Montant",v.m)}
           ${fld("Moyen de paiement",FIN[v.fin].lbl)}
         </div>
@@ -1385,26 +1591,6 @@ function pageApprenant(){
     </div>
   </div>`;
 }
-function pageTreso(){
-  return `<div class="simnote">Simulation de la Trésorerie : aperçu dans son style réel (Geist, sidebar sombre, accents bleu et émeraude).</div>
-  <div class="appframe"><div class="tr-frame">
-    <div class="tr-side">
-      <div class="tr-logo"><span class="sq">T</span><div><div style="font-size:12.5px;font-weight:600">Tresorerie</div><div style="font-size:10px;color:rgba(255,255,255,.6)">Suivi financier</div></div></div>
-      <div class="tr-grp">Dashboards</div>
-      <div class="tr-it on">Trésorerie</div><div class="tr-it">Cash flow</div><div class="tr-it">Projections</div><div class="tr-it">Data analyse</div>
-      <div class="tr-grp">Transactions</div>
-      <div class="tr-it">Transactions</div><div class="tr-it">Revenus</div><div class="tr-it">Sessions</div><div class="tr-it">Commissions</div><div class="tr-it">Rapprochements</div>
-    </div>
-    <div class="tr-main"><h2>Tresorerie</h2><span class="sub">Solde, encaissements et reconnaissance de revenu</span>
-      <div class="kpis">
-        <div class="kpi"><div class="l">Solde Qonto</div><div class="v blue">312 480 €</div><div class="d up">+8,2 % vs juillet</div></div>
-        <div class="kpi"><div class="l">Encaissé ce mois</div><div class="v">96 350 €</div><div class="d up">+12 dossiers</div></div>
-        <div class="kpi"><div class="l">Acquitté non encaissé</div><div class="v">41 200 €</div><div class="d down">à surveiller</div></div>
-        <div class="kpi"><div class="l">Revenu reconnu</div><div class="v">88 900 €</div><div class="d up">+6,1 %</div></div>
-      </div>
-    </div>
-  </div></div>`;
-}
 function pageDash(){
   return `<div class="simnote">Simulation du Data Dashboard : aperçu dans son style réel (cartes KPI, sections pastel, tableaux violets).</div>
   <div class="appframe"><div class="dd-main">
@@ -1425,6 +1611,7 @@ function pageDash(){
 }
 
 /* ── rendu global ── */
+/* ── rendu global ── */
 function render(){
   /* app tabs */
   const apps=ROLE_APPS[S.role];
@@ -1443,7 +1630,6 @@ function render(){
   /* content */
   let h="";
   if(S.app==="apprenant") h=pageApprenant();
-  else if(S.app==="treso") h=pageTreso();
   else if(S.app==="dash") h=pageDash();
   else if(S.fiche){
     h = S.fiche.t==="apprenant" ? ficheApprenantHtml(S.fiche.id) : ficheClientHtml(S.fiche.id);
@@ -1473,12 +1659,14 @@ function render(){
     S.highlight=null;
   }
 }
+function factFilterFor(c){ return c.kb==="fact_cpf"?"cpf":c.kb==="fact_opco"?"opco":c.kb==="fact_frm"?"formateur":c.kb==="fact_com"?(c.fin==="closer"?"closeur":"setteur"):c.fin; }
 /* ── interactions ── */
 document.addEventListener("click",e=>{
   if(e.target.id==="tplmodal"||e.target.closest("[data-closetpl]")){S.tpl=null;document.getElementById("tplmodal")?.remove();return}
   const tplBtn=e.target.closest("[data-tpl]");
   if(tplBtn){e.stopPropagation();S.tpl=tplBtn.dataset.tpl;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
   if(e.target.closest(".hist summary")){S.histOpen=!S.histOpen}
+  if(e.target.closest(".fut summary")){S.futOpen=!S.futOpen}
   if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;document.getElementById("modal")?.remove();return}
   const acc=e.target.closest("details.acc>summary");
   if(acc){const d=acc.parentElement;S.openAcc[d.dataset.acc]=!d.open}
@@ -1496,7 +1684,7 @@ document.addEventListener("click",e=>{
     toast("Modifications enregistrées : <b>"+obj.nom+"</b>");
     return}
   if(t.dataset.ficheback){S.fiche=null;render();return}
-  if(t.dataset.gotoinsc){const c=CARDS.find(x=>x.id===t.dataset.gotoinsc);S.fiche=null;S.modal=null;S.app="delivia";S.tab="inscription";S.fInsc=inscFilterFor(c);S.highlight=c.id;render();return}
+  if(t.dataset.gotoinsc){const c=CARDS.find(x=>x.id===t.dataset.gotoinsc);S.fiche=null;S.modal=null;S.app="delivia";S.tab="inscription";S.fInsc=inscFilterFor(c);S.fInscMode="all";S.highlight=c.id;render();return}
   if(t.dataset.app){
     if(t.dataset.app===S.app) return;
     const a=t.dataset.app;
@@ -1512,16 +1700,18 @@ document.addEventListener("click",e=>{
   }
   if(t.dataset.tab){S.tab=t.dataset.tab;S.fiche=null;render();return}
   if(t.dataset.role){
-    S.role=t.dataset.role; S.app="delivia"; S.fiche=null;
+    S.role=t.dataset.role; S.app="delivia"; S.fiche=null; S.modal=null;
     S.tab=DELIVIA_TABS[S.role][0][1][0][0];
-    if(S.role==="setter"||S.role==="agence") S.tab="facturation";
-    S.fFact = S.role==="closer"?"fp_ent":"cpf";
+    if(S.role==="setter") S.tab="facturation";
+    S.fFact = S.role==="closer"?"fp_ent_vir":S.role==="setter"?"setteur":"cpf";
+    S.fFactOffre="all"; S.fInscMode="all";
+    if(!["n1","n2"].includes(S.fSession)) S.fSession="n1";
     render();return}
   if(t.dataset.chip){const [k,v]=t.dataset.chip.split("::");S[k]=v;render();return}
   if(t.dataset.unlock){const [kb,col]=t.dataset.unlock.split("::");unlockCol(kb,col);return}
   if(t.dataset.goto){S.app="delivia";S.tab="facturation";S.fiche=null;S.modal=null;
     const c=CARDS.find(x=>x.id===t.dataset.goto);
-    S.fFact = c.kb==="fact_cpf"?"cpf":c.kb==="fact_opco"?"opco":(c.fin==="fp_part"?"fp_part":"fp_ent");
+    S.fFact=factFilterFor(c); S.fFactOffre="all";
     S.highlight=c.id;render();return}
   if(t.dataset.resa){toast(`Place réservée pour votre client : elle est bloquée <b>48 h</b>. L'inscription ARD doit être soumise avant expiration.`);return}
   if(t.dataset.demande){toast(`Demande envoyée pour <b>${t.dataset.demande}</b> : France IA doit la valider. Vous serez notifié.`);return}
@@ -1533,7 +1723,6 @@ document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;
   if(S.tpl){S.tpl=null;document.getElementById("tplmodal")?.remove();return}
   if(S.modal){S.modal=null;document.getElementById("modal")?.remove()}});
 render();
-toast("Bienvenue dans le mockup <b>DELIV'IA 2.0</b>. Changez de vision en haut à droite, cochez les tâches pour voir les cartes avancer et les cartes facturation naître.");
 </script>
 </body>
 </html>
