@@ -395,6 +395,21 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tbtn:hover{background:var(--primary-dark)}
 .task.done .tbtn{display:none}
 
+/* popup v22 : trois sections alignées, sans bloc coloré */
+.msep{border-top:1px solid var(--line);margin:16px 0 6px}
+.msec2{border-top:1px solid var(--line)}
+.msec2:first-of-type{border-top:none}
+.msec2>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;padding:10px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-700)}
+.msec2>summary::-webkit-details-marker{display:none}
+.msec2>summary .chev{color:var(--ink-400);font-size:10px;transition:transform .15s}
+.msec2[open]>summary .chev{transform:rotate(90deg)}
+.msec2>summary .n2{font-weight:500;text-transform:none;letter-spacing:0;color:var(--ink-400);font-size:11px}
+.msec2>summary:hover{color:var(--ink-900)}
+.minner{padding:0 0 12px}
+.minner .tasks{margin-top:0;border-top:none;padding-top:0}
+.minner .empty{font-size:12px;color:var(--ink-400)}
+.minner .futcol:first-child{margin-top:2px}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}}
 </style>
@@ -548,23 +563,23 @@ insc:{cols:[
  {id:"lost",   label:"Lost", skip:1, ghost:1},
  {id:"termine",label:"Terminé", ghost:1}],
 tasks:{
- recue:[{t:"Client fait la demande de devis sur Mon CPF",p:"client",fin:["cpf"],note:"DELIV'IA la récupère automatiquement"}],
+ recue:[{t:"Client fait la demande de devis sur Mon CPF (récupérée automatiquement)",p:"client",fin:["cpf"]}],
  action:[
-  {t:"DELIV'IA valide la demande de devis",p:"auto",fin:["cpf"]},
-  {t:"ARD génère le lien de mandat de prélèvement",p:"ard",fin:["fp_ent_man"],note:"paiement direct (solution 1) ou à J+30 (solution 2)"},
-  {t:"ARD génère la convention de formation",p:"ard",fin:["fp_ent_man"]},
-  {t:"ARD génère le devis",p:"ard",fin:["fp_ent_vir","opco"]},
-  {t:"ARD génère la convention de formation",p:"ard",fin:["fp_ent_vir","opco"]},
-  {t:"ARD génère le lien de mandat de prélèvement",p:"ard",fin:["fp_part"],note:"1, 3 ou 6 occurrences ; premier prélèvement à J+15 de la signature"},
-  {t:"ARD génère le contrat de formation",p:"ard",fin:["fp_part"]}],
+  {t:"Admin France IA valide la demande de devis (automatique)",p:"fia",auto:1,fin:["cpf"]},
+  {t:"Closeur génère le lien de mandat de prélèvement (automatique)",p:"closer",auto:1,fin:["fp_ent_man"],note:"paiement direct (solution 1) ou à J+30 (solution 2)"},
+  {t:"Closeur génère la convention de formation (automatique)",p:"closer",auto:1,fin:["fp_ent_man"]},
+  {t:"Closeur génère le devis (automatique)",p:"closer",auto:1,fin:["fp_ent_vir","opco"]},
+  {t:"Closeur génère la convention de formation (automatique)",p:"closer",auto:1,fin:["fp_ent_vir","opco"]},
+  {t:"Closeur génère le lien de mandat de prélèvement (automatique)",p:"closer",auto:1,fin:["fp_part"],note:"1, 3 ou 6 occurrences ; premier prélèvement à J+15 de la signature"},
+  {t:"Closeur génère le contrat de formation (automatique)",p:"closer",auto:1,fin:["fp_part"]}],
  attente:[
-  {t:"Client paie le reste à charge",p:"client",fin:["cpf"],note:"détecté automatiquement"},
+  {t:"Client paie le reste à charge (détecté automatiquement)",p:"client",fin:["cpf"]},
   {t:"Client signe le lien de mandat de prélèvement, ce qui génère la facture",p:"client",fin:["fp_ent_man"]},
   {t:"Client signe la convention",p:"client",fin:["fp_ent_man"]},
-  {t:"ARD transmet la facture au client",p:"ard",tpl:1,fin:["fp_ent_man"],fx:"carte_client",note:"non acquittée ; en solution 2, échéance = dernier prélèvement programmé"},
+  {t:"Closeur transmet la facture au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_ent_man"],fx:"carte_client",note:"non acquittée ; en solution 2, échéance = dernier prélèvement programmé"},
   {t:"Client signe le devis",p:"client",fin:["fp_ent_vir"]},
   {t:"Client signe la convention",p:"client",fin:["fp_ent_vir"]},
-  {t:"ARD génère la facture sans la transmettre",p:"ard",fin:["fp_ent_vir"],fx:"carte_client",note:"échéance J+30 du J2 ; transmise au client à J2+1 de la formation"},
+  {t:"Closeur génère la facture sans la transmettre (automatique)",p:"closer",auto:1,fin:["fp_ent_vir"],fx:"carte_client",note:"échéance J+30 du J2 ; transmise au client à J2+1 de la formation"},
   {t:"Client signe le devis",p:"client",fin:["opco"]},
   {t:"Client transmet la convention et la demande de prise en charge à son OPCO",p:"client",fin:["opco"]},
   {t:"Admin France IA transmet le dossier à l'agence pour analyser la faisabilité du financement",p:"fia",fin:["opco"]},
@@ -573,9 +588,9 @@ tasks:{
   {t:"Closeur génère la facture depuis la carte inscription",p:"closer",fin:["opco"],fx:"carte_client",btn:"Générer la facture",note:"non transmise ; échéance J+30 du J2, transmise à l'OPCO à J2+1 de la formation"},
   {t:"Client signe le lien de mandat de prélèvement",p:"client",fin:["fp_part"]},
   {t:"Client signe le contrat de formation",p:"client",fin:["fp_part"]},
-  {t:"ARD transmet la facture au client",p:"ard",tpl:1,fin:["fp_part"],fx:"carte_client",note:"non acquittée ; échéance = dernier prélèvement programmé"}],
+  {t:"Closeur transmet la facture au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_part"],fx:"carte_client",note:"non acquittée ; échéance = dernier prélèvement programmé"}],
  validee:[
-  {t:"DELIV'IA constate que l'apprenant a émargé J1 et J2",p:"auto"},
+  {t:"Admin France IA constate que l'apprenant a émargé J1 et J2 (détecté automatiquement)",p:"fia",auto:1},
   {t:"Admin France IA déclare la sortie auprès de la CDC",p:"fia",fin:["cpf"],fx:"carte_client"}],
  absent:[
   {t:"Closeur contacte le client pour déterminer si l'absence est justifiée",p:"closer",tpl:1,fin:["cpf"]},
@@ -595,11 +610,11 @@ intra:{cols:[
  {id:"termine",   label:"Terminé"}],
 tasks:{
  demande:[
-  {t:"ARD génère le lien de mandat de prélèvement",p:"ard",fin:["fp_ent_man"],note:"paiement direct (solution 1) ou à J+30 (solution 2)"},
-  {t:"ARD génère le devis",p:"ard",fin:["fp_ent_vir","opco"]}],
+  {t:"Closeur génère le lien de mandat de prélèvement (automatique)",p:"closer",auto:1,fin:["fp_ent_man"],note:"paiement direct (solution 1) ou à J+30 (solution 2)"},
+  {t:"Closeur génère le devis (automatique)",p:"closer",auto:1,fin:["fp_ent_vir","opco"]}],
  engage:[
   {t:"Client signe le lien de mandat de prélèvement, ce qui génère la facture",p:"client",fin:["fp_ent_man"]},
-  {t:"ARD transmet la facture au client",p:"ard",tpl:1,fin:["fp_ent_man"],ev:"shotgun",note:"non acquittée ; en solution 2, échéance = dernier prélèvement programmé"},
+  {t:"Closeur transmet la facture au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_ent_man"],ev:"shotgun",note:"non acquittée ; en solution 2, échéance = dernier prélèvement programmé"},
   {t:"Client signe le devis",p:"client",fin:["fp_ent_vir","opco"],ev:"shotgun",note:"impossible de générer la facture : la date de formation n'est pas connue"},
   {t:"Formateur demande la session",p:"formateur"},
   {t:"Admin France IA valide la demande du formateur",p:"fia",fxfin:["fp_ent_man"],fx:"carte_client"}],
@@ -662,12 +677,12 @@ coaching:{cols:[
  {id:"termine", label:"Terminé"}],
 tasks:{
  demande:[
-  {t:"ARD génère le devis",p:"ard",fin:["fp_ent_vir"]},
+  {t:"Closeur génère le devis (automatique)",p:"closer",auto:1,fin:["fp_ent_vir"]},
   {t:"Client signe la convention",p:"client",fin:["fp_ent_vir"]},
-  {t:"ARD génère la facture et la transmet au client",p:"ard",tpl:1,fin:["fp_ent_vir"],fx:"carte_client"},
-  {t:"ARD génère la facture et le lien de mandat de prélèvement",p:"ard",fin:["fp_ent_man"],fx:"carte_client",note:"la facture n'est pas transmise au client avant le J2"},
-  {t:"ARD génère la facture et le lien de mandat de prélèvement",p:"ard",fin:["fp_part"]},
-  {t:"ARD transmet la facture au client",p:"ard",tpl:1,fin:["fp_part"],fx:"carte_client",note:"non acquittée ; échéance = dernier prélèvement programmé"}],
+  {t:"Closeur génère la facture et la transmet au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_ent_vir"],fx:"carte_client"},
+  {t:"Closeur génère la facture et le lien de mandat de prélèvement (automatique)",p:"closer",auto:1,fin:["fp_ent_man"],fx:"carte_client",note:"la facture n'est pas transmise au client avant le J2"},
+  {t:"Closeur génère la facture et le lien de mandat de prélèvement (automatique)",p:"closer",auto:1,fin:["fp_part"]},
+  {t:"Closeur transmet la facture au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_part"],fx:"carte_client",note:"non acquittée ; échéance = dernier prélèvement programmé"}],
  valider:[
   {t:"Formateur naturel valide son coaching",p:"formateur",note:"le formateur du présentiel de l'apprenant a la priorité"},
   {t:"Formateur spontané fait une demande si le formateur naturel refuse",p:"formateur"},
@@ -730,20 +745,20 @@ fact_cpf:{cols:[
  {id:"recu",    label:"Paiement Bibby reçu + facture acquittée"},
  {id:"final",   label:"Paiement BBF & EDOF + facture acquittée"}],
 tasks:{
- sortie:[{t:"DELIV'IA reçoit la validation du service fait par la CDC",p:"auto",note:"webhook WEDOF, délai variable"}],
+ sortie:[{t:"Admin France IA reçoit la validation du service fait par la CDC (détecté automatiquement)",p:"fia",auto:1,note:"webhook WEDOF, délai variable"}],
  validee:[
-  {t:"DELIV'IA génère la facture Qonto au montant CDC",p:"auto"},
-  {t:"DELIV'IA transmet le numéro de facture sur EDOF",p:"auto"},
-  {t:"DELIV'IA génère les émargements signés et le dossier EDOF",p:"auto",tpl:1},
+  {t:"Admin France IA génère la facture Qonto au montant CDC (automatique)",p:"fia",auto:1},
+  {t:"Admin France IA transmet le numéro de facture sur EDOF (automatique)",p:"fia",auto:1},
+  {t:"Admin France IA génère les émargements signés et le dossier EDOF (automatique)",p:"fia",auto:1,tpl:1},
   {t:"Admin France IA envoie le dossier à Bibby avec la facture, les émargements signés et le dossier EDOF complet",p:"fia",tpl:1}],
  bibby:[
-  {t:"DELIV'IA détecte le paiement Bibby",p:"auto",note:"rapprochement bancaire, attendu sous 30 jours ; passage automatique en En retard à l'échéance de la facture"},
-  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fx:"ligne_closer"}],
+  {t:"Admin France IA constate le paiement Bibby (détecté automatiquement)",p:"fia",auto:1,note:"rapprochement bancaire, attendu sous 30 jours ; passage automatique en En retard à l'échéance de la facture"},
+  {t:"Admin France IA tamponne la facture acquittée (automatique)",p:"fia",auto:1,fx:"ligne_closer"}],
  retard:[
   {t:"Admin France IA relance Bibby",p:"fia",tpl:1},
-  {t:"DELIV'IA détecte le paiement Bibby",p:"auto"},
-  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fx:"ligne_closer"}],
- recu:[{t:"DELIV'IA détecte le paiement EDOF vers Bibby",p:"auto",note:"webhook WEDOF"}],
+  {t:"Admin France IA constate le paiement Bibby (détecté automatiquement)",p:"fia",auto:1},
+  {t:"Admin France IA tamponne la facture acquittée (automatique)",p:"fia",auto:1,fx:"ligne_closer"}],
+ recu:[{t:"Admin France IA constate le paiement EDOF vers Bibby (détecté automatiquement)",p:"fia",auto:1,note:"webhook WEDOF"}],
  final:[]}},
 /* ── Facturation OPCO ── */
 fact_opco:{cols:[
@@ -753,17 +768,17 @@ fact_opco:{cols:[
  {id:"retard", label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1},
  {id:"termine",label:"Terminé"}],
 tasks:{
- raf:[{t:"DELIV'IA constate la fin de la formation",p:"auto",note:"J2+1"}],
+ raf:[{t:"Admin France IA constate la fin de la formation (automatique)",p:"fia",auto:1,note:"J2+1"}],
  transmettre:[
   {t:"Admin France IA génère la feuille d'émargement",p:"fia"},
   {t:"Admin France IA transmet à l'OPCO les émargements et la facture, avec l'agence en copie",p:"fia",note:"cf. Process OPCO"}],
  attente:[
-  {t:"DELIV'IA détecte le règlement de l'OPCO",p:"auto",note:"passage automatique en En retard à l'échéance de la facture (J+30 du J2)"},
-  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fx:"ligne_closer"}],
+  {t:"Admin France IA constate le règlement de l'OPCO (détecté automatiquement)",p:"fia",auto:1,note:"passage automatique en En retard à l'échéance de la facture (J+30 du J2)"},
+  {t:"Admin France IA tamponne la facture acquittée (automatique)",p:"fia",auto:1,fx:"ligne_closer"}],
  retard:[
   {t:"Admin France IA relance l'OPCO via l'agence",p:"fia",tpl:1},
-  {t:"DELIV'IA détecte le règlement de l'OPCO",p:"auto"},
-  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fx:"ligne_closer"}],
+  {t:"Admin France IA constate le règlement de l'OPCO (détecté automatiquement)",p:"fia",auto:1},
+  {t:"Admin France IA tamponne la facture acquittée (automatique)",p:"fia",auto:1,fx:"ligne_closer"}],
  termine:[]}},
 /* ── Facturation fonds propres (Entreprise Virement, Entreprise Mandat, Particulier Mandat) ── */
 fact_fp:{cols:[
@@ -772,21 +787,21 @@ fact_fp:{cols:[
  {id:"retard", label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1, note:"Facture non acquittée après J2+30 ; échéancier SDD : prélèvement refusé, non parti ou irrégulier"},
  {id:"termine",label:"Terminé"}],
 tasks:{
- raf:[{t:"DELIV'IA constate la fin de la formation",p:"auto",note:"J2+1",fin:["fp_ent_vir"]}],
+ raf:[{t:"Closeur constate la fin de la formation (automatique)",p:"closer",auto:1,note:"J2+1",fin:["fp_ent_vir"]}],
  attente:[
-  {t:"DELIV'IA encaisse toutes les échéances",p:"auto",fin:["fp_part","fp_ent_man"],note:"relevé toutes les 30 minutes ; premier prélèvement à J+14 de la vente",sub:1},
-  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fin:["fp_part","fp_ent_man"],fx:"ligne_closer"},
-  {t:"DELIV'IA transmet la facture au client pour règlement à J2+1 de la formation",p:"auto",tpl:1,fin:["fp_ent_vir"]},
-  {t:"DELIV'IA détecte le paiement reçu",p:"auto",fin:["fp_ent_vir"]},
-  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fin:["fp_ent_vir"],fx:"ligne_closer"}],
+  {t:"Closeur encaisse toutes les échéances (détecté automatiquement)",p:"closer",auto:1,fin:["fp_part","fp_ent_man"],note:"relevé toutes les 30 minutes ; premier prélèvement à J+14 de la vente",sub:1},
+  {t:"Closeur tamponne la facture acquittée (automatique)",p:"closer",auto:1,fin:["fp_part","fp_ent_man"],fx:"ligne_closer"},
+  {t:"Closeur transmet la facture au client pour règlement à J2+1 de la formation (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_ent_vir"]},
+  {t:"Closeur constate le paiement reçu (détecté automatiquement)",p:"closer",auto:1,fin:["fp_ent_vir"]},
+  {t:"Closeur tamponne la facture acquittée (automatique)",p:"closer",auto:1,fin:["fp_ent_vir"],fx:"ligne_closer"}],
  retard:[
   {t:"Closeur relance le client pour comprendre",p:"closer",tpl:1,fin:["fp_part","fp_ent_man"]},
   {t:"Closeur décide du rejeu du prélèvement refusé",p:"closer",fin:["fp_part","fp_ent_man"]},
-  {t:"DELIV'IA détecte le paiement reçu",p:"auto",fin:["fp_part","fp_ent_man"]},
-  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fin:["fp_part","fp_ent_man"],fx:"ligne_closer"},
+  {t:"Closeur constate le paiement reçu (détecté automatiquement)",p:"closer",auto:1,fin:["fp_part","fp_ent_man"]},
+  {t:"Closeur tamponne la facture acquittée (automatique)",p:"closer",auto:1,fin:["fp_part","fp_ent_man"],fx:"ligne_closer"},
   {t:"Closeur relance le client",p:"closer",tpl:1,fin:["fp_ent_vir"]},
-  {t:"DELIV'IA détecte le paiement reçu",p:"auto",fin:["fp_ent_vir"]},
-  {t:"DELIV'IA tamponne la facture acquittée",p:"auto",fin:["fp_ent_vir"],fx:"ligne_closer"}],
+  {t:"Closeur constate le paiement reçu (détecté automatiquement)",p:"closer",auto:1,fin:["fp_ent_vir"]},
+  {t:"Closeur tamponne la facture acquittée (automatique)",p:"closer",auto:1,fin:["fp_ent_vir"],fx:"ligne_closer"}],
  termine:[]}},
 /* ── Facturation formateur ── */
 fact_frm:{cols:[
@@ -807,7 +822,7 @@ tasks:{
   {t:"Closeur valide sa facture",p:"closer",fin:["closer"]},
   {t:"Setteur valide sa facture",p:"setter",fin:["setter"]},
   {t:"Admin France IA valide la facture",p:"fia"},
-  {t:"DELIV'IA génère officiellement la facture sur Qonto",p:"auto"}],
+  {t:"Admin France IA génère officiellement la facture sur Qonto (automatique)",p:"fia",auto:1}],
  payer:[{t:"Admin France IA règle la facture",p:"fia"}],
  termine:[]}},
 };
@@ -928,7 +943,7 @@ APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(
 CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
 const S = {role:"admin", app:"delivia", tab:"inscription",
   fSession:"n1", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
-  checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, futOpen:false};
+  checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false};
 
 const $ = s=>document.querySelector(s);
 const el=(h)=>{const d=document.createElement("div");d.innerHTML=h;return d.firstElementChild};
@@ -1193,7 +1208,7 @@ function infoFor(card){
   const rows=[];
   const {cl,aps}=peopleFor(card);
   const clName = cl ? `<a class="ilink" data-fiche="client::${cl.id}">${cl.nom}</a>` : null;
-  const apsHtml = aps.filter(a=>!cl||a.nom!==cl.nom).map(a=>`<a class="ilink" data-fiche="apprenant::${a.id}">${a.nom}</a>`);
+  const apsHtml = aps.map(a=>`<a class="ilink" data-fiche="apprenant::${a.id}">${a.nom}</a>`);
   if(card.kb==="fact_com"){
     rows.push([card.fin==="closer"?"Closeur":"Setteur",card.who],["Mois",card.mois]);
     return rows;
@@ -1234,38 +1249,37 @@ function modalHtml(){
   h+=`<div class="mhead"><div class="row"><div class="t">${card.title}</div>${topBadge}<button class="mclose" data-close="1" aria-label="Fermer">✕</button></div></div>`;
   h+=`<div class="mbody">`;
   /* Informations */
-  h+=`<div class="msec">Informations</div><div class="igrid">`+infoFor(card).map(([k,v])=>`<div class="ifld"><div class="k">${k}</div><div class="v">${v??'<span class="muted">non renseigné</span>'}</div></div>`).join("")+`</div>`;
+  h+=`<div class="igrid">`+infoFor(card).map(([k,v])=>`<div class="ifld"><div class="k">${k}</div><div class="v">${v??'<span class="muted">non renseigné</span>'}</div></div>`).join("")+`</div>`;
   if(card.lines){
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
     h+=`<div class="msec">Lignes de la facture <span class="n2">une ligne par fixe, set ou close</span></div><div class="lines" style="border-top:none;padding-top:0">`
       +card.lines.map((l,ix)=>`<div class="ln ${card.newLine&&ix===card.lines.length-1?"new":""}"><span class="k">${l[0]}</span><span>${l[1]}</span></div>`).join("")
       +`<div class="tot"><span>Total</span><span>${tot.toLocaleString("fr-FR")} €</span></div></div>`;
   }
-  /* Tâches */
-  h+=`<div class="msec" style="margin-top:18px">Tâches</div>`;
-  h+=`<div class="stepline"><span class="pill"></span>Étape en cours · <b>${col.label}</b></div>`;
+  /* Tâches : trois sections dépliables, seule l'étape en cours est ouverte par défaut */
+  h+=`<div class="msep"></div>`;
   const hist=historyFor(card);
   const nHist=hist.filter(r=>!r.ev).length;
-  h+=`<details class="hist"${S.histOpen?" open":""}><summary>Historique des tâches réalisées <span class="n2">${nHist}/${nHist}</span></summary>`;
+  h+=`<details class="msec2" data-k="hist"${S.histOpen?" open":""}><summary><span class="chev">▸</span>Historique <span class="n2">${nHist}/${nHist}</span></summary><div class="minner">`;
   h+=hist.map(r=>r.ev
     ?`<div class="hrow ev"><span class="d">${fmtWhen(r.d)}</span><span class="dot"></span><span>${r.t}</span></div>`
     :`<div class="hrow"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.t}<span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("")||`<div class="hrow"><span class="w">Aucune tâche réalisée pour l'instant.</span></div>`;
-  h+=`</details>`;
-  h+=`<div class="cur"><div class="curh">Tâches de l'étape <span class="n2">${done}/${tks.length}</span></div>`;
+  h+=`</div></details>`;
+  h+=`<details class="msec2" data-k="cur"${S.curOpen!==false?" open":""}><summary><span class="chev">▸</span>Étape en cours : ${col.label} <span class="n2">${done}/${tks.length}</span></summary><div class="minner">`;
   if(tks.length) h+=`<div class="tasks">`+tks.map((tk,i)=>taskHtml(card,card.col,i,tk,false)).join("")+`</div>`;
   else h+=`<p class="empty">Aucune tâche à cette étape.</p>`;
   if(card.waiting){
     const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
     h+=`<div class="openline">🔒 <span>Étape complète. <b>${nc.label}</b> ouvre ${openDateStr(card,nc)} (${nc.open}).</span><a data-unlock="${card.kb}::${nc.id}">Ouvrir en avance</a></div>`;
   }
-  h+=`</div>`;
+  h+=`</div></details>`;
   const fut=futureFor(card);
   const nFut=fut.reduce((a,f)=>a+f.tasks.length,0);
-  h+=`<details class="fut"${S.futOpen?" open":""}><summary>Tâches à venir <span class="n2">0/${nFut}</span></summary>`;
+  h+=`<details class="msec2" data-k="fut"${S.futOpen?" open":""}><summary><span class="chev">▸</span>À venir <span class="n2">0/${nFut}</span></summary><div class="minner">`;
   h+=fut.map(f=>`<div class="futcol"><span class="pill"></span>${f.col.label}${f.col.open?`<span class="n2">ouverture ${openDateStr(card,f.col)} · ${f.col.open}</span>`:""}</div>`
     +(f.tasks.length?f.tasks.map(tk=>`<div class="frow2">${tk.grp?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${tk.t}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
       :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
-  h+=`</details>`;
+  h+=`</div></details>`;
   h+=`</div></div></div>`;
   return h;
 }
@@ -1764,8 +1778,8 @@ document.addEventListener("click",e=>{
   if(tplBtn){e.stopPropagation();S.tpl=tplBtn.dataset.tpl;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
   const tb=e.target.closest("[data-tbtn]");
   if(tb){e.stopPropagation();const [c,col,i]=tb.dataset.tbtn.split("::");const cd=CARDS.find(x=>x.id===c);if(!taskState(cd,col,parseInt(i),tasksFor(cd,col)[parseInt(i)])){toast(`Facture générée depuis la carte inscription : <b>${cd.title}</b>`);clickTask(c,col,parseInt(i));}return}
-  if(e.target.closest(".hist summary")){S.histOpen=!S.histOpen}
-  if(e.target.closest(".fut summary")){S.futOpen=!S.futOpen}
+  const ms=e.target.closest(".msec2>summary");
+  if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
   if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;document.getElementById("modal")?.remove();return}
   const acc=e.target.closest("details.acc>summary");
   if(acc){const d=acc.parentElement;S.openAcc[d.dataset.acc]=!d.open}
