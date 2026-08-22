@@ -414,11 +414,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .mpanel:first-child{margin-top:0}
 .mtasks{padding-top:2px;padding-bottom:2px}
 .mtasks .msec2:first-of-type{border-top:none}
-.mnote{background:#e2e8f0;border-color:#cbd5e1}
 .mnote .k{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-700)}
 .mnote .k svg{color:var(--ink-500)}
-.mnote .k .ilink{margin-left:auto;font-size:11px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink-700)}
-.mnote .notes-ta{margin-top:8px;background:#f8fafc;border-color:#cbd5e1;color:var(--ink-800);min-height:54px}
+.mnote .notes-ta{margin-top:8px;min-height:54px}
 .mnote .notes-ta:focus{background:#fff}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}}
@@ -1289,7 +1287,7 @@ function modalHtml(){
   h+=`</div></details></div>`;
   if(!card.kb.startsWith("session")&&card.kb!=="fact_com"&&card.kb!=="fact_frm"){
     const {cl}=peopleFor(card);
-    if(cl) h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note client<a class="ilink" data-fiche="client::${cl.id}">fiche client</a></div><textarea class="notes-ta" data-note="${cl.id}" placeholder="Note interne sur ce client, visible uniquement par l'équipe.">${cl.note||""}</textarea></div>`;
+    if(cl) h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note</div><textarea class="notes-ta" data-note="${cl.id}" placeholder="Note interne sur ce client, visible uniquement par l'équipe.">${cl.note||""}</textarea></div>`;
   }
   h+=`</div></div></div>`;
   return h;
