@@ -584,20 +584,20 @@ tasks:{
   {t:"Closeur génère le contrat de formation (automatique)",p:"closer",auto:1,fin:["fp_part"]}],
  attente:[
   {t:"Client paie le reste à charge (détecté automatiquement)",p:"client",fin:["cpf"]},
-  {t:"Client signe le lien de mandat de prélèvement, ce qui génère la facture",p:"client",fin:["fp_ent_man"]},
-  {t:"Client signe la convention",p:"client",fin:["fp_ent_man"]},
+  {t:"Client signe le lien de mandat de prélèvement, ce qui génère la facture (détecté automatiquement)",p:"client",auto:1,fin:["fp_ent_man"]},
+  {t:"Client signe la convention (détecté automatiquement)",p:"client",auto:1,fin:["fp_ent_man"]},
   {t:"Closeur transmet la facture au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_ent_man"],fx:"carte_client",note:"non acquittée ; en solution 2, échéance = dernier prélèvement programmé"},
-  {t:"Client signe le devis",p:"client",fin:["fp_ent_vir"]},
-  {t:"Client signe la convention",p:"client",fin:["fp_ent_vir"]},
+  {t:"Client signe le devis (détecté automatiquement)",p:"client",auto:1,fin:["fp_ent_vir"]},
+  {t:"Client signe la convention (détecté automatiquement)",p:"client",auto:1,fin:["fp_ent_vir"]},
   {t:"Closeur génère la facture sans la transmettre (automatique)",p:"closer",auto:1,fin:["fp_ent_vir"],fx:"carte_client",note:"échéance J+30 du J2 ; transmise au client à J2+1 de la formation"},
-  {t:"Client signe le devis",p:"client",fin:["opco"]},
+  {t:"Client signe le devis (détecté automatiquement)",p:"client",auto:1,fin:["opco"]},
   {t:"Client transmet la convention et la demande de prise en charge à son OPCO",p:"client",fin:["opco"]},
   {t:"Admin France IA transmet le dossier à l'agence pour analyser la faisabilité du financement",p:"fia",fin:["opco"]},
   {t:"Client transmet l'accord de prise en charge de l'OPCO",p:"client",fin:["opco"]},
   {t:"Client signe la convention",p:"client",fin:["opco"]},
   {t:"Closeur génère la facture depuis la carte inscription",p:"closer",fin:["opco"],fx:"carte_client",btn:"Générer la facture",note:"non transmise ; échéance J+30 du J2, transmise à l'OPCO à J2+1 de la formation"},
-  {t:"Client signe le lien de mandat de prélèvement",p:"client",fin:["fp_part"]},
-  {t:"Client signe le contrat de formation",p:"client",fin:["fp_part"]},
+  {t:"Client signe le lien de mandat de prélèvement (détecté automatiquement)",p:"client",auto:1,fin:["fp_part"]},
+  {t:"Client signe le contrat de formation (détecté automatiquement)",p:"client",auto:1,fin:["fp_part"]},
   {t:"Closeur transmet la facture au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_part"],fx:"carte_client",note:"non acquittée ; échéance = dernier prélèvement programmé"}],
  validee:[
   {t:"Admin France IA constate que l'apprenant a émargé J1 et J2 (détecté automatiquement)",p:"fia",auto:1},
@@ -623,9 +623,9 @@ tasks:{
   {t:"Closeur génère le lien de mandat de prélèvement (automatique)",p:"closer",auto:1,fin:["fp_ent_man"],note:"paiement direct (solution 1) ou à J+30 (solution 2)"},
   {t:"Closeur génère le devis (automatique)",p:"closer",auto:1,fin:["fp_ent_vir","opco"]}],
  engage:[
-  {t:"Client signe le lien de mandat de prélèvement, ce qui génère la facture",p:"client",fin:["fp_ent_man"]},
+  {t:"Client signe le lien de mandat de prélèvement, ce qui génère la facture (détecté automatiquement)",p:"client",auto:1,fin:["fp_ent_man"]},
   {t:"Closeur transmet la facture au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_ent_man"],ev:"shotgun",note:"non acquittée ; en solution 2, échéance = dernier prélèvement programmé"},
-  {t:"Client signe le devis",p:"client",fin:["fp_ent_vir","opco"],ev:"shotgun",note:"impossible de générer la facture : la date de formation n'est pas connue"},
+  {t:"Client signe le devis (détecté automatiquement)",p:"client",auto:1,fin:["fp_ent_vir","opco"],ev:"shotgun",note:"impossible de générer la facture : la date de formation n'est pas connue"},
   {t:"Formateur demande la session",p:"formateur"},
   {t:"Admin France IA valide la demande du formateur",p:"fia",fxfin:["fp_ent_man"],fx:"carte_client"}],
  convention:[
@@ -688,7 +688,7 @@ coaching:{cols:[
 tasks:{
  demande:[
   {t:"Closeur génère le devis (automatique)",p:"closer",auto:1,fin:["fp_ent_vir"]},
-  {t:"Client signe la convention",p:"client",fin:["fp_ent_vir"]},
+  {t:"Client signe la convention (détecté automatiquement)",p:"client",auto:1,fin:["fp_ent_vir"]},
   {t:"Closeur génère la facture et la transmet au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_ent_vir"],fx:"carte_client"},
   {t:"Closeur génère la facture et le lien de mandat de prélèvement (automatique)",p:"closer",auto:1,fin:["fp_ent_man"],fx:"carte_client",note:"la facture n'est pas transmise au client avant le J2"},
   {t:"Closeur génère la facture et le lien de mandat de prélèvement (automatique)",p:"closer",auto:1,fin:["fp_part"]},
