@@ -887,6 +887,8 @@ const FIN = {
  setter:    {lbl:"Setteur",  cls:"neutral"},
 };
 const MODES_CLIENT = ["cpf","fp_ent_vir","fp_ent_man","opco","fp_part"];
+/* vues du kanban Facturation : quatre vues client */
+const FACT_VIEWS = {cpf:{lbl:"CPF",fins:["cpf"]}, mandat:{lbl:"Mandat",fins:["fp_ent_man","fp_part"]}, virement:{lbl:"Virement",fins:["fp_ent_vir"]}, opco:{lbl:"OPCO",fins:["opco"]}};
 const SESS = {
  paris:   {lbl:"Paris · 12-13 sept",    lieu:"Station F, Paris 13e",            dt:{j1:"2026-09-12",j2:"2026-09-13"}, frm:"Sarah K."},
  bordeaux:{lbl:"Bordeaux · 26-27 sept", lieu:"Quai des Chartrons, Bordeaux",    dt:{j1:"2026-09-26",j2:"2026-09-27"}, frm:"Marc D."},
@@ -1421,24 +1423,26 @@ function pageFacturation(){
   let f=S.fFact;
   const isCloser=S.role==="closer", isSetter=S.role==="setter";
   if(isSetter) f="setteur";
-  if(isCloser && (f==="cpf"||f==="formateur"||f==="setteur")) f="fp_ent_vir";
+  if(!FACT_VIEWS[f] && !["formateur","closeur","setteur"].includes(f)) f="cpf";
+  if(isCloser && (f==="cpf"||f==="formateur"||f==="setteur")) f="virement";
   let h=`<div class="pagehead"><h1>Facturation</h1></div>`;
   if(!isSetter){
-    const clientModes = isCloser?["fp_ent_vir","fp_ent_man","fp_part","opco"]:MODES_CLIENT;
-    const clientChips=[["Clients", clientModes.map(m=>[m,FIN[m].lbl])],
+    const views = isCloser?["mandat","virement","opco"]:Object.keys(FACT_VIEWS);
+    const clientChips=[["Clients", views.map(v=>[v,FACT_VIEWS[v].lbl])],
       ["Externes", isCloser?[["closeur","Ma facture"]]:[["formateur","Formateur"],["closeur","Closeur"],["setteur","Setteur"]]]];
     h+=chips(clientChips, f, "fFact");
   }
-  const isClientMode=MODES_CLIENT.includes(f);
+  const view=FACT_VIEWS[f];
   let offre="all";
-  if(isClientMode){
-    offre=FIN[f].offres.includes(S.fFactOffre)?S.fFactOffre:"all";
-    h+=chips([["Offre",[["all","Toutes"]].concat(FIN[f].offres.map(o=>[o,OFFRES[o]]))]], offre, "fFactOffre");
+  if(view){
+    const offres=[...new Set(view.fins.flatMap(m=>FIN[m].offres))];
+    offre=offres.includes(S.fFactOffre)?S.fFactOffre:"all";
+    h+=chips([["Offre",[["all","Toutes"]].concat(offres.map(o=>[o,OFFRES[o]]))]], offre, "fFactOffre");
   }
   const byOffre=c=>offre==="all"||c.offre===offre;
   if(f==="cpf") h+=boardHtml("fact_cpf", CARDS.filter(c=>c.kb==="fact_cpf"&&byOffre(c)));
   else if(f==="opco") h+=boardHtml("fact_opco", CARDS.filter(c=>c.kb==="fact_opco"&&byOffre(c)));
-  else if(isClientMode) h+=boardHtml("fact_fp", CARDS.filter(c=>c.kb==="fact_fp"&&c.fin===f&&byOffre(c)), {fin:f});
+  else if(view) h+=boardHtml("fact_fp", CARDS.filter(c=>c.kb==="fact_fp"&&view.fins.includes(c.fin)&&byOffre(c)), {fin:view.fins[0]});
   else if(f==="formateur") h+=boardHtml("fact_frm", CARDS.filter(c=>c.kb==="fact_frm"));
   else if(f==="closeur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="closer"));
   else if(f==="setteur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="setter"));
@@ -1828,7 +1832,7 @@ function render(){
     S.highlight=null;
   }
 }
-function factFilterFor(c){ return c.kb==="fact_cpf"?"cpf":c.kb==="fact_opco"?"opco":c.kb==="fact_frm"?"formateur":c.kb==="fact_com"?(c.fin==="closer"?"closeur":"setteur"):c.fin; }
+function factFilterFor(c){ return c.kb==="fact_cpf"?"cpf":c.kb==="fact_opco"?"opco":c.kb==="fact_frm"?"formateur":c.kb==="fact_com"?(c.fin==="closer"?"closeur":"setteur"):(c.fin==="fp_ent_vir"?"virement":"mandat"); }
 /* ── interactions ── */
 document.addEventListener("click",e=>{
   if(e.target.id==="tplmodal"||e.target.closest("[data-closetpl]")){S.tpl=null;document.getElementById("tplmodal")?.remove();return}
@@ -1874,7 +1878,7 @@ document.addEventListener("click",e=>{
     S.role=t.dataset.role; S.app="delivia"; S.fiche=null; S.modal=null;
     S.tab=DELIVIA_TABS[S.role][0][1][0][0];
     if(S.role==="setter") S.tab="facturation";
-    S.fFact = S.role==="closer"?"fp_ent_vir":S.role==="setter"?"setteur":"cpf";
+    S.fFact = S.role==="closer"?"virement":S.role==="setter"?"setteur":"cpf";
     S.fFactOffre="all"; S.fInscMode="all";
     if(!["n1","n2"].includes(S.fSession)) S.fSession="n1";
     render();return}
