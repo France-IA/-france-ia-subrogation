@@ -410,6 +410,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .minner .empty{font-size:12px;color:var(--ink-400)}
 .minner .futcol:first-child{margin-top:2px}
 
+.mnote{margin-top:14px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
+.mnote .k{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#92400e}
+.mnote .k svg{color:#b45309}
+.mnote .k .ilink{margin-left:auto;font-size:11px;font-weight:600;text-transform:none;letter-spacing:0;color:#b45309}
+.mnote .v{font-size:12.5px;color:#78350f;margin-top:5px;line-height:1.5;white-space:pre-line}
+.mnote .v .muted{color:#b45309;opacity:.6}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}}
 </style>
@@ -897,13 +903,13 @@ CARDS.forEach(c=>{ if(c.sess&&!c.lieu) c.lieu=SESS[c.sess].lieu; });
 const CLIENTS=[
  {id:"cl_acme",nom:"ACME Conseil",type:"Entreprise",adr:"5 rue de la Bourse, 33000 Bordeaux",vat:"FR 42 842391557",resp:{n:"Jean Petit",e:"jean.petit@acme.fr",t:"06 78 41 20 19",app:1},siret:"842 391 557 00023",ref:"Jean Petit · jean.petit@acme.fr",mode:"Virement",mandat:null,
   ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_ent_vir",factId:"f5",inscId:"i3"}],apprenants:["ap_jean"],docs:["Devis DE-2026-0412 · signé","Convention · signée","Facture FA-2026-0533 · émise","Certificat de réalisation · à venir"]},
- {id:"cl_btp",nom:"BTP Sud",type:"Entreprise",adr:"120 route de Narbonne, 31400 Toulouse",vat:"FR 17 512887224",resp:{n:"Léa Costa",e:"l.costa@btpsud.fr",t:"06 51 88 34 02",app:1},siret:"512 887 224 00011",ref:"Léa Costa · l.costa@btpsud.fr",mode:"Mandat SDD",mandat:"Actif · 2 échéances (1 refusée)",
+ {id:"cl_btp",nom:"BTP Sud",type:"Entreprise",note:"Première échéance refusée (provision insuffisante). Léa a demandé un rejeu après le 15/09, à confirmer par le closeur.",adr:"120 route de Narbonne, 31400 Toulouse",vat:"FR 17 512887224",resp:{n:"Léa Costa",e:"l.costa@btpsud.fr",t:"06 51 88 34 02",app:1},siret:"512 887 224 00011",ref:"Léa Costa · l.costa@btpsud.fr",mode:"Mandat SDD",mandat:"Actif · 2 échéances (1 refusée)",
   ventes:[{lbl:"Formation N1 · 3 apprenants",m:"4 950 €",fin:"fp_ent_man",factId:"f6",inscId:"i4"}],apprenants:["ap_lea"],docs:["Devis DE-2026-0388 · signé","Convention · signée","Facture FA-2026-0501 · émise","Certificat de réalisation · à venir"]},
- {id:"cl_hotel",nom:"Hôtel du Parc",type:"Entreprise (OPCO)",adr:"2 esplanade des Quinconces, 33000 Bordeaux",vat:"FR 88 399120448",resp:{n:"Sofia Ricci",e:"s.ricci@hotelduparc.fr",t:"07 81 55 60 43",app:1},siret:"399 120 448 00034",ref:"Sofia Ricci · s.ricci@hotelduparc.fr",mode:"OPCO (AKTO)",mandat:null,
+ {id:"cl_hotel",nom:"Hôtel du Parc",type:"Entreprise (OPCO)",note:"OPCO AKTO, dossier déposé par Sofia le 12/08. La DRH veut la facture au nom du groupe, pas de l'hôtel : vérifier le SIRET avant génération.",adr:"2 esplanade des Quinconces, 33000 Bordeaux",vat:"FR 88 399120448",resp:{n:"Sofia Ricci",e:"s.ricci@hotelduparc.fr",t:"07 81 55 60 43",app:1},siret:"399 120 448 00034",ref:"Sofia Ricci · s.ricci@hotelduparc.fr",mode:"OPCO (AKTO)",mandat:null,
   ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"opco",factId:"f3",inscId:"i5"}],apprenants:["ap_sofia"],docs:["Convention · signée","Facture FA-2026-0540 · à transmettre à l'OPCO","Feuille d'émargement collective · à venir","Certificat de réalisation · à venir"]},
- {id:"cl_marie",nom:"Marie Dupont",type:"Particulier",adr:"14 rue des Lilas, 75011 Paris",vat:null,resp:{n:"Marie Dupont",e:"marie.dupont@gmail.com",t:"06 12 45 78 90",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
+ {id:"cl_marie",nom:"Marie Dupont",type:"Particulier",note:"Reste à charge de 150 € : a demandé à payer après sa paie du 28/08.",adr:"14 rue des Lilas, 75011 Paris",vat:null,resp:{n:"Marie Dupont",e:"marie.dupont@gmail.com",t:"06 12 45 78 90",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
   ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i1",note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_marie"],docs:["Dossier EDOF · validé","Certificat de réalisation · à venir"]},
- {id:"cl_karim",nom:"Karim Benali",type:"Particulier",adr:"3 allée du Parc, 92130 Issy-les-Moulineaux",vat:null,resp:{n:"Karim Benali",e:"k.benali@outlook.fr",t:"07 66 21 03 55",app:1},siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 3 échéances, première encaissée",
+ {id:"cl_karim",nom:"Karim Benali",type:"Particulier",note:"Indépendant, joignable surtout le soir. Souhaite la facture au nom de sa micro-entreprise.",adr:"3 allée du Parc, 92130 Issy-les-Moulineaux",vat:null,resp:{n:"Karim Benali",e:"k.benali@outlook.fr",t:"07 66 21 03 55",app:1},siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 3 échéances, première encaissée",
   ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_part",factId:"f4",inscId:"i2"}],apprenants:["ap_karim"],docs:["Facture FA-2026-0512 · émise (non acquittée)","Certificat de réalisation · à venir"]},
 
  {id:"cl_lucas",nom:"Lucas Moreau",type:"Particulier",adr:"12 quai des Chartrons, 33000 Bordeaux",vat:null,resp:{n:"Lucas Moreau",e:"lucas.moreau@gmail.com",t:"06 31 77 20 84",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
@@ -914,7 +920,7 @@ const CLIENTS=[
   ventes:[{lbl:"Formation N2",m:"1 650 €",fin:"fp_ent_vir",factId:null,inscId:"i8",note:"facture générée à l'ARD, carte au fil du rail"}],apprenants:["ap_paul"],docs:["Devis DE-2026-0455 · en attente de signature"]},
  {id:"cl_nexa",nom:"Nexa Digital",type:"Entreprise",adr:"18 rue de la République, 69001 Lyon",vat:"FR 09 753209118",resp:{n:"Marc Leroy",e:"m.leroy@nexa.digital",t:"06 09 33 48 12",app:1},siret:"753 209 118 00027",ref:"Marc Leroy · m.leroy@nexa.digital",mode:"Virement",mandat:null,
   ventes:[{lbl:"Coaching 4 h",m:"1 200 €",fin:"fp_ent_vir",factId:null,inscId:"c2"}],apprenants:["ap_marc"],docs:["Devis DE-2026-0461 · en attente"]},
- {id:"cl_garage",nom:"Garage Moderne",type:"Entreprise (OPCO)",adr:"44 avenue de Muret, 31300 Toulouse",vat:"FR 51 482664905",resp:{n:"Damien Fontan",e:"contact@garagemoderne.fr",t:"05 61 40 22 18",app:0},siret:"482 664 905 00016",ref:"D. Fontan · contact@garagemoderne.fr",mode:"OPCO (OPCO Mobilités)",mandat:null,
+ {id:"cl_garage",nom:"Garage Moderne",type:"Entreprise (OPCO)",note:"Formation sur site à Toulouse : prévoir un vidéoprojecteur, la salle n'en a pas. Contact technique : Damien Fontan.",adr:"44 avenue de Muret, 31300 Toulouse",vat:"FR 51 482664905",resp:{n:"Damien Fontan",e:"contact@garagemoderne.fr",t:"05 61 40 22 18",app:0},siret:"482 664 905 00016",ref:"D. Fontan · contact@garagemoderne.fr",mode:"OPCO (OPCO Mobilités)",mandat:null,
   ventes:[{lbl:"Formation intra · 8 apprenants",m:"7 900 €",fin:"opco",factId:null,inscId:"t1"}],apprenants:[],docs:["Convention · en signature"]},
  {id:"cl_verne",nom:"Cabinet Verne & Associés",type:"Entreprise",adr:"7 place Bellecour, 69002 Lyon",vat:"FR 30 330481227",resp:{n:"Agnès Verne",e:"averne@cabinetverne.fr",t:"04 72 10 55 90",app:0},siret:"330 481 227 00052",ref:"A. Verne · averne@cabinetverne.fr",mode:"Virement",mandat:null,
   ventes:[{lbl:"Formation intra · 5 apprenants",m:"7 900 €",fin:"fp_ent_vir",factId:null,inscId:"t2"}],apprenants:[],docs:["Devis DE-2026-0470 · signé"]},
@@ -1277,6 +1283,10 @@ function modalHtml(){
     +(f.tasks.length?f.tasks.map(tk=>`<div class="frow2">${tk.grp?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${tk.t}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
       :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
   h+=`</div></details>`;
+  if(!card.kb.startsWith("session")&&card.kb!=="fact_com"&&card.kb!=="fact_frm"){
+    const {cl}=peopleFor(card);
+    if(cl) h+=`<div class="mnote"><div class="k">${ICO.file}Note client<a class="ilink" data-fiche="client::${cl.id}">modifier sur la fiche</a></div><div class="v">${cl.note||'<span class="muted">Aucune note pour ce client.</span>'}</div></div>`;
+  }
   h+=`</div></div></div>`;
   return h;
 }
@@ -1436,8 +1446,8 @@ function editBtns(kind,id){
   if(S.editing) return `<button class="btn btn-p" data-editsave="${kind}::${id}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`;
   return `<button class="btn btn-s" data-editstart="${kind}::${id}">Modifier</button>`;
 }
-function notesCard(){
-  return `<div class="fsec"><div class="sect-h">${ICO.file}Notes</div><textarea class="notes-ta" placeholder="Notes internes : visibles par l'équipe France IA, jamais par le client ou l'apprenant."></textarea></div>`;
+function notesCard(obj){
+  return `<div class="fsec"><div class="sect-h">${ICO.file}Notes</div><textarea class="notes-ta" data-note="${obj?obj.id:""}" placeholder="Notes internes : visibles par l'équipe France IA, jamais par le client ou l'apprenant.">${obj&&obj.note?obj.note:""}</textarea></div>`;
 }
 function accKey(k){ return S.openAcc&&S.openAcc[k]; }
 function ficheApprenantHtml(id){
@@ -1469,7 +1479,7 @@ function ficheApprenantHtml(id){
     ${idFld("wedof_dossier_id","wdi",ap)}${idFld("qualiobee_learner_id","qli",ap)}${idFld("apolearn_id","apo",ap)}${idFld("wedof_certification_id","wci",ap)}</div>
   </div>`;
   /* ── Notes ── */
-  h+=notesCard();
+  h+=notesCard(ap);
   /* ── Offres ── */
   h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Offres <span class="n2">${cards.length} · les cartes vivent sur la fiche client, ici tout ce qui est propre à l'apprenant</span></div>`;
   h+=cards.map(c=>{
@@ -1522,7 +1532,7 @@ function ficheClientHtml(id){
   </div>
   </div>`;
   /* ── Notes ── */
-  h+=notesCard();
+  h+=notesCard(cl);
   /* ── Ventes ── */
   h+=`<div class="fsec"><div class="sect-h">${ICO.wallet}Ventes <span class="n2">${cl.ventes.length} · une vente = une offre, un moyen de paiement, une facture</span></div>`;
   h+=cl.ventes.map((v,ix)=>{
@@ -1827,6 +1837,7 @@ document.addEventListener("click",e=>{
   if(t.classList.contains("task")&&t.dataset.c){clickTask(t.dataset.c,t.dataset.col,parseInt(t.dataset.i));return}
   if(t.dataset.open){S.modal=t.dataset.open;render();return}
 });
+document.addEventListener("input",e=>{const ta=e.target.closest("[data-note]");if(!ta)return;const o=CLIENTS.find(c=>c.id===ta.dataset.note)||APPRENANTS.find(a=>a.id===ta.dataset.note);if(o)o.note=ta.value;});
 document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;
   if(S.tpl){S.tpl=null;document.getElementById("tplmodal")?.remove();return}
   if(S.modal){S.modal=null;document.getElementById("modal")?.remove()}});
