@@ -239,7 +239,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* modal détail de carte */
 #modal{position:fixed;inset:0;background:rgba(15,23,42,.35);z-index:150;display:flex;align-items:flex-start;justify-content:center;padding:6vh 16px}
 .mbox{background:#fff;border-radius:14px;box-shadow:0 20px 50px rgb(0 0 0/.2);width:100%;max-width:520px;max-height:86vh;overflow-y:auto}
-.mhead{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:16px 20px 12px;border-radius:14px 14px 0 0}
+.mhead{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line-2);padding:16px 20px 12px;border-radius:14px 14px 0 0}
 .mhead .row{display:flex;align-items:flex-start;gap:10px}
 .mhead .t{font-size:16px;font-weight:600;color:var(--ink-900);letter-spacing:-.01em}
 .mhead .s{font-size:12px;color:var(--ink-400);margin-top:2px}
@@ -247,7 +247,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .mclose:hover{background:var(--bg);color:var(--ink-700)}
 .mstep{display:inline-flex;align-items:center;gap:6px;margin-top:9px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500)}
 .mstep .pill{width:8px;height:8px;border-radius:50%;background:#818cf8}
-.mbody{padding:14px 20px 20px}
+.mbody{padding:14px 16px 16px;background:#f8fafc;border-radius:0 0 14px 14px}
 .msec{font-size:12px;font-weight:600;color:var(--ink-900);margin:12px 0 6px;display:flex;align-items:center;gap:6px}
 .msec .n2{font-weight:400;color:var(--ink-400);font-size:11px}
 /* carte grisée */
@@ -410,12 +410,16 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .minner .empty{font-size:12px;color:var(--ink-400)}
 .minner .futcol:first-child{margin-top:2px}
 
-.mnote{margin-top:14px;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 12px}
-.mnote .k{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#92400e}
-.mnote .k svg{color:#b45309}
-.mnote .k .ilink{margin-left:auto;font-size:11px;font-weight:600;text-transform:none;letter-spacing:0;color:#b45309}
-.mnote .v{font-size:12.5px;color:#78350f;margin-top:5px;line-height:1.5;white-space:pre-line}
-.mnote .v .muted{color:#b45309;opacity:.6}
+.mpanel{background:#fff;border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;margin-top:12px}
+.mpanel:first-child{margin-top:0}
+.mtasks{padding-top:2px;padding-bottom:2px}
+.mtasks .msec2:first-of-type{border-top:none}
+.mnote{background:#e2e8f0;border-color:#cbd5e1}
+.mnote .k{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-700)}
+.mnote .k svg{color:var(--ink-500)}
+.mnote .k .ilink{margin-left:auto;font-size:11px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink-700)}
+.mnote .notes-ta{margin-top:8px;background:#f8fafc;border-color:#cbd5e1;color:var(--ink-800);min-height:54px}
+.mnote .notes-ta:focus{background:#fff}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}}
 </style>
@@ -1252,15 +1256,15 @@ function modalHtml(){
   h+=`<div class="mhead"><div class="row"><div class="t">${card.title}</div>${topBadge}<button class="mclose" data-close="1" aria-label="Fermer">✕</button></div></div>`;
   h+=`<div class="mbody">`;
   /* Informations */
-  h+=`<div class="igrid">`+infoFor(card).map(([k,v])=>`<div class="ifld"><div class="k">${k}</div><div class="v">${v??'<span class="muted">non renseigné</span>'}</div></div>`).join("")+`</div>`;
+  h+=`<div class="mpanel"><div class="igrid">`+infoFor(card).map(([k,v])=>`<div class="ifld"><div class="k">${k}</div><div class="v">${v??'<span class="muted">non renseigné</span>'}</div></div>`).join("")+`</div></div>`;
   if(card.lines){
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
-    h+=`<div class="msec">Lignes de la facture <span class="n2">une ligne par fixe, set ou close</span></div><div class="lines" style="border-top:none;padding-top:0">`
+    h+=`<div class="mpanel"><div class="msec" style="margin-top:0">Lignes de la facture <span class="n2">une ligne par fixe, set ou close</span></div><div class="lines" style="border-top:none;padding-top:0">`
       +card.lines.map((l,ix)=>`<div class="ln ${card.newLine&&ix===card.lines.length-1?"new":""}"><span class="k">${l[0]}</span><span>${l[1]}</span></div>`).join("")
-      +`<div class="tot"><span>Total</span><span>${tot.toLocaleString("fr-FR")} €</span></div></div>`;
+      +`<div class="tot"><span>Total</span><span>${tot.toLocaleString("fr-FR")} €</span></div></div></div>`;
   }
   /* Tâches : trois sections dépliables, seule l'étape en cours est ouverte par défaut */
-  h+=`<div class="msep"></div>`;
+  h+=`<div class="mpanel mtasks">`;
   const hist=historyFor(card);
   const nHist=hist.filter(r=>!r.ev).length;
   h+=`<details class="msec2" data-k="hist"${S.histOpen?" open":""}><summary><span class="chev">▸</span>Historique <span class="n2">${nHist}/${nHist}</span></summary><div class="minner">`;
@@ -1282,10 +1286,10 @@ function modalHtml(){
   h+=fut.map(f=>`<div class="futcol"><span class="pill"></span>${f.col.label}${f.col.open?`<span class="n2">ouverture ${openDateStr(card,f.col)} · ${f.col.open}</span>`:""}</div>`
     +(f.tasks.length?f.tasks.map(tk=>`<div class="frow2">${tk.grp?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${tk.t}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
       :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
-  h+=`</div></details>`;
+  h+=`</div></details></div>`;
   if(!card.kb.startsWith("session")&&card.kb!=="fact_com"&&card.kb!=="fact_frm"){
     const {cl}=peopleFor(card);
-    if(cl) h+=`<div class="mnote"><div class="k">${ICO.file}Note client<a class="ilink" data-fiche="client::${cl.id}">modifier sur la fiche</a></div><div class="v">${cl.note||'<span class="muted">Aucune note pour ce client.</span>'}</div></div>`;
+    if(cl) h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note client<a class="ilink" data-fiche="client::${cl.id}">fiche client</a></div><textarea class="notes-ta" data-note="${cl.id}" placeholder="Note interne sur ce client, visible uniquement par l'équipe.">${cl.note||""}</textarea></div>`;
   }
   h+=`</div></div></div>`;
   return h;
