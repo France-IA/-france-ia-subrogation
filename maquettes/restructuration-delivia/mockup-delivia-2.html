@@ -1094,7 +1094,7 @@ function cardHtml(card, colDef, opts={}){
   const factLink = isGhost ? findFactCard(card) : null;
   const done=tks.filter((tk,i)=>taskState(card,colDef.id,i,tk)).length;
   const nextTk=tks.find((tk,i)=>!taskState(card,colDef.id,i,tk));
-  const lockInfo = opts.lockedCol ? {c:colDef,pref:false} : (card.waiting ? {c:KB[card.kb].cols.find(x=>x.id===card.waiting),pref:true} : null);
+  const lockInfo = card.waiting ? {c:KB[card.kb].cols.find(x=>x.id===card.waiting),pref:true} : null;
   let h=`<div class="card ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${lockInfo?"haslock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
   if(lockInfo){
     const lc=lockInfo.c;
@@ -1299,13 +1299,9 @@ function boardHtml(kbId, cards, opts={}){
   for(const col of kb.cols){
     if(col.fin && opts.fin && !col.fin.includes(opts.fin)) continue;
     const inCol=cards.filter(c=>c.col===col.id);
-    const locked=col.open && !colUnlocked(kbId,col.id);
-    h+=`<div class="col ${locked?"locked":""}"><div class="col-h"><span class="pill" ${locked?'style="background:#cbd5e1"':""}></span><h3>${locked?"🔒 ":""}${col.label}</h3><span class="n">${inCol.length}</span></div>`;
+    h+=`<div class="col"><div class="col-h"><span class="pill"></span><h3>${col.label}</h3><span class="n">${inCol.length}</span></div>`;
     if(col.note) h+=`<div class="col-open">${col.note}</div>`;
-    if(col.open && !locked){
-      h+=`<div class="lockbar" style="background:var(--ok-50);color:var(--ok)">Étape ouverte (${col.open})</div>`;
-    }
-    const render1=c=>cardHtml(c,col,Object.assign({},opts,{lockedCol:locked}));
+    const render1=c=>cardHtml(c,col,opts);
     if(opts.aPrendre && col.id==="shotgun") h+=pointerCard();
     else if(opts.sections && col.id==="valider"){
       h+=pointerCard();
