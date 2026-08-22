@@ -355,7 +355,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .cur .empty{font-size:12px;color:var(--ink-400);margin-top:4px}
 .evrow{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:600;color:var(--ok);margin:3px 0 4px 21px}
 .evrow .dot{width:7px;height:7px;border-radius:50%;background:#10b981;flex-shrink:0}
-.evrow.later{color:var(--ink-400);font-weight:500}.evrow.later .dot{background:var(--ink-300)}
+.evrow.later{color:var(--ok);font-weight:600}.evrow.later .dot{background:#10b981}
 .evrow.done{opacity:.75}
 .fut{margin-top:10px}
 .fut summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--ink-500);list-style:none;display:flex;align-items:center;gap:6px}
@@ -603,7 +603,7 @@ tasks:{
  termine:[]}},
 /* ── Inscription inter (N1 & N2) ── */
 insc:{cols:[
- {id:"recue",  label:"Inscription reçue", note:'Une carte apparaît dès <a href="https://formulaire.franceia-dev.com" target="_blank" rel="noopener">ARD</a> soumis par le client'},
+ {id:"recue",  label:"Inscription reçue"},
  {id:"action", label:"Action de notre part"},
  {id:"attente",label:"En attente client"},
  {id:"validee",label:"Inscription validée", open:"J2+1 formation", rule:"j2+1", ghost:1},
@@ -649,7 +649,7 @@ tasks:{
  lost:[], termine:[]}},
 /* ── Inscription intra (une carte = la formation intra) ── */
 intra:{cols:[
- {id:"demande",   label:"Nouvelle demande", note:'Une carte apparaît dès <a href="https://formulaire.franceia-dev.com" target="_blank" rel="noopener">ARD</a> soumis par le client'},
+ {id:"demande",   label:"Nouvelle demande"},
  {id:"engage",    label:"Client engagé"},
  {id:"convention",label:"Signer convention"},
  {id:"preparer",  label:"Préparer formation"},
@@ -716,7 +716,7 @@ tasks:{
  lost:[], termine:[]}},
 /* ── Inscription coaching ── */
 coaching:{cols:[
- {id:"demande", label:"Nouvelle demande", note:'Une carte apparaît dès <a href="https://formulaire.franceia-dev.com" target="_blank" rel="noopener">ARD</a> soumis par le client'},
+ {id:"demande", label:"Nouvelle demande"},
  {id:"valider", label:"Valider le formateur"},
  {id:"whatsapp",label:"Créer groupe WhatsApp"},
  {id:"preparer",label:"Préparer"},
@@ -832,7 +832,7 @@ tasks:{
 fact_fp:{cols:[
  {id:"raf",    label:"RAF", fin:["fp_ent_vir"]},
  {id:"attente",label:"En attente paiement"},
- {id:"retard", label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1, note:"Facture non acquittée après J2+30 ; échéancier SDD : prélèvement refusé, non parti ou irrégulier"},
+ {id:"retard", label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1},
  {id:"termine",label:"Terminé"}],
 tasks:{
  raf:[{t:"Closeur constate la fin de la formation (automatique)",p:"closer",auto:1,note:"J2+1",fin:["fp_ent_vir"]}],
@@ -1428,7 +1428,7 @@ function pageFacturation(){
   let h=`<div class="pagehead"><h1>Facturation</h1></div>`;
   if(!isSetter){
     const views = isCloser?["mandat","virement","opco"]:Object.keys(FACT_VIEWS);
-    const clientChips=[["Clients", views.map(v=>[v,FACT_VIEWS[v].lbl])],
+    const clientChips=[["Mode de paiement", views.map(v=>[v,FACT_VIEWS[v].lbl])],
       ["Externes", isCloser?[["closeur","Ma facture"]]:[["formateur","Formateur"],["closeur","Closeur"],["setteur","Setteur"]]]];
     h+=chips(clientChips, f, "fFact");
   }
