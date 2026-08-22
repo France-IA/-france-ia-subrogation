@@ -421,6 +421,43 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .ifld.wide{grid-column:1/-1}
 .apslist{display:flex;flex-wrap:wrap;gap:0;margin-top:4px}
 .apslist .perschip{margin:0 6px 6px 0}
+/* ── popup v32 : style épuré ── */
+#modal{background:rgba(15,23,42,.28);backdrop-filter:blur(2px);padding:5vh 16px}
+#modal .mbox{max-width:580px;border-radius:18px;box-shadow:0 24px 64px rgb(15 23 42/.18),0 0 0 1px rgb(15 23 42/.04);animation:mpop .18s ease-out}
+@keyframes mpop{0%{transform:translateY(6px) scale(.985);opacity:0}100%{transform:none;opacity:1}}
+#modal .mhead{border-bottom:none;padding:22px 26px 6px;border-radius:18px 18px 0 0}
+#modal .mhead .t{font-size:18px;font-weight:600;letter-spacing:-.015em}
+#modal .mhead .row .badge{margin-left:6px}
+#modal .mclose{width:30px;height:30px;border-radius:50%;background:#f1f5f9;color:var(--ink-500);font-size:14px}
+#modal .mclose:hover{background:#e2e8f0;color:var(--ink-900)}
+#modal .mbody{padding:0 26px 22px;background:#fff;border-radius:0 0 18px 18px}
+#modal .mpanel{background:transparent;border:none;border-radius:0;padding:16px 0 14px;margin:0;border-top:1px solid var(--line-2)}
+#modal .mpanel:first-child{border-top:none;padding-top:10px}
+#modal .igrid{gap:13px 22px}
+#modal .ifld .k{font-size:11px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink-400)}
+#modal .ifld .v{font-size:13.5px;color:var(--ink-900);margin-top:2px}
+#modal .ilink{font-weight:600}
+#modal .msec{font-size:13px;margin-bottom:8px}
+#modal .mtasks{padding:4px 0 6px}
+#modal .msec2{border-top:1px solid var(--line)}
+#modal .msec2:first-of-type{border-top:none}
+#modal .msec2>summary{padding:11px 0;font-size:13px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink-900);gap:9px}
+#modal .msec2>summary .chev{width:18px;height:18px;border-radius:50%;background:#f1f5f9;display:inline-flex;align-items:center;justify-content:center;font-size:9px;color:var(--ink-500)}
+#modal .msec2>summary .n2{font-size:11px;font-weight:600;color:var(--ink-500);background:#f1f5f9;border-radius:999px;padding:1px 8px}
+#modal .minner{padding:0 0 10px 27px}
+#modal .task{padding:5px 2px;font-size:12.5px}
+#modal .task .box{border-radius:5px;width:15px;height:15px}
+#modal .task.other .box{background:#f8fafc}
+#modal .futcol{text-transform:none;letter-spacing:0;font-size:12px;color:var(--ink-700);margin:12px 0 4px}
+#modal .futcol .pill{width:6px;height:6px}
+#modal .hrow{font-size:12px;padding:4px 0;border-bottom:none}
+#modal .hrow .d{width:112px}
+#modal .mnote .k{text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--ink-900)}
+#modal .mnote .k svg{display:none}
+#modal .mnote .notes-ta{border:none;background:#f8fafc;border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13px}
+#modal .mnote .notes-ta:focus{background:#f1f5f9;box-shadow:none}
+#modal .lines .ln{font-size:12.5px;padding:4px 2px}
+#modal .openline{border-radius:8px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}}
 </style>
@@ -657,7 +694,7 @@ intra_frm:{cols:[
  {id:"preparer",  label:"Préparer"},
  {id:"animer",    label:"Animer", open:"J2 formation", rule:"j2"},
  {id:"facturer",  label:"Facturer"},
- {id:"lost",      label:"Lost", skip:1, note:"Le client n'a malheureusement pas souhaité donner suite"},
+ {id:"lost",      label:"Lost", skip:1},
  {id:"termine",   label:"Terminé"}],
 tasks:{
  shotgun:[
@@ -684,7 +721,7 @@ coaching:{cols:[
  {id:"whatsapp",label:"Créer groupe WhatsApp"},
  {id:"preparer",label:"Préparer"},
  {id:"jourj",   label:"Jour J", open:"date prévue de la séance", rule:"prevue"},
- {id:"lost",    label:"Lost", skip:1, note:"Le client n'a malheureusement pas souhaité donner suite"},
+ {id:"lost",    label:"Lost", skip:1},
  {id:"termine", label:"Terminé"}],
 tasks:{
  demande:[
@@ -722,7 +759,7 @@ coaching_frm:{cols:[
  {id:"preparer",label:"Préparer"},
  {id:"animer",  label:"Animer", open:"date prévue de la séance", rule:"prevue"},
  {id:"facturer",label:"Facturer"},
- {id:"lost",    label:"Lost", skip:1, note:"Le client n'a malheureusement pas souhaité donner suite"},
+ {id:"lost",    label:"Lost", skip:1},
  {id:"termine", label:"Terminé"}],
 tasks:{
  valider:[
