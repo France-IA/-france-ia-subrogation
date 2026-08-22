@@ -1009,17 +1009,14 @@ function runFx(card, tk, k){
     toast(`${EV.ligne_closer} : <b>${card.title}</b>`,1);
   }
 }
+function canCheck(tk){ return tk.p===ROLE_OWNS[S.role] && !tk.auto; }
 function clickTask(cardId,colId,i){
   const card=CARDS.find(c=>c.id===cardId);
   const tk=tasksFor(card,colId)[i];
+  if(!canCheck(tk)) return;
   const k=key(card,colId,i);
-  const owned = tk.p===ROLE_OWNS[S.role];
   S.checks[k]=!S.checks[k];
   if(S.checks[k]) S.when[k]=new Date(); else delete S.when[k];
-  if(S.checks[k] && !owned && !S.simWarned){
-    S.simWarned=true;
-    toast(`Simulation : tâche cochée à la place de « ${WHO[tk.p]} ». Dans DELIV'IA, seul cet acteur (ou l'automate) pourra la cocher.`);
-  }
   if(S.checks[k]) runFx(card,tk,k);
   if(colId===card.col) tryAdvance(card);
   render();
@@ -1054,15 +1051,15 @@ function evRow(ev,state){ /* state : done | now | later */
 function taskHtml(card,colId,i,tk,ghost){
   const k=key(card,colId,i);
   const done=tk.sub&&card.ech ? card.ech.every(e=>e[1]) : !!S.checks[k];
-  const owned=tk.p===ROLE_OWNS[S.role];
+  const can=canCheck(tk);
   let h="";
   if(tk.grp) h+=`<div class="tgrp">${tk.grp}</div>`;
-  h+=`<div class="task ${done?"done":""} ${owned?"":"other"}" data-c="${card.id}" data-col="${colId}" data-i="${i}" ${ghost?'style="pointer-events:none"':""}>
+  h+=`<div class="task ${done?"done":""} ${can?"":"other"}" ${can&&!ghost?`data-c="${card.id}" data-col="${colId}" data-i="${i}"`:'style="cursor:default"'}>
     <span class="box"></span>
-    <span><span class="lbl">${tk.t}</span>${tk.btn&&!done&&!ghost?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
+    <span><span class="lbl">${tk.t}</span>${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
   </div>`;
   if(tk.sub&&card.ech){
-    h+=`<div class="sub">`+card.ech.map((e,j)=>`<div class="task other ${e[1]?"done":""}" data-ech="${card.id}" data-j="${j}"><span class="box"></span><span class="lbl" style="font-size:11px">${e[0]}</span></div>`).join("")+`</div>`;
+    h+=`<div class="sub">`+card.ech.map((e,j)=>`<div class="task other ${e[1]?"done":""}" style="cursor:default"><span class="box"></span><span class="lbl" style="font-size:11px">${e[0]}</span></div>`).join("")+`</div>`;
   }
   const ev = tk.ev || ((tk.fx && (!tk.fxfin || tk.fxfin.includes(card.fin))) ? tk.fx : null);
   if(ev) h+=evRow(ev, done?"done":"now");
@@ -1095,7 +1092,7 @@ function cardHtml(card, colDef, opts={}){
   let h=`<div class="card ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${lockInfo?"haslock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
   if(lockInfo){
     const lc=lockInfo.c;
-    h+=`<div class="lockstrip">🔒 <span>${lockInfo.pref?`<b>${lc.label}</b> · `:""}Ouverture ${openDateStr(card,lc)} <span class="dim">(${lc.open})</span></span><a data-unlock="${card.kb}::${lc.id}">Ouvrir en avance</a></div>`;
+    h+=`<div class="lockstrip">🔒 <span>${lockInfo.pref?`<b>${lc.label}</b> · `:""}Ouverture ${openDateStr(card,lc)} <span class="dim">(${lc.open})</span></span></div>`;
   }
   h+=`<div class="ct"><span class="t">${card.title}</span>${cardBadge(card)}</div>`;
   if(card.lines){
@@ -1270,7 +1267,7 @@ function modalHtml(){
   else h+=`<p class="empty">Aucune tâche à cette étape.</p>`;
   if(card.waiting){
     const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
-    h+=`<div class="openline">🔒 <span>Étape complète. <b>${nc.label}</b> ouvre ${openDateStr(card,nc)} (${nc.open}).</span><a data-unlock="${card.kb}::${nc.id}">Ouvrir en avance</a></div>`;
+    h+=`<div class="openline">🔒 <span>Étape complète. <b>${nc.label}</b> ouvre ${openDateStr(card,nc)} (${nc.open}).</span></div>`;
   }
   h+=`</div></details>`;
   const fut=futureFor(card);
@@ -1783,7 +1780,7 @@ document.addEventListener("click",e=>{
   if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;document.getElementById("modal")?.remove();return}
   const acc=e.target.closest("details.acc>summary");
   if(acc){const d=acc.parentElement;S.openAcc[d.dataset.acc]=!d.open}
-  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],[data-unlock],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave]");
+  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.fiche={t:ty,id:fid};S.app="delivia";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -1821,14 +1818,12 @@ document.addEventListener("click",e=>{
     if(!["n1","n2"].includes(S.fSession)) S.fSession="n1";
     render();return}
   if(t.dataset.chip){const [k,v]=t.dataset.chip.split("::");S[k]=v;render();return}
-  if(t.dataset.unlock){const [kb,col]=t.dataset.unlock.split("::");unlockCol(kb,col);return}
   if(t.dataset.goto){S.app="delivia";S.tab="facturation";S.fiche=null;S.modal=null;
     const c=CARDS.find(x=>x.id===t.dataset.goto);
     S.fFact=factFilterFor(c); S.fFactOffre="all";
     S.highlight=c.id;render();return}
   if(t.dataset.resa){toast(`Place réservée pour votre client : elle est bloquée <b>48 h</b>. L'inscription ARD doit être soumise avant expiration.`);return}
   if(t.dataset.demande){toast(`Demande envoyée pour <b>${t.dataset.demande}</b> : France IA doit la valider. Vous serez notifié.`);return}
-  if(t.dataset.ech!==undefined&&t.dataset.ech!==""){clickEch(t.dataset.ech,parseInt(t.dataset.j));return}
   if(t.classList.contains("task")&&t.dataset.c){clickTask(t.dataset.c,t.dataset.col,parseInt(t.dataset.i));return}
   if(t.dataset.open){S.modal=t.dataset.open;render();return}
 });
