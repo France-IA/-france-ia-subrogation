@@ -418,6 +418,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .mnote .k svg{color:var(--ink-500)}
 .mnote .notes-ta{margin-top:8px;min-height:54px}
 .mnote .notes-ta:focus{background:#fff}
+.ifld.wide{grid-column:1/-1}
+.apslist{display:flex;flex-wrap:wrap;gap:0;margin-top:4px}
+.apslist .perschip{margin:0 6px 6px 0}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}}
 </style>
@@ -923,9 +926,9 @@ const CLIENTS=[
  {id:"cl_nexa",nom:"Nexa Digital",type:"Entreprise",adr:"18 rue de la République, 69001 Lyon",vat:"FR 09 753209118",resp:{n:"Marc Leroy",e:"m.leroy@nexa.digital",t:"06 09 33 48 12",app:1},siret:"753 209 118 00027",ref:"Marc Leroy · m.leroy@nexa.digital",mode:"Virement",mandat:null,
   ventes:[{lbl:"Coaching 4 h",m:"1 200 €",fin:"fp_ent_vir",factId:null,inscId:"c2"}],apprenants:["ap_marc"],docs:["Devis DE-2026-0461 · en attente"]},
  {id:"cl_garage",nom:"Garage Moderne",type:"Entreprise (OPCO)",note:"Formation sur site à Toulouse : prévoir un vidéoprojecteur, la salle n'en a pas. Contact technique : Damien Fontan.",adr:"44 avenue de Muret, 31300 Toulouse",vat:"FR 51 482664905",resp:{n:"Damien Fontan",e:"contact@garagemoderne.fr",t:"05 61 40 22 18",app:0},siret:"482 664 905 00016",ref:"D. Fontan · contact@garagemoderne.fr",mode:"OPCO (OPCO Mobilités)",mandat:null,
-  ventes:[{lbl:"Formation intra · 8 apprenants",m:"7 900 €",fin:"opco",factId:null,inscId:"t1"}],apprenants:[],docs:["Convention · en signature"]},
+  ventes:[{lbl:"Formation intra · 8 apprenants",m:"7 900 €",fin:"opco",factId:null,inscId:"t1"}],apprenants:["ap_garage_0","ap_garage_1","ap_garage_2","ap_garage_3","ap_garage_4","ap_garage_5","ap_garage_6","ap_garage_7"],docs:["Convention · en signature"]},
  {id:"cl_verne",nom:"Cabinet Verne & Associés",type:"Entreprise",adr:"7 place Bellecour, 69002 Lyon",vat:"FR 30 330481227",resp:{n:"Agnès Verne",e:"averne@cabinetverne.fr",t:"04 72 10 55 90",app:0},siret:"330 481 227 00052",ref:"A. Verne · averne@cabinetverne.fr",mode:"Virement",mandat:null,
-  ventes:[{lbl:"Formation intra · 5 apprenants",m:"7 900 €",fin:"fp_ent_vir",factId:null,inscId:"t2"}],apprenants:[],docs:["Devis DE-2026-0470 · signé"]},
+  ventes:[{lbl:"Formation intra · 5 apprenants",m:"7 900 €",fin:"fp_ent_vir",factId:null,inscId:"t2"}],apprenants:["ap_verne_0","ap_verne_1","ap_verne_2","ap_verne_3","ap_verne_4"],docs:["Devis DE-2026-0470 · signé"]},
  {id:"cl_emma",nom:"Emma Bianchi",type:"Particulier",adr:"6 rue Sainte-Catherine, 33000 Bordeaux",vat:null,resp:{n:"Emma Bianchi",e:"emma.bianchi@gmail.com",t:"07 15 62 09 30",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
   ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f2",inscId:null}],apprenants:["ap_emma"],docs:["Dossier EDOF · sortie validée"]},
  {id:"cl_awa",nom:"Awa Diallo",type:"Particulier",adr:"5 rue de la Paix, 69002 Lyon",vat:null,resp:{n:"Awa Diallo",e:"awa.diallo@gmail.com",t:"07 45 09 12 87",app:1},siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 1 échéance",
@@ -934,6 +937,19 @@ const CLIENTS=[
   ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f1",inscId:"i6"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée","Certificat de réalisation · émis"]},
 ];
 const APPRENANTS=[
+ {id:"ap_garage_0",nom:"Damien Fontan",email:"damien.fontan@garagemoderne.fr",tel:"06 10 20 30 40",prenom:"Damien",fam:"Fontan",dom:"Automobile",adr:"3 rue des Ateliers",cp:"31300",ville:"Toulouse",spro:"Gérant",nais:"01/01/1978",client:"cl_garage",insc:["t1"],type:"Salarié Garage Moderne",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_garage_1",nom:"Inès Roussel",email:"ines.roussel@garagemoderne.fr",tel:"06 11 21 31 41",prenom:"Inès",fam:"Roussel",dom:"Automobile",adr:"4 rue des Ateliers",cp:"31300",ville:"Toulouse",spro:"Cheffe d'atelier",nais:"02/02/1979",client:"cl_garage",insc:["t1"],type:"Salarié Garage Moderne",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_garage_2",nom:"Théo Lambert",email:"theo.lambert@garagemoderne.fr",tel:"06 12 22 32 42",prenom:"Théo",fam:"Lambert",dom:"Automobile",adr:"5 rue des Ateliers",cp:"31300",ville:"Toulouse",spro:"Mécanicien",nais:"03/03/1980",client:"cl_garage",insc:["t1"],type:"Salarié Garage Moderne",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_garage_3",nom:"Camille Serre",email:"camille.serre@garagemoderne.fr",tel:"06 13 23 33 43",prenom:"Camille",fam:"Serre",dom:"Automobile",adr:"6 rue des Ateliers",cp:"31300",ville:"Toulouse",spro:"Réceptionnaire",nais:"04/04/1981",client:"cl_garage",insc:["t1"],type:"Salarié Garage Moderne",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_garage_4",nom:"Yanis Okafor",email:"yanis.okafor@garagemoderne.fr",tel:"06 14 24 34 44",prenom:"Yanis",fam:"Okafor",dom:"Automobile",adr:"7 rue des Ateliers",cp:"31300",ville:"Toulouse",spro:"Carrossier",nais:"05/05/1982",client:"cl_garage",insc:["t1"],type:"Salarié Garage Moderne",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_garage_5",nom:"Louise Marty",email:"louise.marty@garagemoderne.fr",tel:"06 15 25 35 45",prenom:"Louise",fam:"Marty",dom:"Automobile",adr:"8 rue des Ateliers",cp:"31300",ville:"Toulouse",spro:"Comptable",nais:"06/06/1983",client:"cl_garage",insc:["t1"],type:"Salarié Garage Moderne",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_garage_6",nom:"Rayan Belkacem",email:"rayan.belkacem@garagemoderne.fr",tel:"06 16 26 36 46",prenom:"Rayan",fam:"Belkacem",dom:"Automobile",adr:"9 rue des Ateliers",cp:"31300",ville:"Toulouse",spro:"Vendeur VO",nais:"07/07/1984",client:"cl_garage",insc:["t1"],type:"Salarié Garage Moderne",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_garage_7",nom:"Manon Vidal",email:"manon.vidal@garagemoderne.fr",tel:"06 17 27 37 47",prenom:"Manon",fam:"Vidal",dom:"Automobile",adr:"10 rue des Ateliers",cp:"31300",ville:"Toulouse",spro:"Assistante",nais:"08/08/1985",client:"cl_garage",insc:["t1"],type:"Salarié Garage Moderne",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_verne_0",nom:"Agnès Verne",email:"averne@cabinetverne.fr",tel:"06 10 20 30 40",prenom:"Agnès",fam:"Verne",dom:"Droit",adr:"3 rue des Ateliers",cp:"69002",ville:"Lyon",spro:"Associée",nais:"01/01/1978",client:"cl_verne",insc:["t2"],type:"Salarié Cabinet Verne & Associés",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_verne_1",nom:"Julien Castel",email:"jcastel@cabinetverne.fr",tel:"06 11 21 31 41",prenom:"Julien",fam:"Castel",dom:"Droit",adr:"4 rue des Ateliers",cp:"69002",ville:"Lyon",spro:"Avocat",nais:"02/02/1979",client:"cl_verne",insc:["t2"],type:"Salarié Cabinet Verne & Associés",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_verne_2",nom:"Sarah Mendes",email:"smendes@cabinetverne.fr",tel:"06 12 22 32 42",prenom:"Sarah",fam:"Mendes",dom:"Droit",adr:"5 rue des Ateliers",cp:"69002",ville:"Lyon",spro:"Juriste",nais:"03/03/1980",client:"cl_verne",insc:["t2"],type:"Salarié Cabinet Verne & Associés",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_verne_3",nom:"Nicolas Prat",email:"nprat@cabinetverne.fr",tel:"06 13 23 33 43",prenom:"Nicolas",fam:"Prat",dom:"Droit",adr:"6 rue des Ateliers",cp:"69002",ville:"Lyon",spro:"Avocat",nais:"04/04/1981",client:"cl_verne",insc:["t2"],type:"Salarié Cabinet Verne & Associés",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_verne_4",nom:"Élise Bonnet",email:"ebonnet@cabinetverne.fr",tel:"06 14 24 34 44",prenom:"Élise",fam:"Bonnet",dom:"Droit",adr:"7 rue des Ateliers",cp:"69002",ville:"Lyon",spro:"Office manager",nais:"05/05/1982",client:"cl_verne",insc:["t2"],type:"Salarié Cabinet Verne & Associés",afaire:["Questionnaire de positionnement"]},
  {id:"ap_lucas",nom:"Lucas Moreau",email:"lucas.moreau@gmail.com",tel:"06 31 77 20 84",prenom:"Lucas",fam:"Moreau",dom:"Logistique",adr:"12 quai des Chartrons",cp:"33000",ville:"Bordeaux",spro:"Salarié",nais:"02/03/1989",client:"cl_lucas",insc:["i9"],type:"Particulier",afaire:["Signer votre convention de formation","Questionnaire de positionnement"]},
  {id:"ap_nadia",nom:"Nadia Slimani",email:"n.slimani@gmail.com",tel:"07 22 90 15 63",prenom:"Nadia",fam:"Slimani",dom:"Santé",adr:"27 boulevard Voltaire",cp:"75011",ville:"Paris",spro:"Salariée",nais:"30/08/1985",client:"cl_nadia",insc:["i7"],type:"Particulière",afaire:["Répondre à votre questionnaire"]},
  {id:"ap_paul",nom:"Paul Fabre",email:"p.fabre@studionova.fr",tel:"06 84 12 55 71",prenom:"Paul",fam:"Fabre",dom:"Audiovisuel",adr:"9 rue des Arts",cp:"75010",ville:"Paris",spro:"Salarié",nais:"11/12/1994",client:"cl_nova",insc:["i8"],type:"Salarié Studio Nova",afaire:["Questionnaire de positionnement"]},
@@ -1213,7 +1229,7 @@ function infoFor(card){
   const rows=[];
   const {cl,aps}=peopleFor(card);
   const clName = cl ? `<a class="ilink" data-fiche="client::${cl.id}">${cl.nom}</a>` : null;
-  const apsHtml = aps.map(a=>`<a class="ilink" data-fiche="apprenant::${a.id}">${a.nom}</a>`);
+  const apsHtml = aps.map(a=>`<span class="perschip" data-fiche="apprenant::${a.id}"><span class="avat">${initiales(a.nom)}</span>${a.nom}</span>`);
   if(card.kb==="fact_com"){
     rows.push([card.fin==="closer"?"Closeur":"Setteur",card.who],["Mois",card.mois]);
     return rows;
@@ -1232,8 +1248,8 @@ function infoFor(card){
   }
   /* inscription et facturation client */
   rows.push(["Client",clName||card.title]);
-  if(apsHtml.length) rows.push([aps.length>1?"Apprenants":"Apprenant",apsHtml.join(", ")]);
-  else if(card.nb) rows.push(["Apprenants",card.nb+" · renseignés par le client"]);
+  if(apsHtml.length) rows.push([aps.length>1?"Apprenants · "+aps.length:"Apprenant",`<div class="apslist">${apsHtml.join("")}</div>`,"wide"]);
+  else rows.push(["Apprenants","À renseigner par le client"]);
   if(isFact(card)) rows.push(["Mode de paiement",FIN[card.fin]?FIN[card.fin].lbl:""]);
   else rows.push(["Offre",OFFRES[card.offre]+(card.nb?" · "+card.nb:"")]);
   rows.push(["Date",fmtDates(card)||"À caler"],["Lieu",card.lieu||"À confirmer"]);
@@ -1254,7 +1270,7 @@ function modalHtml(){
   h+=`<div class="mhead"><div class="row"><div class="t">${card.title}</div>${topBadge}<button class="mclose" data-close="1" aria-label="Fermer">✕</button></div></div>`;
   h+=`<div class="mbody">`;
   /* Informations */
-  h+=`<div class="mpanel"><div class="igrid">`+infoFor(card).map(([k,v])=>`<div class="ifld"><div class="k">${k}</div><div class="v">${v??'<span class="muted">non renseigné</span>'}</div></div>`).join("")+`</div></div>`;
+  h+=`<div class="mpanel"><div class="igrid">`+infoFor(card).map(([k,v,w])=>`<div class="ifld ${w||""}"><div class="k">${k}</div><div class="v">${v??'<span class="muted">non renseigné</span>'}</div></div>`).join("")+`</div></div>`;
   if(card.lines){
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
     h+=`<div class="mpanel"><div class="msec" style="margin-top:0">Lignes de la facture <span class="n2">une ligne par fixe, set ou close</span></div><div class="lines" style="border-top:none;padding-top:0">`
