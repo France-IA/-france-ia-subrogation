@@ -204,6 +204,23 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .acc summary .end{margin-left:auto;display:flex;gap:6px;align-items:center;flex-shrink:0}
 .acc .inner{padding:2px 2px 16px 23px;width:100%}
 .vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 18px;margin:6px 0 2px}
+.wathread{display:flex;flex-direction:column;gap:10px}
+.wamsg{background:#f8fafc;border-radius:10px;padding:8px 11px}
+.wah{font-size:11px;font-weight:600;color:var(--ink-700);display:flex;justify-content:space-between;gap:10px}
+.wah span{font-weight:400;color:var(--ink-400)}
+.wab{font-size:12.5px;color:var(--ink-800);margin-top:3px;line-height:1.45}
+.qard{display:flex;flex-direction:column;gap:2px}
+.qrow{padding:8px 0;border-bottom:1px solid var(--line)}
+.qrow:last-child{border-bottom:none}
+.qrow .q{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400)}
+.qrow .a{font-size:12.5px;color:var(--ink-800);margin-top:2px;line-height:1.45}
+.pgrp{display:flex;align-items:baseline;gap:8px;margin:12px 0 4px;padding-top:8px;border-top:1px solid var(--line)}
+.pgrp:first-child{margin-top:2px;padding-top:0;border-top:none}
+.pgrp .lb{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500)}
+.pgrp .ilink{font-size:11px}
+.acc.sub2acc{margin-top:12px;border-top:1px solid var(--line);padding-top:8px}
+.card.locked-fact{opacity:.75;background:#f8fafc;border-style:dashed}
+.card.locked-fact .s{font-size:11px;color:var(--ink-500);margin-top:4px}
 .pd2{font-size:10.5px;color:var(--ink-400);line-height:1.45;margin-top:4px}
 .vbar{display:flex;justify-content:flex-end;gap:8px;margin:0 0 2px}
 .vcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:10px}
@@ -1301,7 +1318,7 @@ function anoCas(a){
 }
 /* ════════════════════ FAUSSES DONNÉES ════════════════════ */
 /* documents d'une vente : toujours les trois mêmes, devis et facture chez Qonto, convention chez Qualiobee */
-const DOCTYPES = [["devis","Devis","Qonto"],["facture","Facture","Qonto"],["convention","Convention","Qualiobee"]];
+const DOCTYPES = [["devis","Devis","Qonto"],["facture","Facture","Qonto"],["convention","Convention","Qualiobee"],["qard","Questionnaire ARD","ARD"]];
 /* modes de paiement et offres où ils sont possibles */
 const FIN = {
  cpf:       {lbl:"CPF",                 cls:"cpf",    offres:["n1"]},
@@ -2380,20 +2397,27 @@ function ficheApprenantHtml(id){
   h+=cards.map(c=>{
     const offre=c.kb==="coaching"||c.kb==="coaching_frm"?"Coaching":"Formation "+(c.offre||"").toUpperCase();
     const k="ap-"+c.id;
+    const sCard=c.sess?CARDS.find(x=>x.kb==="session_fia"&&x.sess===c.sess):null;
+    const fCard=findFactCard(c);
     return `<details class="acc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span>
-      <span class="tt">${offre}</span><span class="sm">${c.sess?SESS[c.sess].lbl:(c.lieu||"")}</span>
-      <span class="end">${badge(c.fin)}<span class="chip">${colLabel(c)}</span></span></summary>
+      <span class="tt">${offre}</span></summary>
       <div class="inner">
         <div class="vgrid">
-          ${fld("Session",c.sess?SESS[c.sess].lbl:(c.lieu||"À caler"))}
+          ${fld("Session",sCard?`<a class="ilink" data-fiche="session::${sCard.id}">${SESS[c.sess].lbl}</a>`:(c.sess?SESS[c.sess].lbl:(c.lieu||"À caler")))}
           ${fld("Dates",c.dt&&c.dt.j1?new Date(c.dt.j1+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"})+" et "+new Date(c.dt.j2+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"}):(c.dt&&c.dt.prevue?new Date(c.dt.prevue+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"}):"À confirmer"))}
           ${fld("Financement",c.fin?FIN[c.fin].lbl:"")}
           ${fld("Formateur",c.sess&&SESS[c.sess].frm?SESS[c.sess].frm:"À confirmer")}
         </div>
-        <div class="subh">Espace apprenant</div>
+        <div class="vcards">
+          <div><div class="subh" style="margin:0 0 6px">Carte inscription</div>${cardHtml(c,KB[c.kb].cols.find(x=>x.id===c.col),{})}</div>
+          <div><div class="subh" style="margin:0 0 6px">Carte facturation</div>
+            ${fCard?`<div class="card locked-fact"><div class="ct"><span class="t">${fCard.title}</span></div><div class="s">${colLabel(fCard)} · à consulter sur la ${cl?`<a class="ilink" data-fiche="client::${cl.id}">fiche client</a>`:"fiche client"}</div></div>`
+              :`<div class="card pointer"><div class="t">Carte à venir</div><div class="s">La facturation se suit sur la ${cl?`<a class="ilink" data-fiche="client::${cl.id}">fiche client</a>`:"fiche client"}.</div></div>`}</div>
+        </div>
+        <div class="subh">À faire dans l'espace client / apprenant</div>
         ${ap.afaire.length?ap.afaire.map(x=>`<div class="lrow">${x}<span class="chip warn">à faire</span></div>`).join(""):`<div class="lrow">Tout est fait<span class="chip ok">à jour</span></div>`}
-        <div class="subh">Preuves individuelles</div>
-        ${preuvesApprenantHtml(c)}
+        <details class="acc sub2acc" data-acc="pr-${c.id}" ${accKey("pr-"+c.id)?"open":""}><summary><span class="chev">▶</span><span class="tt">Preuves individuelles</span><span class="end"><a class="ilink" data-drive="${ap.id}">Dossier Drive de l'apprenant</a></span></summary>
+        <div class="inner">${preuvesApprenantHtml(c,ap,cl)}</div></details>
       </div></details>`;
   }).join("")||`<div class="lrow"><span class="sm">Aucune offre.</span></div>`;
   h+=`</div>`;
@@ -2417,6 +2441,7 @@ function applyVenteInputs(obj){
 function venteDocs(cl,v,ix,ed){
   return DOCTYPES.map(([k,lbl,src])=>{
     const url=v.docs?v.docs[k]:null;
+    if(k==="qard") return `<div class="docrow"><span class="dl">${lbl}</span><a class="ilink" data-qard="${cl.id}">Ouvrir le questionnaire</a><span class="ds">${src}</span></div>`;
     if(ed) return `<div class="docrow"><span class="dl">${lbl}</span><input class="edin" data-vdoc="${ix}::${k}" value="${(url||"").replace(/"/g,"&quot;")}" placeholder="Coller le lien ${src}"><button class="btn-xs" data-vdocclear="${ix}::${k}">Retirer</button></div>`;
     return `<div class="docrow"><span class="dl">${lbl}</span>${url?`<a class="ilink" href="${url}" target="_blank" rel="noopener">Ouvrir sur ${src}</a>`:`<span class="muted">aucun lien</span>`}<span class="ds">${src}</span></div>`;
   }).join("");
@@ -2468,6 +2493,7 @@ function ficheClientHtml(id){
           ? `<button class="btn btn-p" data-vsave="${cl.id}::${ix}">Enregistrer</button><button class="btn btn-s" data-vcancel="1">Annuler</button>`
           : `<button class="btn btn-s" data-vedit="${cl.id}::${ix}">Modifier</button>`}</div>
         <div class="vgrid">
+          ${(()=>{const sc=ic&&ic.sess?CARDS.find(x=>x.kb==="session_fia"&&x.sess===ic.sess):null;return fld("Session",sc?`<a class="ilink" data-fiche="session::${sc.id}">${SESS[ic.sess].lbl}</a>`:(ic&&ic.lieu?ic.lieu:"À caler"))})()}
           ${fldSel("Closeur",ic?ic.closer:v.closer,ix+"::closer",CLOSEURS,"Sans closeur",undefined,ved)}
           ${fldSel("Setteur",ic?ic.setter:v.setter,ix+"::setter",SETTEURS,"Sans setteur",undefined,ved)}
           ${fldIn("Montant",v.m,ix+"::m",ved)}
@@ -2528,6 +2554,7 @@ function ficheSessionHtml(id){
     ${ed?`<div class="fld"><div class="k">Capacité (places)</div><input class="edin" type="number" data-f="cap" value="${c.cap}"></div>`:(()=>{const sc=sessCounts(c);return fld("Inscrits",`<b>${sc.ins}</b> inscrit${sc.ins>1?"s":""} · <b>${sc.enc}</b> en cours · ${sc.cap} places${sc.over?' <span class="badge b-over">Surbooking</span>':sc.risk?' <span class="badge b-risk">Risque de surbooking</span>':""}`)})()}
     ${linkFld("Lien Mon CPF","cpfLink",c,ed,"Ouvrir Mon CPF")}
     ${linkFld("Lien Qualiobee","qlbLink",c,ed,"Ouvrir la session Qualiobee")}
+    ${fld("Conversation WhatsApp",`<a class="ilink" data-wa="${c.id}">Ouvrir l'export</a>`)}
   </div>
   <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>${(()=>{const sv=S.editing;S.editing=ed?sv:null;const out=idFld("qualiobee_session_id","qlbId",c)+idFld("edof_session_id","edofId",c)+idFld("drive_folder_id","driveId",c);S.editing=sv;return out})()}</div></div>`;
   /* sections 2 et 3 côte à côte : notes (large) et planification (la carte cliquable) */
@@ -2595,6 +2622,34 @@ const IDLINK={
  wedof:{t:"Lier le dossier WEDOF",lbl:"Numéro de dossier WEDOF",ph:"2026-CPF-8841",
    d:"Le dossier WEDOF est normalement rattaché tout seul à la validation de la demande de devis. S'il ne l'est pas, collez son numéro ici : DELIV'IA relit le dossier (entrée, sortie, montant CDC) et resynchronise la carte."},
 };
+/* réponses au questionnaire ARD, consultables depuis la fiche client et les preuves */
+/* export de la conversation WhatsApp de la session, preuve d'accompagnement */
+function waModalHtml(){
+  const c=CARDS.find(x=>x.id===S.wa); if(!c) return "";
+  const M=[["Sarah K. (formatrice)","Bonjour à toutes et à tous, bienvenue dans le groupe de la session ! Je suis Sarah, votre formatrice.","5 sept · 09:12"],
+   ["Admin France IA","Les infos pratiques et le livret d'accueil sont dans votre espace. À lundi !","5 sept · 09:20"],
+   ["Marie Dupont","Bonjour, faut-il apporter son ordinateur portable ?","5 sept · 12:04"],
+   ["Sarah K. (formatrice)","Oui, un portable avec un compte ChatGPT gratuit suffit. On installera le reste ensemble.","5 sept · 12:31"],
+   ["Sarah K. (formatrice)","Merci pour ces deux journées ! Les supports et le certificat arrivent dans votre espace.","13 sept · 17:40"]];
+  return `<div id="modal2"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Conversation WhatsApp de la session</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">${c.title} · export du groupe, preuve d'accompagnement</div></div>
+  <div class="mbody"><div class="wathread">`+M.map(([q,m,d])=>`<div class="wamsg"><div class="wah">${q}<span>${d}</span></div><div class="wab">${m}</div></div>`).join("")+`</div>
+  <p class="pd" style="margin-top:12px">Export réalisé à l'étape Récolter les preuves, puis déposé dans le dossier Drive de la session.</p></div></div></div>`;
+}
+function qArdModalHtml(){
+  const cl=CLIENTS.find(c=>c.id===S.qard); if(!cl) return "";
+  const ap=(cl.apprenants||[]).map(x=>APPRENANTS.find(a=>a.id===x)).filter(Boolean)[0];
+  const R=[["Niveau perçu en IA générative","Débutant : j'utilise ChatGPT de temps en temps, sans méthode"],
+   ["Objectif principal","Gagner du temps sur la rédaction et les comptes rendus"],
+   ["Cas d'usage prioritaire","Rédiger les propositions commerciales et les relances clients"],
+   ["Outils déjà utilisés","ChatGPT (gratuit), Google Gemini"],
+   ["Contraintes ou attentes particulières","Aucune donnée client sensible ne doit sortir de l'entreprise"],
+   ["Situation professionnelle",ap?ap.spro:"Salarié"],
+   ["Diplôme le plus élevé","Bac+3 · attestation sur l'honneur jointe"],
+   ["Justificatif du parcours professionnel","CV téléversé le 7 août"]];
+  return `<div id="modal2"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Questionnaire ARD</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">${cl.nom}${ap&&ap.nom!==cl.nom?" · "+ap.nom:""} · rempli à l'inscription</div></div>
+  <div class="mbody"><div class="qard">`+R.map(([q,a])=>`<div class="qrow"><div class="q">${q}</div><div class="a">${a}</div></div>`).join("")+`</div>
+  <p class="pd" style="margin-top:12px">Les réponses alimentent le positionnement pédagogique et deux preuves : le questionnaire de positionnement et le justificatif du parcours professionnel.</p></div></div></div>`;
+}
 function idLinkModalHtml(){
   const [cid,kind]=S.idLink.split("::");
   const card=CARDS.find(c=>c.id===cid); const m=IDLINK[kind]; if(!card||!m) return "";
@@ -2687,26 +2742,24 @@ const PREUVES = {
   {lieu:"WhatsApp", items:[
     {n:"Conversation WhatsApp de la session", d:"Groupe WhatsApp de la session (animation, suivi, accompagnement), exporté à l'étape Récolter les preuves. Tous les apprenants y sont in fine.", src:"WhatsApp", at:3}]}],
  apprenant:[
-  {lieu:"Formulaire ARD", items:[
+  {lieu:"Questionnaire ARD", items:[
     {n:"Attestation sur l'honneur des prérequis CPF (Bac+2)", d:"Regroupée dans le questionnaire ARD : justificatif du diplôme Bac+2 minimum ou attestation sur l'honneur.", src:"DELIV'IA", at:0, cpf:1},
-    {n:"Questionnaire de positionnement et recueil du besoin", d:"Rempli par l'apprenant dans le formulaire d'inscription.", src:"DELIV'IA", at:0},
+    {n:"Questionnaire de positionnement et recueil du besoin 1/2", d:"Rempli par l'apprenant dans le formulaire d'inscription.", src:"DELIV'IA", at:0},
     {n:"Justificatif du parcours professionnel", d:"CV téléversé ou profil LinkedIn attesté.", src:"DELIV'IA", at:0}]},
   {lieu:"Mail", items:[
-    {n:"Email de confirmation d'inscription", d:"Mail d'envoi des codes de l'espace apprenant.", src:"Mail", at:0},
+    {n:"Email de confirmation d'inscription et d'accès à l'espace", d:"Mail d'envoi des codes de l'espace client / apprenant.", src:"Mail", at:0},
     {n:"Mail d'ajout au groupe WhatsApp", d:"Notification d'ajout au groupe WhatsApp de la session.", src:"Mail", at:1},
-    {n:"Questionnaire de satisfaction", d:"Évaluation à chaud par l'apprenant et le client, puis à froid (J+30). Certains apprenants ne répondent pas.", src:"Mail", at:3}]},
-  {lieu:"Espace apprenant", items:[
+    {n:"Questionnaire de satisfaction à chaud", d:"Évaluation à chaud par l'apprenant et le client.", src:"Mail", at:3}]},
+  {lieu:"Espace client / apprenant", items:[
     {n:"Infos pratiques et accès", d:"Page Notion reliée à la session.", src:"Notion", at:1},
     {n:"Livret d'accueil", d:"Déposé dans l'espace apprenant.", src:"Espace apprenant", at:1},
     {n:"Convocation", d:"Convocation officielle à la formation (dates, lieu, horaires).", src:"Qualiobee", at:1},
     {n:"Émargement J1", d:"Réponse d'émargement du jour 1 : présence signée OU absence justifiée / injustifiée référencée.", src:"Qualiobee", at:2},
     {n:"Émargement J2", d:"Réponse d'émargement du jour 2 : présence signée OU absence justifiée / injustifiée référencée.", src:"Qualiobee", at:2},
-    {n:"Invitation à s'inscrire à la certification", d:"Anciennement par email, maintenant dans les to do de la plateforme.", src:"Espace apprenant", at:1},
+    {n:"Invitation à s'inscrire à la certification et relances", d:"Dans les to do de l'espace, avec ses relances.", src:"Espace apprenant", at:1},
     {n:"Certificat de réalisation", d:"Attestation de réalisation propre à chaque apprenant ayant terminé, disponible dans l'espace apprenant.", src:"Qualiobee", at:3},
-    {n:"Demande d'inscription à la certification et relances", d:"Voie d'inscription (relance CPF, onglet Certification de l'espace) systématiquement offerte à tous. Justificatif généré automatiquement depuis le miroir CertifIAG.", src:"DELIV'IA", at:2},
-    {n:"Convention ou contrat de formation signé", d:"Convention (B2C) ou contrat de formation signé par l'apprenant ou le client, récupéré signé depuis Qualiobee. Non applicable au CPF (financé par la CDC, sans convention).", src:"Qualiobee", at:0, noncpf:1}]},
-  {lieu:"CertifIAG", items:[
-    {n:"Preuve d'inscription à la certification", d:"Justificatif d'inscription de l'apprenant à la certification, généré automatiquement depuis le miroir CertifIAG.", src:"DELIV'IA", at:2, cpf:1}]}],
+    {n:"Attestation d'inscription à la certification", d:"Justificatif d'inscription à la certification, généré automatiquement depuis le miroir CertifIAG.", src:"DELIV'IA", at:2},
+    {n:"Convention ou contrat de formation", d:"Convention (B2C) ou contrat de formation signé par l'apprenant ou le client, récupéré signé depuis Qualiobee. Non applicable au CPF (financé par la CDC, sans convention).", src:"Qualiobee", at:0, noncpf:1}]}],
 };
 function sessStage(sess){
   const s=CARDS.find(c=>c.kb==="session_fia"&&c.sess===sess); if(!s) return 0;
@@ -2771,10 +2824,22 @@ function pagePreuves(){
   h+=`<details class="pvmonth old" data-acc="pvm-old"><summary><div><div class="mt">Ancienne offre (avant le 4 mai)</div><div class="ms">94 sessions · 716 apprenants · 3 982 déposées</div></div><div class="mpct"><div class="bar"><i style="width:84%"></i></div><b>84 %</b></div></summary><div class="fsec" style="margin-top:8px"><p class="muted" style="font-size:12.5px">Sessions de l'ancienne offre, consultables à l'identique.</p></div></details>`;
   return h;
 }
-function preuvesApprenantHtml(insc){
+/* chaque famille de preuves porte le lien de l'endroit où elle vit */
+function lieuLink(lieu,ap,cl){
+  const gid=(ap&&ap.ghl)||(cl&&cl.ghl);
+  if(lieu==="Mail") return gid?`<a class="ilink" href="https://app.gohighlevel.com/v2/location/france-ia/contacts/detail/${gid}" target="_blank" rel="noopener">profil GHL${ap&&ap.ghl?"":" du client"}</a>`:"";
+  if(lieu==="Questionnaire ARD") return cl?`<a class="ilink" data-qard="${cl.id}">ouvrir le questionnaire</a>`:"";
+  if(lieu.startsWith("Espace")) return `<a class="ilink" data-app="apprenant">ouvrir l'espace</a>`;
+  return "";
+}
+function preuvesApprenantHtml(insc,ap,cl){
   const stage=insc.sess?sessStage(insc.sess):0;
-  return PREUVES.apprenant.flatMap(g=>g.items.map(it=>{const st=preuveState(it,insc,stage);if(st==="na")return "";const p=PSTATE[st];
-    return `<div class="lrow"><i class="pst ${p[1]}">${p[0]}</i>${it.n}<span class="sm" style="margin-left:4px">${g.lieu}</span><span class="chip ${st==="ok"?"ok":""}">${p[2]}</span></div>`})).join("");
+  return PREUVES.apprenant.map(g=>{
+    const lignes=g.items.map(it=>{const st=preuveState(it,insc,stage);if(st==="na")return "";const p=PSTATE[st];
+      return `<div class="lrow"><i class="pst ${p[1]}">${p[0]}</i>${it.n}<span class="chip ${st==="ok"?"ok":""}">${p[2]}</span></div>`}).join("");
+    if(!lignes) return "";
+    return `<div class="pgrp"><span class="lb">${g.lieu}</span>${lieuLink(g.lieu,ap,cl)}</div>${lignes}`;
+  }).join("");
 }
 const STUBS = {
  anomalies:["Anomalies","Les incohérences détectées automatiquement (dossier EDOF sans facture, mandat sans échéancier, carte sans vente…), avec leur statut de traitement."],
@@ -2886,6 +2951,8 @@ function render(){
   if(S.switchFor) document.body.insertAdjacentHTML("beforeend", switchModalHtml());
   if(S.bibbyFor) document.body.insertAdjacentHTML("beforeend", bibbyModalHtml());
   if(S.idLink) document.body.insertAdjacentHTML("beforeend", idLinkModalHtml());
+  if(S.qard) document.body.insertAdjacentHTML("beforeend", qArdModalHtml());
+  if(S.wa) document.body.insertAdjacentHTML("beforeend", waModalHtml());
   if(S.reserveFor) document.body.insertAdjacentHTML("beforeend", reserveModalHtml());
   if(S.lostFor) document.body.insertAdjacentHTML("beforeend", lostModalHtml());
   if(S.modal){
@@ -2921,7 +2988,7 @@ document.addEventListener("click",e=>{
   const ms=e.target.closest(".msec2>summary");
   if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
   if(e.target.id==="modal3"){S.swFull=null;render();return}
-  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
+  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
   const anoS=e.target.closest(".ano>summary");
   if(anoS){const d=anoS.parentElement;S.anoOpen=S.anoOpen||{};S.anoOpen[d.dataset.ano]=!d.open}
   const rapS=e.target.closest(".payrap>summary");
@@ -2934,7 +3001,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -2996,6 +3063,9 @@ document.addEventListener("click",e=>{
     S.fSessView="kanban";render();return}
   if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===cd.sess);if(fs)fs.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
+  if(t.dataset.qard){e.stopPropagation();S.qard=t.dataset.qard;render();return}
+  if(t.dataset.wa){e.stopPropagation();S.wa=t.dataset.wa;render();return}
+  if(t.dataset.drive){toast("Ouverture du dossier Drive de preuves de l'apprenant dans un nouvel onglet.");return}
   if(t.dataset.idlink){e.stopPropagation();S.idLink=t.dataset.idlink;render();return}
   if(t.dataset.idlinksave){e.stopPropagation();
     const [cid,kind]=t.dataset.idlinksave.split("::");
