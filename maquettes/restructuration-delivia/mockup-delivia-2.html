@@ -2767,9 +2767,9 @@ const PREUVES = {
     {n:"Convocation", d:"Convocation officielle à la formation (dates, lieu, horaires).", src:"Qualiobee", at:1},
     {n:"Émargement J1", d:"Réponse d'émargement du jour 1 : présence signée OU absence justifiée / injustifiée référencée.", src:"Qualiobee", at:2},
     {n:"Émargement J2", d:"Réponse d'émargement du jour 2 : présence signée OU absence justifiée / injustifiée référencée.", src:"Qualiobee", at:2},
-    {n:"Invitation à s'inscrire à la certification et relances", d:"Dans les to do de l'espace, avec ses relances.", src:"Espace apprenant", at:1},
+    {n:"Invitation à s'inscrire à la certification et relances", d:"Dans les to do de l'espace, avec ses relances.", src:"Espace apprenant", at:1, cpf:1},
     {n:"Certificat de réalisation", d:"Attestation de réalisation propre à chaque apprenant ayant terminé, disponible dans l'espace apprenant.", src:"Qualiobee", at:3},
-    {n:"Attestation d'inscription à la certification", d:"Justificatif d'inscription à la certification, généré automatiquement depuis le miroir CertifIAG.", src:"DELIV'IA", at:2},
+    {n:"Attestation d'inscription à la certification", d:"Justificatif d'inscription à la certification, généré automatiquement depuis le miroir CertifIAG.", src:"DELIV'IA", at:2, cpf:1},
     {n:"Convention ou contrat de formation", d:"Convention (B2C) ou contrat de formation signé par l'apprenant ou le client, récupéré signé depuis Qualiobee. Non applicable au CPF (financé par la CDC, sans convention).", src:"Qualiobee", at:0, noncpf:1}]}],
 };
 function sessStage(sess){
@@ -2795,21 +2795,15 @@ function preuvesSessionHtml(sess){
   PREUVES.session.flatMap(g=>g.items).forEach(it=>{tot++;if(preuveState(it,null,stage)==="ok")ok++;});
   const pct=tot?Math.round(ok/tot*100):0;
   const k="pv-"+sess;
-  let h=`<details class="acc pvs" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span><span class="tt">${fmtDates(c)} · ${c.frm||"formateur à confirmer"}</span><span class="sm">${c.lieu}</span><span class="end"><span class="sm">${aps.length} apprenant${aps.length>1?"s":""} · ${ok} déposée${ok>1?"s":""}</span><span class="pvpct">${pct} %</span></span></summary><div class="inner" style="padding-left:2px">`;
+  let h=`<details class="acc pvs" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span><span class="tt">${fmtDates(c)} · ${c.frm||"formateur à confirmer"}</span><span class="sm">${c.lieu}</span><span class="end"><span class="sm">${aps.length} apprenant${aps.length>1?"s":""}</span><span class="pvpct">${pct} %</span></span></summary><div class="inner" style="padding-left:2px">`;
   const nc=aps.length||1;
   h+=`<div style="overflow-x:auto"><table class="pmat"><thead>`
    +`<tr><th class="pl">Client</th>`+aps.map(x=>`<th>${x.cl?`<a class="ilink" data-fiche="client::${x.cl.id}">${x.cl.nom}</a>`:"—"}</th>`).join("")+`</tr>`
    +`<tr><th class="pl">Apprenant</th>`+aps.map(x=>`<th><a class="ilink" data-fiche="apprenant::${x.ap.id}">${x.ap.nom}</a></th>`).join("")+`</tr>`
    +`<tr><th class="pl">Mode de paiement</th>`+aps.map(x=>`<th><span class="fintxt">${FIN[x.insc.fin]?FIN[x.insc.fin].lbl:""}</span></th>`).join("")+`</tr>`
    +`</thead><tbody>`;
-  /* 1 · preuves de la session : un seul état pour tout le monde, avec le lien de l'endroit où elles vivent */
-  h+=`<tr class="pmsec"><td colspan="${nc+1}">Preuves de la session</td></tr>`;
-  PREUVES.session.forEach(g=>g.items.forEach(it=>{const st=preuveState(it,null,stage);const pp=PSTATE[st];
-    const lien = it.n.startsWith("CV")||it.n.startsWith("Contrat") ? `<a class="ilink" data-frmfiche="${c.frm||""}">fiche formateur</a>`
-      : it.n.startsWith("Conversation") ? `<a class="ilink" data-wa="${c.id}">ouvrir l'export</a>` : "";
-    h+=`<tr><td class="pl"><div class="pn">${it.n}${lien?` <span class="plk">${lien}</span>`:""}</div></td><td colspan="${nc}" style="text-align:left"><i class="pst ${pp[1]}">${pp[0]}</i> <span class="sm">${pp[2]}</span></td></tr>`;}));
-  /* 2 · preuves individuelles, groupées par endroit comme sur la fiche apprenant */
-  h+=`<tr class="pmsec sep"><td colspan="${nc+1}">Preuves individuelles</td></tr>`;
+  /* 1 · preuves individuelles, groupées par endroit comme sur la fiche apprenant */
+  h+=`<tr class="pmsec"><td colspan="${nc+1}">Preuves individuelles</td></tr>`;
   PREUVES.apprenant.forEach(g=>{
     h+=`<tr class="pmgrp"><td colspan="${nc+1}">${g.lieu}</td></tr>`;
     g.items.forEach(it=>{
@@ -2818,6 +2812,12 @@ function preuvesSessionHtml(sess){
       h+=`</tr>`;
     });
   });
+  /* 2 · preuves de la session : un seul état pour tout le monde, avec le lien de l'endroit où elles vivent */
+  h+=`<tr class="pmsec sep"><td colspan="${nc+1}">Preuves de la session</td></tr>`;
+  PREUVES.session.forEach(g=>g.items.forEach(it=>{const st=preuveState(it,null,stage);const pp=PSTATE[st];
+    const lien = it.n.startsWith("CV")||it.n.startsWith("Contrat") ? `<a class="ilink" data-frmfiche="${c.frm||""}">fiche formateur</a>`
+      : it.n.startsWith("Conversation") ? `<a class="ilink" data-wa="${c.id}">ouvrir l'export</a>` : "";
+    h+=`<tr><td class="pl"><div class="pn">${it.n}${lien?` <span class="plk">${lien}</span>`:""}</div></td><td colspan="${nc}" style="text-align:left"><i class="pst ${pp[1]}">${pp[0]}</i> <span class="sm">${pp[2]}</span></td></tr>`;}));
   h+=`</tbody></table></div></div></details>`;
   return {h,ok,tot,pct,n:aps.length};
 }
