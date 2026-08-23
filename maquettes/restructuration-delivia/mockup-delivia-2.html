@@ -331,6 +331,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .cnt .nx .k{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400);margin-right:5px}
 .cnt .nx.ok{color:var(--ok)}
 .prog{margin-top:8px}
+/* documents d'une vente */
+.docs{padding:2px 0 4px;max-width:560px}
+.docrow{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.docrow:last-child{border-bottom:none}
+.docrow .dl{font-size:12px;font-weight:600;color:var(--ink-700);width:96px;flex-shrink:0}
+.docrow .ds{margin-left:auto;font-size:10.5px;color:var(--ink-400)}
+.docrow input{flex:1;min-width:0}
 /* page Anomalies */
 .anohead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
 .anohead .ctl{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--ink-400)}
@@ -354,11 +361,29 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .anocase .sm{font-size:11px;color:var(--ink-400);margin-top:1px}
 .anocase .acts{margin-left:auto;display:flex;gap:6px;flex-shrink:0}
 .anonone{font-size:11.5px;color:var(--ok);padding:9px 0 2px}
-/* page Générer */
-.gengrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:4px}
-.gencard{background:#fff;border:1px solid #dfe4ec;border-radius:12px;box-shadow:var(--sh-carte);padding:14px}
-.gencard .t{font-size:13.5px;font-weight:600;color:var(--ink-900)}
-.gencard .d{font-size:11.5px;color:var(--ink-500);line-height:1.5;margin:5px 0 10px}
+/* page Générer : même forme que le panneau partagé de DELIV'IA 1 */
+.gengrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px;margin:2px 0 18px;max-width:880px}
+.gencard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;background:#fff;border:1px solid var(--line-2);border-radius:12px;padding:13px}
+.gencard:hover{border-color:#cbd5e1;background:#f8fafc}
+.gencard.on{border-color:#c7d2fe;background:#eef2ff;box-shadow:var(--sh-carte)}
+.gencard .ic{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9px;background:#f1f5f9;color:var(--ink-500)}
+.gencard.on .ic{background:var(--primary);color:#fff}
+.gencard .t{font-size:13px;font-weight:600;color:var(--ink-800)}
+.gencard.on .t{color:#4338ca}
+.gencard .d{font-size:11px;color:var(--ink-400);line-height:1.35}
+.genform{background:#fff;border:1px solid var(--line-2);border-radius:14px;box-shadow:var(--sh-carte);padding:18px 20px;max-width:880px}
+.genrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 18px;margin-bottom:12px}
+.genfld .k{font-size:11px;font-weight:600;color:var(--ink-600,#475569);margin-bottom:4px}
+.genfld .edin{width:100%}
+.genfld .pd{font-size:10.5px;color:var(--ink-400);line-height:1.45;margin-top:4px}
+.gensec{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
+.fchk{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-500);margin:0 0 10px;cursor:pointer}
+.fchk .n2{color:var(--ink-400)}
+.genchk{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-700);margin-bottom:12px;cursor:pointer}
+.gentbl input{width:100%}
+.genadd{display:flex;align-items:center;gap:12px;margin-top:8px}
+.genadd .tot{margin-left:auto;font-size:12px;color:var(--ink-600,#475569)}
+.genform .pd{font-size:11px;color:var(--ink-400);line-height:1.5;margin-top:8px}
 /* bloc paiements sous une tâche de constat de paiement */
 .paypanel{margin:2px 0 10px 25px;border:1px solid var(--line-2);border-radius:9px;background:#fff;padding:9px 11px}
 .paypanel .pph{display:flex;align-items:baseline;gap:8px;font-size:11px;color:var(--ink-500);padding-bottom:7px;border-bottom:1px solid var(--line)}
@@ -1236,6 +1261,8 @@ function anoCas(a){
   return a.cas||[];
 }
 /* ════════════════════ FAUSSES DONNÉES ════════════════════ */
+/* documents d'une vente : toujours les trois mêmes, devis et facture chez Qonto, convention chez Qualiobee */
+const DOCTYPES = [["devis","Devis","Qonto"],["facture","Facture","Qonto"],["convention","Convention","Qualiobee"]];
 /* modes de paiement et offres où ils sont possibles */
 const FIN = {
  cpf:       {lbl:"CPF",                 cls:"cpf",    offres:["n1"]},
@@ -1277,6 +1304,15 @@ const COMPTES = [
  {id:"u_sam",nom:"Sam Tessier",role:"setter",titre:"Setteur",email:"sam@franceia.com",tel:"06 45 78 90 12",ghl:"91Bx31",qlb:null,acces:["facturation","faq"],apps:["dash"]},
 ];
 const LIEUX = ["Station F, Paris 13e","Quai des Chartrons, Bordeaux","Part-Dieu, Lyon","Chez le client"];
+/* closeurs et setteurs de la base des comptes, au format court utilisé sur les cartes */
+function abrege(n){ const [p,f]=n.split(" "); return p+(f?" "+f[0]+".":""); }
+const CLOSEURS = COMPTES.filter(u=>u.role==="closer").map(u=>abrege(u.nom));
+const SETTEURS = COMPTES.filter(u=>u.role==="setter").map(u=>abrege(u.nom));
+/* champ à liste déroulante, modifiable seulement en mode édition */
+function fldSel(label,val,name,opts,vide){
+  if(!S.editing) return `<div class="fld"><div class="k">${label}</div><div class="v">${val??'<span class="muted">non renseigné</span>'}</div></div>`;
+  return `<div class="fld"><div class="k">${label}</div><select class="edin" data-vsel="${name}">${vide?`<option value="" ${val?"":"selected"}>${vide}</option>`:""}${opts.map(o=>`<option value="${o}" ${o===val?"selected":""}>${o}</option>`).join("")}</select></div>`;
+}
 const DEMANDES_FRM = {s3:[{f:"Inès B.",d:"2026-08-19",m:"Disponible les deux jours, je connais bien Lyon."},{f:"Marc D.",d:"2026-08-21",m:""}], s4:[{f:"Sarah K.",d:"2026-08-20",m:"Je peux prendre le N2 Paris."}]};
 let CARDS = [
  /* sessions N1/N2 : rail France IA + rail formateur (même session, deux cartes) */
@@ -1284,6 +1320,9 @@ let CARDS = [
  {id:"s2", kb:"session_fia", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:SESS.bordeaux.lbl, lieu:SESS.bordeaux.lieu, frm:"Marc D.",  places:"4/12", col:"prete"},
  {id:"s3", kb:"session_fia", offre:"n1", sess:"lyon",     dt:SESS.lyon.dt,     title:SESS.lyon.lbl,     lieu:SESS.lyon.lieu,     frm:null,       places:"0/12", col:"brouillon"},
  {id:"s4", kb:"session_fia", offre:"n2", sess:"parisn2",  dt:SESS.parisn2.dt,  title:SESS.parisn2.lbl,  lieu:SESS.parisn2.lieu,  frm:null,       places:"2/12", col:"brouillon"},
+ /* sessions passées : masquées par défaut dans la vue Liste */
+ {id:"s5", kb:"session_fia", offre:"n1", sess:null, dt:{j1:"2026-06-20",j2:"2026-06-21"}, title:"Bordeaux · 20-21 juin", lieu:"Quai des Chartrons, Bordeaux", ville:"Bordeaux", niveau:"Plutôt débutant", frm:"Marc D.", places:"11/12", col:"terminee"},
+ {id:"s6", kb:"session_fia", offre:"n2", sess:null, dt:{j1:"2026-07-04",j2:"2026-07-05"}, title:"Paris N2 · 4-5 juillet", lieu:"Station F, Paris 13e", ville:"Paris", niveau:"Plutôt avancé", frm:"Sarah K.", places:"9/12", col:"terminee"},
  {id:"fs1",kb:"session_frm", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"13/12", over:1, col:"preparer", mine:1},
  {id:"fs2",kb:"session_frm", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:SESS.bordeaux.lbl, lieu:SESS.bordeaux.lieu, frm:"Sarah K.", places:"4/12", col:"shotgun", mine:1},
  /* inscriptions N1 / N2 */
@@ -1396,6 +1435,16 @@ const CLIENTS=[
  {id:"cl_hugo",nom:"Hugo Martin",type:"Particulier",adr:"40 rue Oberkampf, 75011 Paris",vat:null,resp:{n:"Hugo Martin",e:"hugo.martin@gmail.com",t:"06 02 93 47 66",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
   ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f1",inscId:"i6"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée","Certificat de réalisation · émis"]},
 ];
+/* chaque vente porte ses trois liens de documents (null = lien à ajouter) */
+CLIENTS.forEach((c,ci)=>(c.ventes||[]).forEach((v,vi)=>{
+  const n=700+ci*3+vi;
+  const fc=v.factId?CARDS.find(x=>x.id===v.factId):null;
+  v.docs={
+    devis: v.fin==="cpf" ? null : "https://app.qonto.com/invoicing/quotes/D-2026-0"+n,
+    facture: fc&&fc.fac ? "https://app.qonto.com/invoicing/client-invoices/"+fc.fac.num : null,
+    convention: (ci%5===3) ? null : "https://app.qualiobee.fr/documents/convention-"+c.id.replace("cl_","")+"-"+(vi+1),
+  };
+}));
 const APPRENANTS=[
  {id:"ap_garage_0",nom:"Damien Fontan",email:"damien.fontan@garagemoderne.fr",tel:"06 10 20 30 40",prenom:"Damien",fam:"Fontan",dom:"Automobile",adr:"3 rue des Ateliers",cp:"31300",ville:"Toulouse",spro:"Gérant",nais:"01/01/1978",client:"cl_garage",insc:["t1"],type:"Salarié Garage Moderne",afaire:["Questionnaire de positionnement"]},
  {id:"ap_garage_1",nom:"Inès Roussel",email:"ines.roussel@garagemoderne.fr",tel:"06 11 21 31 41",prenom:"Inès",fam:"Roussel",dom:"Automobile",adr:"4 rue des Ateliers",cp:"31300",ville:"Toulouse",spro:"Cheffe d'atelier",nais:"02/02/1979",client:"cl_garage",insc:["t1"],type:"Salarié Garage Moderne",afaire:["Questionnaire de positionnement"]},
@@ -1533,12 +1582,6 @@ function amtOf(str){ const m=String(str||"").match(/([\d\s\u00a0]+)\s*€/); ret
 function eur(n){ return n.toLocaleString("fr-FR",{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2})+" €"; }
 function fmtJour(iso){ return new Date(iso+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"short"}); }
 function facUrl(f){ return "https://app.qonto.com/invoicing/client-invoices/"+f.num; }
-function facFld(card){
-  const f=card.fac;
-  if(!f) return `<span class="muted">Pas encore générée</span>`;
-  const st=f.avoir?`<span class="chip warn">Avoir ${f.avoir}</span>`:(f.paye?`<span class="chip ok">Acquittée</span>`:`<span class="chip">Non acquittée</span>`);
-  return `<div class="facline"><a class="ilink" href="${facUrl(f)}" target="_blank" rel="noopener">${f.num}</a>${st}</div>`;
-}
 function finFld(card){
   const cur=FIN[card.fin]?FIN[card.fin].lbl:"";
   if(S.editFin!==card.id) return `<span class="facline">${cur}<a class="ilink" style="font-size:11px" data-finedit="${card.id}">Modifier</a></span>`;
@@ -1803,7 +1846,7 @@ function infoFor(card){
   rows.push(["Date",fmtDates(card)||"À caler"],["Lieu",card.lieu||"À confirmer"]);
   const src = card.src ? CARDS.find(c=>c.id===card.src) : card;
   rows.push(["Closeur / Setteur",[src&&src.closer,src&&src.setter].filter(Boolean).join(" / ")||"Sans setteur"]);
-  if(isFact(card)) rows.push(["Montant",card.m],["Facture",facFld(card)]);
+  if(isFact(card)) rows.push(["Montant",card.m]);
   else rows.push(["Transmission ARD",card.ard?fmtDT(card.ard):null]);
   return rows;
 }
@@ -1924,7 +1967,12 @@ function pageSessions(){
     &&(S.fSessFrm==="all"||(S.fSessFrm==="none"?!c.frm:c.frm===S.fSessFrm))
     &&(!q||[c.title,c.lieu,c.frm,c.ville,...CARDS.filter(i=>i.kb==="insc"&&i.sess===c.sess).map(i=>i.title)].join(" ").toLowerCase().includes(q)));
   if(S.fSessView==="cal") h+=calendarHtml(list);
-  else if(S.fSessView==="list") h+=sessionListHtml(list);
+  else if(S.fSessView==="list"){
+    const auj=new Date().toISOString().slice(0,10);
+    const passees=list.filter(c=>c.dt&&c.dt.j2&&c.dt.j2<auj);
+    h+=`<label class="fchk"><input type="checkbox" data-sesspass="1" ${S.sessPass?"checked":""}> Afficher les sessions passées <span class="n2">${passees.length}</span></label>`;
+    h+=sessionListHtml(S.sessPass?list:list.filter(c=>!(c.dt&&c.dt.j2&&c.dt.j2<auj)));
+  }
   else h+=boardHtml("session_fia", list);
   return h;
 }
@@ -2070,16 +2118,62 @@ function pageAnomalies(){
   if(vide) h+=`<div class="stub"><p>Aucune anomalie ouverte dans ce process. Cochez « afficher aussi les contrôles au vert » pour voir la liste des contrôles passés.</p></div>`;
   return h;
 }
+/* page Générer : reprise exacte du panneau partagé de DELIV'IA 1 (mêmes cartes, mêmes champs) */
+function genCards(){ return [
+ ["facture","Facture","Facture Qonto envoyée au client",ICO.receipt],
+ ["devis","Devis","Devis Qonto — avec ou sans fiche ARD",ICO.file2],
+ ["sdd","Paiement en N fois","Prélèvement SEPA Qonto, jusqu'à 12 échéances",ICO.cal],
+ ["convention","Convention OPCO","Convention de formation inter, prête à signer",ICO.scroll],
+]; }
+function genClientOpts(){ return CLIENTS.map(c=>`<option>${c.nom}</option>`).join(""); }
+function genSessionOpts(){
+  const list=CARDS.filter(c=>c.kb==="session_fia");
+  return `<optgroup label="Cohorte(s) de ce client">${list.slice(0,2).map(c=>`<option>${c.title} · ${OFFRES[c.offre]}</option>`).join("")}</optgroup><optgroup label="Autres sessions">${list.slice(2).map(c=>`<option>${c.title} · ${OFFRES[c.offre]}</option>`).join("")}</optgroup>`;
+}
+function genLignes(){
+  const lignes=[["Formation « Maîtriser l'IA générative » · Niveau 1","1","1 650,00","0 %"],["Participant · {{apprenant}}","1","0,00","0 %"]];
+  return `<div class="tblwrap"><table class="tbl gentbl"><thead><tr><th>Description</th><th>Qté</th><th>Prix unitaire</th><th>TVA</th><th></th></tr></thead><tbody>`
+   +lignes.map(l=>`<tr><td><input class="edin" value="${l[0]}"></td><td><input class="edin" style="width:56px" value="${l[1]}"></td><td><input class="edin" style="width:96px" value="${l[2]}"></td><td><input class="edin" style="width:70px" value="${l[3]}"></td><td class="act"><button class="btn-xs" data-gen="Supprimer la ligne">Retirer</button></td></tr>`).join("")
+   +`</tbody></table></div><div class="genadd"><button class="btn-xs" data-gen="Ajouter une ligne">+ Ajouter une ligne</button><span class="tot">Total TTC : <b>1 650,00 €</b></span></div>`;
+}
 function pageGenerer(){
-  const cartes=[
-   ["Facture","Émettre une facture Qonto pour une vente existante ou hors process (formation offerte, prestation ponctuelle).","Générer une facture"],
-   ["Devis","Créer un devis, avec ou sans passage par ARD, et l'envoyer à la signature.","Générer un devis"],
-   ["Paiement en plusieurs fois","Créer un lien de mandat de prélèvement et son échéancier pour un client qui paie en 2, 3 ou 4 fois.","Créer l'échéancier"],
-   ["Convention OPCO","Éditer la convention de formation attendue par l'OPCO, quand le client ne peut pas la générer depuis sa plateforme.","Générer la convention"],
-   ["Nouveau client","Créer une fiche client à la main : entreprise ou particulier qui n'est pas passé par ARD.","Créer le client"],
-  ];
-  return `<div class="pagehead"><h1>Générer</h1><p>Les documents que l'on crée à la main quand le process ne les a pas produits tout seul. Même panneau pour les admins et pour les closeurs.</p></div>
-  <div class="gengrid">`+cartes.map(([t,d,b])=>`<div class="gencard"><div class="t">${t}</div><div class="d">${d}</div><button class="btn btn-p" data-gen="${encodeURIComponent(t)}">${b}</button></div>`).join("")+`</div>`;
+  const t=["facture","devis","sdd","convention"].includes(S.genType)?S.genType:"facture";
+  const isQonto=t==="facture"||t==="devis";
+  let h=`<div class="pagehead"><h1>Générer</h1><p>Choisis ce que tu veux produire — un maximum est pré-rempli, les champs à compléter sont légèrement grisés.</p></div>`;
+  h+=`<div class="gengrid">`+genCards().map(([k,lbl,d,ico])=>`<button class="gencard ${t===k?"on":""}" data-chip="genType::${k}"><span class="ic">${ico}</span><span class="t">${lbl}</span><span class="d">${d}</span></button>`).join("")+`</div>`;
+  h+=`<div class="genform">`;
+  if(t==="devis") h+=`<label class="genchk"><input type="checkbox"> Le client n'a pas de fiche ARD (devis sans fiche client)</label>`;
+  h+=`<div class="genrow"><div class="genfld"><div class="k">Client *</div><select class="edin">${genClientOpts()}<option>+ Nouveau client…</option></select></div>`;
+  if(t!=="sdd") h+=`<div class="genfld"><div class="k">Session (optionnel)</div><select class="edin"><option>Aucune session</option>${genSessionOpts()}</select></div>`;
+  h+=`</div>`;
+  if(isQonto){
+    h+=`<div class="genrow"><div class="genfld"><div class="k">Apprenant porté sur la pièce</div><select class="edin"><option>Aucun apprenant</option>${APPRENANTS.slice(0,8).map(a=>`<option>${a.nom}</option>`).join("")}</select><div class="pd">Son nom sera porté sur la pièce, à la place du marqueur du gabarit Qonto. Sans apprenant, la ligne « Participant » est retirée.</div></div></div>`;
+    h+=`<div class="gensec">Coordonnées de facturation</div>
+      <div class="genrow"><div class="genfld"><div class="k">Raison sociale ou nom</div><input class="edin" value="ACME Conseil"></div><div class="genfld"><div class="k">Email</div><input class="edin" value="jean.petit@acme.fr"></div></div>
+      <div class="genrow"><div class="genfld"><div class="k">Adresse</div><input class="edin" value="5 rue de la Bourse, 33000 Bordeaux"></div><div class="genfld"><div class="k">SIRET</div><input class="edin" value="842 391 557 00023"></div></div>`;
+    h+=`<div class="gensec">Lignes de document</div>${genLignes()}`;
+    h+=`<div class="gensec">Paramètres</div><div class="genrow"><div class="genfld"><div class="k">Date d'émission</div><input class="edin" type="date" value="2026-08-23"></div>`;
+    h+= t==="devis" ? `<div class="genfld"><div class="k">Date d'expiration</div><input class="edin" type="date" value="2026-09-22"></div></div>` : `<div class="genfld"><div class="k">Échéance</div><input class="edin" type="date" value="2026-09-22"></div></div>`;
+    h+=`<div class="genrow"><div class="genfld"><div class="k">Conditions de règlement</div><input class="edin" value="Paiement à 30 jours, par virement"></div><div class="genfld"><div class="k">Pied de page</div><input class="edin" value="France IA · organisme de formation certifié Qualiopi"></div></div>`;
+  }
+  if(t==="sdd"){
+    h+=`<div class="genrow"><div class="genfld"><div class="k">Montant total</div><input class="edin" value="1 650,00 €"></div>
+      <div class="genfld"><div class="k">Nombre d'échéances</div><select class="edin" data-fsel="genN">${[1,2,3,4,6,12].map(n=>`<option value="${n}" ${String(S.genN||3)===String(n)?"selected":""}>${n} échéance${n>1?"s":""}</option>`).join("")}</select></div></div>
+      <div class="genrow"><div class="genfld"><div class="k">Première échéance</div><input class="edin" type="date" value="2026-09-06"></div><div class="genfld"><div class="k">Jour de prélèvement</div><select class="edin"><option>Le 6 de chaque mois</option><option>Le 1er de chaque mois</option><option>Le 15 de chaque mois</option></select></div></div>`;
+    const n=parseInt(S.genN||3), unit=1650/n;
+    h+=`<div class="gensec">Échéancier</div><div class="tblwrap"><table class="tbl"><thead><tr><th>Échéance</th><th>Date</th><th>Montant</th></tr></thead><tbody>`
+      +Array.from({length:n},(_,i)=>`<tr><td>${i+1}/${n}</td><td>${fmtJour("2026-"+String(9+i).padStart(2,"0")+"-06")}</td><td>${eur(Math.round(unit*100)/100)}</td></tr>`).join("")
+      +`</tbody></table></div><div class="pd">Mandat SEPA Qonto : le client signe une fois, les prélèvements partent tout seuls. 14 jours de rétractation avant le premier.</div>`;
+  }
+  if(t==="convention"){
+    h+=`<div class="genrow"><div class="genfld"><div class="k">OPCO</div><select class="edin"><option>AKTO</option><option>OPCO Mobilités</option><option>OPCO EP</option><option>Atlas</option><option>Autre</option></select></div>
+      <div class="genfld"><div class="k">Montant de la formation</div><input class="edin" value="1 650,00 €"></div></div>
+      <div class="genrow"><div class="genfld"><div class="k">Signataire côté client</div><input class="edin" value="Jean Petit · Gérant"></div><div class="genfld"><div class="k">Nombre de participants</div><input class="edin" type="number" value="1"></div></div>
+      <div class="pd">La convention reprend l'intitulé, les dates, le lieu et le formateur de la session choisie. Elle part en signature Qualiobee, et le client la retrouve sur sa plateforme.</div>`;
+  }
+  const lbl = t==="facture"?"Générer la facture" : t==="devis"?"Générer le devis" : t==="sdd"?"Créer l'échéancier" : "Générer la convention";
+  h+=`<div class="mactions" style="margin-top:16px"><button class="btn btn-p" data-gen="${encodeURIComponent(lbl)}">${lbl}</button></div>`;
+  return h+`</div>`;
 }
 function pointerCard(){
   return `<div class="card pointer clickable" data-tab="aprendre"><div class="t">📥 Sessions et coachings disponibles</div><div class="s">Publiés au shotgun, à la demande</div><div class="nextt" style="margin-top:9px"><span class="v" style="color:var(--primary);font-weight:600">Rendez-vous sur la page À prendre →</span></div></div>`;
@@ -2120,6 +2214,10 @@ const ICO={
  building:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M12 10h.01M16 10h.01M8 10h.01M12 14h.01M16 14h.01M8 14h.01"/></svg>',
  cap:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>',
  wallet:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>',
+ receipt:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+ file2:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>',
+ cal:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M12 14v3l2 1"/></svg>',
+ scroll:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12"/><path d="M3 17h14a2 2 0 0 1 2 2 2 2 0 0 0 2-2V7"/><path d="M7 7h8M7 11h8"/></svg>',
  file:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
 };
 function colLabel(card){ return (KB[card.kb].cols.find(c=>c.id===card.col)||{}).label||card.col; }
@@ -2212,6 +2310,14 @@ function ficheApprenantHtml(id){
   h+=`</div>`;
   return h;
 }
+function venteDocs(cl,v,ix){
+  const ed=S.editing==="client::"+cl.id;
+  return DOCTYPES.map(([k,lbl,src])=>{
+    const url=v.docs?v.docs[k]:null;
+    if(ed) return `<div class="docrow"><span class="dl">${lbl}</span><input class="edin" data-vdoc="${ix}::${k}" value="${(url||"").replace(/"/g,"&quot;")}" placeholder="Coller le lien ${src}"><button class="btn-xs" data-vdocclear="${ix}::${k}">Retirer</button></div>`;
+    return `<div class="docrow"><span class="dl">${lbl}</span>${url?`<a class="ilink" href="${url}" target="_blank" rel="noopener">Ouvrir sur ${src}</a>`:`<span class="muted">aucun lien</span>`}<span class="ds">${src}</span></div>`;
+  }).join("");
+}
 function ficheClientHtml(id){
   const cl=CLIENTS.find(c=>c.id===id); if(!cl) return "";
   const isPart=cl.type.startsWith("Particulier");
@@ -2254,21 +2360,21 @@ function ficheClientHtml(id){
       <span class="end">${badge(v.fin)}<span style="font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums">${v.m}</span>${fcCol?`<span class="chip">${fcCol}</span>`:`<span class="chip">carte à venir</span>`}</span></summary>
       <div class="inner">
         <div class="vgrid">
-          ${fld("Closeur",ic?ic.closer:"Alex R.")}
-          ${fld("Setteur",ic?ic.setter:null)}
+          ${fldSel("Closeur",ic?ic.closer:v.closer,ix+"::closer",CLOSEURS,"Sans closeur")}
+          ${fldSel("Setteur",ic?ic.setter:v.setter,ix+"::setter",SETTEURS,"Sans setteur")}
           ${fld("Montant",v.m)}
           ${fld("Moyen de paiement",FIN[v.fin].lbl)}
         </div>
         <div class="subh">Apprenants concernés</div>
         <div style="padding:2px 0 4px">${appr.map(a=>`<span class="perschip" data-fiche="apprenant::${a.id}"><span class="avat">${initiales(a.nom)}</span>${a.nom}</span>`).join("")||'<span class="idchip">Renseignés par le client</span>'}</div>
-        <div class="subh">Documents</div>
-        <div style="padding:2px 0 4px">${cl.docs.map(d=>`<span class="chip" style="margin:0 6px 6px 0">${ICO.file} ${d}</span>`).join("")}</div>
         <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px">
           <div style="width:280px"><div class="subh" style="margin:0 0 6px">Carte inscription</div>
             ${ic?cardHtml(ic,KB[ic.kb].cols.find(x=>x.id===ic.col),{}):`<div class="card pointer"><div class="s">Pas de carte inscription individuelle.</div></div>`}</div>
           <div style="width:280px"><div class="subh" style="margin:0 0 6px">Carte facturation</div>
             ${fc?cardHtml(fc,KB[fc.kb].cols.find(x=>x.id===fc.col),{}):`<div class="card pointer"><div class="t">Carte à venir</div><div class="s">${v.note||"Elle naîtra selon la règle de son rail."}</div></div>`}</div>
         </div>
+        <div class="subh">Documents</div>
+        <div class="docs">${venteDocs(cl,v,ix)}</div>
       </div></details>`;
   }).join("");
   h+=`</div>`;
@@ -2660,7 +2766,9 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-sopen]")){openSearch();return}
   if(e.target.closest("[data-sclose]")){closeSearch();return}
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
-  const t=e.target.closest("[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const dc=e.target.closest("[data-vdocclear]");
+  if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
+  const t=e.target.closest("[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -2669,6 +2777,9 @@ document.addEventListener("click",e=>{
     const [kind,fid]=t.dataset.editsave.split("::");
     const obj=(kind==="apprenant"?APPRENANTS:kind==="session"?CARDS:kind==="compte"?COMPTES:CLIENTS).find(x=>x.id===fid);
     document.querySelectorAll("#content [data-f]").forEach(inp=>{obj[inp.dataset.f]=inp.value});
+    document.querySelectorAll("#content [data-vdoc]").forEach(inp=>{const [vi,dk]=inp.dataset.vdoc.split("::");if(obj.ventes&&obj.ventes[vi])obj.ventes[vi].docs[dk]=inp.value.trim()||null;});
+    document.querySelectorAll("#content [data-vsel]").forEach(sel=>{const [vi,ky]=sel.dataset.vsel.split("::");const v=obj.ventes&&obj.ventes[vi];if(!v)return;const val=sel.value||null;v[ky]=val;
+      [v.inscId,v.factId].filter(Boolean).forEach(cid=>{const c=CARDS.find(x=>x.id===cid);if(c)c[ky]=val;});});
     if(kind==="apprenant"){obj.nom=((obj.prenom||"")+" "+(obj.fam||"")).trim()||obj.nom;}
     if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.cap=parseInt(obj.cap)||12;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===obj.sess);if(fs){fs.frm=obj.frm;fs.dt=obj.dt;fs.cap=obj.cap;}}
     S.editing=null;render();
@@ -2702,6 +2813,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===cd.sess);if(fs)fs.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
   if(t.dataset.anoall!==undefined){S.anoAll=!S.anoAll;render();return}
+  if(t.dataset.sesspass!==undefined){S.sessPass=!S.sessPass;render();return}
   if(t.dataset.anorun){toast(`Contrôle relancé : balayage d'ARD, Qualiobee, WEDOF, EDOF, GHL, Mollie et Qonto. Résultat dans deux minutes.`);return}
   if(t.dataset.anoact){const [a,c]=t.dataset.anoact.split("::");toast(`<b>${decodeURIComponent(a)}</b> · ${decodeURIComponent(c)}`);return}
   if(t.dataset.gen){toast(`<b>${decodeURIComponent(t.dataset.gen)}</b> : le formulaire s'ouvrirait ici, prérempli avec le client choisi.`);return}
