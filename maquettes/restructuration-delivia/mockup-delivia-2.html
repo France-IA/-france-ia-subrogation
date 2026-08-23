@@ -2295,9 +2295,7 @@ function ficheApprenantHtml(id){
   /* ── Identité ── */
   h+=`<div class="fichehead"><div class="fh-top">
     <div class="avat">${initiales(ap.nom)}</div>
-    <div><h1>${ap.nom}</h1>
-      <div class="fh-contact"><span>${ICO.mail}${ap.email}</span><span>${ICO.phone}${ap.tel}</span></div>
-      <div class="fh-badges"><span class="chip">${ap.type}</span>${cl?`<span class="fh-link" data-fiche="client::${cl.id}">Client lié : ${cl.nom} →</span>`:""}</div></div>
+    <div><h1>${ap.nom}</h1></div>
     <div class="fh-right">${editBtns("apprenant",ap.id)}<button class="btn btn-s" data-app="apprenant">Ouvrir son espace apprenant</button></div>
   </div>
   <div class="idgrid">
@@ -2311,6 +2309,10 @@ function ficheApprenantHtml(id){
     ${fld("Ville",ap.ville,"ville",ap)}
     ${fld("Statut professionnel",ap.spro,"spro",ap)}
     ${fld("Date de naissance",ap.nais,"nais",ap)}
+    ${fld("Situation",ap.type,"type",ap)}
+    ${S.editing===("apprenant::"+ap.id)
+      ? `<div class="fld"><div class="k">Client lié</div><select class="edin" data-apcl="1"><option value="">Aucun client</option>${CLIENTS.map(c=>`<option value="${c.id}" ${ap.client===c.id?"selected":""}>${c.nom}</option>`).join("")}</select><div class="pd2">Le client porte la vente et la facturation ; l'apprenant, la formation et ses preuves.</div></div>`
+      : fld("Client lié",cl?`<a class="ilink" data-fiche="client::${cl.id}">${cl.nom}</a>`:null)}
   </div>
   <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>
     ${idFld("wedof_dossier_id","wdi",ap)}${idFld("qualiobee_learner_id","qli",ap)}${idFld("apolearn_id","apo",ap)}${idFld("wedof_certification_id","wci",ap)}</div>
@@ -2318,7 +2320,7 @@ function ficheApprenantHtml(id){
   /* ── Notes ── */
   h+=notesCard(ap);
   /* ── Offres ── */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Offres <span class="n2">${cards.length} · les cartes vivent sur la fiche client, ici tout ce qui est propre à l'apprenant</span></div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Offres</div>`;
   h+=cards.map(c=>{
     const offre=c.kb==="coaching"||c.kb==="coaching_frm"?"Coaching":"Formation "+(c.offre||"").toUpperCase();
     const k="ap-"+c.id;
@@ -2839,7 +2841,20 @@ document.addEventListener("click",e=>{
       obj.apprenants=ids;
       ids.forEach(i2=>{const a=APPRENANTS.find(x=>x.id===i2); if(a) a.client=obj.id;});
     }
-    if(kind==="apprenant"){obj.nom=((obj.prenom||"")+" "+(obj.fam||"")).trim()||obj.nom;}
+    if(kind==="apprenant"){
+      obj.nom=((obj.prenom||"")+" "+(obj.fam||"")).trim()||obj.nom;
+      const selCl=document.querySelector("#content [data-apcl]");
+      if(selCl){
+        const nv=selCl.value||null;
+        if(nv!==obj.client){
+          const anc=CLIENTS.find(c=>c.id===obj.client);
+          if(anc) anc.apprenants=(anc.apprenants||[]).filter(x=>x!==obj.id);
+          const nouveau=CLIENTS.find(c=>c.id===nv);
+          if(nouveau) nouveau.apprenants=[...new Set((nouveau.apprenants||[]).concat([obj.id]))];
+          obj.client=nv;
+        }
+      }
+    }
     if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.cap=parseInt(obj.cap)||12;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===obj.sess);if(fs){fs.frm=obj.frm;fs.dt=obj.dt;fs.cap=obj.cap;}}
     S.editing=null;render();
     toast("Modifications enregistrées : <b>"+(obj.nom||obj.title)+"</b>");
