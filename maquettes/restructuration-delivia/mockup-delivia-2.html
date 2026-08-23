@@ -533,15 +533,18 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .btn-p.danger{background:var(--err);color:#fff;border:none}
 .calhead{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .calhead b{font-size:15px;color:var(--ink-900);margin:0 6px}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;background:transparent}
-.cal-dh{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;padding:4px 6px}
-.cal-d{min-height:92px;background:#fff;border-radius:10px;box-shadow:var(--sh-carte);padding:6px 7px;position:relative}
-.cal-d.off{background:transparent;box-shadow:none}
+.cal{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:10px 10px 6px;overflow:hidden}
+.cal-wk{display:grid;grid-template-columns:repeat(7,1fr);column-gap:6px;margin-bottom:6px;min-height:64px}
+.cal-wk.head{min-height:0;margin-bottom:4px}
+.cal-dh{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;padding:2px 8px}
+.cal-d{background:#f8fafc;border-radius:8px;padding:4px 8px;min-height:64px}
+.cal-d.off{background:transparent}
 .cal-d .n{font-size:11.5px;color:var(--ink-400);font-weight:500}
 .cal-d.today .n{background:var(--primary);color:#fff;border-radius:999px;padding:1px 6px}
-.cal-ev{margin-top:4px;font-size:11px;font-weight:600;color:var(--primary-dark);background:var(--primary-50);border-radius:6px;padding:3px 7px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cal-ev.draft{background:#f1f5f9;color:var(--ink-500)}
-.cal-ev:hover{filter:brightness(.96)}
+.cal-bar{z-index:2;margin:2px 2px 0;font-size:11px;font-weight:600;color:#fff;background:var(--primary);border-radius:6px;padding:3px 9px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:8px;box-shadow:0 1px 2px rgb(79 70 229/.25)}
+.cal-bar .cb-n{margin-left:auto;font-weight:500;opacity:.85;font-variant-numeric:tabular-nums}
+.cal-bar.draft{background:#e2e8f0;color:var(--ink-700);box-shadow:none}
+.cal-bar:hover{filter:brightness(.95)}
 .seg{display:inline-flex;background:#f1f5f9;border-radius:8px;padding:3px;gap:2px;margin-top:4px}
 .seg button{padding:5px 12px;border-radius:6px;font-size:12.5px;font-weight:500;color:var(--ink-500)}
 .seg button.on{background:#fff;color:var(--ink-900);font-weight:600;box-shadow:var(--sh-carte)}
@@ -1636,13 +1639,27 @@ function calendarHtml(list){
   const lbl=first.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
   const prev=new Date(y,m-2,1), next=new Date(y,m,1);
   const key=d=>`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-  let h=`<div class="calhead"><button class="btn btn-s" data-chip="calMonth::${prev.getFullYear()}-${String(prev.getMonth()+1).padStart(2,"0")}">‹</button><b>${lbl.charAt(0).toUpperCase()+lbl.slice(1)}</b><button class="btn btn-s" data-chip="calMonth::${next.getFullYear()}-${String(next.getMonth()+1).padStart(2,"0")}">›</button><button class="btn btn-s" data-chip="calMonth::2026-09">Aujourd'hui</button></div>`;
-  h+=`<div class="cal">`+["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].map(d=>`<div class="cal-dh">${d}</div>`).join("");
-  for(let i=0;i<start;i++) h+=`<div class="cal-d off"></div>`;
-  for(let d=1;d<=days;d++){
-    const k=key(d);
-    const here=list.filter(c=>c.dt&&c.dt.j1<=k&&k<=c.dt.j2);
-    h+=`<div class="cal-d ${k==="2026-09-12"?"today":""}"><span class="n">${d}</span>${here.map(c=>`<div class="cal-ev ${c.col==="brouillon"?"draft":""}" data-open="${c.id}">${c.ville||c.title}${c.frm?" · "+c.frm:""}</div>`).join("")}</div>`;
+  let h=`<div class="calhead"><button class="btn btn-s" data-chip="calMonth::${prev.getFullYear()}-${String(prev.getMonth()+1).padStart(2,"0")}">‹</button><b>${lbl.charAt(0).toUpperCase()+lbl.slice(1)}</b><button class="btn btn-s" data-chip="calMonth::${next.getFullYear()}-${String(next.getMonth()+1).padStart(2,"0")}">›</button></div>`;
+  h+=`<div class="cal"><div class="cal-wk head">`+["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].map(d=>`<div class="cal-dh">${d}</div>`).join("")+`</div>`;
+  /* semaines : cellules de jour en fond, barres continues par-dessus (une session sur deux jours = une seule barre) */
+  const cells=[]; for(let i=0;i<start;i++) cells.push(null); for(let d=1;d<=days;d++) cells.push(d); while(cells.length%7) cells.push(null);
+  for(let w=0;w<cells.length/7;w++){
+    const wk=cells.slice(w*7,w*7+7);
+    const kOf=i=>wk[i]?key(wk[i]):null;
+    const bars=[]; const lanes=[];
+    list.filter(c=>c.dt&&c.dt.j1).forEach(c=>{
+      let a=-1,bb=-1;
+      for(let i=0;i<7;i++){const k=kOf(i); if(!k) continue; if(c.dt.j1<=k&&k<=c.dt.j2){ if(a<0)a=i; bb=i; }}
+      if(a<0) return;
+      let lane=0; while(lanes[lane]&&lanes[lane].some(([x,yy])=>!(bb<x||a>yy))) lane++;
+      (lanes[lane]=lanes[lane]||[]).push([a,bb]);
+      bars.push({c,a,bb,lane});
+    });
+    const nl=Math.max(1,lanes.length);
+    h+=`<div class="cal-wk" style="grid-template-rows:22px repeat(${nl},24px) 8px">`;
+    wk.forEach((d,i)=>{const k=d?key(d):null; h+=`<div class="cal-d ${d?"":"off"} ${k==="2026-09-12"?"today":""}" style="grid-column:${i+1};grid-row:1 / span ${nl+2}">${d?`<span class="n">${d}</span>`:""}</div>`;});
+    bars.forEach(({c,a,bb,lane})=>{h+=`<div class="cal-bar ${c.col==="brouillon"?"draft":""}" data-open="${c.id}" style="grid-column:${a+1} / span ${bb-a+1};grid-row:${lane+2}" title="${c.title}">${c.ville||c.title}${c.frm?" · "+c.frm:""}<span class="cb-n">${sessCounts(c).txt}</span></div>`;});
+    h+=`</div>`;
   }
   return h+`</div>`;
 }
