@@ -596,7 +596,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .accrow{display:flex;align-items:center;gap:10px;padding:7px 4px;border-radius:8px;font-size:13px;color:var(--ink-800);cursor:pointer}
 .accrow:hover{background:#f8fafc}
 .accrow.fixed{cursor:default;color:var(--ink-500)}
-.sw{width:34px;height:20px;border-radius:999px;background:#e2e8f0;position:relative;flex-shrink:0;transition:background .15s}
+.sw{display:inline-block;width:34px;height:20px;border-radius:999px;background:#cbd5e1;position:relative;flex-shrink:0;transition:background .15s;cursor:pointer;vertical-align:middle}
+.swrow{display:flex;align-items:center;gap:10px}
 .sw i{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgb(0 0 0/.2);transition:left .15s}
 .sw.on{background:var(--primary)}
 .sw.on i{left:16px}
@@ -1975,12 +1976,12 @@ function ficheSessionHtml(id){
   /* section 5 : publication ARD, visible dès que la session est publiée */
   if(c.col!=="brouillon"){
     const sc=sessCounts(c);
-    h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Publication ARD <span class="chip ok">visible sur ARD</span></div><div class="idgrid" style="border-top:none;padding-top:4px">
-      <div class="fld"><div class="k">Visible sur ARD</div><div class="v"><span class="sw on" data-ardtoggle="${c.id}"><i></i></span></div></div>
+    const vis=c.ardVisible!==false;
+    h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Visibilité sur ARD</div><div class="idgrid" style="border-top:none;padding-top:4px">
+      <div class="fld"><div class="k">Visible sur ARD</div><div class="v swrow"><span class="sw ${vis?"on":""}" data-ardtoggle="${c.id}"><i></i></span><span class="${vis?"":"muted"}">${vis?"Activée : la session apparaît sur le formulaire d'inscription":"Désactivée : la session est masquée sur ARD"}</span></div></div>
       <div class="fld"><div class="k">Places réelles restantes</div><div class="v">${Math.max(0,sc.cap-sc.ins-sc.enc)} sur ${sc.cap} <span class="muted">(${sc.ins} inscrits, ${sc.enc} en cours)</span></div></div>
       <div class="fld"><div class="k">Places affichées sur ARD (plafond)</div><div class="v">${c.plafond||sc.cap}</div></div>
       <div class="fld"><div class="k">Délai d'inscription</div><div class="v">${c.delai||"Normal (11 jours ouvrés pour le CPF)"}</div></div>
-      <div class="fld"><div class="k">Lien d'inscription pré-filtré</div><div class="v"><a class="ilink" data-copy="https://formulaire.franceia-dev.com/?session=${c.id}">Copier le lien ARD de cette session</a></div></div>
     </div></div>`;
   }
   return h;
@@ -2322,7 +2323,7 @@ document.addEventListener("click",e=>{
     S.reserveFor=null;toast(`Place bloquée 48 h pour <b>${p} ${n}</b>.`);render();return}
   if(t.dataset.prolong){const i=CARDS.find(x=>x.id===t.dataset.prolong);i.expires="2026-08-26T16:30";toast("Réservation prolongée de 48 h.");render();return}
   if(t.dataset.cancelres){const i=CARDS.find(x=>x.id===t.dataset.cancelres);const reason=prompt("Raison de l'annulation (obligatoire) :");if(!reason)return;CARDS.splice(CARDS.indexOf(i),1);toast("Réservation annulée, place libérée.");render();return}
-  if(t.dataset.ardtoggle){t.classList.toggle("on");toast(t.classList.contains("on")?"Session visible sur ARD.":"Session masquée sur ARD.");return}
+  if(t.dataset.ardtoggle){const c=CARDS.find(x=>x.id===t.dataset.ardtoggle);c.ardVisible=c.ardVisible===false;toast(c.ardVisible?"Session visible sur ARD.":"Session masquée sur ARD.");render();return}
   if(t.dataset.espace){toast("Ouverture de l'espace apprenant dans un nouvel onglet.");return}
   if(t.dataset.delsession){if(confirm("Supprimer cette session ? Les inscriptions payées bloqueront la suppression dans la vraie application.")){const c=CARDS.find(x=>x.id===t.dataset.delsession);CARDS.splice(CARDS.indexOf(c),1);S.fiche=null;toast("Session supprimée.");render();}return}
   if(t.dataset.copy){toast("Lien copié dans le presse-papier.");return}
