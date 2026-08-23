@@ -2716,17 +2716,22 @@ function lostModalHtml(){
   <div class="mactions"><button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p danger" data-lostconfirm="${i.id}">Confirmer le passage en Lost</button></div></div></div></div>`;
 }
 function pageAnnuaire(){
-  const f=S.fUsers||"apprenants";
+  const f=S.fUsers||"clients";
   let h=`<div class="pagehead"><h1>Annuaire</h1><p>Toutes les personnes du système : celles qui ont un compte (internes, formateurs, commerciaux) et celles qui ont une fiche (clients, apprenants).</p></div>`;
-  h+=chips([["",[["apprenants","Apprenants"],["clients","Clients"],["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["internes","Internes"]]]], f, "fUsers");
+  h+=chips([["",[["clients","Clients"],["apprenants","Apprenants"],["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["internes","Internes"]]]], f, "fUsers");
   h+=`<div class="fsec">`;
-  if(f==="apprenants"){
-    h+=`<h2>Apprenants <span class="n2">${APPRENANTS.length}</span></h2>`;
-    h+=APPRENANTS.map(a=>{const cl=CLIENTS.find(c=>c.id===a.client);
-      return `<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(a.nom)}</span><div><div class="tt">${a.nom}</div><div class="sm">${a.email}</div></div><span class="chip">${a.type}</span><span class="go" data-fiche="apprenant::${a.id}">Fiche apprenant</span>${cl?`<span class="go" data-fiche="client::${cl.id}">Client</span>`:""}</div>`;}).join("");
-  } else if(f==="clients"){
+  if(f==="clients"){
     h+=`<h2>Clients <span class="n2">${CLIENTS.length}</span></h2>`;
-    h+=CLIENTS.map(c=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${c.type.startsWith("Particulier")?initiales(c.nom):"🏢"}</span><div><div class="tt">${c.nom}</div><div class="sm">${c.siret?"SIRET "+c.siret:"Particulier"}</div></div><span class="chip">${c.mode}</span><span class="go" data-fiche="client::${c.id}">Fiche client</span></div>`).join("");
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Client</th><th>Apprenants</th><th>Type</th><th>Fiche</th></tr></thead><tbody>`
+      +CLIENTS.map(c=>`<tr><td><b>${c.nom}</b></td><td>${(c.apprenants||[]).length}</td><td>${c.type}</td><td><a class="ilink" data-fiche="client::${c.id}">Fiche client</a></td></tr>`).join("")
+      +`</tbody></table></div>`;
+  } else if(f==="apprenants"){
+    h+=`<h2>Apprenants <span class="n2">${APPRENANTS.length}</span></h2>`;
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Apprenant</th><th>Client</th><th>Type</th><th>Fiches</th></tr></thead><tbody>`
+      +APPRENANTS.map(a=>{const cl=CLIENTS.find(c=>c.id===a.client);
+        const type=String(a.type||"").startsWith("Salarié")?"Salarié":"Particulier";
+        return `<tr><td><b>${a.nom}</b></td><td>${cl?cl.nom:'<span class="muted">aucun</span>'}</td><td>${type}</td><td class="acts"><a class="ilink" data-fiche="apprenant::${a.id}">Fiche apprenant</a>${cl?`<a class="ilink" data-fiche="client::${cl.id}">Fiche client</a>`:""}</td></tr>`}).join("")
+      +`</tbody></table></div>`;
   } else if(f==="formateurs"){
     h+=`<h2>Formateurs <span class="n2">qualifications, profil, onboarding</span></h2>`;
     h+=[["Sarah K.","N1 · N2 · Coaching","Paris"],["Marc D.","N1","Bordeaux · Toulouse"],["Inès B.","N1 · Coaching","Lyon"]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div><div class="tt">${x[0]}</div><div class="sm">Villes : ${x[2]}</div></div><span class="chip">Offres : ${x[1]}</span><span class="chip ok">Onboarding complet</span></div>`).join("");
