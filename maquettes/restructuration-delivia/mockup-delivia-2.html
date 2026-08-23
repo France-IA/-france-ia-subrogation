@@ -574,6 +574,16 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .pvpct{font-size:13px;font-weight:700;color:var(--ok);font-variant-numeric:tabular-nums}
 .pmat th .pname a{display:block;font-size:11.5px;line-height:1.35}
 .pmat th{min-width:120px}
+/* ── fiche compte : interrupteurs d'accès ── */
+.accgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px 18px;margin-top:10px}
+.accrow{display:flex;align-items:center;gap:10px;padding:7px 4px;border-radius:8px;font-size:13px;color:var(--ink-800);cursor:pointer}
+.accrow:hover{background:#f8fafc}
+.accrow.fixed{cursor:default;color:var(--ink-500)}
+.sw{width:34px;height:20px;border-radius:999px;background:#e2e8f0;position:relative;flex-shrink:0;transition:background .15s}
+.sw i{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgb(0 0 0/.2);transition:left .15s}
+.sw.on{background:var(--primary)}
+.sw.on i{left:16px}
+.accrow.fixed .sw.on{background:#a5b4fc}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}#gsearch{display:none}}
 </style>
@@ -1021,6 +1031,18 @@ const SESS = {
  parisn2: {lbl:"Paris N2 · 10-11 oct",  lieu:"Station F, Paris 13e",            ville:"Paris",    dt:{j1:"2026-10-10",j2:"2026-10-11"}, frm:null,       niveau:"Plutôt avancé"},
 };
 const FORMATEURS = ["Sarah K.","Marc D.","Inès B."];
+/* comptes ayant un accès à DELIV'IA, avec leurs droits page par page (admin : tout, non modifiable) */
+const PAGES_ACCES = [["sessions","Sessions"],["inscription","Inscription"],["facturation","Facturation"],["anomalies","Anomalies"],["actions","Actions"],["automatisations","Automatisations"],["templates","Templates"],["utilisateurs","Annuaire"],["faq","FAQ & Feedback"],["preuves","Preuves"],["generer","Générer"]];
+const APPS_ACCES = [["apprenant","Plateforme apprenant"],["dash","Data Dashboard"]];
+const COMPTES = [
+ {id:"u_jeanne",nom:"Jeanne Dubois",role:"admin",titre:"Admin · Customer Success",email:"jeanne@franceia.com",tel:"06 12 00 45 67",ghl:"91Bx12",qlb:"7a21-20",acces:null,apps:["apprenant","dash"]},
+ {id:"u_come",nom:"Côme Aubert",role:"admin",titre:"Admin · Process",email:"come@franceia.com",tel:"06 33 10 22 84",ghl:"91Bx07",qlb:"7a21-11",acces:null,apps:["apprenant","dash"]},
+ {id:"u_olivier",nom:"Olivier Renard",role:"admin",titre:"Admin",email:"olivier@franceia.com",tel:"06 70 55 31 09",ghl:"91Bx03",qlb:"7a21-04",acces:null,apps:["apprenant","dash"]},
+ {id:"u_alex",nom:"Alex Rivière",role:"closer",titre:"Closeur",email:"alex@franceia.com",tel:"06 81 42 19 30",ghl:"91Bx21",qlb:null,acces:["sessions","inscription","facturation","anomalies","generer","faq"],apps:["dash"]},
+ {id:"u_chloe",nom:"Chloé Martin",role:"closer",titre:"Closeuse",email:"chloe@franceia.com",tel:"06 90 12 77 45",ghl:"91Bx22",qlb:null,acces:["sessions","inscription","facturation","anomalies","generer","faq"],apps:["dash"]},
+ {id:"u_yanis",nom:"Yanis Benamar",role:"closer",titre:"Closeur",email:"yanis@franceia.com",tel:"07 11 48 62 05",ghl:"91Bx23",qlb:null,acces:["sessions","inscription","facturation","anomalies","generer","faq"],apps:["dash"]},
+ {id:"u_sam",nom:"Sam Tessier",role:"setter",titre:"Setteur",email:"sam@franceia.com",tel:"06 45 78 90 12",ghl:"91Bx31",qlb:null,acces:["facturation","faq"],apps:["dash"]},
+];
 const LIEUX = ["Station F, Paris 13e","Quai des Chartrons, Bordeaux","Part-Dieu, Lyon","Chez le client"];
 const DEMANDES_FRM = {s3:[{f:"Inès B.",d:"2026-08-19",m:"Disponible les deux jours, je connais bien Lyon."},{f:"Marc D.",d:"2026-08-21",m:""}], s4:[{f:"Sarah K.",d:"2026-08-20",m:"Je peux prendre le N2 Paris."}]};
 let CARDS = [
@@ -1827,6 +1849,20 @@ function ficheClientHtml(id){
   h+=`</div>`;
   return h;
 }
+function ficheCompteHtml(id){
+  const u=COMPTES.find(x=>x.id===id); if(!u) return "";
+  const ed=S.editing==="compte::"+u.id;
+  let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
+  h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${initiales(u.nom)}</div><div><h1>${u.nom}</h1><div class="fh-contact"><span>${ICO.mail}${u.email}</span><span>${ICO.phone}${u.tel}</span></div><div class="fh-badges"><span class="chip">${u.titre}</span><span class="chip ok">Compte actif</span></div></div>
+    <div class="fh-right">${editBtns("compte",u.id)}<button class="btn btn-s">Ré-inviter</button><button class="btn btn-s danger">Désactiver</button></div></div>
+  <div class="idgrid">${fld("Nom",u.nom,"nom",u)}${fld("Email",u.email,"email",u)}${fld("Téléphone",u.tel,"tel",u)}${fld("Rôle",ROLES[u.role])}</div>
+  <div class="idchips"><span class="lbl">Identifiants techniques</span>${idFld("ghl_user_id","ghl",u)}${u.role==="admin"?idFld("qualiobee_user_id","qlb",u):""}</div></div>`;
+  /* droits d'accès */
+  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Accès aux pages <span class="n2">${u.role==="admin"?"un admin accède à tout, ce paramétrage n'est pas modifiable":"les changements s'appliquent immédiatement au menu et à la navigation"}</span></div>`;
+  h+=`<div class="accgrid">`+PAGES_ACCES.map(([pid,lbl])=>{const on=u.role==="admin"||(u.acces||[]).includes(pid);return `<div class="accrow ${u.role==="admin"?"fixed":""}" ${u.role==="admin"?"":`data-acctoggle="${u.id}::${pid}"`}><span class="sw ${on?"on":""}"><i></i></span><span>${lbl}</span></div>`}).join("")+`</div>`;
+  h+=`<div class="subh">Applications de la plateforme</div><div class="accgrid">`+APPS_ACCES.map(([aid,lbl])=>{const on=(u.apps||[]).includes(aid);return `<div class="accrow" data-apptoggle="${u.id}::${aid}"><span class="sw ${on?"on":""}"><i></i></span><span>${lbl}</span></div>`}).join("")+`</div></div>`;
+  return h;
+}
 function sessionStatusGroup(c){
   if(c.movedFrom) return 3;
   if(c.col==="lost") return 2;
@@ -1898,14 +1934,10 @@ function pageAnnuaire(){
   } else if(f==="formateurs"){
     h+=`<h2>Formateurs <span class="n2">qualifications, profil, onboarding</span></h2>`;
     h+=[["Sarah K.","N1 · N2 · Coaching","Paris"],["Marc D.","N1","Bordeaux · Toulouse"],["Inès B.","N1 · Coaching","Lyon"]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div><div class="tt">${x[0]}</div><div class="sm">Villes : ${x[2]}</div></div><span class="chip">Offres : ${x[1]}</span><span class="chip ok">Onboarding complet</span></div>`).join("");
-  } else if(f==="closeurs"){
-    h+=`<h2>Closeurs <span class="n2">calendriers de closing</span></h2>`;
-    h+=[["Alex R."],["Chloé M."],["Yanis B."]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div class="tt">${x[0]}</div><span class="chip">Calendrier GHL relié</span></div>`).join("");
-  } else if(f==="setteurs"){
-    h+=`<h2>Setteurs</h2><div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">ST</span><div class="tt">Sam T.</div><span class="chip">Fixe + commissions</span></div>`;
-  } else {
-    h+=`<h2>Internes <span class="n2">comptes France IA et accès aux pages</span></h2>`;
-    h+=[["Jeanne D.","Admin · Customer Success"],["Côme A.","Admin · Process"],["Olivier R.","Admin"]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div class="tt">${x[0]}</div><span class="chip">${x[1]}</span><span class="chip">Accès : toutes les pages</span></div>`).join("");
+  } else if(f==="closeurs"||f==="setteurs"||f==="internes"){
+    const role=f==="closeurs"?"closer":f==="setteurs"?"setter":"admin";
+    h+=`<h2>${f==="closeurs"?"Closeurs":f==="setteurs"?"Setteurs":"Internes"} <span class="n2">${role==="admin"?"comptes France IA, accès à toutes les pages":"comptes et accès aux pages"}</span></h2>`;
+    h+=COMPTES.filter(u=>u.role===role).map(u=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(u.nom)}</span><div><div class="tt">${u.nom}</div><div class="sm">${u.email}</div></div><span class="chip">${u.titre}</span><span class="chip">${u.acces?u.acces.length+" pages":"Toutes les pages"}</span><span class="go" data-fiche="compte::${u.id}">Fiche</span></div>`).join("");
   }
   h+=`</div>`;
   return h;
@@ -2082,7 +2114,7 @@ function render(){
   const crumbEnd = S.fiche
     ? (S.fiche.t==="apprenant" ? "Fiche apprenant · "+(APPRENANTS.find(a=>a.id===S.fiche.id)||{}).nom : "Fiche client · "+(CLIENTS.find(c=>c.id===S.fiche.id)||{}).nom)
     : ((groups.flatMap(g=>g[1]).find(t=>t[0]===S.tab)||["",""])[1]||"");
-  const crumbEnd2 = S.fiche&&S.fiche.t==="session" ? "Fiche session · "+(CARDS.find(c=>c.id===S.fiche.id)||{}).title : crumbEnd;
+  const crumbEnd2 = S.fiche&&S.fiche.t==="session" ? "Fiche session · "+(CARDS.find(c=>c.id===S.fiche.id)||{}).title : S.fiche&&S.fiche.t==="compte" ? "Annuaire · "+(COMPTES.find(c=>c.id===S.fiche.id)||{}).nom : crumbEnd;
   $("#crumb").innerHTML=`${APPS[S.app].name}<span class="sep">/</span><span style="color:var(--ink-500);font-weight:500">${crumbEnd2}</span>`;
   $("#roleSel").innerHTML=Object.entries(ROLES).map(([id,lbl])=>`<button class="${S.role===id?"active":""}" data-role="${id}">${lbl}</button>`).join("");
   /* bouton Voir comme (réel : réservé aux admins), bannière de vision, menu utilisateur */
@@ -2096,7 +2128,7 @@ function render(){
   if(S.app==="apprenant") h=pageApprenant();
   else if(S.app==="dash") h=pageDash();
   else if(S.fiche){
-    h = S.fiche.t==="apprenant" ? ficheApprenantHtml(S.fiche.id) : S.fiche.t==="session" ? ficheSessionHtml(S.fiche.id) : ficheClientHtml(S.fiche.id);
+    h = S.fiche.t==="apprenant" ? ficheApprenantHtml(S.fiche.id) : S.fiche.t==="session" ? ficheSessionHtml(S.fiche.id) : S.fiche.t==="compte" ? ficheCompteHtml(S.fiche.id) : ficheClientHtml(S.fiche.id);
   }
   else {
     if(S.tab==="sessions") h=pageSessions();
@@ -2147,14 +2179,14 @@ document.addEventListener("click",e=>{
   if(acc){const d=acc.parentElement;S.openAcc[d.dataset.acc]=!d.open}
   if(!e.target.closest("#gsearch")) $("#gsearchRes").classList.remove("on");
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
-  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive]");
+  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
   if(t.dataset.editcancel){S.editing=null;render();return}
   if(t.dataset.editsave){
     const [kind,fid]=t.dataset.editsave.split("::");
-    const obj=(kind==="apprenant"?APPRENANTS:kind==="session"?CARDS:CLIENTS).find(x=>x.id===fid);
+    const obj=(kind==="apprenant"?APPRENANTS:kind==="session"?CARDS:kind==="compte"?COMPTES:CLIENTS).find(x=>x.id===fid);
     document.querySelectorAll("#content [data-f]").forEach(inp=>{obj[inp.dataset.f]=inp.value});
     if(kind==="apprenant"){obj.nom=((obj.prenom||"")+" "+(obj.fam||"")).trim()||obj.nom;}
     if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.over=parseInt(obj.places)>parseInt((obj.places||"0/12").split("/")[1]||12);const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===obj.sess);if(fs){fs.frm=obj.frm;fs.dt=obj.dt;fs.places=obj.places;}}
@@ -2195,6 +2227,8 @@ document.addEventListener("click",e=>{
   if(t.dataset.espace){toast("Ouverture de l'espace apprenant dans un nouvel onglet.");return}
   if(t.dataset.delsession){if(confirm("Supprimer cette session ? Les inscriptions payées bloqueront la suppression dans la vraie application.")){const c=CARDS.find(x=>x.id===t.dataset.delsession);CARDS.splice(CARDS.indexOf(c),1);S.fiche=null;toast("Session supprimée.");render();}return}
   if(t.dataset.copy){toast("Lien copié dans le presse-papier.");return}
+  if(t.dataset.acctoggle){const [uid,pid]=t.dataset.acctoggle.split("::");const u=COMPTES.find(x=>x.id===uid);u.acces=u.acces||[];const ix=u.acces.indexOf(pid);if(ix>=0)u.acces.splice(ix,1);else u.acces.push(pid);toast(`Accès <b>${PAGES_ACCES.find(p=>p[0]===pid)[1]}</b> ${ix>=0?"retiré":"accordé"} à ${u.nom}.`);render();return}
+  if(t.dataset.apptoggle){const [uid,aid]=t.dataset.apptoggle.split("::");const u=COMPTES.find(x=>x.id===uid);u.apps=u.apps||[];const ix=u.apps.indexOf(aid);if(ix>=0)u.apps.splice(ix,1);else u.apps.push(aid);render();return}
   if(t.dataset.syncdrive){toast("Synchronisation avec le Drive lancée : les preuves déposées hors DELIV'IA seront reconnues dans quelques minutes.");return}
   if(t.dataset.vcback){S.voirComme=null; S.role=S.realRole; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; S.fFact="cpf"; render(); return}
   if(t.dataset.logout){toast("Déconnexion : retour à l'écran de connexion SSO France IA."); return}
