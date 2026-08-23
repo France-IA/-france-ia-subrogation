@@ -362,7 +362,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .anocase .acts{margin-left:auto;display:flex;gap:6px;flex-shrink:0}
 .anonone{font-size:11.5px;color:var(--ok);padding:9px 0 2px}
 /* page Générer : même forme que le panneau partagé de DELIV'IA 1 */
-.gengrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px;margin:2px 0 18px;max-width:880px}
+.genwrap{max-width:880px;margin:0 auto}
+.gengrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px;margin:2px 0 18px}
 .gencard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;background:#fff;border:1px solid var(--line-2);border-radius:12px;padding:13px}
 .gencard:hover{border-color:#cbd5e1;background:#f8fafc}
 .gencard.on{border-color:#c7d2fe;background:#eef2ff;box-shadow:var(--sh-carte)}
@@ -371,7 +372,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .gencard .t{font-size:13px;font-weight:600;color:var(--ink-800)}
 .gencard.on .t{color:#4338ca}
 .gencard .d{font-size:11px;color:var(--ink-400);line-height:1.35}
-.genform{background:#fff;border:1px solid var(--line-2);border-radius:14px;box-shadow:var(--sh-carte);padding:18px 20px;max-width:880px}
+.genform{background:#fff;border:1px solid var(--line-2);border-radius:14px;box-shadow:var(--sh-carte);padding:18px 20px}
 .genrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 18px;margin-bottom:12px}
 .genfld .k{font-size:11px;font-weight:600;color:var(--ink-600,#475569);margin-bottom:4px}
 .genfld .edin{width:100%}
@@ -609,6 +610,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .lockmid .lm-d{font-size:11.5px;color:var(--ink-500);line-height:1.2}
 .lockmid .lm-r{font-size:10.5px;color:var(--ink-400);line-height:1.2}
 .card.over{box-shadow:0 0 0 1.5px var(--err),var(--sh-carte)}
+.fintxt{font-size:11.5px;color:var(--ink-500);white-space:nowrap}
+.ct .fintxt{flex-shrink:0;margin-top:2px}
+.mhead .row .fintxt{font-size:12px;margin-top:4px}
 .badge.b-over{background:var(--err-50);color:var(--err);font-weight:600}
 .badge.b-risk{background:var(--warn-50);color:var(--warn);font-weight:600}
 /* ── sessions : filtres, liste, calendrier, fiche, modales secondaires ── */
@@ -635,6 +639,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tbl tr.rowlink{cursor:pointer}.tbl tr.rowlink:hover td{background:#f8fafc}
 .tbl tr.dim td{color:var(--ink-400)}
 .tbl tr.tgrp2 td{background:#f8fafc;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-500);padding:7px 14px}
+.tbl tr.tgrp2.apart td{border-top:2px dashed var(--line-2);padding-top:13px}
 .tbl .acts{display:flex;gap:12px;white-space:nowrap}
 .tbl .sm{font-size:11px;color:var(--ink-400)}
 .muted{color:var(--ink-400)}
@@ -1580,7 +1585,8 @@ function unlockCol(kb,colId){
 }
 
 /* ════════════════════ RENDU ════════════════════ */
-function badge(fin){ if(!fin||!FIN[fin]) return ""; const f=FIN[fin]; return `<span class="badge b-${f.cls}">${f.lbl}</span>` }
+/* le mode de paiement s'écrit en texte, jamais en badge coloré */
+function badge(fin){ if(!fin||!FIN[fin]) return ""; return `<span class="fintxt">${FIN[fin].lbl}</span>` }
 function badgeOffre(offre){ if(!offre) return ""; return `<span class="badge b-offre">${OFFRES[offre]||offre}</span>` }
 function isFact(card){ return card.kb.startsWith("fact_"); }
 /* changer le mode de paiement d'une carte : elle change de rail de facturation */
@@ -1712,7 +1718,7 @@ function cardHtml(card, colDef, opts={}){
   const lockInfo = card.waiting ? {c:KB[card.kb].cols.find(x=>x.id===card.waiting),pref:true} : null;
   const over=card.kb.startsWith("session")&&sessCounts(card).over;
   let h=`<div class="card st-${st} ${over?"over":""} ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${lockInfo?"haslock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
-  h+=`<div class="ct"><span class="t">${card.title}</span>${cardBadge(card)}</div>`;
+  h+=`<div class="ct"><span class="t">${card.title}</span>${opts.noBadge?"":cardBadge(card)}</div>`;
   if(lockInfo){
     const lc=lockInfo.c;
     h+=`<div class="lockmid"><span class="lockico">${ICO.lock}</span><div class="lm-x"><div class="lm-t">${lc.label}</div><div class="lm-d">Ouverture ${openDateStr(card,lc)}</div><div class="lm-r">${lc.open}</div></div></div></div>`;
@@ -2160,7 +2166,7 @@ function genLignes(){
 function pageGenerer(){
   const t=["facture","devis","sdd","convention"].includes(S.genType)?S.genType:"facture";
   const isQonto=t==="facture"||t==="devis";
-  let h=`<div class="pagehead"><h1>Générer</h1><p>Choisis ce que tu veux produire — un maximum est pré-rempli, les champs à compléter sont légèrement grisés.</p></div>`;
+  let h=`<div class="genwrap"><div class="pagehead"><h1>Générer</h1><p>Choisis ce que tu veux produire — un maximum est pré-rempli, les champs à compléter sont légèrement grisés.</p></div>`;
   h+=`<div class="gengrid">`+genCards().map(([k,lbl,d,ico])=>`<button class="gencard ${t===k?"on":""}" data-chip="genType::${k}"><span class="ic">${ico}</span><span class="t">${lbl}</span><span class="d">${d}</span></button>`).join("")+`</div>`;
   h+=`<div class="genform">`;
   if(t==="devis") h+=`<label class="genchk"><input type="checkbox"> Le client n'a pas de fiche ARD (devis sans fiche client)</label>`;
@@ -2194,7 +2200,7 @@ function pageGenerer(){
   }
   const lbl = t==="facture"?"Générer la facture" : t==="devis"?"Générer le devis" : t==="sdd"?"Créer l'échéancier" : "Générer la convention";
   h+=`<div class="mactions" style="margin-top:16px"><button class="btn btn-p" data-gen="${encodeURIComponent(lbl)}">${lbl}</button></div>`;
-  return h+`</div>`;
+  return h+`</div></div>`;
 }
 function pointerCard(){
   return `<div class="card pointer clickable" data-tab="aprendre"><div class="t">📥 Sessions et coachings disponibles</div><div class="s">Publiés au shotgun, à la demande</div><div class="nextt" style="margin-top:9px"><span class="v" style="color:var(--primary);font-weight:600">Rendez-vous sur la page À prendre →</span></div></div>`;
@@ -2417,25 +2423,27 @@ function ficheCompteHtml(id){
   h+=`<div class="subh">Applications de la plateforme</div><div class="accgrid">`+APPS_ACCES.map(([aid,lbl])=>{const on=(u.apps||[]).includes(aid);return `<div class="accrow" data-apptoggle="${u.id}::${aid}"><span class="sw ${on?"on":""}"><i></i></span><span>${lbl}</span></div>`}).join("")+`</div></div>`;
   return h;
 }
+/* 0 inscrits · 1 en cours d'inscription · 2 lost · 3 changés de session · 4 réservations (à part) */
 function sessionStatusGroup(c){
-  if(c.movedFrom) return 4;
-  if(c.col==="lost") return 3;
-  if(c.reserved) return 1;
+  if(c.reserved) return 4;
+  if(c.movedFrom) return 3;
+  if(c.col==="lost") return 2;
   if(["validee","absent","termine"].includes(c.col)) return 0;
-  return 2;
+  return 1;
 }
 function ficheSessionHtml(id){
   const c=CARDS.find(x=>x.id===id); if(!c) return "";
   const ed=S.editing==="session::"+c.id;
   let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
   /* section 1 : informations générales, sans titre */
-  h+=`<div class="fichehead"><div class="fh-top"><div><h1>${c.title}</h1><div class="fh-badges">${badgeOffre(c.offre)}<span class="chip">${colLabel(c)}</span>${placesBadge(c)}</div></div>
+  h+=`<div class="fichehead"><div class="fh-top"><div><h1>${c.title}</h1></div>
     <div class="fh-right">${ed?`<button class="btn btn-p" data-editsave="session::${c.id}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`:`<button class="btn btn-s" data-editstart="session::${c.id}">Modifier</button><button class="btn btn-s danger" data-delsession="${c.id}">Supprimer</button>`}</div></div>
   <div class="idgrid">
     ${ed?`<div class="fld"><div class="k">Jour 1</div><input class="edin" type="date" data-f="j1" value="${c.dt.j1}"></div><div class="fld"><div class="k">Jour 2</div><input class="edin" type="date" data-f="j2" value="${c.dt.j2}"></div>`:fld("Période",fmtDates(c))}
     ${ed?`<div class="fld"><div class="k">Formateur</div><select class="edin" data-f="frm"><option value="">À confirmer</option>${FORMATEURS.map(f=>`<option ${c.frm===f?"selected":""}>${f}</option>`).join("")}</select></div>`:fld("Formateur",c.frm||"À confirmer")}
     ${ed?`<div class="fld"><div class="k">Lieu J1</div><select class="edin" data-f="lieu">${LIEUX.map(l=>`<option ${c.lieu===l?"selected":""}>${l}</option>`).join("")}</select></div><div class="fld"><div class="k">Lieu J2</div><select class="edin" data-f="lieuJ2">${LIEUX.map(l=>`<option ${c.lieuJ2===l?"selected":""}>${l}</option>`).join("")}</select></div>`:(c.lieuJ2&&c.lieuJ2!==c.lieu?fld("Lieu J1",c.lieu)+fld("Lieu J2",c.lieuJ2):fld("Lieu J1 et J2",c.lieu))}
     ${ed?`<div class="fld"><div class="k">Niveau ARD</div><select class="edin" data-f="niveau">${["Plutôt débutant","Plutôt avancé","Aucun badge"].map(n=>`<option ${c.niveau===n?"selected":""}>${n}</option>`).join("")}</select></div>`:fld("Niveau ARD",c.niveau)}
+    ${ed?`<div class="fld"><div class="k">Offre</div><select class="edin" data-f="offre">${Object.entries(OFFRES).map(([k2,l2])=>`<option value="${k2}" ${c.offre===k2?"selected":""}>${l2}</option>`).join("")}</select></div>`:fld("Offre",OFFRES[c.offre])}
     ${ed?`<div class="fld"><div class="k">Capacité (places)</div><input class="edin" type="number" data-f="cap" value="${c.cap}"></div>`:(()=>{const sc=sessCounts(c);return fld("Inscrits",`<b>${sc.ins}</b> inscrit${sc.ins>1?"s":""} · <b>${sc.enc}</b> en cours · ${sc.cap} places${sc.over?' <span class="badge b-over">Surbooking</span>':sc.risk?' <span class="badge b-risk">Risque de surbooking</span>':""}`)})()}
     ${linkFld("Lien Mon CPF","cpfLink",c,ed,"Ouvrir Mon CPF")}
     ${linkFld("Lien Qualiobee","qlbLink",c,ed,"Ouvrir la session Qualiobee")}
@@ -2443,22 +2451,22 @@ function ficheSessionHtml(id){
   <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>${(()=>{const sv=S.editing;S.editing=ed?sv:null;const out=idFld("qualiobee_session_id","qlbId",c)+idFld("edof_session_id","edofId",c)+idFld("drive_folder_id","driveId",c);S.editing=sv;return out})()}</div></div>`;
   /* sections 2 et 3 côte à côte : notes (large) et planification (la carte cliquable) */
   h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Notes</div><textarea class="notes-ta" data-note="${c.id}">${c.note||""}</textarea></div>
-  <div class="fsec"><div class="sect-h">${ICO.cap}Planification</div><div style="margin-top:10px">${cardHtml(c,KB[c.kb].cols.find(x=>x.id===c.col),{})}</div></div></div>`;
+  <div class="fsec"><div class="sect-h">${ICO.cap}Planification <span class="n2">étape ${colLabel(c).toLowerCase()}</span></div><div style="margin-top:10px">${cardHtml(c,KB[c.kb].cols.find(x=>x.id===c.col),{noBadge:1})}</div></div></div>`;
   /* section 4 : apprenants */
-  const inscs=CARDS.filter(i=>i.kb==="insc"&&(i.sess===c.sess||i.movedFrom===c.sess)).map(i=>({i,g:i.movedFrom===c.sess?4:sessionStatusGroup(i)})).sort((a,b)=>a.g-b.g);
-  const GL=["Inscrits","Réservations en cours (48 h)","Pas encore inscrits","Lost","Changés de session"];
+  const inscs=CARDS.filter(i=>i.kb==="insc"&&(i.sess===c.sess||i.movedFrom===c.sess)).map(i=>({i,g:i.movedFrom===c.sess?3:sessionStatusGroup(i)})).sort((a,b)=>a.g-b.g);
+  const GL=["Inscrits","En cours d'inscription","Lost","Changés de session","Réservations en cours (48 h)"];
   h+=`<div class="fsec"><div class="sect-h">${ICO.user}Apprenants <span class="n2">${inscs.length}</span><span class="right"><button class="btn btn-s" data-reserve="${c.id}">+ Réserver une place</button></span></div><div class="tblwrap"><table class="tbl"><thead><tr><th>Nom</th><th>Mode de paiement</th><th>Closeur / Setteur</th><th>Statut</th><th>Actions</th></tr></thead><tbody>`;
   let lastG=-1;
   inscs.forEach(({i,g})=>{
-    if(g!==lastG){h+=`<tr class="tgrp2"><td colspan="5">${GL[g]}</td></tr>`;lastG=g;}
+    if(g!==lastG){h+=`<tr class="tgrp2 ${g===4?"apart":""}"><td colspan="5">${GL[g]}</td></tr>`;lastG=g;}
     const {cl,aps}=peopleFor(i); const ap=aps[0];
     const moved=g===4;
     if(i.reserved){
       h+=`<tr><td>${i.title}<div class="sm">${i.resNote||""}</div></td><td><span class="chip">À définir</span></td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><span class="chip warn">Réservée jusqu'au ${fmtDT(i.expires)}</span></td><td class="acts"><a class="ilink" data-prolong="${i.id}">Prolonger</a><a class="ilink danger" data-cancelres="${i.id}">Annuler</a></td></tr>`;
       return;
     }
-    h+=`<tr class="${g>=3?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><span class="chip">${moved?"Déplacée vers "+SESS[i.sess].lbl:colLabel(i)}</span></td>
-      <td class="acts">${g<3?`<a class="ilink" data-switch="${i.id}">Switch session</a><a class="ilink danger" data-lost="${i.id}">Lost</a>`:""}${g===0?`<a class="ilink" data-espace="${i.id}">Ouvrir espace</a>`:""}</td></tr>`;
+    h+=`<tr class="${g===2||g===3?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><span class="chip">${moved?"Déplacée vers "+SESS[i.sess].lbl:colLabel(i)}</span></td>
+      <td class="acts">${g<2?`<a class="ilink" data-switch="${i.id}">Switch session</a><a class="ilink danger" data-lost="${i.id}">Lost</a>`:""}${g===0?`<a class="ilink" data-espace="${i.id}">Ouvrir espace</a>`:""}</td></tr>`;
   });
   if(!inscs.length) h+=`<tr><td colspan="5" class="muted">Aucun apprenant inscrit.</td></tr>`;
   h+=`</tbody></table></div></div>`;
@@ -2473,7 +2481,7 @@ function ficheSessionHtml(id){
         <div class="fld"><div class="k">Places maximum affichées (plafond fictif)</div><div class="v swrow">${edp?`<input class="edin" id="plafondIn" type="number" value="${c.plafond||sc.cap}" style="width:90px;margin:0"><button class="btn btn-p" data-plafondsave="${c.id}">Enregistrer</button><button class="btn btn-s" data-plafondcancel="1">Annuler</button>`:`<span>${c.plafond||sc.cap}</span><a class="ilink" data-plafondedit="${c.id}">Modifier</a>`}</div></div>
       </div>
       <div class="ardright"><div class="k">Fermeture des inscriptions</div>
-        <div class="closegrid">${ardClosings(c).map(x=>`<div class="closerow"><span class="chip">${x.lbl}</span><span class="cd">${x.date}</span><span class="cl ${x.left<0?"off":x.left<=3?"warn":""}">${x.txt}</span><span class="cr">${x.rule}</span></div>`).join("")}</div>
+        <div class="closegrid">${ardClosings(c).map(x=>`<div class="closerow"><span class="fintxt">${x.lbl}</span><span class="cd">${x.date}</span><span class="cl ${x.left<0?"off":x.left<=3?"warn":""}">${x.txt}</span><span class="cr">${x.rule}</span></div>`).join("")}</div>
       </div></div></div>`;
   }
   return h;
