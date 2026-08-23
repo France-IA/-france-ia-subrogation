@@ -417,6 +417,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .btn-xs.p:hover{opacity:.9;color:#fff}
 .facline{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .editptr{text-align:right;font-size:11px;margin-top:10px}
+.mact2{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;padding:14px 0 2px;border-top:1px solid var(--line);margin-top:14px}
 .col.sepcol{margin-left:17px;position:relative}
 .col.sepcol::before{content:"";position:absolute;left:-17px;top:4px;bottom:4px;border-left:1.5px dashed var(--line-2)}
 .colbulk{display:flex;flex-direction:column;gap:5px;margin:0 2px 9px}
@@ -1929,6 +1930,10 @@ function modalHtml(){
     const {cl}=peopleFor(card);
     if(cl) h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note</div><textarea class="notes-ta" data-note="${cl.id}">${cl.note||""}</textarea></div>`;
   }
+  if(card.kb==="insc"&&!card.reserved){
+    const {aps}=peopleFor(card);
+    h+=`<div class="mact2">${aps.length?`<button class="btn btn-s" data-espace="${card.id}">Ouvrir l'espace apprenant</button>`:""}<button class="btn btn-s" data-switch="${card.id}">Changer de session</button><button class="btn btn-s danger" data-lost="${card.id}">Passer en Lost</button></div>`;
+  }
   h+=`</div></div></div>`;
   return h;
 }
@@ -2491,7 +2496,7 @@ function ficheSessionHtml(id){
       return;
     }
     h+=`<tr class="${g===2||g===3?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}${moved?`<div class="sm">Déplacée vers ${SESS[i.sess].lbl}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><a class="ilink" data-open="${i.id}">Ouvrir la carte</a></td>
-      <td class="acts">${g<2?`<a class="ilink" data-switch="${i.id}">Switch session</a><a class="ilink danger" data-lost="${i.id}">Lost</a>`:""}${g===0?`<a class="ilink" data-espace="${i.id}">Ouvrir espace</a>`:""}</td></tr>`;
+      <td class="acts">${g===0?`<a class="ilink" data-espace="${i.id}">Ouvrir espace</a>`:""}</td></tr>`;
   });
   if(!inscs.length) h+=`<tr><td colspan="5" class="muted">Aucun apprenant inscrit.</td></tr>`;
   h+=`</tbody></table></div></div>`;
