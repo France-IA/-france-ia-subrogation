@@ -2396,13 +2396,11 @@ function ficheClientHtml(id){
   h+=cl.ventes.map((v,ix)=>{
     const ic=v.inscId?CARDS.find(c=>c.id===v.inscId):null;
     const fc=v.factId?CARDS.find(c=>c.id===v.factId):null;
-    const fcCol=fc?colLabel(fc):null;
     const k="cl-"+cl.id+"-"+ix;
     const appr=(v.apprenants||cl.apprenants||[]).map(aid=>APPRENANTS.find(x=>x.id===aid)).filter(Boolean);
     const ved = S.editVente===(cl.id+"::"+ix) || S.editing===("client::"+cl.id);
     return `<details class="acc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span>
-      <span class="tt">${v.lbl}</span>
-      <span class="end"><span style="font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums">${v.m}</span>${fcCol?`<span class="chip">${fcCol}</span>`:`<span class="chip">carte à venir</span>`}</span></summary>
+      <span class="tt">${v.lbl}</span></summary>
       <div class="inner">
         <div class="vbar">${ved
           ? `<button class="btn btn-p" data-vsave="${cl.id}::${ix}">Enregistrer</button><button class="btn btn-s" data-vcancel="1">Annuler</button>`
