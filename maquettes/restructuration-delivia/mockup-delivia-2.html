@@ -508,6 +508,57 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .card.st-locked .t{color:var(--ink-500)}
 .card.over{box-shadow:0 0 0 1.5px var(--err),var(--sh-carte)}
 .badge.b-over{background:var(--err-50);color:var(--err);font-weight:600}
+/* ── sessions : filtres, liste, calendrier, fiche, modales secondaires ── */
+.pagehead.row{display:flex;align-items:center;gap:12px}
+.pagehead.row .btn{margin-left:auto}
+.fbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-6px 0 14px}
+.fbar .chips{margin:0}
+.fsearch{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:6px 10px;color:var(--ink-400);min-width:260px}
+.fsearch input{border:none;outline:none;font:inherit;font-size:13px;color:var(--ink-900);flex:1;background:transparent}
+.fsel{font:inherit;font-size:13px;color:var(--ink-700);background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:6px 10px}
+.tblwrap{overflow-x:auto;background:#fff;border-radius:12px;box-shadow:var(--sh-carte)}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;padding:11px 14px;border-bottom:1px solid var(--line-2)}
+.tbl td{padding:11px 14px;border-top:1px solid var(--line);vertical-align:middle;color:var(--ink-800)}
+.tbl tr.rowlink{cursor:pointer}.tbl tr.rowlink:hover td{background:#f8fafc}
+.tbl tr.dim td{color:var(--ink-400)}
+.tbl tr.tgrp2 td{background:#f8fafc;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-500);padding:7px 14px}
+.tbl .acts{display:flex;gap:12px;white-space:nowrap}
+.tbl .sm{font-size:11px;color:var(--ink-400)}
+.muted{color:var(--ink-400)}
+.ilink.danger{color:var(--err)}
+.btn.danger{color:var(--err);border-color:#fecdd3}
+.btn-p.danger{background:var(--err);color:#fff;border:none}
+.calhead{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.calhead b{font-size:15px;color:var(--ink-900);margin:0 6px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;background:transparent}
+.cal-dh{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;padding:4px 6px}
+.cal-d{min-height:92px;background:#fff;border-radius:10px;box-shadow:var(--sh-carte);padding:6px 7px;position:relative}
+.cal-d.off{background:transparent;box-shadow:none}
+.cal-d .n{font-size:11.5px;color:var(--ink-400);font-weight:500}
+.cal-d.today .n{background:var(--primary);color:#fff;border-radius:999px;padding:1px 6px}
+.cal-ev{margin-top:4px;font-size:11px;font-weight:600;color:var(--primary-dark);background:var(--primary-50);border-radius:6px;padding:3px 7px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-ev.draft{background:#f1f5f9;color:var(--ink-500)}
+.cal-ev:hover{filter:brightness(.96)}
+.seg{display:inline-flex;background:#f1f5f9;border-radius:8px;padding:3px;gap:2px;margin-top:4px}
+.seg button{padding:5px 12px;border-radius:6px;font-size:12.5px;font-weight:500;color:var(--ink-500)}
+.seg button.on{background:#fff;color:var(--ink-900);font-weight:600;box-shadow:var(--sh-carte)}
+.mactions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+#modal2{position:fixed;inset:0;background:rgba(15,23,42,.3);z-index:220;display:flex;align-items:flex-start;justify-content:center;padding:8vh 16px}
+#modal2 .mbox{max-width:520px;border-radius:18px;box-shadow:0 24px 64px rgb(15 23 42/.18)}
+#modal2 .mhead{border-bottom:none;padding:20px 24px 4px}
+#modal2 .mbody{background:#fff;padding:6px 24px 20px;border-radius:0 0 18px 18px}
+#modal2 .mpanel{background:transparent;border:none;padding:12px 0;border-top:1px solid var(--line-2)}
+#modal2 .mpanel:first-child{border-top:none}
+.drow{display:flex;align-items:center;gap:12px}
+.drow>div:first-child{flex:1}
+.drow .tt{font-weight:600;color:var(--ink-900);font-size:13.5px}
+.drow .sm{font-size:12px;color:var(--ink-400);margin-top:2px}
+.dbtns{display:flex;gap:6px}
+.k2{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600}
+.ul{margin:6px 0 0 18px;font-size:13px;color:var(--ink-700);line-height:1.7}
+#modal[data-kind="newsession"] .igrid{grid-template-columns:repeat(2,1fr)}
+#modal[data-kind="newsession"] .edin{margin-top:3px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}#gsearch{display:none}}
 </style>
@@ -596,8 +647,8 @@ tasks:{
  brouillon:[
   {t:"Admin France IA réserve et paie le lieu",p:"fia"},
   {t:"Formateur demande cette session",p:"formateur"},
-  {t:"Admin France IA valide la demande du formateur",p:"fia"},
-  {t:"Admin France IA crée, ouvre et lie la session EDOF",p:"fia"}],
+  {t:"Admin France IA valide la demande du formateur",p:"fia",btn:"Voir les demandes",kind2:"demandes"},
+  {t:"Admin France IA crée, ouvre et lie la session EDOF",p:"fia",btn:"Ouvrir EDOF"}],
  prete:[
   {t:"Admin France IA désactive les contrats Qualiobee (CPF)",p:"fia"},
   {t:"Admin France IA lance la session Qualiobee",p:"fia"},
@@ -620,8 +671,9 @@ tasks:{
   {t:"Formateur crée sa facture",p:"formateur"},
   {t:"Formateur dépose sa facture",p:"formateur",fx:"carte_formateur"}],
  preuves:[
-  {t:"Admin France IA exporte la discussion WhatsApp",p:"fia"},
-  {t:"Admin France IA téléverse toutes les preuves dans le Drive",p:"fia"}],
+  {t:"Admin France IA récupère le CV et le contrat du formateur (automatique)",p:"fia",auto:1},
+  {t:"Admin France IA exporte la discussion WhatsApp",p:"fia",btn:"Déposer l'export"},
+  {t:"Admin France IA téléverse toutes les preuves dans le Drive (automatique)",p:"fia",auto:1}],
  terminee:[]}},
 /* ── Session inter · rail Formateur ── */
 session_frm:{cols:[
@@ -691,7 +743,10 @@ tasks:{
   {t:"Closeur transmet la facture au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_part"],fx:"carte_client",note:"non acquittée ; échéance = dernier prélèvement programmé"}],
  validee:[
   {t:"Admin France IA constate que l'apprenant a émargé J1 et J2 (détecté automatiquement)",p:"fia",auto:1},
-  {t:"Admin France IA déclare la sortie auprès de la CDC",p:"fia",fin:["cpf"],fx:"carte_client"}],
+  {t:"Admin France IA récupère toutes les preuves individuelles de l'apprenant (automatique)",p:"fia",auto:1},
+  {t:"Admin France IA crée un nouveau dossier Google Drive de preuves pour l'apprenant (automatique)",p:"fia",auto:1},
+  {t:"Admin France IA téléverse les preuves de l'apprenant sur Google Drive (automatique)",p:"fia",auto:1},
+  {t:"Admin France IA déclare la sortie auprès de la CDC",p:"fia",fin:["cpf"],fx:"carte_client",btn:"Déclarer la sortie"}],
  absent:[
   {t:"Closeur contacte le client pour déterminer si l'absence est justifiée",p:"closer",tpl:1,fin:["cpf"]},
   {t:"Closeur récupère la pièce justificative de l'absence",p:"closer",fin:["cpf"],grp:"Chemin 1 · absence justifiée"},
@@ -734,8 +789,11 @@ tasks:{
   {t:"Formateur adapte le contenu de la formation",p:"formateur"}],
  enformation:[
   {t:"Formateur vérifie que tous les émargements sont faits",p:"formateur"},
+  {t:"Admin France IA récupère toutes les preuves individuelles de l'apprenant (automatique)",p:"fia",auto:1},
+  {t:"Admin France IA crée un nouveau dossier Google Drive de preuves pour l'apprenant (automatique)",p:"fia",auto:1},
+  {t:"Admin France IA téléverse les preuves de l'apprenant sur Google Drive (automatique)",p:"fia",auto:1},
   {t:"Formateur envoie le message de fin par mail au client",p:"formateur",tpl:1},
-  {t:"Admin France IA envoie la facture au client, échéance J+30 du J2",p:"fia",tpl:1,fin:["fp_ent_vir","opco"]},
+  {t:"Admin France IA envoie la facture au client, échéance J+30 du J2",p:"fia",tpl:1,fin:["fp_ent_vir","opco"],btn:"Envoyer la facture"},
   {t:"Formateur crée sa facture",p:"formateur"},
   {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",fx:"carte_formateur"}],
  lost:[], termine:[]}},
@@ -942,11 +1000,14 @@ const MODES_CLIENT = ["cpf","fp_ent_vir","fp_ent_man","opco","fp_part"];
 /* vues du kanban Facturation : quatre vues client */
 const FACT_VIEWS = {cpf:{lbl:"CPF",fins:["cpf"]}, mandat:{lbl:"Mandat",fins:["fp_ent_man","fp_part"]}, virement:{lbl:"Virement",fins:["fp_ent_vir"]}, opco:{lbl:"OPCO",fins:["opco"]}};
 const SESS = {
- paris:   {lbl:"Paris · 12-13 sept",    lieu:"Station F, Paris 13e",            dt:{j1:"2026-09-12",j2:"2026-09-13"}, frm:"Sarah K."},
- bordeaux:{lbl:"Bordeaux · 26-27 sept", lieu:"Quai des Chartrons, Bordeaux",    dt:{j1:"2026-09-26",j2:"2026-09-27"}, frm:"Marc D."},
- lyon:    {lbl:"Lyon · 3-4 oct",        lieu:"Part-Dieu, Lyon",                 dt:{j1:"2026-10-03",j2:"2026-10-04"}, frm:null},
- parisn2: {lbl:"Paris N2 · 10-11 oct",  lieu:"Station F, Paris 13e",            dt:{j1:"2026-10-10",j2:"2026-10-11"}, frm:null},
+ paris:   {lbl:"Paris · 12-13 sept",    lieu:"Station F, Paris 13e",            ville:"Paris",    dt:{j1:"2026-09-12",j2:"2026-09-13"}, frm:"Sarah K.", niveau:"Plutôt débutant"},
+ bordeaux:{lbl:"Bordeaux · 26-27 sept", lieu:"Quai des Chartrons, Bordeaux",    ville:"Bordeaux", dt:{j1:"2026-09-26",j2:"2026-09-27"}, frm:"Marc D.",  niveau:"Plutôt avancé"},
+ lyon:    {lbl:"Lyon · 3-4 oct",        lieu:"Part-Dieu, Lyon",                 ville:"Lyon",     dt:{j1:"2026-10-03",j2:"2026-10-04"}, frm:null,       niveau:"Aucun badge"},
+ parisn2: {lbl:"Paris N2 · 10-11 oct",  lieu:"Station F, Paris 13e",            ville:"Paris",    dt:{j1:"2026-10-10",j2:"2026-10-11"}, frm:null,       niveau:"Plutôt avancé"},
 };
+const FORMATEURS = ["Sarah K.","Marc D.","Inès B."];
+const LIEUX = ["Station F, Paris 13e","Quai des Chartrons, Bordeaux","Part-Dieu, Lyon","Chez le client"];
+const DEMANDES_FRM = {s3:[{f:"Inès B.",d:"2026-08-19",m:"Disponible les deux jours, je connais bien Lyon."},{f:"Marc D.",d:"2026-08-21",m:""}], s4:[{f:"Sarah K.",d:"2026-08-20",m:"Je peux prendre le N2 Paris."}]};
 let CARDS = [
  /* sessions N1/N2 : rail France IA + rail formateur (même session, deux cartes) */
  {id:"s1", kb:"session_fia", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"13/12", over:1, col:"demarree"},
@@ -993,7 +1054,12 @@ let CARDS = [
  {id:"m2", kb:"fact_com", title:"Sam T. · août 2026", who:"Sam T.", mois:"Août 2026", fin:"setter", col:"valider",
    lines:[["Fixe mensuel","1 200 €"],["Set · Marie Dupont","30 €"],["Set · Karim Benali","30 €"],["Set · Studio Nova","30 €"],["Close · Awa Diallo","80 €"]]},
 ];
-CARDS.forEach(c=>{ if(c.sess&&!c.lieu) c.lieu=SESS[c.sess].lieu; });
+CARDS.forEach(c=>{ if(c.sess&&!c.lieu) c.lieu=SESS[c.sess].lieu; if(c.kb==="session_fia"&&c.sess){ const S0=SESS[c.sess]; c.ville=S0.ville; c.niveau=S0.niveau; c.lieuJ2=c.lieuJ2||c.lieu; c.cpfLink="https://www.moncompteformation.gouv.fr/espace-prive/html/#/formation/"+c.id; c.qlbLink="https://app.qualiobee.fr/sessions/"+c.id; c.note=c.note||""; } });
+/* inscriptions supplémentaires pour la fiche session (Lost et changé de session) */
+CARDS.push(
+ {id:"i11", kb:"insc", offre:"n1", sess:"paris", dt:SESS.paris.dt, title:"Inès Garnier", closer:"Alex R.", setter:"Sam T.", ard:"2026-07-22T11:10", fin:"cpf", col:"lost"},
+ {id:"i12", kb:"insc", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:"Yasmine Bello", closer:"Chloé M.", setter:"Sam T.", ard:"2026-07-25T09:45", fin:"fp_part", col:"attente", movedFrom:"paris"}
+);
 
 /* Fiches : fausses identités reliées aux cartes */
 const CLIENTS=[
@@ -1024,6 +1090,10 @@ const CLIENTS=[
   ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f2",inscId:null}],apprenants:["ap_emma"],docs:["Dossier EDOF · sortie validée"]},
  {id:"cl_awa",nom:"Awa Diallo",type:"Particulier",adr:"5 rue de la Paix, 69002 Lyon",vat:null,resp:{n:"Awa Diallo",e:"awa.diallo@gmail.com",t:"07 45 09 12 87",app:1},siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 1 échéance",
   ventes:[{lbl:"Coaching 4 h",m:"1 200 €",fin:"fp_part",factId:"f8",inscId:"c1"}],apprenants:["ap_awa"],docs:["Facture FA-2026-0548 · émise (non acquittée)","Convention · signée"]},
+ {id:"cl_ines",nom:"Inès Garnier",type:"Particulier",adr:"9 rue Lepic, 75018 Paris",vat:null,resp:{n:"Inès Garnier",e:"ines.garnier@gmail.com",t:"06 44 12 78 31",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,note:"A annulé le 5 août : pas de prise en charge CPF suffisante.",
+  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i11"}],apprenants:["ap_ines"],docs:["Dossier EDOF · annulé"]},
+ {id:"cl_yasmine",nom:"Yasmine Bello",type:"Particulier",adr:"3 cours de l'Intendance, 33000 Bordeaux",vat:null,resp:{n:"Yasmine Bello",e:"yasmine.bello@gmail.com",t:"06 58 90 21 47",app:1},siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 3 échéances",note:"Déplacée de Paris 12-13 sept vers Bordeaux 26-27 sept à sa demande (déménagement).",
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_part",factId:null,inscId:"i12"}],apprenants:["ap_yasmine"],docs:["Contrat de formation · signé"]},
  {id:"cl_hugo",nom:"Hugo Martin",type:"Particulier",adr:"40 rue Oberkampf, 75011 Paris",vat:null,resp:{n:"Hugo Martin",e:"hugo.martin@gmail.com",t:"06 02 93 47 66",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
   ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f1",inscId:"i6"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée","Certificat de réalisation · émis"]},
 ];
@@ -1041,6 +1111,8 @@ const APPRENANTS=[
  {id:"ap_verne_2",nom:"Sarah Mendes",email:"smendes@cabinetverne.fr",tel:"06 12 22 32 42",prenom:"Sarah",fam:"Mendes",dom:"Droit",adr:"5 rue des Ateliers",cp:"69002",ville:"Lyon",spro:"Juriste",nais:"03/03/1980",client:"cl_verne",insc:["t2"],type:"Salarié Cabinet Verne & Associés",afaire:["Questionnaire de positionnement"]},
  {id:"ap_verne_3",nom:"Nicolas Prat",email:"nprat@cabinetverne.fr",tel:"06 13 23 33 43",prenom:"Nicolas",fam:"Prat",dom:"Droit",adr:"6 rue des Ateliers",cp:"69002",ville:"Lyon",spro:"Avocat",nais:"04/04/1981",client:"cl_verne",insc:["t2"],type:"Salarié Cabinet Verne & Associés",afaire:["Questionnaire de positionnement"]},
  {id:"ap_verne_4",nom:"Élise Bonnet",email:"ebonnet@cabinetverne.fr",tel:"06 14 24 34 44",prenom:"Élise",fam:"Bonnet",dom:"Droit",adr:"7 rue des Ateliers",cp:"69002",ville:"Lyon",spro:"Office manager",nais:"05/05/1982",client:"cl_verne",insc:["t2"],type:"Salarié Cabinet Verne & Associés",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_ines",nom:"Inès Garnier",email:"ines.garnier@gmail.com",tel:"06 44 12 78 31",prenom:"Inès",fam:"Garnier",dom:"Design",adr:"9 rue Lepic",cp:"75018",ville:"Paris",spro:"Indépendante",nais:"14/02/1995",client:"cl_ines",insc:["i11"],type:"Particulière",afaire:[]},
+ {id:"ap_yasmine",nom:"Yasmine Bello",email:"yasmine.bello@gmail.com",tel:"06 58 90 21 47",prenom:"Yasmine",fam:"Bello",dom:"Commerce",adr:"3 cours de l'Intendance",cp:"33000",ville:"Bordeaux",spro:"Salariée",nais:"08/09/1990",client:"cl_yasmine",insc:["i12"],type:"Particulière",afaire:["Questionnaire de positionnement"]},
  {id:"ap_lucas",nom:"Lucas Moreau",email:"lucas.moreau@gmail.com",tel:"06 31 77 20 84",prenom:"Lucas",fam:"Moreau",dom:"Logistique",adr:"12 quai des Chartrons",cp:"33000",ville:"Bordeaux",spro:"Salarié",nais:"02/03/1989",client:"cl_lucas",insc:["i9"],type:"Particulier",afaire:["Signer votre convention de formation","Questionnaire de positionnement"]},
  {id:"ap_nadia",nom:"Nadia Slimani",email:"n.slimani@gmail.com",tel:"07 22 90 15 63",prenom:"Nadia",fam:"Slimani",dom:"Santé",adr:"27 boulevard Voltaire",cp:"75011",ville:"Paris",spro:"Salariée",nais:"30/08/1985",client:"cl_nadia",insc:["i7"],type:"Particulière",afaire:["Répondre à votre questionnaire"]},
  {id:"ap_paul",nom:"Paul Fabre",email:"p.fabre@studionova.fr",tel:"06 84 12 55 71",prenom:"Paul",fam:"Fabre",dom:"Audiovisuel",adr:"9 rue des Arts",cp:"75010",ville:"Paris",spro:"Salarié",nais:"11/12/1994",client:"cl_nova",insc:["i8"],type:"Salarié Studio Nova",afaire:["Questionnaire de positionnement"]},
@@ -1057,7 +1129,7 @@ const APPRENANTS=[
 APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } });
 CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
 const S = {role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
-  fSession:"n1", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
+  fSession:"n1", fSessView:"kanban", fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false};
 
 const $ = s=>document.querySelector(s);
@@ -1338,7 +1410,7 @@ function infoFor(card){
     return rows;
   }
   if(card.kb.startsWith("session")){
-    rows.push(["Offre",OFFRES[card.offre]],["Dates",fmtDates(card)],["Lieu",card.lieu],["Formateur",card.frm||"À confirmer"],["Places",card.places]);
+    rows.push(["Session",card.kb==="session_fia"?`<a class="ilink" data-fiche="session::${card.id}">${card.title}</a>`:card.title],["Offre",OFFRES[card.offre]],["Dates",fmtDates(card)],["Lieu",card.lieu],["Formateur",card.frm||"À confirmer"],["Places",card.over?`<span class="badge b-over">${card.places} · surbooking</span>`:card.places]);
     return rows;
   }
   if(card.kb==="intra_frm"||card.kb==="coaching_frm"){
@@ -1457,13 +1529,77 @@ function pageSessions(){
       + `</div>`;
   }
   const f=["n1","n2","param"].includes(S.fSession)?S.fSession:"n1";
-  let h=`<div class="pagehead"><h1>Sessions</h1></div>`;
+  let h=`<div class="pagehead row"><h1>Sessions</h1><button class="btn btn-p" data-newsession="1">+ Nouvelle session</button></div>`;
   h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]],["Paramétrage",[["param","Lieux & Salles · Ressources"]]]], f, "fSession");
   if(f==="param"){
     return h+`<div class="stub"><h2>Paramétrage des sessions</h2><p>Par offre : le référentiel <b>Lieux & Salles</b> (aujourd'hui dans Staff) et les <b>Ressources</b> formateur (aujourd'hui dans BookMySessions) sont rapatriés ici.</p><ul><li>Lieux & Salles : catalogue des salles, capacité, accès HAL Station F</li><li>Ressources : vidéos, canvas et supports mis à disposition des formateurs</li></ul></div>`;
   }
-  h+=boardHtml("session_fia", CARDS.filter(c=>c.kb==="session_fia"&&c.offre===f));
+  h+=`<div class="fbar">`+chips([["Vue",[["kanban","Kanban"],["cal","Calendrier"],["list","Liste"]]]], S.fSessView, "fSessView")
+    +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fSessQ" value="${(S.fSessQ||"").replace(/"/g,"&quot;")}" placeholder="Date, formateur, ville, apprenant…"></div>
+     <select class="fsel" data-fsel="fSessLieu"><option value="all">Tous les lieux</option>${LIEUX.filter(l=>l!=="Chez le client").map(l=>`<option value="${l}" ${S.fSessLieu===l?"selected":""}>${l}</option>`).join("")}</select>
+     <select class="fsel" data-fsel="fSessFrm"><option value="all">Tous les formateurs</option><option value="none" ${S.fSessFrm==="none"?"selected":""}>Sans formateur</option>${FORMATEURS.map(x=>`<option value="${x}" ${S.fSessFrm===x?"selected":""}>${x}</option>`).join("")}</select></div>`;
+  const q=(S.fSessQ||"").toLowerCase();
+  const list=CARDS.filter(c=>c.kb==="session_fia"&&c.offre===f
+    &&(S.fSessLieu==="all"||c.lieu===S.fSessLieu)
+    &&(S.fSessFrm==="all"||(S.fSessFrm==="none"?!c.frm:c.frm===S.fSessFrm))
+    &&(!q||[c.title,c.lieu,c.frm,c.ville,...CARDS.filter(i=>i.kb==="insc"&&i.sess===c.sess).map(i=>i.title)].join(" ").toLowerCase().includes(q)));
+  if(S.fSessView==="cal") h+=calendarHtml(list);
+  else if(S.fSessView==="list") h+=sessionListHtml(list);
+  else h+=boardHtml("session_fia", list);
   return h;
+}
+function sessionListHtml(list){
+  if(!list.length) return `<div class="stub"><p>Aucune session ne correspond aux filtres.</p></div>`;
+  return `<div class="tblwrap"><table class="tbl"><thead><tr><th>Dates</th><th>Offre</th><th>Formateur</th><th>Ville</th><th>Lieu</th><th>Inscrits</th><th>Statut</th></tr></thead><tbody>`
+    +list.sort((a,b)=>a.dt.j1.localeCompare(b.dt.j1)).map(c=>`<tr class="rowlink" data-fiche="session::${c.id}"><td><b>${fmtDates(c)}</b></td><td>${badgeOffre(c.offre)}</td><td>${c.frm||'<span class="muted">À confirmer</span>'}</td><td>${c.ville||""}</td><td>${c.lieu}</td><td>${c.over?`<span class="badge b-over">${c.places}</span>`:c.places}</td><td><span class="chip">${colLabel(c)}</span></td></tr>`).join("")
+    +`</tbody></table></div>`;
+}
+function calendarHtml(list){
+  const [y,m]=S.calMonth.split("-").map(Number);
+  const first=new Date(y,m-1,1); const start=(first.getDay()+6)%7; const days=new Date(y,m,0).getDate();
+  const lbl=first.toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+  const prev=new Date(y,m-2,1), next=new Date(y,m,1);
+  const key=d=>`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+  let h=`<div class="calhead"><button class="btn btn-s" data-chip="calMonth::${prev.getFullYear()}-${String(prev.getMonth()+1).padStart(2,"0")}">‹</button><b>${lbl.charAt(0).toUpperCase()+lbl.slice(1)}</b><button class="btn btn-s" data-chip="calMonth::${next.getFullYear()}-${String(next.getMonth()+1).padStart(2,"0")}">›</button><button class="btn btn-s" data-chip="calMonth::2026-09">Aujourd'hui</button></div>`;
+  h+=`<div class="cal">`+["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"].map(d=>`<div class="cal-dh">${d}</div>`).join("");
+  for(let i=0;i<start;i++) h+=`<div class="cal-d off"></div>`;
+  for(let d=1;d<=days;d++){
+    const k=key(d);
+    const here=list.filter(c=>c.dt&&c.dt.j1<=k&&k<=c.dt.j2);
+    h+=`<div class="cal-d ${k==="2026-09-12"?"today":""}"><span class="n">${d}</span>${here.map(c=>`<div class="cal-ev ${c.col==="brouillon"?"draft":""}" data-open="${c.id}">${c.ville||c.title}${c.frm?" · "+c.frm:""}</div>`).join("")}</div>`;
+  }
+  return h+`</div>`;
+}
+function newSessionModalHtml(){
+  const ns=S.newSess||{type:"inter"};
+  const isIntra=ns.type==="intra";
+  return `<div id="modal" data-kind="newsession"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Nouvelle session</div><button class="mclose" data-close="1" aria-label="Fermer">✕</button></div></div>
+  <div class="mbody"><div class="mpanel">
+    <div class="igrid">
+      <div class="ifld wide"><div class="k">Type de session</div><div class="seg"><button class="${!isIntra?"on":""}" data-nstype="inter">Inter</button><button class="${isIntra?"on":""}" data-nstype="intra">Intra (entreprise)</button></div></div>
+      ${isIntra?`<div class="ifld wide"><div class="k">Client (entreprise)</div><select class="edin"><option>Cabinet Verne & Associés</option><option>Garage Moderne</option><option>Nexa Digital</option><option>+ Nouvelle entreprise…</option></select></div>
+      <div class="ifld wide"><div class="k">Intitulé</div><div class="v">INTRA · Maîtriser l'IA générative dans son quotidien professionnel <span class="muted">· 7 900 € HT</span></div></div>
+      <div class="ifld"><div class="k">Date 1</div><input class="edin" type="date" value="2026-11-05"></div><div class="ifld"><div class="k">Date 2</div><input class="edin" type="date" value="2026-11-06"></div>
+      <div class="ifld wide"><a class="ilink">+ Ajouter une date</a></div>`
+      :`<div class="ifld"><div class="k">Offre</div><select class="edin"><option>Niveau 1 · 1 650 €</option><option>Niveau 2 · 1 650 € (hors CPF)</option></select></div>
+      <div class="ifld"><div class="k">Niveau affiché sur ARD</div><select class="edin"><option>🌱 Plutôt débutant</option><option>🚀 Plutôt avancé</option><option>Aucun badge</option></select></div>
+      <div class="ifld"><div class="k">Jour 1</div><input class="edin" type="date" value="2026-11-07"></div><div class="ifld"><div class="k">Jour 2</div><input class="edin" type="date" value="2026-11-08"></div>`}
+      <div class="ifld"><div class="k">Formateur</div><select class="edin"><option>À définir</option>${FORMATEURS.map(f=>`<option>${f}</option>`).join("")}</select></div>
+      <div class="ifld"><div class="k">Places</div><input class="edin" type="number" value="12"></div>
+      <div class="ifld"><div class="k">Pays</div><select class="edin"><option>France</option><option>Belgique</option><option>Suisse</option></select></div>
+      <div class="ifld"><div class="k">Ville</div><select class="edin"><option>Paris</option><option>Bordeaux</option><option>Lyon</option><option>Toulouse</option></select></div>
+      <div class="ifld"><div class="k">Lieu</div><select class="edin">${LIEUX.map(l=>`<option>${l}</option>`).join("")}</select></div>
+      <div class="ifld"><div class="k">Salle</div><select class="edin"><option>À définir</option><option>Salle Ada</option><option>Salle Turing</option></select><div class="pd">Station F : la salle sera réservée via HAL et renseignée sur la fiche session.</div></div>
+      <div class="ifld wide"><div class="k">Notes</div><textarea class="notes-ta" placeholder="Informations internes (optionnel)"></textarea></div>
+    </div></div>
+    <div class="mactions"><button class="btn btn-s" data-close="1">Annuler</button><button class="btn btn-p" data-nssubmit="1">Créer la session</button></div>
+  </div></div></div>`;
+}
+function demandesModalHtml(){
+  const card=CARDS.find(c=>c.id===S.demandesFor); if(!card) return "";
+  const list=DEMANDES_FRM[card.id]||[];
+  return `<div id="modal2"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Demandes de formateurs</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">${card.title} · premier arrivé, premier servi : la première demande validée assigne le formateur et refuse les autres</div></div>
+  <div class="mbody">${list.length?list.map((d,i)=>`<div class="mpanel drow"><div><div class="tt">${d.f}</div><div class="sm">Demande du ${new Date(d.d+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"})}${d.m?" · « "+d.m+" »":""}</div></div><div class="dbtns"><button class="btn btn-p" data-dvalid="${card.id}::${i}">Valider</button><button class="btn btn-s" data-drefus="${card.id}::${i}">Refuser</button></div></div>`).join(""):`<p class="empty">Aucune demande pour l'instant : la session est visible sur la page À prendre des formateurs.</p>`}</div></div></div>`;
 }
 function pageInscription(){
   const f=S.fInsc;
@@ -1527,6 +1663,7 @@ function pageAPrendre(){
   return h;
 }
 const ICO={
+ search:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
  eye:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
  out:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>',
  mail:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>',
@@ -1673,6 +1810,62 @@ function ficheClientHtml(id){
   }).join("");
   h+=`</div>`;
   return h;
+}
+function sessionStatusGroup(c){
+  if(c.movedFrom) return 3;
+  if(c.col==="lost") return 2;
+  if(["validee","absent","termine"].includes(c.col)) return 0;
+  return 1;
+}
+function ficheSessionHtml(id){
+  const c=CARDS.find(x=>x.id===id); if(!c) return "";
+  const ed=S.editing==="session::"+c.id;
+  let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
+  /* section 1 : informations générales, sans titre */
+  h+=`<div class="fichehead"><div class="fh-top"><div><h1>${c.title}</h1><div class="fh-badges">${badgeOffre(c.offre)}<span class="chip">${colLabel(c)}</span>${c.over?'<span class="badge b-over">Surbooking</span>':""}</div></div>
+    <div class="fh-right">${ed?`<button class="btn btn-p" data-editsave="session::${c.id}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`:`<button class="btn btn-s" data-editstart="session::${c.id}">Modifier</button><button class="btn btn-s danger" data-delsession="${c.id}">Supprimer</button>`}</div></div>
+  <div class="idgrid">
+    ${ed?`<div class="fld"><div class="k">Jour 1</div><input class="edin" type="date" data-f="j1" value="${c.dt.j1}"></div><div class="fld"><div class="k">Jour 2</div><input class="edin" type="date" data-f="j2" value="${c.dt.j2}"></div>`:fld("Période",fmtDates(c))}
+    ${ed?`<div class="fld"><div class="k">Formateur</div><select class="edin" data-f="frm"><option value="">À confirmer</option>${FORMATEURS.map(f=>`<option ${c.frm===f?"selected":""}>${f}</option>`).join("")}</select></div>`:fld("Formateur",c.frm||"À confirmer")}
+    ${ed?`<div class="fld"><div class="k">Lieu J1</div><select class="edin" data-f="lieu">${LIEUX.map(l=>`<option ${c.lieu===l?"selected":""}>${l}</option>`).join("")}</select></div><div class="fld"><div class="k">Lieu J2</div><select class="edin" data-f="lieuJ2">${LIEUX.map(l=>`<option ${c.lieuJ2===l?"selected":""}>${l}</option>`).join("")}</select></div>`:(c.lieuJ2&&c.lieuJ2!==c.lieu?fld("Lieu J1",c.lieu)+fld("Lieu J2",c.lieuJ2):fld("Lieu J1 et J2",c.lieu))}
+    ${ed?`<div class="fld"><div class="k">Niveau ARD</div><select class="edin" data-f="niveau">${["Plutôt débutant","Plutôt avancé","Aucun badge"].map(n=>`<option ${c.niveau===n?"selected":""}>${n}</option>`).join("")}</select></div>`:fld("Niveau ARD",c.niveau)}
+    ${ed?`<div class="fld"><div class="k">Nombre de places</div><input class="edin" data-f="places" value="${c.places}"></div>`:fld("Nombre de places",c.places)}
+    ${fld("Lien Mon CPF",`<a class="ilink" data-copy="${c.cpfLink}">Copier le lien</a>`)}
+    ${fld("Lien Qualiobee",`<a class="ilink" href="${c.qlbLink}" target="_blank" rel="noopener">Ouvrir la session</a>`)}
+  </div></div>`;
+  /* section 2 : notes */
+  h+=`<div class="fsec"><div class="sect-h">${ICO.file}Notes</div><textarea class="notes-ta" data-note="${c.id}">${c.note||""}</textarea></div>`;
+  /* section 3 : planification = la carte cliquable */
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Planification <span class="n2">la carte ouvre le détail des tâches</span></div><div style="max-width:300px;margin-top:10px">${cardHtml(c,KB[c.kb].cols.find(x=>x.id===c.col),{})}</div></div>`;
+  /* section 4 : apprenants */
+  const inscs=CARDS.filter(i=>i.kb==="insc"&&(i.sess===c.sess||i.movedFrom===c.sess)).map(i=>({i,g:i.movedFrom===c.sess?3:sessionStatusGroup(i)})).sort((a,b)=>a.g-b.g);
+  const GL=["Inscrits","Pas encore inscrits","Lost","Changés de session"];
+  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Apprenants <span class="n2">${inscs.length}</span></div><div class="tblwrap"><table class="tbl"><thead><tr><th>Nom</th><th>Mode de paiement</th><th>Closeur / Setteur</th><th>Statut</th><th>Actions</th></tr></thead><tbody>`;
+  let lastG=-1;
+  inscs.forEach(({i,g})=>{
+    if(g!==lastG){h+=`<tr class="tgrp2"><td colspan="5">${GL[g]}</td></tr>`;lastG=g;}
+    const {cl,aps}=peopleFor(i); const ap=aps[0];
+    const moved=g===3;
+    h+=`<tr class="${g>=2?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><span class="chip">${moved?"Déplacée vers "+SESS[i.sess].lbl:colLabel(i)}</span></td>
+      <td class="acts">${g<2?`<a class="ilink" data-switch="${i.id}">Switch session</a><a class="ilink danger" data-lost="${i.id}">Lost</a>`:""}${g===0?`<a class="ilink" data-espace="${i.id}">Ouvrir espace</a>`:""}</td></tr>`;
+  });
+  if(!inscs.length) h+=`<tr><td colspan="5" class="muted">Aucun apprenant inscrit.</td></tr>`;
+  h+=`</tbody></table></div></div>`;
+  return h;
+}
+function switchModalHtml(){
+  const i=CARDS.find(x=>x.id===S.switchFor); if(!i) return "";
+  const targets=Object.entries(SESS).filter(([k])=>k!==i.sess);
+  return `<div id="modal2"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Changer de session</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">${i.title} · actuellement ${i.sess?SESS[i.sess].lbl:""}</div></div>
+  <div class="mbody">${targets.map(([k,v])=>`<div class="mpanel drow"><div><div class="tt">${v.lbl}</div><div class="sm">${v.lieu} · ${v.frm||"formateur à confirmer"}</div></div><div class="dbtns"><button class="btn btn-p" data-switchto="${i.id}::${k}">Déplacer ici</button></div></div>`).join("")}
+  <p class="pd" style="margin-top:10px">La convocation Qualiobee et la session EDOF suivent automatiquement ; l'inscription reste visible dans l'ancienne session sous « Changés de session ».</p></div></div></div>`;
+}
+function lostModalHtml(){
+  const i=CARDS.find(x=>x.id===S.lostFor); if(!i) return "";
+  return `<div id="modal2"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Passer en Lost</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">${i.title}</div></div>
+  <div class="mbody"><div class="mpanel"><div class="k2">Sera fait automatiquement</div><ul class="ul"><li>Inscription passée en Lost</li><li>Convocation Qualiobee supprimée</li><li>Paiements futurs annulés (mandat révoqué le cas échéant)</li><li>Preuves conservées</li></ul><div class="k2" style="margin-top:10px">À faire manuellement après</div><ul class="ul"><li>Passer aussi l'opportunité en Lost sur GHL</li></ul>
+  <div class="k2" style="margin-top:10px">Raison</div><textarea class="notes-ta" placeholder="Obligatoire"></textarea></div>
+  <div class="mactions"><button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p danger" data-lostconfirm="${i.id}">Confirmer le passage en Lost</button></div></div></div></div>`;
 }
 function pageAnnuaire(){
   const f=S.fUsers||"apprenants";
@@ -1850,7 +2043,8 @@ function render(){
   const crumbEnd = S.fiche
     ? (S.fiche.t==="apprenant" ? "Fiche apprenant · "+(APPRENANTS.find(a=>a.id===S.fiche.id)||{}).nom : "Fiche client · "+(CLIENTS.find(c=>c.id===S.fiche.id)||{}).nom)
     : ((groups.flatMap(g=>g[1]).find(t=>t[0]===S.tab)||["",""])[1]||"");
-  $("#crumb").innerHTML=`${APPS[S.app].name}<span class="sep">/</span><span style="color:var(--ink-500);font-weight:500">${crumbEnd}</span>`;
+  const crumbEnd2 = S.fiche&&S.fiche.t==="session" ? "Fiche session · "+(CARDS.find(c=>c.id===S.fiche.id)||{}).title : crumbEnd;
+  $("#crumb").innerHTML=`${APPS[S.app].name}<span class="sep">/</span><span style="color:var(--ink-500);font-weight:500">${crumbEnd2}</span>`;
   $("#roleSel").innerHTML=Object.entries(ROLES).map(([id,lbl])=>`<button class="${S.role===id?"active":""}" data-role="${id}">${lbl}</button>`).join("");
   /* bouton Voir comme (réel : réservé aux admins), bannière de vision, menu utilisateur */
   const realAdmin = S.realRole==="admin";
@@ -1863,7 +2057,7 @@ function render(){
   if(S.app==="apprenant") h=pageApprenant();
   else if(S.app==="dash") h=pageDash();
   else if(S.fiche){
-    h = S.fiche.t==="apprenant" ? ficheApprenantHtml(S.fiche.id) : ficheClientHtml(S.fiche.id);
+    h = S.fiche.t==="apprenant" ? ficheApprenantHtml(S.fiche.id) : S.fiche.t==="session" ? ficheSessionHtml(S.fiche.id) : ficheClientHtml(S.fiche.id);
   }
   else {
     if(S.tab==="sessions") h=pageSessions();
@@ -1877,7 +2071,12 @@ function render(){
   }
   $("#content").innerHTML=h;
   document.getElementById("modal")?.remove();
+  document.getElementById("modal2")?.remove();
   document.getElementById("tplmodal")?.remove();
+  if(S.newSess) document.body.insertAdjacentHTML("beforeend", newSessionModalHtml());
+  if(S.demandesFor) document.body.insertAdjacentHTML("beforeend", demandesModalHtml());
+  if(S.switchFor) document.body.insertAdjacentHTML("beforeend", switchModalHtml());
+  if(S.lostFor) document.body.insertAdjacentHTML("beforeend", lostModalHtml());
   if(S.modal){
     const mc=CARDS.find(c=>c.id===S.modal);
     if(mc) document.body.insertAdjacentHTML("beforeend", modalHtml());
@@ -1898,26 +2097,30 @@ document.addEventListener("click",e=>{
   const tplBtn=e.target.closest("[data-tpl]");
   if(tplBtn){e.stopPropagation();S.tpl=tplBtn.dataset.tpl;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
   const tb=e.target.closest("[data-tbtn]");
-  if(tb){e.stopPropagation();const [c,col,i]=tb.dataset.tbtn.split("::");const cd=CARDS.find(x=>x.id===c);if(!taskState(cd,col,parseInt(i),tasksFor(cd,col)[parseInt(i)])){toast(`Facture générée depuis la carte inscription : <b>${cd.title}</b>`);clickTask(c,col,parseInt(i));}return}
+  if(tb){e.stopPropagation();const [c,col,i]=tb.dataset.tbtn.split("::");const cd=CARDS.find(x=>x.id===c);const tk=tasksFor(cd,col)[parseInt(i)];
+    if(tk.kind2==="demandes"){S.demandesFor=c;S.demandesTask=[c,col,parseInt(i)];render();return}
+    if(!taskState(cd,col,parseInt(i),tk)){toast(`<b>${tk.btn}</b> : ${cd.title}`);clickTask(c,col,parseInt(i));}return}
   const ms=e.target.closest(".msec2>summary");
   if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
-  if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;document.getElementById("modal")?.remove();return}
+  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;document.getElementById("modal2")?.remove();return}
+  if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;S.newSess=null;document.getElementById("modal")?.remove();return}
   const acc=e.target.closest("details.acc>summary");
   if(acc){const d=acc.parentElement;S.openAcc[d.dataset.acc]=!d.open}
   if(!e.target.closest("#gsearch")) $("#gsearchRes").classList.remove("on");
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
-  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs]");
+  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy]");
   if(!t) return;
-  if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.fiche={t:ty,id:fid};S.app="delivia";render();return}
+  if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
   if(t.dataset.editcancel){S.editing=null;render();return}
   if(t.dataset.editsave){
     const [kind,fid]=t.dataset.editsave.split("::");
-    const obj=(kind==="apprenant"?APPRENANTS:CLIENTS).find(x=>x.id===fid);
+    const obj=(kind==="apprenant"?APPRENANTS:kind==="session"?CARDS:CLIENTS).find(x=>x.id===fid);
     document.querySelectorAll("#content [data-f]").forEach(inp=>{obj[inp.dataset.f]=inp.value});
     if(kind==="apprenant"){obj.nom=((obj.prenom||"")+" "+(obj.fam||"")).trim()||obj.nom;}
+    if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.over=parseInt(obj.places)>parseInt((obj.places||"0/12").split("/")[1]||12);const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===obj.sess);if(fs){fs.frm=obj.frm;fs.dt=obj.dt;fs.places=obj.places;}}
     S.editing=null;render();
-    toast("Modifications enregistrées : <b>"+obj.nom+"</b>");
+    toast("Modifications enregistrées : <b>"+(obj.nom||obj.title)+"</b>");
     return}
   if(t.dataset.ficheback){S.fiche=null;render();return}
   if(t.dataset.gotoinsc){const c=CARDS.find(x=>x.id===t.dataset.gotoinsc);S.fiche=null;S.modal=null;S.app="delivia";S.tab="inscription";S.fInsc=inscFilterFor(c);S.fInscMode="all";S.highlight=c.id;render();return}
@@ -1937,11 +2140,27 @@ document.addEventListener("click",e=>{
   if(t.dataset.tab){S.tab=t.dataset.tab;S.fiche=null;render();return}
   if(t.dataset.vcopen!==undefined){const m=document.getElementById("vcmenu"); if(m&&!e.target.closest("[data-voircomme]")) m.classList.toggle("on");}
   if(t.dataset.voircomme){S.voirComme=t.dataset.voircomme; S.role=t.dataset.voircomme; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; if(S.role==="setter") S.tab="facturation"; S.fFact=S.role==="closer"?"virement":S.role==="setter"?"setteur":"cpf"; render(); return}
+  if(t.dataset.newsession){S.newSess={type:"inter"};render();return}
+  if(t.dataset.nstype){S.newSess={type:t.dataset.nstype};render();return}
+  if(t.dataset.nssubmit){const isIntra=S.newSess&&S.newSess.type==="intra";S.newSess=null;
+    const nid="ns"+Math.floor(performance.now());
+    if(isIntra){CARDS.push({id:nid,kb:"intra",offre:"intra",title:"Cabinet Verne & Associés",closer:"Chloé M.",setter:null,ard:"2026-08-23T10:00",fin:"fp_ent_vir",col:"demande",lieu:"Station F, Paris 13e",nb:"5 apprenants",fresh:1});toast("Session intra créée dans le kanban Intra (Nouvelle demande).");}
+    else{CARDS.push({id:nid,kb:"session_fia",offre:S.fSession==="n2"?"n2":"n1",sess:null,dt:{j1:"2026-11-07",j2:"2026-11-08"},title:"Paris · 7-8 nov",lieu:"Station F, Paris 13e",ville:"Paris",niveau:"Plutôt débutant",frm:null,places:"0/12",col:"brouillon",fresh:1,cpfLink:"#",qlbLink:"#",note:""});toast("Session créée en Brouillon : ses tâches sont générées.");}
+    S.fSessView="kanban";render();return}
+  if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===cd.sess);if(fs)fs.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
+  if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
+  if(t.dataset.switch){S.switchFor=t.dataset.switch;render();return}
+  if(t.dataset.switchto){const [iid,k]=t.dataset.switchto.split("::");const i=CARDS.find(x=>x.id===iid);i.movedFrom=i.sess;i.sess=k;i.dt=SESS[k].dt;i.lieu=SESS[k].lieu;S.switchFor=null;toast(`<b>${i.title}</b> déplacée vers ${SESS[k].lbl}.`);render();return}
+  if(t.dataset.lost){S.lostFor=t.dataset.lost;render();return}
+  if(t.dataset.lostconfirm){const i=CARDS.find(x=>x.id===t.dataset.lostconfirm);i.col="lost";S.lostFor=null;toast(`<b>${i.title}</b> passée en Lost ; pensez à l'opportunité GHL.`);render();return}
+  if(t.dataset.espace){toast("Ouverture de l'espace apprenant dans un nouvel onglet.");return}
+  if(t.dataset.delsession){if(confirm("Supprimer cette session ? Les inscriptions payées bloqueront la suppression dans la vraie application.")){const c=CARDS.find(x=>x.id===t.dataset.delsession);CARDS.splice(CARDS.indexOf(c),1);S.fiche=null;toast("Session supprimée.");render();}return}
+  if(t.dataset.copy){toast("Lien copié dans le presse-papier.");return}
   if(t.dataset.vcback){S.voirComme=null; S.role=S.realRole; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; S.fFact="cpf"; render(); return}
   if(t.dataset.logout){toast("Déconnexion : retour à l'écran de connexion SSO France IA."); return}
   if(t.dataset.gs){const [ty,id]=t.dataset.gs.split("::"); $("#gsearchIn").value=""; $("#gsearchRes").classList.remove("on");
     if(ty==="apprenant"||ty==="client"){S.modal=null;S.fiche={t:ty,id};S.app="delivia";render();}
-    else if(ty==="session"){S.app="delivia";S.fiche=null;S.tab=S.role==="formateur"?"services":"sessions";S.modal=id;render();}
+    else if(ty==="session"){S.app="delivia";S.tab="sessions";S.modal=null;S.fiche={t:"session",id};render();}
     return}
   if(t.dataset.role){
     S.role=t.dataset.role; S.realRole=t.dataset.role; S.voirComme=null; S.app="delivia"; S.fiche=null; S.modal=null;
@@ -1961,7 +2180,7 @@ document.addEventListener("click",e=>{
   if(t.classList.contains("task")&&t.dataset.c){clickTask(t.dataset.c,t.dataset.col,parseInt(t.dataset.i));return}
   if(t.dataset.open){S.modal=t.dataset.open;render();return}
 });
-document.addEventListener("input",e=>{const ta=e.target.closest("[data-note]");if(!ta)return;const o=CLIENTS.find(c=>c.id===ta.dataset.note)||APPRENANTS.find(a=>a.id===ta.dataset.note);if(o)o.note=ta.value;});
+document.addEventListener("input",e=>{const ta=e.target.closest("[data-note]");if(!ta)return;const o=CLIENTS.find(c=>c.id===ta.dataset.note)||APPRENANTS.find(a=>a.id===ta.dataset.note)||CARDS.find(c=>c.id===ta.dataset.note);if(o)o.note=ta.value;});
 /* recherche globale */
 function gsearch(q){
   q=q.trim().toLowerCase(); const box=$("#gsearchRes");
@@ -1977,6 +2196,9 @@ function gsearch(q){
   box.innerHTML=h||`<div class="none">Aucun résultat pour « ${q} »</div>`; box.classList.add("on");
 }
 document.getElementById("gsearchIn").addEventListener("input",e=>gsearch(e.target.value));
+document.addEventListener("change",e=>{const sel=e.target.closest("[data-fsel]");if(sel){S[sel.dataset.fsel]=sel.value;render();}});
+let fqTimer=null;
+document.addEventListener("input",e=>{const inp=e.target.closest("[data-fq]");if(!inp)return;const k=inp.dataset.fq;const v=inp.value;clearTimeout(fqTimer);fqTimer=setTimeout(()=>{S[k]=v;render();const again=document.querySelector(`[data-fq="${k}"]`);if(again){again.focus();again.setSelectionRange(v.length,v.length);}},250);});
 document.getElementById("gsearchIn").addEventListener("focus",e=>gsearch(e.target.value));
 document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();$("#gsearchIn").focus();return}
   if(e.key!=="Escape")return;
