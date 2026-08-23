@@ -1112,7 +1112,14 @@ let CARDS = [
    lines:[["Fixe mensuel","1 200 €"],["Set · Marie Dupont","30 €"],["Set · Karim Benali","30 €"],["Set · Studio Nova","30 €"],["Close · Awa Diallo","80 €"]]},
 ];
 CARDS.forEach(c=>{ if(c.places){ c.cap=parseInt(c.places.split("/")[1])||12; if(c.sess==="paris") c.cap=5; } });
-CARDS.forEach(c=>{ if(c.sess&&!c.lieu) c.lieu=SESS[c.sess].lieu; if(c.kb==="session_fia"&&c.sess){ const S0=SESS[c.sess]; c.ville=S0.ville; c.niveau=S0.niveau; c.lieuJ2=c.lieuJ2||c.lieu; c.cpfLink="https://www.moncompteformation.gouv.fr/espace-prive/html/#/formation/"+c.id; c.qlbLink="https://app.qualiobee.fr/sessions/"+c.id; c.note=c.note||""; } });
+CARDS.forEach(c=>{ if(c.sess&&!c.lieu) c.lieu=SESS[c.sess].lieu; if(c.kb==="session_fia"&&c.sess){ const S0=SESS[c.sess]; c.ville=S0.ville; c.niveau=S0.niveau; c.lieuJ2=c.lieuJ2||c.lieu; c.cpfLink="https://www.moncompteformation.gouv.fr/espace-prive/html/#/formation/"+c.id; c.qlbLink="https://app.qualiobee.fr/sessions/"+c.id; c.note=c.note||""; c.qlbId=c.qlbId||"s_"+c.id.replace(/\D/g,"")+"842"; c.edofId=c.edofId||"EDF-2026-0"+c.id.replace(/\D/g,"")+"17"; c.driveId=c.driveId||"1aQz"+c.id; } });
+/* lien : cliquable en lecture, URL modifiable en édition */
+function linkFld(label,key,obj,ed){
+  const url=obj[key]||"";
+  if(ed) return `<div class="fld"><div class="k">${label}</div><input class="edin" data-f="${key}" value="${url.replace(/"/g,"&quot;")}" placeholder="https://…"></div>`;
+  const short=url?url.replace(/^https?:\/\//,"").replace(/^www\./,"").slice(0,38)+(url.length>46?"…":""):null;
+  return `<div class="fld"><div class="k">${label}</div><div class="v">${url?`<a class="ilink" href="${url}" target="_blank" rel="noopener">${short}</a>`:'<span class="muted">non renseigné</span>'}</div></div>`;
+}
 /* inscriptions supplémentaires pour la fiche session (Lost et changé de session) */
 CARDS.push(
  {id:"r1", kb:"insc", offre:"n1", sess:"paris", dt:SESS.paris.dt, title:"Thomas Petit", closer:"Alex R.", setter:"Sam T.", ard:null, fin:null, col:"recue", reserved:1, expires:"2026-08-24T16:30", resNote:"Attend le retour de son OPCO, paiement FT possible"},
@@ -1940,9 +1947,10 @@ function ficheSessionHtml(id){
     ${ed?`<div class="fld"><div class="k">Lieu J1</div><select class="edin" data-f="lieu">${LIEUX.map(l=>`<option ${c.lieu===l?"selected":""}>${l}</option>`).join("")}</select></div><div class="fld"><div class="k">Lieu J2</div><select class="edin" data-f="lieuJ2">${LIEUX.map(l=>`<option ${c.lieuJ2===l?"selected":""}>${l}</option>`).join("")}</select></div>`:(c.lieuJ2&&c.lieuJ2!==c.lieu?fld("Lieu J1",c.lieu)+fld("Lieu J2",c.lieuJ2):fld("Lieu J1 et J2",c.lieu))}
     ${ed?`<div class="fld"><div class="k">Niveau ARD</div><select class="edin" data-f="niveau">${["Plutôt débutant","Plutôt avancé","Aucun badge"].map(n=>`<option ${c.niveau===n?"selected":""}>${n}</option>`).join("")}</select></div>`:fld("Niveau ARD",c.niveau)}
     ${ed?`<div class="fld"><div class="k">Capacité (places)</div><input class="edin" type="number" data-f="cap" value="${c.cap}"></div>`:(()=>{const sc=sessCounts(c);return fld("Inscrits",`<b>${sc.ins}</b> inscrit${sc.ins>1?"s":""} · <b>${sc.enc}</b> en cours · ${sc.cap} places${sc.over?' <span class="badge b-over">Surbooking</span>':sc.risk?' <span class="badge b-risk">Risque de surbooking</span>':""}`)})()}
-    ${fld("Lien Mon CPF",`<a class="ilink" data-copy="${c.cpfLink}">Copier le lien</a>`)}
-    ${fld("Lien Qualiobee",`<a class="ilink" href="${c.qlbLink}" target="_blank" rel="noopener">Ouvrir la session</a>`)}
-  </div></div>`;
+    ${linkFld("Lien Mon CPF","cpfLink",c,ed)}
+    ${linkFld("Lien Qualiobee","qlbLink",c,ed)}
+  </div>
+  <div class="idchips"><span class="lbl">Identifiants techniques</span>${(()=>{const sv=S.editing;S.editing=ed?sv:null;const out=idFld("qualiobee_session_id","qlbId",c)+idFld("edof_session_id","edofId",c)+idFld("drive_folder_id","driveId",c);S.editing=sv;return out})()}</div></div>`;
   /* sections 2 et 3 côte à côte : notes (large) et planification (la carte cliquable) */
   h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Notes</div><textarea class="notes-ta" data-note="${c.id}">${c.note||""}</textarea></div>
   <div class="fsec"><div class="sect-h">${ICO.cap}Planification</div><div style="margin-top:10px">${cardHtml(c,KB[c.kb].cols.find(x=>x.id===c.col),{})}</div></div></div>`;
