@@ -97,7 +97,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .openline b{color:var(--ink-700);font-weight:600}
 .openline a{color:var(--primary);font-weight:600;cursor:pointer;margin-left:auto;font-size:10.5px;white-space:nowrap}
 .openline a:hover{text-decoration:underline;text-underline-offset:2px}
-.card{background:#fff;border-radius:10px;box-shadow:var(--sh-carte);padding:9px 11px;margin-bottom:9px;position:relative;transition:box-shadow .15s,opacity .3s,transform .3s}
+.card{background:#fff;border:1px solid #dfe4ec;border-radius:10px;box-shadow:var(--sh-carte);padding:9px 11px;margin-bottom:9px;position:relative;transition:box-shadow .15s,opacity .3s,transform .3s}
 .card:hover{box-shadow:var(--sh-hover)}
 .card.pop{animation:pop .45s ease}
 @keyframes pop{0%{transform:scale(.92);opacity:0}100%{transform:scale(1);opacity:1}}
@@ -154,6 +154,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .apercu .v .sm{font-weight:400;color:var(--ink-500);font-size:12px}
 .idchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;border-top:1px solid var(--line);padding-top:12px;align-items:center}
 .idchips .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;margin-right:2px}
+.idchips.editing{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px 18px}
+.idchips.editing .lbl{grid-column:1/-1;margin-bottom:-4px}
 .idchip{display:inline-flex;align-items:center;border-radius:6px;background:#f8fafc;border:1px solid var(--line);padding:2px 8px;font-size:10.5px;color:var(--ink-500);font-variant-numeric:tabular-nums}
 .perschip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:#f8fafc;border:1px solid var(--line);padding:3px 10px 3px 4px;font-size:12px;font-weight:500;color:var(--ink-700);cursor:pointer;margin:0 6px 4px 0}
 .perschip:hover{border-color:#c7d2fe;color:var(--primary-dark)}
@@ -598,8 +600,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .accrow.fixed{cursor:default;color:var(--ink-500)}
 .sw{display:inline-block;width:34px;height:20px;border-radius:999px;background:#cbd5e1;position:relative;flex-shrink:0;transition:background .15s;cursor:pointer;vertical-align:middle}
 .swrow{display:flex;align-items:center;gap:10px}
+.ardduo{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,1.4fr);gap:14px 32px;margin-top:12px;align-items:start}
+.ardleft{display:flex;flex-direction:column;gap:12px}
+.ardright .k{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;margin-bottom:2px}
 .closegrid{display:flex;flex-direction:column;gap:2px}
-.closerow{display:flex;align-items:center;gap:12px;padding:7px 2px;border-top:1px solid var(--line);font-size:13px}
+.closerow{display:flex;align-items:center;gap:12px;padding:8px 2px;border-top:1px solid var(--line);font-size:13px}
+.closerow:first-child{border-top:none}
 .closerow .chip{min-width:96px;justify-content:center}
 .closerow .cd{color:var(--ink-900);font-weight:500;min-width:130px}
 .closerow .cl{color:var(--ok);font-weight:600}
@@ -1136,11 +1142,10 @@ function ardClosings(card){
   });
 }
 /* lien : cliquable en lecture, URL modifiable en édition */
-function linkFld(label,key,obj,ed){
+function linkFld(label,key,obj,ed,txt){
   const url=obj[key]||"";
   if(ed) return `<div class="fld"><div class="k">${label}</div><input class="edin" data-f="${key}" value="${url.replace(/"/g,"&quot;")}" placeholder="https://…"></div>`;
-  const short=url?url.replace(/^https?:\/\//,"").replace(/^www\./,"").slice(0,38)+(url.length>46?"…":""):null;
-  return `<div class="fld"><div class="k">${label}</div><div class="v">${url?`<a class="ilink" href="${url}" target="_blank" rel="noopener">${short}</a>`:'<span class="muted">non renseigné</span>'}</div></div>`;
+  return `<div class="fld"><div class="k">${label}</div><div class="v">${url?`<a class="ilink" href="${url}" target="_blank" rel="noopener">${txt||"Ouvrir"}</a>`:'<span class="muted">non renseigné</span>'}</div></div>`;
 }
 /* inscriptions supplémentaires pour la fiche session (Lost et changé de session) */
 CARDS.push(
@@ -1808,7 +1813,7 @@ function fld(label,val,editKey,obj){
   return `<div class="fld"><div class="k">${label}</div><div class="v">${val??'<span class="muted">non renseigné</span>'}</div></div>`;
 }
 function idFld(label,key,obj){
-  if(S.editing) return `<span style="min-width:190px"><span class="fld"><span class="k">${label}</span><input class="edin" data-f="${key}" value="${(obj[key]??"").toString().replace(/"/g,"&quot;")}" style="margin-top:3px"></span></span>`;
+  if(S.editing) return `<div class="fld"><div class="k">${label}</div><input class="edin" data-f="${key}" value="${(obj[key]??"").toString().replace(/"/g,"&quot;")}"></div>`;
   return `<span class="idchip">${label} · ${obj[key]??"…"}</span>`;
 }
 function editBtns(kind,id){
@@ -1844,7 +1849,7 @@ function ficheApprenantHtml(id){
     ${fld("Statut professionnel",ap.spro,"spro",ap)}
     ${fld("Date de naissance",ap.nais,"nais",ap)}
   </div>
-  <div class="idchips"><span class="lbl">Identifiants techniques</span>
+  <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>
     ${idFld("wedof_dossier_id","wdi",ap)}${idFld("qualiobee_learner_id","qli",ap)}${idFld("apolearn_id","apo",ap)}${idFld("wedof_certification_id","wci",ap)}</div>
   </div>`;
   /* ── Notes ── */
@@ -1894,7 +1899,7 @@ function ficheClientHtml(id){
     ${fld("Email responsable",cl.resp?cl.resp.e:null)}
     ${fld("Téléphone responsable",cl.resp?cl.resp.t:null)}
   </div>
-  <div class="idchips"><span class="lbl">Identifiants techniques</span>
+  <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>
     ${idFld("ghl_contact_id","ghl",cl)}${idFld("qonto_client_id","qonto",cl)}${idFld("qualiobee_customer_id","qlb",cl)}</div>
   <div class="idchips" style="border-top:none;padding-top:4px"><span class="lbl">Apprenants liés</span>
     ${(cl.apprenants||[]).map(aid=>{const a=APPRENANTS.find(x=>x.id===aid);return a?`<span class="perschip" data-fiche="apprenant::${a.id}"><span class="avat">${initiales(a.nom)}</span>${a.nom}</span>`:""}).join("")||'<span class="idchip">Aucun</span>'}
@@ -1942,7 +1947,7 @@ function ficheCompteHtml(id){
   h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${initiales(u.nom)}</div><div><h1>${u.nom}</h1><div class="fh-contact"><span>${ICO.mail}${u.email}</span><span>${ICO.phone}${u.tel}</span></div><div class="fh-badges"><span class="chip">${u.titre}</span><span class="chip ok">Compte actif</span></div></div>
     <div class="fh-right">${editBtns("compte",u.id)}<button class="btn btn-s">Ré-inviter</button><button class="btn btn-s danger">Désactiver</button></div></div>
   <div class="idgrid">${fld("Nom",u.nom,"nom",u)}${fld("Email",u.email,"email",u)}${fld("Téléphone",u.tel,"tel",u)}${fld("Rôle",ROLES[u.role])}</div>
-  <div class="idchips"><span class="lbl">Identifiants techniques</span>${idFld("ghl_user_id","ghl",u)}${u.role==="admin"?idFld("qualiobee_user_id","qlb",u):""}</div></div>`;
+  <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>${idFld("ghl_user_id","ghl",u)}${u.role==="admin"?idFld("qualiobee_user_id","qlb",u):""}</div></div>`;
   /* droits d'accès */
   h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Accès aux pages <span class="n2">${u.role==="admin"?"un admin accède à tout, ce paramétrage n'est pas modifiable":"les changements s'appliquent immédiatement au menu et à la navigation"}</span></div>`;
   h+=`<div class="accgrid">`+PAGES_ACCES.map(([pid,lbl])=>{const on=u.role==="admin"||(u.acces||[]).includes(pid);return `<div class="accrow ${u.role==="admin"?"fixed":""}" ${u.role==="admin"?"":`data-acctoggle="${u.id}::${pid}"`}><span class="sw ${on?"on":""}"><i></i></span><span>${lbl}</span></div>`}).join("")+`</div>`;
@@ -1969,10 +1974,10 @@ function ficheSessionHtml(id){
     ${ed?`<div class="fld"><div class="k">Lieu J1</div><select class="edin" data-f="lieu">${LIEUX.map(l=>`<option ${c.lieu===l?"selected":""}>${l}</option>`).join("")}</select></div><div class="fld"><div class="k">Lieu J2</div><select class="edin" data-f="lieuJ2">${LIEUX.map(l=>`<option ${c.lieuJ2===l?"selected":""}>${l}</option>`).join("")}</select></div>`:(c.lieuJ2&&c.lieuJ2!==c.lieu?fld("Lieu J1",c.lieu)+fld("Lieu J2",c.lieuJ2):fld("Lieu J1 et J2",c.lieu))}
     ${ed?`<div class="fld"><div class="k">Niveau ARD</div><select class="edin" data-f="niveau">${["Plutôt débutant","Plutôt avancé","Aucun badge"].map(n=>`<option ${c.niveau===n?"selected":""}>${n}</option>`).join("")}</select></div>`:fld("Niveau ARD",c.niveau)}
     ${ed?`<div class="fld"><div class="k">Capacité (places)</div><input class="edin" type="number" data-f="cap" value="${c.cap}"></div>`:(()=>{const sc=sessCounts(c);return fld("Inscrits",`<b>${sc.ins}</b> inscrit${sc.ins>1?"s":""} · <b>${sc.enc}</b> en cours · ${sc.cap} places${sc.over?' <span class="badge b-over">Surbooking</span>':sc.risk?' <span class="badge b-risk">Risque de surbooking</span>':""}`)})()}
-    ${linkFld("Lien Mon CPF","cpfLink",c,ed)}
-    ${linkFld("Lien Qualiobee","qlbLink",c,ed)}
+    ${linkFld("Lien Mon CPF","cpfLink",c,ed,"Ouvrir Mon CPF")}
+    ${linkFld("Lien Qualiobee","qlbLink",c,ed,"Ouvrir la session Qualiobee")}
   </div>
-  <div class="idchips"><span class="lbl">Identifiants techniques</span>${(()=>{const sv=S.editing;S.editing=ed?sv:null;const out=idFld("qualiobee_session_id","qlbId",c)+idFld("edof_session_id","edofId",c)+idFld("drive_folder_id","driveId",c);S.editing=sv;return out})()}</div></div>`;
+  <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>${(()=>{const sv=S.editing;S.editing=ed?sv:null;const out=idFld("qualiobee_session_id","qlbId",c)+idFld("edof_session_id","edofId",c)+idFld("drive_folder_id","driveId",c);S.editing=sv;return out})()}</div></div>`;
   /* sections 2 et 3 côte à côte : notes (large) et planification (la carte cliquable) */
   h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Notes</div><textarea class="notes-ta" data-note="${c.id}">${c.note||""}</textarea></div>
   <div class="fsec"><div class="sect-h">${ICO.cap}Planification</div><div style="margin-top:10px">${cardHtml(c,KB[c.kb].cols.find(x=>x.id===c.col),{})}</div></div></div>`;
@@ -1997,14 +2002,16 @@ function ficheSessionHtml(id){
   /* section 5 : publication ARD, visible dès que la session est publiée */
   if(c.col!=="brouillon"){
     const sc=sessCounts(c);
-    const vis=c.ardVisible!==false;
-    h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Visibilité sur ARD</div><div class="idgrid" style="border-top:none;padding-top:4px">
-      <div class="fld"><div class="k">Visible sur ARD</div><div class="v swrow"><span class="sw ${vis?"on":""}" data-ardtoggle="${c.id}"><i></i></span><span class="${vis?"":"muted"}">${vis?"Activée : la session apparaît sur le formulaire d'inscription":"Désactivée : la session est masquée sur ARD"}</span></div></div>
-      <div class="fld"><div class="k">Places réelles restantes</div><div class="v">${Math.max(0,sc.cap-sc.ins-sc.enc)} sur ${sc.cap} <span class="muted">(${sc.ins} inscrits, ${sc.enc} en cours)</span></div></div>
-      <div class="fld"><div class="k">Places affichées sur ARD (plafond)</div><div class="v">${c.plafond||sc.cap}</div></div>
-    </div>
-    <div class="subh">Fermeture des inscriptions</div>
-    <div class="closegrid">${ardClosings(c).map(x=>`<div class="closerow"><span class="chip">${x.lbl}</span><span class="cd">${x.date}</span><span class="cl ${x.left<0?"off":x.left<=3?"warn":""}">${x.txt}</span><span class="cr">${x.rule}</span></div>`).join("")}</div></div>`;
+    const vis=c.ardVisible!==false; const edp=S.editPlafond===c.id;
+    h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Visibilité sur ARD</div><div class="ardduo">
+      <div class="ardleft">
+        <div class="fld"><div class="k">Visible sur ARD</div><div class="v swrow"><span class="sw ${vis?"on":""}" data-ardtoggle="${c.id}"><i></i></span><span class="${vis?"":"muted"}">${vis?"Activée":"Désactivée"}</span></div></div>
+        <div class="fld"><div class="k">Places réelles restantes</div><div class="v">${Math.max(0,sc.cap-sc.ins-sc.enc)} sur ${sc.cap} <span class="muted">(${sc.ins} inscrits, ${sc.enc} en cours)</span></div></div>
+        <div class="fld"><div class="k">Places maximum affichées (plafond fictif)</div><div class="v swrow">${edp?`<input class="edin" id="plafondIn" type="number" value="${c.plafond||sc.cap}" style="width:90px;margin:0"><button class="btn btn-p" data-plafondsave="${c.id}">Enregistrer</button><button class="btn btn-s" data-plafondcancel="1">Annuler</button>`:`<span>${c.plafond||sc.cap}</span><a class="ilink" data-plafondedit="${c.id}">Modifier</a>`}</div></div>
+      </div>
+      <div class="ardright"><div class="k">Fermeture des inscriptions</div>
+        <div class="closegrid">${ardClosings(c).map(x=>`<div class="closerow"><span class="chip">${x.lbl}</span><span class="cd">${x.date}</span><span class="cl ${x.left<0?"off":x.left<=3?"warn":""}">${x.txt}</span><span class="cr">${x.rule}</span></div>`).join("")}</div>
+      </div></div></div>`;
   }
   return h;
 }
@@ -2293,7 +2300,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-sopen]")){openSearch();return}
   if(e.target.closest("[data-sclose]")){closeSearch();return}
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
-  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle]");
+  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -2345,6 +2352,9 @@ document.addEventListener("click",e=>{
     S.reserveFor=null;toast(`Place bloquée 48 h pour <b>${p} ${n}</b>.`);render();return}
   if(t.dataset.prolong){const i=CARDS.find(x=>x.id===t.dataset.prolong);i.expires="2026-08-26T16:30";toast("Réservation prolongée de 48 h.");render();return}
   if(t.dataset.cancelres){const i=CARDS.find(x=>x.id===t.dataset.cancelres);const reason=prompt("Raison de l'annulation (obligatoire) :");if(!reason)return;CARDS.splice(CARDS.indexOf(i),1);toast("Réservation annulée, place libérée.");render();return}
+  if(t.dataset.plafondedit){S.editPlafond=t.dataset.plafondedit;render();return}
+  if(t.dataset.plafondcancel){S.editPlafond=null;render();return}
+  if(t.dataset.plafondsave){const c=CARDS.find(x=>x.id===t.dataset.plafondsave);c.plafond=parseInt(document.getElementById("plafondIn").value)||c.cap;S.editPlafond=null;toast("Plafond ARD enregistré : "+c.plafond+" places affichées.");render();return}
   if(t.dataset.ardtoggle){const c=CARDS.find(x=>x.id===t.dataset.ardtoggle);c.ardVisible=c.ardVisible===false;toast(c.ardVisible?"Session visible sur ARD.":"Session masquée sur ARD.");render();return}
   if(t.dataset.espace){toast("Ouverture de l'espace apprenant dans un nouvel onglet.");return}
   if(t.dataset.delsession){if(confirm("Supprimer cette session ? Les inscriptions payées bloqueront la suppression dans la vraie application.")){const c=CARDS.find(x=>x.id===t.dataset.delsession);CARDS.splice(CARDS.indexOf(c),1);S.fiche=null;toast("Session supprimée.");render();}return}
