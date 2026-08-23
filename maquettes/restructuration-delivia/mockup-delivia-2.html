@@ -1731,12 +1731,22 @@ function placesBadge(card){
   const c=sessCounts(card);
   return `<span class="badge ${c.over?"b-over":c.risk?"b-risk":"b-neutral"}" title="${c.ins} inscrit(s), ${c.enc} en cours d'inscription, ${c.cap} places">${c.txt}${c.over?" · surbooking":c.risk?" · risque":""}</span>`;
 }
+/* qui SUIT la tâche : le client fait, mais quelqu'un chez nous en répond (le closeur sur ses ventes,
+   l'admin sur le CPF, l'OPCO, les sessions, l'intra et les coachings) */
+function responsableOf(card,tk){
+  if(tk.p!=="client") return tk.p;
+  if(card.kb.startsWith("session")||card.kb.startsWith("intra")||card.kb.startsWith("coaching")) return "fia";
+  if(["cpf","opco"].includes(card.fin)) return "fia";
+  return "closer";
+}
+/* noir = j'en suis responsable ; gris = quelqu'un d'autre en répond, ou rien à faire */
 function cardState(card,colId){
   if(card.waiting) return "locked";
   const tks=tasksFor(card,colId);
   const nextTk=tks.find((tk,i)=>!taskState(card,colId,i,tk));
   if(!nextTk) return "other";
-  return canCheck(nextTk) ? "mine" : "other";
+  if(nextTk.auto && nextTk.p!=="client") return "other";
+  return responsableOf(card,nextTk)===ROLE_OWNS[S.role] ? "mine" : "other";
 }
 function cardHtml(card, colDef, opts={}){
   const isGhost = opts.ghostCols && colDef.ghost;
