@@ -331,6 +331,34 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .cnt .nx .k{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400);margin-right:5px}
 .cnt .nx.ok{color:var(--ok)}
 .prog{margin-top:8px}
+/* page Anomalies */
+.anohead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
+.anohead .ctl{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--ink-400)}
+.anofam{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin:16px 0 7px}
+.anofam:first-of-type{margin-top:4px}
+.ano{background:#fff;border:1px solid #dfe4ec;border-radius:11px;box-shadow:var(--sh-carte);margin-bottom:8px;overflow:hidden}
+.ano>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;padding:11px 14px}
+.ano>summary::-webkit-details-marker{display:none}
+.ano>summary .chev{color:var(--ink-300);transition:transform .15s;font-size:11px}
+.ano[open]>summary .chev{transform:rotate(90deg)}
+.ano .nm{font-size:13px;font-weight:600;color:var(--ink-900)}
+.ano .cnt2{font-size:11px;font-weight:600;border-radius:999px;padding:1px 8px;background:#f1f5f9;color:var(--ink-500);font-variant-numeric:tabular-nums}
+.ano.err .cnt2{background:var(--err-50);color:var(--err)}
+.ano.warn .cnt2{background:var(--warn-50);color:var(--warn)}
+.ano.ok .nm{color:var(--ink-500);font-weight:500}
+.ano .src{margin-left:auto;font-size:10.5px;color:var(--ink-400);white-space:nowrap}
+.anobody{padding:0 14px 12px;border-top:1px solid var(--line)}
+.anod{font-size:11.5px;color:var(--ink-500);line-height:1.5;margin:9px 0 4px}
+.anocase{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.anocase .tt{font-size:12.5px;font-weight:600;color:var(--ink-800)}
+.anocase .sm{font-size:11px;color:var(--ink-400);margin-top:1px}
+.anocase .acts{margin-left:auto;display:flex;gap:6px;flex-shrink:0}
+.anonone{font-size:11.5px;color:var(--ok);padding:9px 0 2px}
+/* page Générer */
+.gengrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:4px}
+.gencard{background:#fff;border:1px solid #dfe4ec;border-radius:12px;box-shadow:var(--sh-carte);padding:14px}
+.gencard .t{font-size:13.5px;font-weight:600;color:var(--ink-900)}
+.gencard .d{font-size:11.5px;color:var(--ink-500);line-height:1.5;margin:5px 0 10px}
 /* bloc paiements sous une tâche de constat de paiement */
 .paypanel{margin:2px 0 10px 25px;border:1px solid var(--line-2);border-radius:9px;background:#fff;padding:9px 11px}
 .paypanel .pph{display:flex;align-items:baseline;gap:8px;font-size:11px;color:var(--ink-500);padding-bottom:7px;border-bottom:1px solid var(--line)}
@@ -717,7 +745,7 @@ const OFFRES = {n1:"Niveau 1", n2:"Niveau 2", intra:"Intra", coaching:"Coaching"
 
 const DELIVIA_TABS = {
   admin:[["Processus",[["sessions","Sessions"],["inscription","Inscription"],["facturation","Facturation"]]],
-         ["Pilotage",[["anomalies","Anomalies"],["actions","Actions"],["automatisations","Automatisations"],["templates","Templates"]]],
+         ["Pilotage",[["anomalies","Anomalies"],["actions","Actions"],["generer","Générer"],["automatisations","Automatisations"],["templates","Templates"]]],
          ["Divers",[["utilisateurs","Annuaire"],["faq","FAQ & Feedback"],["preuves","Preuves"]]]],
   closer:[["Processus",[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]],
           ["Divers",[["anomalies","Anomalies"],["generer","Générer"],["faq","FAQ & Feedback"]]]],
@@ -1090,6 +1118,123 @@ tasks:{
  termine:[]}},
 };
 
+/* ════════════════════ ANOMALIES ════════════════════ */
+/* un type d'anomalie = un contrôle automatique (toutes les 6 h). v = le process où l'anomalie vit. */
+const ANO_VUES = {session:"Session", inscription:"Inscription", facturation:"Facturation", systeme:"Système"};
+const ANO = [
+/* ── Session ── */
+ {v:"session",fam:"Paramétrage",t:"Session en paramétrage incomplet",g:"warn",src:"DELIV'IA",
+  d:"Session sans formateur, sans lieu, ou dont le lieu n'est pas relié à Qualiobee : la convocation ne partira pas.",
+  cas:[{tt:"Lyon · 3-4 oct",sm:"aucun formateur assigné, J1 dans 41 jours",fiche:"session::s3",act:["Ouvrir la session"]}]},
+ {v:"session",fam:"Paramétrage",t:"Réservation HAL incomplète",g:"warn",src:"HAL Station F",
+  d:"Session à Station F dont les créneaux de salle ne sont pas tous réservés sur HAL.",
+  cas:[{tt:"Paris · 12-13 sept",sm:"J2 sans salle réservée",fiche:"session::s1",act:["Ouvrir HAL","Ouvrir la session"]}]},
+ {v:"session",fam:"Places",t:"Surbooking",g:"err",src:"DELIV'IA",dyn:"over",
+  d:"Plus d'inscrits que de places : la seule alerte rouge portée sur une carte."},
+ {v:"session",fam:"Places",t:"Risque de surbooking",g:"warn",src:"DELIV'IA",dyn:"risk",
+  d:"Les inscriptions en cours, si elles aboutissent toutes, dépassent le nombre de places."},
+ {v:"session",fam:"Synchronisation",t:"Désynchronisation Qualiobee",g:"warn",src:"Qualiobee",
+  d:"Les inscrits Qualiobee ne correspondent pas à ceux de DELIV'IA : convocation manquante ou en trop, identifiant apprenant vide.",
+  cas:[{tt:"Bordeaux · 26-27 sept",sm:"Lucas Moreau inscrit chez nous, absent de Qualiobee",act:["Ajouter à Qualiobee","Ignorer"]},
+       {tt:"Paris · 12-13 sept",sm:"une convocation en trop : apprenant retiré côté DELIV'IA",act:["Supprimer la convocation","Ignorer"]}]},
+ {v:"session",fam:"Synchronisation",t:"Fermeture EDOF dépassée",g:"err",src:"EDOF",
+  d:"Session sans session EDOF liée à moins de 11 jours ouvrés du J1 : les dossiers CPF ne pourront plus être déclarés.",
+  cas:[{tt:"Paris · 12-13 sept",sm:"aucune session EDOF liée, J1 dans 20 jours",fiche:"session::s1",act:["Créer la session EDOF"]}]},
+ {v:"session",fam:"Synchronisation",t:"Écart entre les trois systèmes",g:"warn",src:"DELIV'IA · espace · Qualiobee",
+  d:"Inscrits ou e-mails divergents entre DELIV'IA, l'espace apprenants et Qualiobee ; apprenant non provisionné ou documents absents de son espace.",
+  cas:[{tt:"Emma Bianchi",sm:"non provisionnée sur l'espace apprenants",act:["Re-provisionner","Resynchroniser"]}]},
+ {v:"session",fam:"Preuves",t:"Collecte de preuve en échec",g:"warn",src:"Qualiobee · Drive",
+  d:"Émargement non signé, document pas encore généré côté Qualiobee, CV du formateur absent : la preuve ne peut pas être déposée sur le Drive.",
+  cas:[{tt:"Bordeaux · 26-27 sept",sm:"émargement J2 non signé par 2 apprenants",act:["Relancer la signature"]},
+       {tt:"Sarah K.",sm:"CV du formateur absent du coffre-fort",act:["Demander le CV"]}]},
+ {v:"session",fam:"Preuves",t:"Tâche en retard",g:"warn",src:"DELIV'IA",
+  d:"Une tâche dont la date d'échéance est dépassée alors que l'étape est ouverte.",
+  cas:[{tt:"Bordeaux · 26-27 sept",sm:"« désactiver les contrats Qualiobee (CPF) » en retard de 3 jours",open:"s2",act:["Ouvrir la carte"]}]},
+/* ── Inscription ── */
+ {v:"inscription",fam:"Identité",t:"Doublon d'apprenant",g:"warn",src:"ARD · DELIV'IA",
+  d:"Même e-mail ou même téléphone entre un profil arrivé par ARD et un profil existant.",
+  cas:[{tt:"Nadia Slimani",sm:"même e-mail qu'un profil de mai 2026",act:["Fusionner","Garder le nouveau","Garder l'ancien"]}]},
+ {v:"inscription",fam:"Identité",t:"Orphelin WEDOF",g:"warn",src:"WEDOF",
+  d:"Dossier venu de Mon Compte Formation sans fiche DELIV'IA correspondante.",
+  cas:[{tt:"Dossier 2026-CPF-8841",sm:"Julien R., aucune correspondance par e-mail ni par nom",act:["Rechercher","Déclarer nouveau client","Supprimer"]}]},
+ {v:"inscription",fam:"Identité",t:"Réservation fantôme",g:"info",src:"DELIV'IA",
+  d:"Place réservée à la main (48 h) expirée ou sans client rattaché : elle bloque une place pour rien.",
+  cas:[{tt:"Paris · 12-13 sept",sm:"réservation expirée depuis 2 jours, closeur Yanis B.",act:["Libérer la place"]}]},
+ {v:"inscription",fam:"Identité",t:"Client déjà existant sur Qualiobee",g:"info",src:"Qualiobee",
+  d:"Correspondance incertaine entre un nouveau client et une fiche Qualiobee existante.",
+  cas:[{tt:"Studio Nova",sm:"fiche Qualiobee « STUDIO NOVA SAS » très proche",act:["Confirmer la fiche","Créer une nouvelle fiche"]}]},
+ {v:"inscription",fam:"Synchronisation",t:"Désynchronisation WEDOF / EDOF",g:"err",src:"WEDOF",
+  d:"Dossier CPF sans numéro WEDOF, auto-acceptation échouée, dates ARD différentes des dates WEDOF, ou montant CDC différent du prix de l'offre.",
+  cas:[{tt:"Marie Dupont",sm:"dates ARD 12-13 sept, dates WEDOF 26-27 sept",act:["Accepter le devis CPF","Refuser"]},
+       {tt:"Hugo Martin",sm:"montant CDC 1 500 €, prix de l'offre 1 650 €",act:["Ouvrir le dossier WEDOF"]}]},
+ {v:"inscription",fam:"Synchronisation",t:"Désynchronisation GHL",g:"info",src:"GHL",
+  d:"Contact CRM sans correspondance dans DELIV'IA, ou passage en « won » qui a échoué.",
+  cas:[{tt:"Marc Leroy",sm:"opportunité gagnée non répercutée sur la fiche",act:["Rapprocher le contact"]}]},
+ {v:"inscription",fam:"Conformité",t:"Apprenant sans identifiant EDOF",g:"warn",src:"EDOF",
+  d:"Apprenant CPF sans identifiant EDOF alors que sa session approche : la déclaration d'entrée sera impossible.",
+  cas:[{tt:"Lucas Moreau",sm:"J1 dans 34 jours, identifiant EDOF absent",act:["Retrouver l'identifiant"]}]},
+ {v:"inscription",fam:"Conformité",t:"Apprenant CPF non inscrit à la certification",g:"warn",src:"WEDOF",
+  d:"Sans inscription à la certification RS6891, la facture du formateur reste bloquée.",
+  cas:[{tt:"Emma Bianchi",sm:"certification non demandée, J2 passé depuis 4 jours",act:["Inscrire à la certification"]}]},
+/* ── Facturation ── */
+ {v:"facturation",fam:"Encaissements",t:"Virement reçu non rapproché",g:"warn",src:"Qonto",dyn:"qonto",
+  d:"Argent reçu sur le compte Qonto sans facture rattachée. Le rapprochement se fait dans Qonto : DELIV'IA relit ensuite le statut de la facture."},
+ {v:"facturation",fam:"Encaissements",t:"Échec de prélèvement SEPA",g:"err",src:"Mollie",
+  d:"Prélèvement refusé, non parti ou irrégulier sur un mandat actif.",
+  cas:[{tt:"BTP Sud",sm:"échéance 1/2 refusée le 10 août (provision insuffisante)",open:"f6",act:["Ouvrir la carte","Rejouer"]}]},
+ {v:"facturation",fam:"Encaissements",t:"Paiement orphelin",g:"warn",src:"Mollie · Qonto",
+  d:"Paiement encaissé sans inscription rattachée : personne ne le suit.",
+  cas:[{tt:"Paiement Mollie 3 591,95 €",sm:"reçu le 14 août, aucun dossier lié",act:["Rattacher à un client","Archiver"]}]},
+ {v:"facturation",fam:"Documents",t:"Facture ou devis orphelin, doublon ou délié",g:"info",src:"Qonto",
+  d:"Document de facturation sans dossier, en double, ou dont le lien vers la vente a été perdu ; lien de paiement sans dossier.",
+  cas:[{tt:"F-2026-0689",sm:"facture sans carte de facturation rattachée",act:["Lier à une vente","Annuler la facture"]}]},
+ {v:"facturation",fam:"Documents",t:"Facture à générer à la main",g:"warn",src:"DELIV'IA",
+  d:"La génération automatique a échoué (SIRET manquant, client sans adresse, montant à confirmer).",
+  cas:[{tt:"Hôtel du Parc",sm:"SIRET du groupe à confirmer avant émission",fiche:"client::cl_hotel",act:["Ouvrir la fiche client"]}]},
+ {v:"facturation",fam:"Contrôles",t:"Fausse alerte de facturation",g:"info",src:"DELIV'IA",
+  d:"Dossier rangé dans la mauvaise colonne, échéance calée sur une ancienne session, tâche sans échéance, changement de colonne proposé par WEDOF.",
+  cas:[{tt:"Karim Benali",sm:"WEDOF propose le passage en « Terminé »",open:"f4",act:["Appliquer","Ignorer"]}]},
+ {v:"facturation",fam:"Contrôles",t:"Carte de facturation sur une inscription non validée",g:"warn",src:"DELIV'IA",
+  d:"Une facturation a démarré alors que l'inscription n'est pas validée : no-show présumé ou erreur de rail.",
+  cas:[{tt:"Awa Diallo",sm:"coaching facturé, séance non encore réalisée",open:"f8",act:["Ouvrir la carte","Ignorer"]}]},
+ {v:"facturation",fam:"Affacturage",t:"Bibby en erreur",g:"err",src:"Bibby Factor",
+  d:"Transmission refusée par Bibby, ou export EDOF manquant dans le dossier envoyé.",
+  cas:[{tt:"Emma Bianchi",sm:"dossier refusé : export EDOF absent",open:"f2",act:["Déposer l'export","Renvoyer"]}]},
+ {v:"facturation",fam:"Affacturage",t:"Étude de cas ou témoignage manquant",g:"info",src:"DELIV'IA",
+  d:"Le formateur n'a pas déposé son étude de cas ou son témoignage de clôture : sa facture reste bloquée.",
+  cas:[{tt:"Sarah K.",sm:"étude de cas de la session de Paris non déposée",act:["Relancer le formateur"]}]},
+/* ── Système ── */
+ {v:"systeme",fam:"Automatisations",t:"Instance WhatsApp déconnectée",g:"err",src:"WhatsApp",
+  d:"Le compte WhatsApp qui crée les groupes n'est plus connecté : les groupes et les messages ne partent plus.",
+  cas:[{tt:"Instance principale",sm:"déconnectée depuis 3 h",act:["Reconnecter"]}]},
+ {v:"systeme",fam:"Automatisations",t:"Envoi d'e-mail en échec",g:"warn",src:"Brevo",
+  d:"Mail de bienvenue, de facture ou de convocation refusé par le destinataire ou par le serveur.",
+  cas:[{tt:"contact@garagemoderne.fr",sm:"mail de bienvenue rejeté (boîte pleine)",act:["Renvoyer","Corriger l'adresse"]}]},
+ {v:"systeme",fam:"Automatisations",t:"Rappel de rendez-vous en échec",g:"info",src:"GHL",
+  d:"Rappel ou confirmation de rendez-vous de closing non parti.",
+  cas:[]},
+ {v:"systeme",fam:"Infrastructure",t:"Stockage au-delà de 80 %",g:"warn",src:"Supabase",
+  d:"L'espace de stockage des preuves approche de sa limite.",
+  cas:[{tt:"Bucket preuves",sm:"84 % utilisés",act:["Voir le détail"]}]},
+ {v:"systeme",fam:"Formateurs",t:"Formateur à traiter",g:"warn",src:"DELIV'IA",
+  d:"Document administratif refusé ou manquant, modification de profil en attente d'approbation, demande de qualification, demande de retrait d'une session.",
+  cas:[{tt:"Marc D.",sm:"attestation URSSAF expirée",act:["Demander le document"]},
+       {tt:"Julie T.",sm:"demande de qualification Niveau 2 en attente",act:["Accepter","Refuser"]}]},
+];
+/* anomalies déjà traitées, conservées six mois */
+const ANO_RES = [
+ {t:"Doublon d'apprenant",tt:"Paul Fabre",sm:"fusionné avec le profil de juin",d:"2026-08-21",qui:"Sofia (admin)"},
+ {t:"Virement reçu non rapproché",tt:"ACME Conseil · 1 650 €",sm:"rapproché à la facture F-2026-0533",d:"2026-08-20",qui:"rapprochement Qonto"},
+ {t:"Désynchronisation Qualiobee",tt:"Paris · 12-13 sept",sm:"convocation renvoyée",d:"2026-08-19",qui:"contrôle automatique"},
+];
+function anoCas(a){
+  if(a.dyn==="qonto") return QONTO_ENC.map(t=>({tt:t.lib,sm:`${fmtJour(t.d)} · ${eur(t.m)} · ${t.ref}`,act:["Rapprocher","Archiver"]}));
+  if(a.dyn==="over"||a.dyn==="risk") return CARDS.filter(c=>c.kb==="session_fia"&&sessCounts(c)[a.dyn]).map(c=>{
+    const sc=sessCounts(c);
+    return {tt:c.title,sm:`${sc.ins} inscrit(s) et ${sc.enc} en cours pour ${sc.cap} places`,fiche:"session::"+c.id,act:["Ouvrir la session","Ajuster le plafond"]};
+  });
+  return a.cas||[];
+}
 /* ════════════════════ FAUSSES DONNÉES ════════════════════ */
 /* modes de paiement et offres où ils sont possibles */
 const FIN = {
@@ -1391,9 +1536,8 @@ function facUrl(f){ return "https://app.qonto.com/invoicing/client-invoices/"+f.
 function facFld(card){
   const f=card.fac;
   if(!f) return `<span class="muted">Pas encore générée</span>`;
-  const env=f.envoi?`<span class="chip ok">Transmise le ${fmtDT(f.envoi)}</span>`:`<span class="chip warn">Non transmise</span>`;
   const st=f.avoir?`<span class="chip warn">Avoir ${f.avoir}</span>`:(f.paye?`<span class="chip ok">Acquittée</span>`:`<span class="chip">Non acquittée</span>`);
-  return `<div class="facline"><a class="ilink" href="${facUrl(f)}" target="_blank" rel="noopener">${f.num}</a>${env}${st}</div>`;
+  return `<div class="facline"><a class="ilink" href="${facUrl(f)}" target="_blank" rel="noopener">${f.num}</a>${st}</div>`;
 }
 function finFld(card){
   const cur=FIN[card.fin]?FIN[card.fin].lbl:"";
@@ -1888,6 +2032,54 @@ function pageFacturation(){
   else if(f==="closeur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="closer"));
   else if(f==="setteur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="setter"));
   return h;
+}
+function anoCount(v){ return ANO.filter(a=>a.v===v).reduce((n,a)=>n+anoCas(a).length,0); }
+function pageAnomalies(){
+  const vues=Object.keys(ANO_VUES);
+  const v=vues.includes(S.fAno)||S.fAno==="resolues"?S.fAno:"session";
+  let h=`<div class="pagehead"><h1>Anomalies</h1><p>Tout ce que DELIV'IA vérifie tout seul, toutes les 6 heures, entre ARD, Qualiobee, WEDOF, EDOF, GHL, Mollie et Qonto. Chaque anomalie est classée dans le process où elle vit, pour savoir qui doit s'en occuper.</p></div>`;
+  h+=`<div class="anohead">`
+    +chips([["Vue",vues.map(k=>[k,`${ANO_VUES[k]} <span class="cnt2">${anoCount(k)}</span>`]).concat([["resolues","Résolues"]])]], v, "fAno")
+    +`<div class="ctl"><span>Dernier contrôle il y a 42 minutes · prochain à 18 h 00</span><button class="btn btn-s" data-anorun="1">${ICO.refresh} Relancer le contrôle</button></div></div>`;
+  if(v==="resolues"){
+    return h+`<div class="fsec"><h2>Anomalies résolues <span class="n2">conservées six mois</span></h2>`
+      +ANO_RES.map(r=>`<div class="frow"><div><div class="tt">${r.tt}</div><div class="sm">${r.t} · ${r.sm}</div></div><span class="chip ok">Résolue le ${fmtJour(r.d)} · ${r.qui}</span></div>`).join("")
+      +`</div>`;
+  }
+  const list=ANO.filter(a=>a.v===v);
+  const fams=[...new Set(list.map(a=>a.fam))];
+  const showOk=!!S.anoAll;
+  h+=`<div class="anohead" style="margin:-4px 0 10px"><label style="font-size:11.5px;color:var(--ink-500);display:flex;align-items:center;gap:7px;cursor:pointer"><input type="checkbox" data-anoall="1" ${showOk?"checked":""}> Afficher aussi les contrôles au vert</label></div>`;
+  let vide=true;
+  for(const fam of fams){
+    const inFam=list.filter(a=>a.fam===fam).map(a=>({a,cas:anoCas(a)})).filter(x=>showOk||x.cas.length);
+    if(!inFam.length) continue;
+    vide=false;
+    h+=`<div class="anofam">${fam}</div>`;
+    for(const {a,cas} of inFam){
+      const g=cas.length?a.g:"ok";
+      const open=S.anoOpen&&S.anoOpen[a.t];
+      h+=`<details class="ano ${g}" data-ano="${a.t}"${open?" open":""}><summary><span class="chev">▶</span><span class="nm">${a.t}</span><span class="cnt2">${cas.length}</span><span class="src">${a.src}</span></summary>
+        <div class="anobody"><div class="anod">${a.d}</div>`;
+      h+= cas.length
+        ? cas.map(c=>`<div class="anocase"><div><div class="tt">${c.fiche?`<a class="ilink" data-fiche="${c.fiche}">${c.tt}</a>`:c.open?`<a class="ilink" data-open="${c.open}">${c.tt}</a>`:c.tt}</div><div class="sm">${c.sm}</div></div><div class="acts">${c.act.map(x=>`<button class="btn-xs${x===c.act[0]?" p":""}" data-anoact="${encodeURIComponent(x)}::${encodeURIComponent(c.tt)}">${x}</button>`).join("")}</div></div>`).join("")
+        : `<div class="anonone">Rien à signaler : le contrôle est passé au vert au dernier balayage.</div>`;
+      h+=`</div></details>`;
+    }
+  }
+  if(vide) h+=`<div class="stub"><p>Aucune anomalie ouverte dans ce process. Cochez « afficher aussi les contrôles au vert » pour voir la liste des contrôles passés.</p></div>`;
+  return h;
+}
+function pageGenerer(){
+  const cartes=[
+   ["Facture","Émettre une facture Qonto pour une vente existante ou hors process (formation offerte, prestation ponctuelle).","Générer une facture"],
+   ["Devis","Créer un devis, avec ou sans passage par ARD, et l'envoyer à la signature.","Générer un devis"],
+   ["Paiement en plusieurs fois","Créer un lien de mandat de prélèvement et son échéancier pour un client qui paie en 2, 3 ou 4 fois.","Créer l'échéancier"],
+   ["Convention OPCO","Éditer la convention de formation attendue par l'OPCO, quand le client ne peut pas la générer depuis sa plateforme.","Générer la convention"],
+   ["Nouveau client","Créer une fiche client à la main : entreprise ou particulier qui n'est pas passé par ARD.","Créer le client"],
+  ];
+  return `<div class="pagehead"><h1>Générer</h1><p>Les documents que l'on crée à la main quand le process ne les a pas produits tout seul. Même panneau pour les admins et pour les closeurs.</p></div>
+  <div class="gengrid">`+cartes.map(([t,d,b])=>`<div class="gencard"><div class="t">${t}</div><div class="d">${d}</div><button class="btn btn-p" data-gen="${encodeURIComponent(t)}">${b}</button></div>`).join("")+`</div>`;
 }
 function pointerCard(){
   return `<div class="card pointer clickable" data-tab="aprendre"><div class="t">📥 Sessions et coachings disponibles</div><div class="s">Publiés au shotgun, à la demande</div><div class="nextt" style="margin-top:9px"><span class="v" style="color:var(--primary);font-weight:600">Rendez-vous sur la page À prendre →</span></div></div>`;
@@ -2410,6 +2602,8 @@ function render(){
     else if(S.tab==="services") h=pageServices();
     else if(S.tab==="aprendre") h=pageAPrendre();
     else if(S.tab==="utilisateurs") h=pageAnnuaire();
+    else if(S.tab==="anomalies") h=pageAnomalies();
+    else if(S.tab==="generer") h=pageGenerer();
     else if(S.tab==="preuves") h=pagePreuves();
     else h=pageStub(S.tab);
   }
@@ -2456,6 +2650,8 @@ document.addEventListener("click",e=>{
   const ms=e.target.closest(".msec2>summary");
   if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
   if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;document.getElementById("modal2")?.remove();return}
+  const anoS=e.target.closest(".ano>summary");
+  if(anoS){const d=anoS.parentElement;S.anoOpen=S.anoOpen||{};S.anoOpen[d.dataset.ano]=!d.open}
   const rapS=e.target.closest(".payrap>summary");
   if(rapS){S.rapOpen=!rapS.parentElement.open}
   if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;S.newSess=null;document.getElementById("modal")?.remove();return}
@@ -2464,7 +2660,7 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-sopen]")){openSearch();return}
   if(e.target.closest("[data-sclose]")){closeSearch();return}
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
-  const t=e.target.closest("[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -2505,6 +2701,10 @@ document.addEventListener("click",e=>{
     S.fSessView="kanban";render();return}
   if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===cd.sess);if(fs)fs.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
+  if(t.dataset.anoall!==undefined){S.anoAll=!S.anoAll;render();return}
+  if(t.dataset.anorun){toast(`Contrôle relancé : balayage d'ARD, Qualiobee, WEDOF, EDOF, GHL, Mollie et Qonto. Résultat dans deux minutes.`);return}
+  if(t.dataset.anoact){const [a,c]=t.dataset.anoact.split("::");toast(`<b>${decodeURIComponent(a)}</b> · ${decodeURIComponent(c)}`);return}
+  if(t.dataset.gen){toast(`<b>${decodeURIComponent(t.dataset.gen)}</b> : le formulaire s'ouvrirait ici, prérempli avec le client choisi.`);return}
   if(t.dataset.finedit){e.stopPropagation();S.editFin=t.dataset.finedit;render();return}
   if(t.dataset.fincancel){e.stopPropagation();S.editFin=null;render();return}
   if(t.dataset.finsave){e.stopPropagation();
