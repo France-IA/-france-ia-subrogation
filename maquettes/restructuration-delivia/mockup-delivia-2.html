@@ -74,7 +74,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .col{width:272px;flex-shrink:0;background:rgba(248,250,252,.9);border:1px solid var(--line);border-radius:12px;padding:10px}
 .col-h{display:flex;align-items:center;gap:7px;padding:2px 4px 8px}
 .col-h .pill{width:8px;height:8px;border-radius:50%;background:var(--ink-400);flex-shrink:0}
-.col-h h3{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500)}
+.col-h h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-900)}
 .col-h .n{margin-left:auto;font-size:11px;color:var(--ink-400);font-variant-numeric:tabular-nums}
 .col-open{font-size:10.5px;color:var(--info);background:var(--info-50);border-radius:6px;padding:4px 8px;margin:0 2px 8px;display:block;line-height:1.45}
 .col-open a{color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:2px}
@@ -616,12 +616,17 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #usermenu .out{margin-left:auto;color:var(--ink-400);width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center}
 #usermenu .out:hover{background:#f1f5f9;color:var(--err)}
 /* états des cartes : noir = à moi, gris = à quelqu'un d'autre ou automatique, cadenas = attente d'une date */
-.card.st-other .t{color:var(--ink-500);font-weight:500}
+/* contraste : la carte qui attend un geste de l'utilisateur connecté est en noir, les autres en gris */
+.card.st-other .t{color:var(--ink-400);font-weight:500}
 .card.st-other{background:#fbfcfd}
-.card.st-other .nx{color:var(--ink-400)}
-.card.st-other .badge{opacity:.75}
+.card.st-other .nx,.card.st-other .cnt,.card.st-other .cnt b{color:var(--ink-400)}
+.card.st-other .badge,.card.st-other .fintxt{opacity:.7}
+.card.st-other .prog i{background:#cbd5e1}
+.card.st-mine{background:#fff}
 .card.st-mine .t{color:var(--ink-900);font-weight:600}
-.card.st-mine .nx{color:var(--ink-800)}
+.card.st-mine .nx{color:var(--ink-900);font-weight:500}
+.card.st-mine .cnt,.card.st-mine .cnt b{color:var(--ink-900)}
+.card.st-mine .nx .k{color:var(--primary)}
 .card.st-locked .t{color:var(--ink-500)}
 .card.haslock{background:repeating-linear-gradient(-45deg,#fbfcfd 0 8px,#f4f6f9 8px 9px)}
 .card.haslock > *:not(.lockmid){opacity:.8}
@@ -1950,8 +1955,11 @@ function modalHtml(){
     const {cl}=peopleFor(card);
     if(cl) h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note</div><textarea class="notes-ta" data-note="${cl.id}">${cl.note||""}</textarea></div>`;
   }
+  const edofBtn = card.fin==="cpf"&&(card.kb==="insc"||card.kb==="fact_cpf") ? `<button class="btn btn-s" data-syncedof="${card.id}">Sync EDOF</button>` : "";
   if(card.kb==="insc"&&!card.reserved){
-    h+=`<div class="mact2"><button class="btn btn-s" data-switch="${card.id}">Changer de session</button><button class="btn btn-s danger" data-lost="${card.id}">Passer en Lost</button></div>`;
+    h+=`<div class="mact2">${edofBtn}<button class="btn btn-s" data-switch="${card.id}">Changer de session</button><button class="btn btn-s danger" data-lost="${card.id}">Passer en Lost</button></div>`;
+  } else if(edofBtn){
+    h+=`<div class="mact2">${edofBtn}</div>`;
   }
   h+=`</div></div></div>`;
   return h;
@@ -2397,7 +2405,7 @@ function ficheClientHtml(id){
   h+=`<div class="fichehead"><div class="fh-top">
     <div class="avat">${isPart?initiales(cl.nom):ICO.building}</div>
     <div><h1>${cl.nom}</h1></div>
-    <div class="fh-right">${editBtns("client",cl.id)}${S.editing?"":`<button class="btn btn-s" data-syncghl="${cl.id}">Synchroniser GHL</button>`}</div>
+    <div class="fh-right">${editBtns("client",cl.id)}${S.editing?"":`<button class="btn btn-s" data-syncghl="${cl.id}">Synchroniser GHL</button><button class="btn btn-s" data-app="apprenant">Ouvrir l'espace client / apprenant</button>`}</div>
   </div>
   <div class="idgrid">
     ${fld("Adresse",cl.adr,"adr",cl)}
@@ -2886,7 +2894,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -2948,6 +2956,7 @@ document.addEventListener("click",e=>{
     S.fSessView="kanban";render();return}
   if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===cd.sess);if(fs)fs.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
+  if(t.dataset.syncedof){const c=CARDS.find(x=>x.id===t.dataset.syncedof);toast(`Synchronisation EDOF pour <b>${c?c.title:""}</b> : dossier relu chez WEDOF (entrée, sortie, montant CDC, numéro de dossier).`);return}
   if(t.dataset.syncghl){const cl=CLIENTS.find(c=>c.id===t.dataset.syncghl);toast(`Fiche <b>${cl?cl.nom:""}</b> resynchronisée avec GHL : coordonnées, responsable et opportunités relus.`);return}
   if(t.dataset.vedit){S.editVente=t.dataset.vedit;S.editing=null;render();return}
   if(t.dataset.vcancel){S.editVente=null;render();return}
