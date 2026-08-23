@@ -214,10 +214,16 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .qrow:last-child{border-bottom:none}
 .qrow .q{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400)}
 .qrow .a{font-size:12.5px;color:var(--ink-800);margin-top:2px;line-height:1.45}
-.pgrp{display:flex;align-items:baseline;gap:8px;margin:12px 0 4px;padding-top:8px;border-top:1px solid var(--line)}
-.pgrp:first-child{margin-top:2px;padding-top:0;border-top:none}
-.pgrp .lb{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500)}
-.pgrp .ilink{font-size:11px}
+.pgrp{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 6px;padding:6px 10px;background:#f8fafc;border-radius:8px;border-left:2px solid var(--line-2)}
+.pgrp:first-child{margin-top:4px}
+.pgrp .lb{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-700)}
+.pgrp .ilink{font-size:11px;margin-left:auto}
+.espadv{display:flex;align-items:center;gap:10px;margin-left:auto;font-size:11px;color:var(--ink-500);font-variant-numeric:tabular-nums}
+.espadv b{color:var(--ink-800)}
+.espadv .nx{color:var(--ink-600,#475569)}
+.espadv .nx .k{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400);margin-right:5px}
+.espadv .nx.ok{color:var(--ok)}
+.espadv .ilink{margin-left:0}
 .acc.sub2acc{margin-top:12px;border-top:1px solid var(--line);padding-top:8px}
 .card.locked-fact{opacity:.75;background:#f8fafc;border-style:dashed}
 .card.locked-fact .s{font-size:11px;color:var(--ink-500);margin-top:4px}
@@ -2423,8 +2429,6 @@ function ficheApprenantHtml(id){
             ${fCard?`<div class="card locked-fact"><div class="ct"><span class="t">${fCard.title}</span></div><div class="s">${colLabel(fCard)} · à consulter sur la ${cl?`<a class="ilink" data-fiche="client::${cl.id}">fiche client</a>`:"fiche client"}</div></div>`
               :`<div class="card pointer"><div class="t">Carte à venir</div><div class="s">La facturation se suit sur la ${cl?`<a class="ilink" data-fiche="client::${cl.id}">fiche client</a>`:"fiche client"}.</div></div>`}</div>
         </div>
-        <div class="subh">À faire dans l'espace client / apprenant</div>
-        ${ap.afaire.length?ap.afaire.map(x=>`<div class="lrow">${x}<span class="chip warn">à faire</span></div>`).join(""):`<div class="lrow">Tout est fait<span class="chip ok">à jour</span></div>`}
         <details class="acc sub2acc" data-acc="pr-${c.id}" ${accKey("pr-"+c.id)?"open":""}><summary><span class="chev">▶</span><span class="tt">Preuves individuelles</span><span class="end"><a class="ilink" data-drive="${ap.id}">Dossier Drive de l'apprenant</a></span></summary>
         <div class="inner">${preuvesApprenantHtml(c,ap,cl)}</div></details>
       </div></details>`;
@@ -2764,7 +2768,7 @@ const PREUVES = {
     {n:"Email de confirmation d'inscription et d'accès à l'espace", d:"Mail d'envoi des codes de l'espace client / apprenant.", src:"Mail", at:0},
     {n:"Mail d'ajout au groupe WhatsApp", d:"Notification d'ajout au groupe WhatsApp de la session.", src:"Mail", at:1},
     {n:"Questionnaire de satisfaction à chaud", d:"Évaluation à chaud par l'apprenant et le client.", src:"Mail", at:3}]},
-  {lieu:"Espace client / apprenant", items:[
+  {lieu:"Espace apprenant", items:[
     {n:"Infos pratiques et accès", d:"Page Notion reliée à la session.", src:"Notion", at:1},
     {n:"Livret d'accueil", d:"Déposé dans l'espace apprenant.", src:"Espace apprenant", at:1},
     {n:"Convocation", d:"Convocation officielle à la formation (dates, lieu, horaires).", src:"Qualiobee", at:1},
@@ -2849,11 +2853,16 @@ function pagePreuves(){
   return h;
 }
 /* chaque famille de preuves porte le lien de l'endroit où elle vit */
+const ESPACE_TODO=5; /* les to do standard de l'espace : positionnement, préparation, convention, émargements, certification */
 function lieuLink(lieu,ap,cl){
   const gid=(ap&&ap.ghl)||(cl&&cl.ghl);
-  if(lieu==="Mail") return gid?`<a class="ilink" href="https://app.gohighlevel.com/v2/location/france-ia/contacts/detail/${gid}" target="_blank" rel="noopener">profil GHL${ap&&ap.ghl?"":" du client"}</a>`:"";
-  if(lieu==="Questionnaire ARD") return cl?`<a class="ilink" data-qard="${cl.id}">ouvrir le questionnaire</a>`:"";
-  if(lieu.startsWith("Espace")) return `<a class="ilink" data-app="apprenant">ouvrir l'espace</a>`;
+  if(lieu==="Mail") return gid?`<a class="ilink" href="https://app.gohighlevel.com/v2/location/france-ia/contacts/detail/${gid}" target="_blank" rel="noopener">profil GHL apprenant</a>`:"";
+  if(lieu==="Questionnaire ARD") return cl?`<a class="ilink" data-qard="${cl.id}">fiche client</a>`:"";
+  if(lieu.startsWith("Espace")){
+    const reste=ap&&ap.afaire?ap.afaire.length:0;
+    const fait=Math.max(0,ESPACE_TODO-reste);
+    return `<span class="espadv"><b>${fait}/${ESPACE_TODO}</b>${reste?`<span class="nx"><span class="k">Next</span>${ap.afaire[0]}</span>`:`<span class="nx ok">Tout est fait</span>`}<a class="ilink" data-app="apprenant">ouvrir l'espace</a></span>`;
+  }
   return "";
 }
 function preuvesApprenantHtml(insc,ap,cl){
