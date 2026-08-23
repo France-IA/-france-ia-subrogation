@@ -2480,17 +2480,17 @@ function ficheSessionHtml(id){
   /* section 4 : apprenants */
   const inscs=CARDS.filter(i=>i.kb==="insc"&&(i.sess===c.sess||i.movedFrom===c.sess)).map(i=>({i,g:i.movedFrom===c.sess?3:sessionStatusGroup(i)})).sort((a,b)=>a.g-b.g);
   const GL=["Inscrits","En cours d'inscription","Lost","Changés de session","Réservations en cours (48 h)"];
-  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Apprenants <span class="n2">${inscs.length}</span><span class="right"><button class="btn btn-s" data-reserve="${c.id}">+ Réserver une place</button></span></div><div class="tblwrap"><table class="tbl"><thead><tr><th>Nom</th><th>Mode de paiement</th><th>Closeur / Setteur</th><th>Statut</th><th>Actions</th></tr></thead><tbody>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Apprenants <span class="n2">${inscs.length}</span><span class="right"><button class="btn btn-s" data-reserve="${c.id}">+ Réserver une place</button></span></div><div class="tblwrap"><table class="tbl"><thead><tr><th>Nom</th><th>Mode de paiement</th><th>Closeur / Setteur</th><th>Carte inscription</th><th>Actions</th></tr></thead><tbody>`;
   let lastG=-1;
   inscs.forEach(({i,g})=>{
     if(g!==lastG){h+=`<tr class="tgrp2 ${g===4?"apart":""}"><td colspan="5">${GL[g]}</td></tr>`;lastG=g;}
     const {cl,aps}=peopleFor(i); const ap=aps[0];
     const moved=g===4;
     if(i.reserved){
-      h+=`<tr><td>${i.title}<div class="sm">${i.resNote||""}</div></td><td><span class="chip">À définir</span></td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><span class="chip warn">Réservée jusqu'au ${fmtDT(i.expires)}</span></td><td class="acts"><a class="ilink" data-prolong="${i.id}">Prolonger</a><a class="ilink danger" data-cancelres="${i.id}">Annuler</a></td></tr>`;
+      h+=`<tr><td>${i.title}<div class="sm">Réservée jusqu'au ${fmtDT(i.expires)}${i.resNote?" · "+i.resNote:""}</div></td><td><span class="fintxt">À définir</span></td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><span class="muted">pas de carte</span></td><td class="acts"><a class="ilink" data-prolong="${i.id}">Prolonger</a><a class="ilink danger" data-cancelres="${i.id}">Annuler</a></td></tr>`;
       return;
     }
-    h+=`<tr class="${g===2||g===3?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><span class="chip">${moved?"Déplacée vers "+SESS[i.sess].lbl:colLabel(i)}</span></td>
+    h+=`<tr class="${g===2||g===3?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}${moved?`<div class="sm">Déplacée vers ${SESS[i.sess].lbl}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><a class="ilink" data-open="${i.id}">Ouvrir la carte</a></td>
       <td class="acts">${g<2?`<a class="ilink" data-switch="${i.id}">Switch session</a><a class="ilink danger" data-lost="${i.id}">Lost</a>`:""}${g===0?`<a class="ilink" data-espace="${i.id}">Ouvrir espace</a>`:""}</td></tr>`;
   });
   if(!inscs.length) h+=`<tr><td colspan="5" class="muted">Aucun apprenant inscrit.</td></tr>`;
