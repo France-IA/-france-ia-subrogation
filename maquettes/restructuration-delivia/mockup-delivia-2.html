@@ -933,11 +933,11 @@ tasks:{
   {t:"Client signe le contrat de formation (détecté automatiquement)",p:"client",auto:1,fin:["fp_part"]},
   {t:"Closeur transmet la facture au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_part"],fx:"carte_client",note:"non acquittée ; échéance = dernier prélèvement programmé"}],
  validee:[
-  {t:"Admin France IA constate que l'apprenant a émargé J1 et J2 (détecté automatiquement)",p:"fia",auto:1},
-  {t:"Admin France IA récupère toutes les preuves individuelles de l'apprenant (automatique)",p:"fia",auto:1},
-  {t:"Admin France IA crée un nouveau dossier Google Drive de preuves pour l'apprenant (automatique)",p:"fia",auto:1},
-  {t:"Admin France IA téléverse les preuves de l'apprenant sur Google Drive (automatique)",p:"fia",auto:1},
-  {t:"Admin France IA déclare la sortie auprès de la CDC",p:"fia",fin:["cpf"],fx:"carte_client",btn:"Déclarer la sortie"}],
+  {t:"Admin France IA constate que l'apprenant a émargé J1 et J2 (détecté automatiquement)",tPl:"Admin France IA constate que chaque apprenant a émargé J1 et J2 (détecté automatiquement)",perAp:1,p:"fia",auto:1},
+  {t:"Admin France IA récupère toutes les preuves individuelles de l'apprenant (automatique)",tPl:"Admin France IA récupère les preuves individuelles de chaque apprenant (automatique)",perAp:1,p:"fia",auto:1},
+  {t:"Admin France IA crée un nouveau dossier Google Drive de preuves pour l'apprenant (automatique)",tPl:"Admin France IA crée un dossier Google Drive de preuves par apprenant (automatique)",perAp:1,p:"fia",auto:1},
+  {t:"Admin France IA téléverse les preuves de l'apprenant sur Google Drive (automatique)",tPl:"Admin France IA téléverse les preuves de chaque apprenant sur Google Drive (automatique)",perAp:1,p:"fia",auto:1},
+  {t:"Admin France IA déclare la sortie auprès de la CDC",tPl:"Admin France IA déclare la sortie de chaque apprenant auprès de la CDC",perAp:1,p:"fia",fin:["cpf"],fx:"carte_client",btn:"Déclarer la sortie"}],
  absent:[
   {t:"Closeur contacte le client pour déterminer si l'absence est justifiée",p:"closer",btn:"Contacter",tpl:1,fin:["cpf"]},
   {t:"Closeur récupère la pièce justificative de l'absence",p:"closer",btn:"Déposer le justificatif",fin:["cpf"],grp:"Chemin 1 · absence justifiée"},
@@ -1450,7 +1450,7 @@ const CLIENTS=[
  {id:"cl_acme",nom:"ACME Conseil",type:"Entreprise",adr:"5 rue de la Bourse, 33000 Bordeaux",vat:"FR 42 842391557",resp:{n:"Jean Petit",e:"jean.petit@acme.fr",t:"06 78 41 20 19",app:1},siret:"842 391 557 00023",ref:"Jean Petit · jean.petit@acme.fr",mode:"Virement",mandat:null,
   ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_ent_vir",factId:"f5",inscId:"i3"},{lbl:"Formation N2 · annulée",m:"1 650 €",fin:"fp_ent_vir",factId:"f9",inscId:null,note:"apprenant absent le J1, avoir émis le 4 août"}],apprenants:["ap_jean"],docs:["Devis DE-2026-0412 · signé","Convention · signée","Facture FA-2026-0533 · émise","Certificat de réalisation · à venir"]},
  {id:"cl_btp",nom:"BTP Sud",type:"Entreprise",note:"Première échéance refusée (provision insuffisante). Léa a demandé un rejeu après le 15/09, à confirmer par le closeur.",adr:"120 route de Narbonne, 31400 Toulouse",vat:"FR 17 512887224",resp:{n:"Léa Costa",e:"l.costa@btpsud.fr",t:"06 51 88 34 02",app:1},siret:"512 887 224 00011",ref:"Léa Costa · l.costa@btpsud.fr",mode:"Mandat SDD",mandat:"Actif · 2 échéances (1 refusée)",
-  ventes:[{lbl:"Formation N1 · 3 apprenants",m:"4 950 €",fin:"fp_ent_man",factId:"f6",inscId:"i4"}],apprenants:["ap_lea"],docs:["Devis DE-2026-0388 · signé","Convention · signée","Facture FA-2026-0501 · émise","Certificat de réalisation · à venir"]},
+  ventes:[{lbl:"Formation N1 · 3 apprenants",m:"4 950 €",fin:"fp_ent_man",factId:"f6",inscId:"i4"}],apprenants:["ap_lea","ap_nico","ap_sonia"],docs:["Devis DE-2026-0388 · signé","Convention · signée","Facture FA-2026-0501 · émise","Certificat de réalisation · à venir"]},
  {id:"cl_hotel",nom:"Hôtel du Parc",type:"Entreprise (OPCO)",note:"OPCO AKTO, dossier déposé par Sofia le 12/08. La DRH veut la facture au nom du groupe, pas de l'hôtel : vérifier le SIRET avant génération.",adr:"2 esplanade des Quinconces, 33000 Bordeaux",vat:"FR 88 399120448",resp:{n:"Sofia Ricci",e:"s.ricci@hotelduparc.fr",t:"07 81 55 60 43",app:1},siret:"399 120 448 00034",ref:"Sofia Ricci · s.ricci@hotelduparc.fr",mode:"OPCO (AKTO)",mandat:null,
   ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"opco",factId:"f3",inscId:"i5"}],apprenants:["ap_sofia"],docs:["Convention · signée","Facture FA-2026-0540 · à transmettre à l'OPCO","Feuille d'émargement collective · à venir","Certificat de réalisation · à venir"]},
  {id:"cl_marie",nom:"Marie Dupont",type:"Particulier",note:"Reste à charge de 150 € : a demandé à payer après sa paie du 28/08.",adr:"14 rue des Lilas, 75011 Paris",vat:null,resp:{n:"Marie Dupont",e:"marie.dupont@gmail.com",t:"06 12 45 78 90",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
@@ -1515,6 +1515,8 @@ const APPRENANTS=[
  {id:"ap_marie",nom:"Marie Dupont",email:"marie.dupont@gmail.com",tel:"06 12 45 78 90",prenom:"Marie",fam:"Dupont",dom:"Communication",adr:"14 rue des Lilas",cp:"75011",ville:"Paris",spro:"Salariée",nais:"12/04/1991",client:"cl_marie",insc:["i1"],type:"Particulier",afaire:["Signer votre convention de formation","Préparer votre formation (9/13)","Répondre à votre questionnaire"]},
  {id:"ap_karim",nom:"Karim Benali",email:"k.benali@outlook.fr",tel:"07 66 21 03 55",prenom:"Karim",fam:"Benali",dom:"Immobilier",adr:"3 allée du Parc",cp:"92130",ville:"Issy-les-Moulineaux",spro:"Indépendant",nais:"28/09/1987",client:"cl_karim",insc:["i2"],type:"Particulier",afaire:["Préparer votre formation (2/13)","Questionnaire de positionnement"]},
  {id:"ap_jean",nom:"Jean Petit",email:"jean.petit@acme.fr",tel:"06 78 41 20 19",prenom:"Jean",fam:"Petit",dom:"Conseil",adr:"22 cours de Verdun",cp:"33000",ville:"Bordeaux",spro:"Salarié",nais:"05/02/1984",client:"cl_acme",insc:["i3"],type:"Salarié ACME Conseil",afaire:["Questionnaire de positionnement"]},
+ {id:"ap_nico",nom:"Nicolas Roy",email:"n.roy@btpsud.fr",tel:"06 51 88 34 11",prenom:"Nicolas",fam:"Roy",dom:"BTP",adr:"8 avenue Jean Jaurès",cp:"31000",ville:"Toulouse",spro:"Conducteur de travaux",nais:"03/04/1988",client:"cl_btp",insc:["i4"],type:"Salarié BTP Sud",afaire:["Préparer votre formation (2/13)"]},
+ {id:"ap_sonia",nom:"Sonia Amrani",email:"s.amrani@btpsud.fr",tel:"06 51 88 34 22",prenom:"Sonia",fam:"Amrani",dom:"BTP",adr:"8 avenue Jean Jaurès",cp:"31000",ville:"Toulouse",spro:"Assistante de direction",nais:"25/07/1991",client:"cl_btp",insc:["i4"],type:"Salariée BTP Sud",afaire:["Préparer votre formation (7/13)"]},
  {id:"ap_lea",nom:"Léa Costa",email:"l.costa@btpsud.fr",tel:"06 51 88 34 02",prenom:"Léa",fam:"Costa",dom:"BTP",adr:"8 avenue Jean Jaurès",cp:"31000",ville:"Toulouse",spro:"Salariée",nais:"19/11/1993",client:"cl_btp",insc:["i4"],type:"Salariée BTP Sud",afaire:["Préparer votre formation (5/13)"]},
  {id:"ap_sofia",nom:"Sofia Ricci",email:"s.ricci@hotelduparc.fr",tel:"07 81 55 60 43",prenom:"Sofia",fam:"Ricci",dom:"Hôtellerie",adr:"1 place du Marché",cp:"33300",ville:"Bordeaux",spro:"Salariée",nais:"07/07/1990",client:"cl_hotel",insc:["i5"],type:"Salariée Hôtel du Parc",afaire:["Questionnaire de positionnement","Préparer votre formation (0/13)"]},
  {id:"ap_hugo",nom:"Hugo Martin",email:"hugo.martin@gmail.com",tel:"06 02 93 47 66",prenom:"Hugo",fam:"Martin",dom:"Design",adr:"40 rue Oberkampf",cp:"75011",ville:"Paris",spro:"Demandeur d'emploi",nais:"23/01/1996",client:"cl_hugo",insc:["i6"],type:"Particulier",afaire:["Répondre à votre questionnaire de satisfaction à froid"]},
@@ -1692,12 +1694,18 @@ function taskHtml(card,colId,i,tk,ghost){
   const k=key(card,colId,i);
   const done=tk.sub&&card.ech ? card.ech.every(e=>e.st==="ok") : !!S.checks[k];
   const can=canCheck(tk);
+  const apsTk = tk.perAp ? peopleFor(card).aps : null;
+  const multi = apsTk && apsTk.length>1;
+  const lbl = multi && tk.tPl ? tk.tPl : tk.t;
   let h="";
   if(tk.grp) h+=`<div class="tgrp">${tk.grp}</div>`;
   h+=`<div class="task ${done?"done":""} ${can?"":"other"}" ${can&&!ghost?`data-c="${card.id}" data-col="${colId}" data-i="${i}"`:'style="cursor:default"'}>
     <span class="box"></span>
-    <span><span class="lbl">${tk.t}</span>${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tbtn" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
+    <span><span class="lbl">${lbl}</span>${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tbtn" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
   </div>`;
+  if(multi){
+    h+=`<div class="sub">`+apsTk.map(a=>`<div class="task other ${done?"done":""}" style="cursor:default"><span class="box"></span><span class="lbl" style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`;
+  }
   if(payKind(card,tk)){
     const all=tasksFor(card,colId);
     if(all.findIndex(x=>payKind(card,x))===i) h+=payPanel(card);
@@ -1960,8 +1968,9 @@ function modalHtml(){
   const fut=futureFor(card);
   const nFut=fut.reduce((a,f)=>a+f.tasks.length,0);
   h+=`<details class="msec2" data-k="fut"${S.futOpen?" open":""}><summary><span class="chev">▸</span>À venir <span class="n2">0/${nFut}</span></summary><div class="minner">`;
+  const apsFut=peopleFor(card).aps, multiFut=apsFut&&apsFut.length>1;
   h+=fut.map(f=>`<div class="futcol"><span class="pill"></span>${f.col.label}${f.col.open?`<span class="n2">ouverture ${openDateStr(card,f.col)} · ${f.col.open}</span>`:""}</div>`
-    +(f.tasks.length?f.tasks.map(tk=>`<div class="frow2">${tk.grp?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${tk.t}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
+    +(f.tasks.length?f.tasks.map(tk=>`<div class="frow2">${tk.grp?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${(tk.perAp&&multiFut&&tk.tPl)?tk.tPl:tk.t}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${(tk.perAp&&multiFut)?`<div class="sub">`+apsFut.map(a=>`<div class="ftask"><span class="box"></span><span style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`:""}${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
       :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
   h+=`</div></details></div>`;
   if(card.kb==="session_fia"){
