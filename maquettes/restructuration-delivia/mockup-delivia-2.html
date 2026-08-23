@@ -522,6 +522,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
 .tbl th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;padding:11px 14px;border-bottom:1px solid var(--line-2)}
 .tbl td{padding:11px 14px;border-top:1px solid var(--line);vertical-align:middle;color:var(--ink-800)}
+.tbl th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
+.tbl th.sortable:hover{color:var(--ink-700)}
+.tbl th.sortable .arr{margin-left:5px;font-size:9px;color:var(--ink-300)}
+.tbl th.sortable.on{color:var(--primary-dark)}
+.tbl th.sortable.on .arr{color:var(--primary)}
 .tbl tr.rowlink{cursor:pointer}.tbl tr.rowlink:hover td{background:#f8fafc}
 .tbl tr.dim td{color:var(--ink-400)}
 .tbl tr.tgrp2 td{background:#f8fafc;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-500);padding:7px 14px}
@@ -1177,7 +1182,7 @@ const APPRENANTS=[
 APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } });
 CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
 const S = {role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
-  fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
+  fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", sortSess:"dt", sortSessDir:1, fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false};
 
 const $ = s=>document.querySelector(s);
@@ -1629,8 +1634,12 @@ function pageSessions(){
 }
 function sessionListHtml(list){
   if(!list.length) return `<div class="stub"><p>Aucune session ne correspond aux filtres.</p></div>`;
-  return `<div class="tblwrap"><table class="tbl"><thead><tr><th>Dates</th><th>Offre</th><th>Formateur</th><th>Ville</th><th>Lieu</th><th>Inscrits</th><th>Statut</th></tr></thead><tbody>`
-    +list.sort((a,b)=>a.dt.j1.localeCompare(b.dt.j1)).map(c=>`<tr class="rowlink" data-fiche="session::${c.id}"><td><b>${fmtDates(c)}</b></td><td>${badgeOffre(c.offre)}</td><td>${c.frm||'<span class="muted">À confirmer</span>'}</td><td>${c.ville||""}</td><td>${c.lieu}</td><td>${placesBadge(c)}</td><td><span class="chip">${colLabel(c)}</span></td></tr>`).join("")
+  const COLS=[["dt","Dates",c=>c.dt.j1],["offre","Offre",c=>OFFRES[c.offre]],["frm","Formateur",c=>c.frm||"zz"],["ville","Ville",c=>c.ville||""],["lieu","Lieu",c=>c.lieu],["ins","Inscrits",c=>sessCounts(c).ins+sessCounts(c).enc],["col","Statut",c=>KB[c.kb].cols.findIndex(x=>x.id===c.col)]];
+  const sk=S.sortSess||"dt", sd=S.sortSessDir||1;
+  const get=(COLS.find(c=>c[0]===sk)||COLS[0])[2];
+  const sorted=[...list].sort((a,b)=>{const x=get(a),y=get(b);return (x>y?1:x<y?-1:0)*sd});
+  return `<div class="tblwrap"><table class="tbl"><thead><tr>`+COLS.map(([k,l])=>`<th class="sortable ${sk===k?"on":""}" data-sort="${k}">${l}<span class="arr">${sk===k?(sd>0?"▲":"▼"):"⇅"}</span></th>`).join("")+`</tr></thead><tbody>`
+    +sorted.map(c=>`<tr class="rowlink" data-fiche="session::${c.id}"><td><b>${fmtDates(c)}</b></td><td>${badgeOffre(c.offre)}</td><td>${c.frm||'<span class="muted">À confirmer</span>'}</td><td>${c.ville||""}</td><td>${c.lieu}</td><td>${placesBadge(c)}</td><td><span class="chip">${colLabel(c)}</span></td></tr>`).join("")
     +`</tbody></table></div>`;
 }
 function calendarHtml(list){
@@ -2249,7 +2258,7 @@ document.addEventListener("click",e=>{
   if(acc){const d=acc.parentElement;S.openAcc[d.dataset.acc]=!d.open}
   if(!e.target.closest("#gsearch")) $("#gsearchRes").classList.remove("on");
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
-  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle]");
+  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -2294,6 +2303,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.switchto){const [iid,k]=t.dataset.switchto.split("::");const i=CARDS.find(x=>x.id===iid);i.movedFrom=i.sess;i.sess=k;i.dt=SESS[k].dt;i.lieu=SESS[k].lieu;S.switchFor=null;toast(`<b>${i.title}</b> déplacée vers ${SESS[k].lbl}.`);render();return}
   if(t.dataset.lost){S.lostFor=t.dataset.lost;render();return}
   if(t.dataset.lostconfirm){const i=CARDS.find(x=>x.id===t.dataset.lostconfirm);i.col="lost";S.lostFor=null;toast(`<b>${i.title}</b> passée en Lost ; pensez à l'opportunité GHL.`);render();return}
+  if(t.dataset.sort){if(S.sortSess===t.dataset.sort)S.sortSessDir=-(S.sortSessDir||1);else{S.sortSess=t.dataset.sort;S.sortSessDir=1;}render();return}
   if(t.dataset.reserve){S.reserveFor=t.dataset.reserve;render();return}
   if(t.dataset.reserveconfirm){const c=CARDS.find(x=>x.id===t.dataset.reserveconfirm);const p=(document.getElementById("resPrenom")||{}).value||"Nouveau";const n=(document.getElementById("resNom")||{}).value||"Client";const note=(document.getElementById("resNote")||{}).value||"";
     CARDS.push({id:"r"+Math.floor(performance.now()),kb:"insc",offre:c.offre,sess:c.sess,dt:c.dt,title:p+" "+n,closer:"Alex R.",setter:"Sam T.",ard:null,fin:null,col:"recue",reserved:1,expires:"2026-08-25T10:00",resNote:note});
