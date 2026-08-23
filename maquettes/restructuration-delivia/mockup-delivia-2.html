@@ -740,8 +740,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal[data-kind="newsession"] .igrid{grid-template-columns:repeat(2,1fr)}
 #modal[data-kind="newsession"] .edin{margin-top:3px}
 /* ── preuves v39 : par mois, par session ── */
-.pvmonth{background:transparent;margin-bottom:10px}
-.pvmonth>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:14px 18px}
+.pvmonth{background:#fff;border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--sh-carte);margin-bottom:10px;overflow:hidden}
+.pvmonth>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;background:#fff;padding:14px 18px}
+.pvmonth[open]>summary{border-bottom:1px solid var(--line-2)}
+.pvmonth .pvbody{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.pvmonth .pvs{background:#fff;border:1px solid var(--line-2);border-radius:10px;box-shadow:none;margin:0;padding:0}
+.pvmonth .pvs>summary{padding:10px 12px}
+.pvmonth .pvs .inner{padding:0 12px 12px}
 .pvmonth>summary::-webkit-details-marker{display:none}
 .pvmonth .mt{font-size:15px;font-weight:600;color:var(--ink-900)}
 .pvmonth .ms{font-size:12px;color:var(--ink-400);margin-top:2px}
@@ -2847,9 +2852,9 @@ function pagePreuves(){
     const nAp=blocks.reduce((a,b)=>a+b.n,0), ok=blocks.reduce((a,b)=>a+b.ok,0), tot=blocks.reduce((a,b)=>a+b.tot,0);
     const pct=tot?Math.round(ok/tot*100):0;
     const k="pvm-"+m;
-    h+=`<details class="pvmonth" data-acc="${k}" ${(accKey(k)||(ix===0&&S.openAcc[k]===undefined))?"open":""}><summary><div><div class="mt">${lbl.charAt(0).toUpperCase()+lbl.slice(1)}</div><div class="ms">${list.length} session${list.length>1?"s":""} · ${nAp} apprenant${nAp>1?"s":""} · ${ok} déposée${ok>1?"s":""}</div></div><div class="mpct"><div class="bar"><i style="width:${pct}%"></i></div><b>${pct} %</b></div></summary><div class="fsec" style="margin-top:8px">${blocks.map(b=>b.h).join("")}</div></details>`;
+    h+=`<details class="pvmonth" data-acc="${k}" ${(accKey(k)||(ix===0&&S.openAcc[k]===undefined))?"open":""}><summary><div><div class="mt">${lbl.charAt(0).toUpperCase()+lbl.slice(1)}</div><div class="ms">${list.length} session${list.length>1?"s":""} · ${nAp} apprenant${nAp>1?"s":""} · ${ok} déposée${ok>1?"s":""}</div></div><div class="mpct"><div class="bar"><i style="width:${pct}%"></i></div><b>${pct} %</b></div></summary><div class="pvbody">${blocks.map(b=>b.h).join("")}</div></details>`;
   });
-  h+=`<details class="pvmonth old" data-acc="pvm-old"><summary><div><div class="mt">Ancienne offre (avant le 4 mai)</div><div class="ms">94 sessions · 716 apprenants · 3 982 déposées</div></div><div class="mpct"><div class="bar"><i style="width:84%"></i></div><b>84 %</b></div></summary><div class="fsec" style="margin-top:8px"><p class="muted" style="font-size:12.5px">Sessions de l'ancienne offre, consultables à l'identique.</p></div></details>`;
+  h+=`<details class="pvmonth old" data-acc="pvm-old"><summary><div><div class="mt">Ancienne offre (avant le 4 mai)</div><div class="ms">94 sessions · 716 apprenants · 3 982 déposées</div></div><div class="mpct"><div class="bar"><i style="width:84%"></i></div><b>84 %</b></div></summary><div class="pvbody"><p class="muted" style="font-size:12.5px">Sessions de l'ancienne offre, consultables à l'identique.</p></div></details>`;
   return h;
 }
 /* chaque famille de preuves porte le lien de l'endroit où elle vit */
