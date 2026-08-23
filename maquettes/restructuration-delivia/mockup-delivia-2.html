@@ -1582,7 +1582,9 @@ function modalHtml(){
     +(f.tasks.length?f.tasks.map(tk=>`<div class="frow2">${tk.grp?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${tk.t}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
       :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
   h+=`</div></details></div>`;
-  if(!card.kb.startsWith("session")&&card.kb!=="fact_com"&&card.kb!=="fact_frm"){
+  if(card.kb==="session_fia"){
+    h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note</div><textarea class="notes-ta" data-note="${card.id}">${card.note||""}</textarea></div>`;
+  } else if(!card.kb.startsWith("session")&&card.kb!=="fact_com"&&card.kb!=="fact_frm"){
     const {cl}=peopleFor(card);
     if(cl) h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note</div><textarea class="notes-ta" data-note="${cl.id}">${cl.note||""}</textarea></div>`;
   }
