@@ -411,6 +411,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .btn-xs.p{background:var(--primary);border-color:var(--primary);color:#fff}
 .btn-xs.p:hover{opacity:.9;color:#fff}
 .facline{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.editptr{text-align:right;font-size:11px;margin-top:10px}
 .col.sepcol{margin-left:17px;position:relative}
 .col.sepcol::before{content:"";position:absolute;left:-17px;top:4px;bottom:4px;border-left:1.5px dashed var(--line-2)}
 .colbulk{display:flex;flex-direction:column;gap:5px;margin:0 2px 9px}
@@ -1309,9 +1310,14 @@ function abrege(n){ const [p,f]=n.split(" "); return p+(f?" "+f[0]+".":""); }
 const CLOSEURS = COMPTES.filter(u=>u.role==="closer").map(u=>abrege(u.nom));
 const SETTEURS = COMPTES.filter(u=>u.role==="setter").map(u=>abrege(u.nom));
 /* champ à liste déroulante, modifiable seulement en mode édition */
-function fldSel(label,val,name,opts,vide){
+function fldSel(label,val,name,opts,vide,cur){
   if(!S.editing) return `<div class="fld"><div class="k">${label}</div><div class="v">${val??'<span class="muted">non renseigné</span>'}</div></div>`;
-  return `<div class="fld"><div class="k">${label}</div><select class="edin" data-vsel="${name}">${vide?`<option value="" ${val?"":"selected"}>${vide}</option>`:""}${opts.map(o=>`<option value="${o}" ${o===val?"selected":""}>${o}</option>`).join("")}</select></div>`;
+  const sel=cur===undefined?val:cur;
+  return `<div class="fld"><div class="k">${label}</div><select class="edin" data-vsel="${name}">${vide?`<option value="" ${sel?"":"selected"}>${vide}</option>`:""}${opts.map(o=>{const [v2,l2]=Array.isArray(o)?o:[o,o];return `<option value="${v2}" ${String(v2)===String(sel??"")?"selected":""}>${l2}</option>`}).join("")}</select></div>`;
+}
+function fldIn(label,val,name){
+  if(!S.editing) return `<div class="fld"><div class="k">${label}</div><div class="v">${val??'<span class="muted">non renseigné</span>'}</div></div>`;
+  return `<div class="fld"><div class="k">${label}</div><input class="edin" data-vsel="${name}" value="${(val??"").toString().replace(/"/g,"&quot;")}"></div>`;
 }
 const DEMANDES_FRM = {s3:[{f:"Inès B.",d:"2026-08-19",m:"Disponible les deux jours, je connais bien Lyon."},{f:"Marc D.",d:"2026-08-21",m:""}], s4:[{f:"Sarah K.",d:"2026-08-20",m:"Je peux prendre le N2 Paris."}]};
 let CARDS = [
@@ -1577,17 +1583,21 @@ function unlockCol(kb,colId){
 function badge(fin){ if(!fin||!FIN[fin]) return ""; const f=FIN[fin]; return `<span class="badge b-${f.cls}">${f.lbl}</span>` }
 function badgeOffre(offre){ if(!offre) return ""; return `<span class="badge b-offre">${OFFRES[offre]||offre}</span>` }
 function isFact(card){ return card.kb.startsWith("fact_"); }
+/* changer le mode de paiement d'une carte : elle change de rail de facturation */
+function changeFin(card,v){
+  card.fin=v;
+  if(!isFact(card)) return;
+  const kb = v==="cpf"?"fact_cpf" : v==="opco"?"fact_opco" : "fact_fp";
+  if(kb!==card.kb){ card.kb=kb; card.col=KB[kb].cols.find(c=>!c.skip).id; }
+  const mandat=["fp_part","fp_ent_man"].includes(v);
+  if(mandat&&!card.ech) card.ech=[{n:"1/1",m:amtOf(card.m),d:(card.dt&&card.dt.echeance)||"2026-09-30",st:""}];
+  if(!mandat) card.ech=null;
+}
 /* ── argent : facture Qonto, échéances, virements reçus ── */
 function amtOf(str){ const m=String(str||"").match(/([\d\s\u00a0]+)\s*€/); return m?parseInt(m[1].replace(/\D/g,""),10)||0:0; }
 function eur(n){ return n.toLocaleString("fr-FR",{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2})+" €"; }
 function fmtJour(iso){ return new Date(iso+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"short"}); }
 function facUrl(f){ return "https://app.qonto.com/invoicing/client-invoices/"+f.num; }
-function finFld(card){
-  const cur=FIN[card.fin]?FIN[card.fin].lbl:"";
-  if(S.editFin!==card.id) return `<span class="facline">${cur}<a class="ilink" style="font-size:11px" data-finedit="${card.id}">Modifier</a></span>`;
-  const opts=modesForOffre(card.offre||"n1");
-  return `<span class="facline"><select class="edin" id="finsel" style="max-width:180px">${opts.map(m=>`<option value="${m}" ${m===card.fin?"selected":""}>${FIN[m].lbl}</option>`).join("")}</select><button class="btn-xs p" data-finsave="${card.id}">Enregistrer</button><button class="btn-xs" data-fincancel="1">Annuler</button></span>`;
-}
 /* le bloc paiements s'affiche sous la première tâche de constat de paiement de l'étape */
 function payKind(card,tk){
   if(!isFact(card)||card.kb==="fact_frm"||card.kb==="fact_com") return null;
@@ -1841,7 +1851,7 @@ function infoFor(card){
   rows.push(["Client",clName||card.title]);
   if(apsHtml.length) rows.push([aps.length>1?"Apprenants · "+aps.length:"Apprenant",apsHtml.join(", "),aps.length>2?"wide":""]);
   else rows.push(["Apprenants","À renseigner par le client"]);
-  if(isFact(card)) rows.push(["Mode de paiement",finFld(card)]);
+  if(isFact(card)) rows.push(["Mode de paiement",FIN[card.fin]?FIN[card.fin].lbl:""]);
   else rows.push(["Offre",OFFRES[card.offre]+(card.nb?" · "+card.nb:"")]);
   rows.push(["Date",fmtDates(card)||"À caler"],["Lieu",card.lieu||"À confirmer"]);
   const src = card.src ? CARDS.find(c=>c.id===card.src) : card;
@@ -1849,6 +1859,17 @@ function infoFor(card){
   if(isFact(card)) rows.push(["Montant",card.m]);
   else rows.push(["Transmission ARD",card.ard?fmtDT(card.ard):null]);
   return rows;
+}
+/* le popup est en lecture : on modifie sur la fiche */
+function editPtr(card){
+  if(card.kb.startsWith("session")) return `<div class="editptr"><a class="ilink" data-fiche="session::${card.kb==="session_fia"?card.id:(CARDS.find(c=>c.kb==="session_fia"&&c.sess===card.sess)||{}).id||card.id}">Modifier → fiche session</a></div>`;
+  if(card.kb==="fact_com"){
+    const u=COMPTES.find(x=>abrege(x.nom)===card.who);
+    return u?`<div class="editptr"><a class="ilink" data-fiche="compte::${u.id}">Modifier → fiche du compte</a></div>`:"";
+  }
+  if(card.kb==="fact_frm") return "";
+  const {cl}=peopleFor(card);
+  return cl?`<div class="editptr"><a class="ilink" data-fiche="client::${cl.id}">Modifier → fiche client</a></div>`:"";
 }
 function modalHtml(){
   const card=CARDS.find(c=>c.id===S.modal);
@@ -1861,7 +1882,7 @@ function modalHtml(){
   h+=`<div class="mhead"><div class="row"><div class="t">${card.title}</div>${topBadge}<button class="mclose" data-close="1" aria-label="Fermer">✕</button></div></div>`;
   h+=`<div class="mbody">`;
   /* Informations */
-  h+=`<div class="mpanel"><div class="igrid">`+infoFor(card).map(([k,v,w])=>`<div class="ifld ${w||""}"><div class="k">${k}</div><div class="v">${v??'<span class="muted">non renseigné</span>'}</div></div>`).join("")+`</div></div>`;
+  h+=`<div class="mpanel"><div class="igrid">`+infoFor(card).map(([k,v,w])=>`<div class="ifld ${w||""}"><div class="k">${k}</div><div class="v">${v??'<span class="muted">non renseigné</span>'}</div></div>`).join("")+`</div>${editPtr(card)}</div>`;
   if(card.lines){
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
     h+=`<div class="mpanel"><div class="msec" style="margin-top:0">Lignes de la facture <span class="n2">une ligne par fixe, set ou close</span></div><div class="lines" style="border-top:none;padding-top:0">`
@@ -2354,7 +2375,7 @@ function ficheClientHtml(id){
     const fc=v.factId?CARDS.find(c=>c.id===v.factId):null;
     const fcCol=fc?colLabel(fc):null;
     const k="cl-"+cl.id+"-"+ix;
-    const appr=(cl.apprenants||[]).map(aid=>APPRENANTS.find(x=>x.id===aid)).filter(Boolean);
+    const appr=(v.apprenants||cl.apprenants||[]).map(aid=>APPRENANTS.find(x=>x.id===aid)).filter(Boolean);
     return `<details class="acc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span>
       <span class="tt">${v.lbl}</span>
       <span class="end">${badge(v.fin)}<span style="font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums">${v.m}</span>${fcCol?`<span class="chip">${fcCol}</span>`:`<span class="chip">carte à venir</span>`}</span></summary>
@@ -2362,11 +2383,13 @@ function ficheClientHtml(id){
         <div class="vgrid">
           ${fldSel("Closeur",ic?ic.closer:v.closer,ix+"::closer",CLOSEURS,"Sans closeur")}
           ${fldSel("Setteur",ic?ic.setter:v.setter,ix+"::setter",SETTEURS,"Sans setteur")}
-          ${fld("Montant",v.m)}
-          ${fld("Moyen de paiement",FIN[v.fin].lbl)}
+          ${fldIn("Montant",v.m,ix+"::m")}
+          ${fldSel("Moyen de paiement",FIN[v.fin].lbl,ix+"::fin",MODES_CLIENT.map(m=>[m,FIN[m].lbl]),null,v.fin)}
         </div>
         <div class="subh">Apprenants concernés</div>
-        <div style="padding:2px 0 4px">${appr.map(a=>`<span class="perschip" data-fiche="apprenant::${a.id}"><span class="avat">${initiales(a.nom)}</span>${a.nom}</span>`).join("")||'<span class="idchip">Renseignés par le client</span>'}</div>
+        ${S.editing===("client::"+cl.id)
+          ? `<select class="edin" data-vaps="${ix}" multiple size="4" style="min-width:280px">${APPRENANTS.map(a=>`<option value="${a.id}" ${appr.some(x=>x.id===a.id)?"selected":""}>${a.nom}</option>`).join("")}</select><div class="pd" style="font-size:10.5px;color:var(--ink-400);margin-top:4px">Sélection multiple : les apprenants rattachés à cette vente, donc aux cartes qui en découlent.</div>`
+          : `<div style="padding:2px 0 4px">${appr.map(a=>`<span class="perschip" data-fiche="apprenant::${a.id}"><span class="avat">${initiales(a.nom)}</span>${a.nom}</span>`).join("")||'<span class="idchip">Renseignés par le client</span>'}</div>`}
         <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px">
           <div style="width:280px"><div class="subh" style="margin:0 0 6px">Carte inscription</div>
             ${ic?cardHtml(ic,KB[ic.kb].cols.find(x=>x.id===ic.col),{}):`<div class="card pointer"><div class="s">Pas de carte inscription individuelle.</div></div>`}</div>
@@ -2778,8 +2801,17 @@ document.addEventListener("click",e=>{
     const obj=(kind==="apprenant"?APPRENANTS:kind==="session"?CARDS:kind==="compte"?COMPTES:CLIENTS).find(x=>x.id===fid);
     document.querySelectorAll("#content [data-f]").forEach(inp=>{obj[inp.dataset.f]=inp.value});
     document.querySelectorAll("#content [data-vdoc]").forEach(inp=>{const [vi,dk]=inp.dataset.vdoc.split("::");if(obj.ventes&&obj.ventes[vi])obj.ventes[vi].docs[dk]=inp.value.trim()||null;});
-    document.querySelectorAll("#content [data-vsel]").forEach(sel=>{const [vi,ky]=sel.dataset.vsel.split("::");const v=obj.ventes&&obj.ventes[vi];if(!v)return;const val=sel.value||null;v[ky]=val;
+    document.querySelectorAll("#content [data-vsel]").forEach(sel=>{const [vi,ky]=sel.dataset.vsel.split("::");const v=obj.ventes&&obj.ventes[vi];if(!v)return;const val=sel.value||null;
+      if(ky==="fin"){ if(val&&val!==v.fin){ v.fin=val; [v.inscId,v.factId].filter(Boolean).forEach(cid=>{const c=CARDS.find(x=>x.id===cid);if(c)changeFin(c,val);}); } return; }
+      v[ky]=val;
       [v.inscId,v.factId].filter(Boolean).forEach(cid=>{const c=CARDS.find(x=>x.id===cid);if(c)c[ky]=val;});});
+    document.querySelectorAll("#content [data-vaps]").forEach(sel=>{const v=obj.ventes&&obj.ventes[sel.dataset.vaps];if(!v)return;
+      const ids=[...sel.selectedOptions].map(o=>o.value); v.apprenants=ids;
+      const srcId=v.inscId||v.factId;
+      if(srcId) APPRENANTS.forEach(a=>{const has=a.insc.includes(srcId);const want=ids.includes(a.id);
+        if(want&&!has) a.insc=a.insc.concat([srcId]);
+        if(!want&&has) a.insc=a.insc.filter(x=>x!==srcId);});
+      obj.apprenants=[...new Set((obj.ventes||[]).flatMap(x=>x.apprenants||[]).concat(obj.apprenants||[]))];});
     if(kind==="apprenant"){obj.nom=((obj.prenom||"")+" "+(obj.fam||"")).trim()||obj.nom;}
     if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.cap=parseInt(obj.cap)||12;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===obj.sess);if(fs){fs.frm=obj.frm;fs.dt=obj.dt;fs.cap=obj.cap;}}
     S.editing=null;render();
@@ -2817,21 +2849,6 @@ document.addEventListener("click",e=>{
   if(t.dataset.anorun){toast(`Contrôle relancé : balayage d'ARD, Qualiobee, WEDOF, EDOF, GHL, Mollie et Qonto. Résultat dans deux minutes.`);return}
   if(t.dataset.anoact){const [a,c]=t.dataset.anoact.split("::");toast(`<b>${decodeURIComponent(a)}</b> · ${decodeURIComponent(c)}`);return}
   if(t.dataset.gen){toast(`<b>${decodeURIComponent(t.dataset.gen)}</b> : le formulaire s'ouvrirait ici, prérempli avec le client choisi.`);return}
-  if(t.dataset.finedit){e.stopPropagation();S.editFin=t.dataset.finedit;render();return}
-  if(t.dataset.fincancel){e.stopPropagation();S.editFin=null;render();return}
-  if(t.dataset.finsave){e.stopPropagation();
-    const card=CARDS.find(c=>c.id===t.dataset.finsave), v=document.getElementById("finsel").value;
-    if(v!==card.fin){
-      const kb = v==="cpf"?"fact_cpf" : v==="opco"?"fact_opco" : "fact_fp";
-      card.fin=v;
-      if(kb!==card.kb){ card.kb=kb; card.col=KB[kb].cols.find(c=>!c.skip).id; }
-      const mandat=["fp_part","fp_ent_man"].includes(v);
-      if(mandat&&!card.ech) card.ech=[{n:"1/1",m:amtOf(card.m),d:(card.dt&&card.dt.echeance)||"2026-09-30",st:""}];
-      if(!mandat) card.ech=null;
-      S.fFact=factFilterFor(card);
-      toast(`Mode de paiement de <b>${card.title}</b> : ${FIN[v].lbl}. La carte suit désormais le rail ${FACT_VIEWS[S.fFact]?FACT_VIEWS[S.fFact].lbl:S.fFact}.`);
-    }
-    S.editFin=null;render();return}
   if(t.dataset.rap){e.stopPropagation();
     const [cid,txid]=t.dataset.rap.split("::");
     const card=CARDS.find(c=>c.id===cid), ix=QONTO_ENC.findIndex(x=>x.id===txid);
