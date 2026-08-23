@@ -514,11 +514,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .card.st-locked .t{color:var(--ink-500)}
 .card.haslock{background:repeating-linear-gradient(-45deg,#fbfcfd 0 8px,#f4f6f9 8px 9px)}
 .card.haslock > *:not(.lockmid){opacity:.8}
-.lockmid{display:flex;flex-direction:column;align-items:center;text-align:center;padding:10px 4px 6px;opacity:1!important}
-.lockmid .lockico{width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;color:var(--ink-500);box-shadow:var(--sh-carte);margin-bottom:7px}
-.lockmid .lm-t{font-size:12px;font-weight:600;color:var(--ink-700)}
-.lockmid .lm-d{font-size:11.5px;color:var(--ink-500);margin-top:1px}
-.lockmid .lm-r{font-size:10.5px;color:var(--ink-400)}
+.lockmid{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:8px;opacity:1!important}
+.lockmid .lockico{width:30px;height:30px;border-radius:50%;background:#fff;border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;color:var(--ink-500);box-shadow:var(--sh-carte);flex:0 0 auto}
+.lockmid .lockico svg{width:16px;height:16px}
+.lockmid .lm-x{min-width:0}
+.lockmid .lm-t{font-size:12px;font-weight:600;color:var(--ink-700);line-height:1.2}
+.lockmid .lm-d{font-size:11.5px;color:var(--ink-500);line-height:1.2}
+.lockmid .lm-r{font-size:10.5px;color:var(--ink-400);line-height:1.2}
 .card.over{box-shadow:0 0 0 1.5px var(--err),var(--sh-carte)}
 .badge.b-over{background:var(--err-50);color:var(--err);font-weight:600}
 .badge.b-risk{background:var(--warn-50);color:var(--warn);font-weight:600}
@@ -1410,7 +1412,7 @@ function cardHtml(card, colDef, opts={}){
   h+=`<div class="ct"><span class="t">${card.title}</span>${cardBadge(card)}</div>`;
   if(lockInfo){
     const lc=lockInfo.c;
-    h+=`<div class="lockmid"><span class="lockico">${ICO.lock}</span><div class="lm-t">${lc.label}</div><div class="lm-d">Ouverture ${openDateStr(card,lc)}</div><div class="lm-r">${lc.open}</div></div></div>`;
+    h+=`<div class="lockmid"><span class="lockico">${ICO.lock}</span><div class="lm-x"><div class="lm-t">${lc.label}</div><div class="lm-d">Ouverture ${openDateStr(card,lc)}</div><div class="lm-r">${lc.open}</div></div></div></div>`;
     return h;
   }
   if(card.lines){
