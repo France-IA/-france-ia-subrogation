@@ -417,6 +417,24 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .btn-xs.p:hover{opacity:.9;color:#fff}
 .facline{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .editptr{text-align:right;font-size:11px;margin-top:10px}
+#modal3{position:fixed;inset:0;background:rgba(15,23,42,.35);z-index:240;display:flex;align-items:flex-start;justify-content:center;padding:14vh 16px}
+#modal3 .mbox{max-width:440px;border-radius:16px;box-shadow:0 24px 64px rgb(15 23 42/.2);background:#fff}
+#modal3 .mhead{border-bottom:1px solid var(--line);padding:16px 20px 12px}
+#modal3 .mbody{padding:14px 20px 18px;font-size:12.5px;color:var(--ink-700);line-height:1.55}
+.mhead .who2{color:var(--ink-500);font-weight:500;margin-left:6px}
+.swcascade{background:var(--warn-50);border-bottom:1px solid #fde68a;color:#92400e;font-size:11.5px;padding:8px 20px;line-height:1.45}
+.swbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 20px 6px;border-bottom:1px solid var(--line)}
+.swsort{padding:8px 20px 0;font-size:11px}
+.swlist{max-height:46vh;overflow-y:auto;padding:10px 14px 16px}
+.swlist .swrow{display:block;width:100%;text-align:left;border:1px solid var(--line-2);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff}
+.swrow:hover{background:#f8fafc}
+.swrow.full{border-color:#fecdd3;background:#fff5f6}
+.swrow.full:hover{background:#fff1f2}
+.swrow .l1{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.swrow .nm{font-size:13px;font-weight:600;color:var(--ink-800)}
+.swrow .occ{font-size:11px;color:var(--ink-500)}
+.swrow .occ.ko{color:var(--err);font-weight:600}
+.swrow .l2{font-size:11px;color:var(--ink-400);margin-top:3px}
 .mact2{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;padding:14px 0 2px;border-top:1px solid var(--line);margin-top:14px}
 .col.sepcol{margin-left:17px;position:relative}
 .col.sepcol::before{content:"";position:absolute;left:-17px;top:4px;bottom:4px;border-left:1.5px dashed var(--line-2)}
@@ -761,7 +779,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* ════════════════════ CONFIG ════════════════════ */
 const APPS = {
   delivia:  {name:"DELIV'IA",             color:"var(--app-delivia)",  accent:"#4f46e5"},
-  apprenant:{name:"Plateforme apprenant", color:"var(--app-apprenant)",accent:"#0284c7"},
+  apprenant:{name:"Espace client / apprenant", color:"var(--app-apprenant)",accent:"#0284c7"},
   dash:     {name:"Data Dashboard",       color:"var(--app-dash)",     accent:"#7c3aed"},
 };
 const ROLES = {admin:"Admin", closer:"Closeur", formateur:"Formateur", setter:"Setteur"};
@@ -790,7 +808,7 @@ const DELIVIA_TABS = {
   setter:[["Processus",[["facturation","Facturation"]]]],
 };
 const APP_TABS = {
-  apprenant:[["Aperçu",[["espace","Espace apprenant"],["support","Support de formation"]]]],
+  apprenant:[["Aperçu",[["espace","Espace client / apprenant"],["support","Support de formation"]]]],
   dash:[["Funnel",[["northstar","North Star"],["equation","Equation"],["targeting","Targeting"],["leadgen","Lead Gen"],["setting","Setting"],["closing","Closing"]]],
         ["Opérations",[["agendasetting","Agenda Setting"],["agenda","Agenda Closing"],["commissions","Commissions"]]]],
 };
@@ -1300,11 +1318,13 @@ const SESS = {
  bordeaux:{lbl:"Bordeaux · 26-27 sept", lieu:"Quai des Chartrons, Bordeaux",    ville:"Bordeaux", dt:{j1:"2026-09-26",j2:"2026-09-27"}, frm:"Marc D.",  niveau:"Plutôt avancé"},
  lyon:    {lbl:"Lyon · 3-4 oct",        lieu:"Part-Dieu, Lyon",                 ville:"Lyon",     dt:{j1:"2026-10-03",j2:"2026-10-04"}, frm:null,       niveau:"Aucun badge"},
  parisn2: {lbl:"Paris N2 · 10-11 oct",  lieu:"Station F, Paris 13e",            ville:"Paris",    dt:{j1:"2026-10-10",j2:"2026-10-11"}, frm:null,       niveau:"Plutôt avancé"},
+ bxjuin:  {lbl:"Bordeaux · 20-21 juin", lieu:"Quai des Chartrons, Bordeaux",    ville:"Bordeaux", dt:{j1:"2026-06-20",j2:"2026-06-21"}, frm:"Marc D.",  niveau:"Plutôt débutant"},
+ pn2juil: {lbl:"Paris N2 · 4-5 juillet",lieu:"Station F, Paris 13e",            ville:"Paris",    dt:{j1:"2026-07-04",j2:"2026-07-05"}, frm:"Sarah K.", niveau:"Plutôt avancé"},
 };
 const FORMATEURS = ["Sarah K.","Marc D.","Inès B."];
 /* comptes ayant un accès à DELIV'IA, avec leurs droits page par page (admin : tout, non modifiable) */
 const PAGES_ACCES = [["sessions","Sessions"],["inscription","Inscription"],["facturation","Facturation"],["anomalies","Anomalies"],["actions","Actions"],["automatisations","Automatisations"],["templates","Templates"],["utilisateurs","Annuaire"],["faq","FAQ & Feedback"],["preuves","Preuves"],["generer","Générer"]];
-const APPS_ACCES = [["apprenant","Plateforme apprenant"],["dash","Data Dashboard"]];
+const APPS_ACCES = [["apprenant","Espace client / apprenant"],["dash","Data Dashboard"]];
 const COMPTES = [
  {id:"u_jeanne",nom:"Jeanne Dubois",role:"admin",titre:"Admin · Customer Success",email:"jeanne@franceia.com",tel:"06 12 00 45 67",ghl:"91Bx12",qlb:"7a21-20",acces:null,apps:["apprenant","dash"]},
  {id:"u_come",nom:"Côme Aubert",role:"admin",titre:"Admin · Process",email:"come@franceia.com",tel:"06 33 10 22 84",ghl:"91Bx07",qlb:"7a21-11",acces:null,apps:["apprenant","dash"]},
@@ -1337,8 +1357,8 @@ let CARDS = [
  {id:"s3", kb:"session_fia", offre:"n1", sess:"lyon",     dt:SESS.lyon.dt,     title:SESS.lyon.lbl,     lieu:SESS.lyon.lieu,     frm:null,       places:"0/12", col:"brouillon"},
  {id:"s4", kb:"session_fia", offre:"n2", sess:"parisn2",  dt:SESS.parisn2.dt,  title:SESS.parisn2.lbl,  lieu:SESS.parisn2.lieu,  frm:null,       places:"2/12", col:"brouillon"},
  /* sessions passées : masquées par défaut dans la vue Liste */
- {id:"s5", kb:"session_fia", offre:"n1", sess:null, dt:{j1:"2026-06-20",j2:"2026-06-21"}, title:"Bordeaux · 20-21 juin", lieu:"Quai des Chartrons, Bordeaux", ville:"Bordeaux", niveau:"Plutôt débutant", frm:"Marc D.", places:"11/12", col:"terminee"},
- {id:"s6", kb:"session_fia", offre:"n2", sess:null, dt:{j1:"2026-07-04",j2:"2026-07-05"}, title:"Paris N2 · 4-5 juillet", lieu:"Station F, Paris 13e", ville:"Paris", niveau:"Plutôt avancé", frm:"Sarah K.", places:"9/12", col:"terminee"},
+ {id:"s5", kb:"session_fia", offre:"n1", sess:"bxjuin", dt:{j1:"2026-06-20",j2:"2026-06-21"}, title:"Bordeaux · 20-21 juin", lieu:"Quai des Chartrons, Bordeaux", ville:"Bordeaux", niveau:"Plutôt débutant", frm:"Marc D.", places:"11/12", col:"terminee"},
+ {id:"s6", kb:"session_fia", offre:"n2", sess:"pn2juil", dt:{j1:"2026-07-04",j2:"2026-07-05"}, title:"Paris N2 · 4-5 juillet", lieu:"Station F, Paris 13e", ville:"Paris", niveau:"Plutôt avancé", frm:"Sarah K.", places:"9/12", col:"terminee"},
  {id:"fs1",kb:"session_frm", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"13/12", over:1, col:"preparer", mine:1},
  {id:"fs2",kb:"session_frm", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:SESS.bordeaux.lbl, lieu:SESS.bordeaux.lieu, frm:"Sarah K.", places:"4/12", col:"shotgun", mine:1},
  /* inscriptions N1 / N2 */
@@ -1931,8 +1951,7 @@ function modalHtml(){
     if(cl) h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note</div><textarea class="notes-ta" data-note="${cl.id}">${cl.note||""}</textarea></div>`;
   }
   if(card.kb==="insc"&&!card.reserved){
-    const {aps}=peopleFor(card);
-    h+=`<div class="mact2">${aps.length?`<button class="btn btn-s" data-espace="${card.id}">Ouvrir l'espace apprenant</button>`:""}<button class="btn btn-s" data-switch="${card.id}">Changer de session</button><button class="btn btn-s danger" data-lost="${card.id}">Passer en Lost</button></div>`;
+    h+=`<div class="mact2"><button class="btn btn-s" data-switch="${card.id}">Changer de session</button><button class="btn btn-s danger" data-lost="${card.id}">Passer en Lost</button></div>`;
   }
   h+=`</div></div></div>`;
   return h;
@@ -2301,7 +2320,7 @@ function ficheApprenantHtml(id){
   h+=`<div class="fichehead"><div class="fh-top">
     <div class="avat">${initiales(ap.nom)}</div>
     <div><h1>${ap.nom}</h1></div>
-    <div class="fh-right">${editBtns("apprenant",ap.id)}<button class="btn btn-s" data-app="apprenant">Ouvrir son espace apprenant</button></div>
+    <div class="fh-right">${editBtns("apprenant",ap.id)}<button class="btn btn-s" data-app="apprenant">Ouvrir l'espace client / apprenant</button></div>
   </div>
   <div class="idgrid">
     ${fld("Nom",ap.fam,"fam",ap)}
@@ -2485,20 +2504,19 @@ function ficheSessionHtml(id){
   /* section 4 : apprenants */
   const inscs=CARDS.filter(i=>i.kb==="insc"&&(i.sess===c.sess||i.movedFrom===c.sess)).map(i=>({i,g:i.movedFrom===c.sess?3:sessionStatusGroup(i)})).sort((a,b)=>a.g-b.g);
   const GL=["Inscrits","En cours d'inscription","Lost","Changés de session","Réservations en cours (48 h)"];
-  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Apprenants <span class="n2">${inscs.length}</span><span class="right"><button class="btn btn-s" data-reserve="${c.id}">+ Réserver une place</button></span></div><div class="tblwrap"><table class="tbl"><thead><tr><th>Nom</th><th>Mode de paiement</th><th>Closeur / Setteur</th><th>Carte inscription</th><th>Actions</th></tr></thead><tbody>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Apprenants <span class="n2">${inscs.length}</span><span class="right"><button class="btn btn-s" data-reserve="${c.id}">+ Réserver une place</button></span></div><div class="tblwrap"><table class="tbl"><thead><tr><th>Nom</th><th>Mode de paiement</th><th>Closeur / Setteur</th><th>Carte inscription</th></tr></thead><tbody>`;
   let lastG=-1;
   inscs.forEach(({i,g})=>{
-    if(g!==lastG){h+=`<tr class="tgrp2 ${g===4?"apart":""}"><td colspan="5">${GL[g]}</td></tr>`;lastG=g;}
+    if(g!==lastG){h+=`<tr class="tgrp2 ${g===4?"apart":""}"><td colspan="4">${GL[g]}</td></tr>`;lastG=g;}
     const {cl,aps}=peopleFor(i); const ap=aps[0];
     const moved=g===4;
     if(i.reserved){
-      h+=`<tr><td>${i.title}<div class="sm">Réservée jusqu'au ${fmtDT(i.expires)}${i.resNote?" · "+i.resNote:""}</div></td><td><span class="fintxt">À définir</span></td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><span class="muted">pas de carte</span></td><td class="acts"><a class="ilink" data-prolong="${i.id}">Prolonger</a><a class="ilink danger" data-cancelres="${i.id}">Annuler</a></td></tr>`;
+      h+=`<tr><td>${i.title}<div class="sm">Réservée jusqu'au ${fmtDT(i.expires)}${i.resNote?" · "+i.resNote:""}</div></td><td><span class="fintxt">À définir</span></td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td class="acts"><a class="ilink" data-prolong="${i.id}">Prolonger</a><a class="ilink danger" data-cancelres="${i.id}">Annuler</a></td></tr>`;
       return;
     }
-    h+=`<tr class="${g===2||g===3?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}${moved?`<div class="sm">Déplacée vers ${SESS[i.sess].lbl}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><a class="ilink" data-open="${i.id}">Ouvrir la carte</a></td>
-      <td class="acts">${g===0?`<a class="ilink" data-espace="${i.id}">Ouvrir espace</a>`:""}</td></tr>`;
+    h+=`<tr class="${g===2||g===3?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}${moved?`<div class="sm">Déplacée vers ${SESS[i.sess].lbl}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><a class="ilink" data-open="${i.id}">Ouvrir la carte</a></td></tr>`;
   });
-  if(!inscs.length) h+=`<tr><td colspan="5" class="muted">Aucun apprenant inscrit.</td></tr>`;
+  if(!inscs.length) h+=`<tr><td colspan="4" class="muted">Aucun apprenant inscrit.</td></tr>`;
   h+=`</tbody></table></div></div>`;
   /* section 5 : publication ARD, visible dès que la session est publiée */
   if(c.col!=="brouillon"){
@@ -2537,12 +2555,50 @@ function bibbyModalHtml(){
    <div class="mactions"><button class="btn btn-s" data-close2="1">Fermer</button><button class="btn btn-p" data-bibbysend="${c.id}">Valider et envoyer à Bibby</button></div>
   </div></div></div>`;
 }
+/* modale Switch session : même forme que celle de DELIV'IA aujourd'hui */
 function switchModalHtml(){
   const i=CARDS.find(x=>x.id===S.switchFor); if(!i) return "";
-  const targets=Object.entries(SESS).filter(([k])=>k!==i.sess);
-  return `<div id="modal2"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Changer de session</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">${i.title} · actuellement ${i.sess?SESS[i.sess].lbl:""}</div></div>
-  <div class="mbody">${targets.map(([k,v])=>`<div class="mpanel drow"><div><div class="tt">${v.lbl}</div><div class="sm">${v.lieu} · ${v.frm||"formateur à confirmer"}</div></div><div class="dbtns"><button class="btn btn-p" data-switchto="${i.id}::${k}">Déplacer ici</button></div></div>`).join("")}
-  <p class="pd" style="margin-top:10px">La convocation Qualiobee et la session EDOF suivent automatiquement ; l'inscription reste visible dans l'ancienne session sous « Changés de session ».</p></div></div></div>`;
+  const {cl}=peopleFor(i);
+  const cascade = cl && !String(cl.type||"").startsWith("Particulier")
+    ? CARDS.filter(x=>x.kb==="insc"&&x.id!==i.id&&x.sess===i.sess&&!x.reserved&&((peopleFor(x).cl||{}).id===cl.id)).length : 0;
+  const auj=new Date().toISOString().slice(0,10);
+  let list=CARDS.filter(c=>c.kb==="session_fia"&&c.sess&&c.sess!==i.sess);
+  if(!S.swPast) list=list.filter(c=>!(c.dt&&c.dt.j2&&c.dt.j2<auj));
+  if(S.swFrm&&S.swFrm!=="all") list=list.filter(c=>c.frm===S.swFrm);
+  if(S.swLieu&&S.swLieu!=="all") list=list.filter(c=>c.lieu===S.swLieu);
+  if(S.swMois&&S.swMois!=="all") list=list.filter(c=>(c.dt&&c.dt.j1||"").slice(0,7)===S.swMois);
+  const dir=S.swSort==="desc"?-1:1;
+  list=[...list].sort((a,b)=>((a.dt&&a.dt.j1||"")>(b.dt&&b.dt.j1||"")?1:-1)*dir);
+  const mois=[...new Set(CARDS.filter(c=>c.kb==="session_fia"&&c.dt&&c.dt.j1).map(c=>c.dt.j1.slice(0,7)))].sort();
+  const moisLbl=m=>new Date(m+"-01T12:00:00").toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+  const row=c=>{
+    const sc=sessCounts(c), plein=sc.ins+sc.enc>=sc.cap;
+    return `<button class="swrow ${plein?"full":""}" data-${plein?"swfull":"switchto"}="${i.id}::${c.sess}">
+      <div class="l1"><span class="nm">${OFFRES[c.offre]}</span><span class="occ ${plein?"ko":""}">${plein?`Complet (${sc.ins+sc.enc}/${sc.cap})`:`${sc.ins+sc.enc}/${sc.cap} disponible`}</span></div>
+      <div class="l2">${fmtDates(c)||"Sans date"} · ${c.frm||"—"} · ${c.lieu||"—"}</div></button>`;
+  };
+  return `<div id="modal2"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Switch session <span class="who2">${i.title}</span></div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div></div>
+  ${cascade?`<div class="swcascade">⚠ Client entreprise <b>${cl.nom}</b> : ${cascade} autre${cascade>1?"s":""} apprenant${cascade>1?"s":""} ser${cascade>1?"ont":"a"} aussi déplacé${cascade>1?"s":""}.</div>`:""}
+  <div class="swbar">
+    <select class="fsel" data-fsel="swFrm"><option value="all">Formateur</option>${FORMATEURS.map(f=>`<option value="${f}" ${S.swFrm===f?"selected":""}>${f}</option>`).join("")}</select>
+    <select class="fsel" data-fsel="swLieu"><option value="all">Lieu</option>${LIEUX.map(l=>`<option value="${l}" ${S.swLieu===l?"selected":""}>${l}</option>`).join("")}</select>
+    <select class="fsel" data-fsel="swMois"><option value="all">Mois</option>${mois.map(m=>`<option value="${m}" ${S.swMois===m?"selected":""}>${moisLbl(m)}</option>`).join("")}</select>
+    <label class="fchk" style="margin:0 0 0 auto"><input type="checkbox" data-swpast="1" ${S.swPast?"checked":""}> Inclure passées</label>
+  </div>
+  <div class="swsort"><a class="ilink" data-swsort="1">⇅ Tri : ${S.swSort==="desc"?"Date décroissante":"Date croissante"}</a></div>
+  <div class="mbody swlist">${list.map(row).join("")||`<p class="empty">Aucune session ne correspond aux filtres.</p>`}</div></div></div>`
+   + (S.swFull?swFullHtml():"");
+}
+function swFullHtml(){
+  const [iid,k]=S.swFull.split("::");
+  const i=CARDS.find(x=>x.id===iid); const c=CARDS.find(x=>x.kb==="session_fia"&&x.sess===k);
+  if(!i||!c) return "";
+  const sc=sessCounts(c);
+  return `<div id="modal3"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Confirmer le surbooking</div><button class="mclose" data-swcancel="1" aria-label="Fermer">✕</button></div></div>
+  <div class="mbody"><p>Cette session est complète : <b>${sc.ins+sc.enc}/${sc.cap}</b>.</p>
+  <p style="margin-top:8px">Vous allez déplacer <b>${i.title}</b> vers :<br><span class="muted">${OFFRES[c.offre]} — ${fmtDates(c)||"Sans date"}</span></p>
+  <p class="pd" style="margin-top:8px;font-style:italic">Cette action sera tracée comme un dépassement de capacité dans l'historique.</p>
+  <div class="mactions"><button class="btn btn-s" data-swcancel="1">Annuler</button><button class="btn btn-p danger" data-switchto="${iid}::${k}">Confirmer surbooking</button></div></div></div></div>`;
 }
 function lostModalHtml(){
   const i=CARDS.find(x=>x.id===S.lostFor); if(!i) return "";
@@ -2693,7 +2749,7 @@ function pageStub(id){
 
 /* ── pages autres applications ── */
 function pageApprenant(){
-  return `<div class="simnote">Simulation de la Plateforme apprenant : aperçu dans son style réel (Inter, indigo, fond slate).</div>
+  return `<div class="simnote">Simulation de l'espace client / apprenant : aperçu dans son style réel (Inter, indigo, fond slate).</div>
   <div class="appframe" style="font-family:Inter,sans-serif">
     <div class="ap-head"><div class="brand" style="padding:0"><span class="word" style="font-size:15px">France <em>IA</em></span><div class="tri" style="width:52px"><i></i><i></i><i></i></div></div><div class="ap-avatar">MD</div></div>
     <div class="ap-body">
@@ -2816,7 +2872,8 @@ document.addEventListener("click",e=>{
     if(!taskState(cd,col,parseInt(i),tk)){toast(`<b>${tk.btn}</b> : ${cd.title}`);clickTask(c,col,parseInt(i));}return}
   const ms=e.target.closest(".msec2>summary");
   if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
-  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;document.getElementById("modal2")?.remove();return}
+  if(e.target.id==="modal3"){S.swFull=null;render();return}
+  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
   const anoS=e.target.closest(".ano>summary");
   if(anoS){const d=anoS.parentElement;S.anoOpen=S.anoOpen||{};S.anoOpen[d.dataset.ano]=!d.open}
   const rapS=e.target.closest(".payrap>summary");
@@ -2829,7 +2886,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -2924,8 +2981,12 @@ document.addEventListener("click",e=>{
     const [c,col,i]=S.bibbyTask; S.bibbyFor=null;
     toast(`Dossier envoyé à Bibby : <b>${CARDS.find(x=>x.id===c).title}</b>. Réponse attendue sous 48 h.`);
     clickTask(c,col,i);return}
-  if(t.dataset.switch){S.switchFor=t.dataset.switch;render();return}
-  if(t.dataset.switchto){const [iid,k]=t.dataset.switchto.split("::");const i=CARDS.find(x=>x.id===iid);i.movedFrom=i.sess;i.sess=k;i.dt=SESS[k].dt;i.lieu=SESS[k].lieu;S.switchFor=null;toast(`<b>${i.title}</b> déplacée vers ${SESS[k].lbl}.`);render();return}
+  if(t.dataset.switch){S.switchFor=t.dataset.switch;S.swFull=null;render();return}
+  if(t.dataset.swfull){S.swFull=t.dataset.swfull;render();return}
+  if(t.dataset.swcancel!==undefined){S.swFull=null;render();return}
+  if(t.dataset.swpast!==undefined){S.swPast=!S.swPast;render();return}
+  if(t.dataset.swsort){S.swSort=S.swSort==="desc"?"asc":"desc";render();return}
+  if(t.dataset.switchto){const [iid,k]=t.dataset.switchto.split("::");const i=CARDS.find(x=>x.id===iid);i.movedFrom=i.sess;i.sess=k;i.dt=SESS[k].dt;i.lieu=SESS[k].lieu;S.switchFor=null;S.swFull=null;toast(`<b>${i.title}</b> déplacée vers ${SESS[k].lbl}.`);render();return}
   if(t.dataset.lost){S.lostFor=t.dataset.lost;render();return}
   if(t.dataset.lostconfirm){const i=CARDS.find(x=>x.id===t.dataset.lostconfirm);i.col="lost";S.lostFor=null;toast(`<b>${i.title}</b> passée en Lost ; pensez à l'opportunité GHL.`);render();return}
   if(t.dataset.sort){if(S.sortSess===t.dataset.sort)S.sortSessDir=-(S.sortSessDir||1);else{S.sortSess=t.dataset.sort;S.sortSessDir=1;}render();return}
@@ -2939,7 +3000,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.plafondcancel){S.editPlafond=null;render();return}
   if(t.dataset.plafondsave){const c=CARDS.find(x=>x.id===t.dataset.plafondsave);c.plafond=parseInt(document.getElementById("plafondIn").value)||c.cap;S.editPlafond=null;toast("Plafond ARD enregistré : "+c.plafond+" places affichées.");render();return}
   if(t.dataset.ardtoggle){const c=CARDS.find(x=>x.id===t.dataset.ardtoggle);c.ardVisible=c.ardVisible===false;toast(c.ardVisible?"Session visible sur ARD.":"Session masquée sur ARD.");render();return}
-  if(t.dataset.espace){toast("Ouverture de l'espace apprenant dans un nouvel onglet.");return}
+  if(t.dataset.espace){toast("Ouverture de l'espace client / apprenant dans un nouvel onglet.");return}
   if(t.dataset.delsession){if(confirm("Supprimer cette session ? Les inscriptions payées bloqueront la suppression dans la vraie application.")){const c=CARDS.find(x=>x.id===t.dataset.delsession);CARDS.splice(CARDS.indexOf(c),1);S.fiche=null;toast("Session supprimée.");render();}return}
   if(t.dataset.copy){toast("Lien copié dans le presse-papier.");return}
   if(t.dataset.acctoggle){const [uid,pid]=t.dataset.acctoggle.split("::");const u=COMPTES.find(x=>x.id===uid);u.acces=u.acces||[];const ix=u.acces.indexOf(pid);if(ix>=0)u.acces.splice(ix,1);else u.acces.push(pid);toast(`Accès <b>${PAGES_ACCES.find(p=>p[0]===pid)[1]}</b> ${ix>=0?"retiré":"accordé"} à ${u.nom}.`);render();return}
