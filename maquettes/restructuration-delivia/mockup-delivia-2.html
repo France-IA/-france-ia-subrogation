@@ -202,8 +202,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .acc summary .tt{font-size:13.5px;font-weight:600;color:var(--ink-900)}
 .acc summary .sm{font-size:11.5px;color:var(--ink-400)}
 .acc summary .end{margin-left:auto;display:flex;gap:6px;align-items:center;flex-shrink:0}
-.acc .inner{padding:2px 2px 16px 23px}
-.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px 18px;margin:6px 0 2px}
+.acc .inner{padding:2px 2px 16px 23px;width:100%}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 18px;margin:6px 0 2px}
+.vbar{display:flex;justify-content:flex-end;gap:8px;margin:0 0 2px}
+.vcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:10px}
+.acc .inner .docs{max-width:none}
 /* historique des to_do */
 .hist{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
 .hist summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--ink-500);list-style:none;display:flex;align-items:center;gap:6px}
@@ -1315,13 +1318,13 @@ function abrege(n){ const [p,f]=n.split(" "); return p+(f?" "+f[0]+".":""); }
 const CLOSEURS = COMPTES.filter(u=>u.role==="closer").map(u=>abrege(u.nom));
 const SETTEURS = COMPTES.filter(u=>u.role==="setter").map(u=>abrege(u.nom));
 /* champ à liste déroulante, modifiable seulement en mode édition */
-function fldSel(label,val,name,opts,vide,cur){
-  if(!S.editing) return `<div class="fld"><div class="k">${label}</div><div class="v">${val??'<span class="muted">non renseigné</span>'}</div></div>`;
+function fldSel(label,val,name,opts,vide,cur,ed){
+  if(ed===undefined?!S.editing:!ed) return `<div class="fld"><div class="k">${label}</div><div class="v">${val??'<span class="muted">non renseigné</span>'}</div></div>`;
   const sel=cur===undefined?val:cur;
   return `<div class="fld"><div class="k">${label}</div><select class="edin" data-vsel="${name}">${vide?`<option value="" ${sel?"":"selected"}>${vide}</option>`:""}${opts.map(o=>{const [v2,l2]=Array.isArray(o)?o:[o,o];return `<option value="${v2}" ${String(v2)===String(sel??"")?"selected":""}>${l2}</option>`}).join("")}</select></div>`;
 }
-function fldIn(label,val,name){
-  if(!S.editing) return `<div class="fld"><div class="k">${label}</div><div class="v">${val??'<span class="muted">non renseigné</span>'}</div></div>`;
+function fldIn(label,val,name,ed){
+  if(ed===undefined?!S.editing:!ed) return `<div class="fld"><div class="k">${label}</div><div class="v">${val??'<span class="muted">non renseigné</span>'}</div></div>`;
   return `<div class="fld"><div class="k">${label}</div><input class="edin" data-vsel="${name}" value="${(val??"").toString().replace(/"/g,"&quot;")}"></div>`;
 }
 const DEMANDES_FRM = {s3:[{f:"Inès B.",d:"2026-08-19",m:"Disponible les deux jours, je connais bien Lyon."},{f:"Marc D.",d:"2026-08-21",m:""}], s4:[{f:"Sarah K.",d:"2026-08-20",m:"Je peux prendre le N2 Paris."}]};
@@ -1419,14 +1422,14 @@ const CLIENTS=[
  {id:"cl_hotel",nom:"Hôtel du Parc",type:"Entreprise (OPCO)",note:"OPCO AKTO, dossier déposé par Sofia le 12/08. La DRH veut la facture au nom du groupe, pas de l'hôtel : vérifier le SIRET avant génération.",adr:"2 esplanade des Quinconces, 33000 Bordeaux",vat:"FR 88 399120448",resp:{n:"Sofia Ricci",e:"s.ricci@hotelduparc.fr",t:"07 81 55 60 43",app:1},siret:"399 120 448 00034",ref:"Sofia Ricci · s.ricci@hotelduparc.fr",mode:"OPCO (AKTO)",mandat:null,
   ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"opco",factId:"f3",inscId:"i5"}],apprenants:["ap_sofia"],docs:["Convention · signée","Facture FA-2026-0540 · à transmettre à l'OPCO","Feuille d'émargement collective · à venir","Certificat de réalisation · à venir"]},
  {id:"cl_marie",nom:"Marie Dupont",type:"Particulier",note:"Reste à charge de 150 € : a demandé à payer après sa paie du 28/08.",adr:"14 rue des Lilas, 75011 Paris",vat:null,resp:{n:"Marie Dupont",e:"marie.dupont@gmail.com",t:"06 12 45 78 90",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
-  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i1",note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_marie"],docs:["Dossier EDOF · validé","Certificat de réalisation · à venir"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"cpf",factId:null,inscId:"i1",note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_marie"],docs:["Dossier EDOF · validé","Certificat de réalisation · à venir"]},
  {id:"cl_karim",nom:"Karim Benali",type:"Particulier",note:"Indépendant, joignable surtout le soir. Souhaite la facture au nom de sa micro-entreprise.",adr:"3 allée du Parc, 92130 Issy-les-Moulineaux",vat:null,resp:{n:"Karim Benali",e:"k.benali@outlook.fr",t:"07 66 21 03 55",app:1},siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 3 échéances, première encaissée",
   ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_part",factId:"f4",inscId:"i2"}],apprenants:["ap_karim"],docs:["Facture FA-2026-0512 · émise (non acquittée)","Certificat de réalisation · à venir"]},
 
  {id:"cl_lucas",nom:"Lucas Moreau",type:"Particulier",adr:"12 quai des Chartrons, 33000 Bordeaux",vat:null,resp:{n:"Lucas Moreau",e:"lucas.moreau@gmail.com",t:"06 31 77 20 84",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
-  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i9",note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_lucas"],docs:["Dossier EDOF · en cours"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"cpf",factId:null,inscId:"i9",note:"la carte facturation naît à la déclaration de sortie EDOF"}],apprenants:["ap_lucas"],docs:["Dossier EDOF · en cours"]},
  {id:"cl_nadia",nom:"Nadia Slimani",type:"Particulier",adr:"27 boulevard Voltaire, 75011 Paris",vat:null,resp:{n:"Nadia Slimani",e:"n.slimani@gmail.com",t:"07 22 90 15 63",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
-  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i7"}],apprenants:["ap_nadia"],docs:["Dossier EDOF · validé"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"cpf",factId:null,inscId:"i7"}],apprenants:["ap_nadia"],docs:["Dossier EDOF · validé"]},
  {id:"cl_nova",nom:"Studio Nova",type:"Entreprise",adr:"31 rue du Faubourg Saint-Martin, 75010 Paris",vat:"FR 65 901254883",resp:{n:"Paul Fabre",e:"p.fabre@studionova.fr",t:"06 84 12 55 71",app:1},siret:"901 254 883 00019",ref:"Paul Fabre · p.fabre@studionova.fr",mode:"Virement",mandat:null,
   ventes:[{lbl:"Formation N2",m:"1 650 €",fin:"fp_ent_vir",factId:null,inscId:"i8",note:"facture générée à l'ARD, carte au fil du rail"}],apprenants:["ap_paul"],docs:["Devis DE-2026-0455 · en attente de signature"]},
  {id:"cl_nexa",nom:"Nexa Digital",type:"Entreprise",adr:"18 rue de la République, 69001 Lyon",vat:"FR 09 753209118",resp:{n:"Marc Leroy",e:"m.leroy@nexa.digital",t:"06 09 33 48 12",app:1},siret:"753 209 118 00027",ref:"Marc Leroy · m.leroy@nexa.digital",mode:"Virement",mandat:null,
@@ -1436,15 +1439,15 @@ const CLIENTS=[
  {id:"cl_verne",nom:"Cabinet Verne & Associés",type:"Entreprise",adr:"7 place Bellecour, 69002 Lyon",vat:"FR 30 330481227",resp:{n:"Agnès Verne",e:"averne@cabinetverne.fr",t:"04 72 10 55 90",app:0},siret:"330 481 227 00052",ref:"A. Verne · averne@cabinetverne.fr",mode:"Virement",mandat:null,
   ventes:[{lbl:"Formation intra · 5 apprenants",m:"7 900 €",fin:"fp_ent_vir",factId:null,inscId:"t2"}],apprenants:["ap_verne_0","ap_verne_1","ap_verne_2","ap_verne_3","ap_verne_4"],docs:["Devis DE-2026-0470 · signé"]},
  {id:"cl_emma",nom:"Emma Bianchi",type:"Particulier",adr:"6 rue Sainte-Catherine, 33000 Bordeaux",vat:null,resp:{n:"Emma Bianchi",e:"emma.bianchi@gmail.com",t:"07 15 62 09 30",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
-  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f2",inscId:null}],apprenants:["ap_emma"],docs:["Dossier EDOF · sortie validée"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"cpf",factId:"f2",inscId:null}],apprenants:["ap_emma"],docs:["Dossier EDOF · sortie validée"]},
  {id:"cl_awa",nom:"Awa Diallo",type:"Particulier",adr:"5 rue de la Paix, 69002 Lyon",vat:null,resp:{n:"Awa Diallo",e:"awa.diallo@gmail.com",t:"07 45 09 12 87",app:1},siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 1 échéance",
   ventes:[{lbl:"Coaching 4 h",m:"1 200 €",fin:"fp_part",factId:"f8",inscId:"c1"}],apprenants:["ap_awa"],docs:["Facture FA-2026-0548 · émise (non acquittée)","Convention · signée"]},
  {id:"cl_ines",nom:"Inès Garnier",type:"Particulier",adr:"9 rue Lepic, 75018 Paris",vat:null,resp:{n:"Inès Garnier",e:"ines.garnier@gmail.com",t:"06 44 12 78 31",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,note:"A annulé le 5 août : pas de prise en charge CPF suffisante.",
-  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:null,inscId:"i11"}],apprenants:["ap_ines"],docs:["Dossier EDOF · annulé"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"cpf",factId:null,inscId:"i11"}],apprenants:["ap_ines"],docs:["Dossier EDOF · annulé"]},
  {id:"cl_yasmine",nom:"Yasmine Bello",type:"Particulier",adr:"3 cours de l'Intendance, 33000 Bordeaux",vat:null,resp:{n:"Yasmine Bello",e:"yasmine.bello@gmail.com",t:"06 58 90 21 47",app:1},siret:null,ref:null,mode:"Mandat SDD",mandat:"Actif · 3 échéances",note:"Déplacée de Paris 12-13 sept vers Bordeaux 26-27 sept à sa demande (déménagement).",
   ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_part",factId:null,inscId:"i12"}],apprenants:["ap_yasmine"],docs:["Contrat de formation · signé"]},
  {id:"cl_hugo",nom:"Hugo Martin",type:"Particulier",adr:"40 rue Oberkampf, 75011 Paris",vat:null,resp:{n:"Hugo Martin",e:"hugo.martin@gmail.com",t:"06 02 93 47 66",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
-  ventes:[{lbl:"Formation N1 · CPF",m:"1 650 €",fin:"cpf",factId:"f1",inscId:"i6"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée","Certificat de réalisation · émis"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"cpf",factId:"f1",inscId:"i6"}],apprenants:["ap_hugo"],docs:["Dossier EDOF · sortie déclarée","Certificat de réalisation · émis"]},
 ];
 /* chaque vente porte ses trois liens de documents (null = lien à ajouter) */
 CLIENTS.forEach((c,ci)=>(c.ventes||[]).forEach((v,vi)=>{
@@ -2337,8 +2340,22 @@ function ficheApprenantHtml(id){
   h+=`</div>`;
   return h;
 }
-function venteDocs(cl,v,ix){
-  const ed=S.editing==="client::"+cl.id;
+/* lit les champs de vente présents à l'écran (fiche entière en édition, ou une seule vente) */
+function applyVenteInputs(obj){
+  document.querySelectorAll("#content [data-vdoc]").forEach(inp=>{const [vi,dk]=inp.dataset.vdoc.split("::");if(obj.ventes&&obj.ventes[vi])obj.ventes[vi].docs[dk]=inp.value.trim()||null;});
+  document.querySelectorAll("#content [data-vsel]").forEach(sel=>{const [vi,ky]=sel.dataset.vsel.split("::");const v=obj.ventes&&obj.ventes[vi];if(!v)return;const val=sel.value||null;
+    if(ky==="fin"){ if(val&&val!==v.fin){ v.fin=val; [v.inscId,v.factId].filter(Boolean).forEach(cid=>{const c=CARDS.find(x=>x.id===cid);if(c)changeFin(c,val);}); } return; }
+    v[ky]=val;
+    [v.inscId,v.factId].filter(Boolean).forEach(cid=>{const c=CARDS.find(x=>x.id===cid);if(c)c[ky]=val;});});
+  document.querySelectorAll("#content [data-vaps]").forEach(sel=>{const v=obj.ventes&&obj.ventes[sel.dataset.vaps];if(!v)return;
+    const ids=[...sel.selectedOptions].map(o=>o.value); v.apprenants=ids;
+    const srcId=v.inscId||v.factId;
+    if(srcId) APPRENANTS.forEach(a=>{const has=a.insc.includes(srcId);const want=ids.includes(a.id);
+      if(want&&!has) a.insc=a.insc.concat([srcId]);
+      if(!want&&has) a.insc=a.insc.filter(x=>x!==srcId);});
+    obj.apprenants=[...new Set((obj.ventes||[]).flatMap(x=>x.apprenants||[]).concat(obj.apprenants||[]))];});
+}
+function venteDocs(cl,v,ix,ed){
   return DOCTYPES.map(([k,lbl,src])=>{
     const url=v.docs?v.docs[k]:null;
     if(ed) return `<div class="docrow"><span class="dl">${lbl}</span><input class="edin" data-vdoc="${ix}::${k}" value="${(url||"").replace(/"/g,"&quot;")}" placeholder="Coller le lien ${src}"><button class="btn-xs" data-vdocclear="${ix}::${k}">Retirer</button></div>`;
@@ -2375,35 +2392,39 @@ function ficheClientHtml(id){
   /* ── Notes ── */
   h+=notesCard(cl);
   /* ── Ventes ── */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.wallet}Ventes <span class="n2">${cl.ventes.length} · une vente = une offre, un moyen de paiement, une facture</span></div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.wallet}Ventes</div>`;
   h+=cl.ventes.map((v,ix)=>{
     const ic=v.inscId?CARDS.find(c=>c.id===v.inscId):null;
     const fc=v.factId?CARDS.find(c=>c.id===v.factId):null;
     const fcCol=fc?colLabel(fc):null;
     const k="cl-"+cl.id+"-"+ix;
     const appr=(v.apprenants||cl.apprenants||[]).map(aid=>APPRENANTS.find(x=>x.id===aid)).filter(Boolean);
+    const ved = S.editVente===(cl.id+"::"+ix) || S.editing===("client::"+cl.id);
     return `<details class="acc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span>
       <span class="tt">${v.lbl}</span>
-      <span class="end">${badge(v.fin)}<span style="font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums">${v.m}</span>${fcCol?`<span class="chip">${fcCol}</span>`:`<span class="chip">carte à venir</span>`}</span></summary>
+      <span class="end"><span style="font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums">${v.m}</span>${fcCol?`<span class="chip">${fcCol}</span>`:`<span class="chip">carte à venir</span>`}</span></summary>
       <div class="inner">
+        <div class="vbar">${ved
+          ? `<button class="btn btn-p" data-vsave="${cl.id}::${ix}">Enregistrer</button><button class="btn btn-s" data-vcancel="1">Annuler</button>`
+          : `<button class="btn btn-s" data-vedit="${cl.id}::${ix}">Modifier</button>`}</div>
         <div class="vgrid">
-          ${fldSel("Closeur",ic?ic.closer:v.closer,ix+"::closer",CLOSEURS,"Sans closeur")}
-          ${fldSel("Setteur",ic?ic.setter:v.setter,ix+"::setter",SETTEURS,"Sans setteur")}
-          ${fldIn("Montant",v.m,ix+"::m")}
-          ${fldSel("Moyen de paiement",FIN[v.fin].lbl,ix+"::fin",MODES_CLIENT.map(m=>[m,FIN[m].lbl]),null,v.fin)}
+          ${fldSel("Closeur",ic?ic.closer:v.closer,ix+"::closer",CLOSEURS,"Sans closeur",undefined,ved)}
+          ${fldSel("Setteur",ic?ic.setter:v.setter,ix+"::setter",SETTEURS,"Sans setteur",undefined,ved)}
+          ${fldIn("Montant",v.m,ix+"::m",ved)}
+          ${fldSel("Moyen de paiement",FIN[v.fin].lbl,ix+"::fin",MODES_CLIENT.map(m=>[m,FIN[m].lbl]),null,v.fin,ved)}
         </div>
         <div class="subh">Apprenants concernés</div>
-        ${S.editing===("client::"+cl.id)
-          ? `<select class="edin" data-vaps="${ix}" multiple size="4" style="min-width:280px">${APPRENANTS.map(a=>`<option value="${a.id}" ${appr.some(x=>x.id===a.id)?"selected":""}>${a.nom}</option>`).join("")}</select><div class="pd" style="font-size:10.5px;color:var(--ink-400);margin-top:4px">Sélection multiple : les apprenants rattachés à cette vente, donc aux cartes qui en découlent.</div>`
+        ${ved
+          ? `<select class="edin" data-vaps="${ix}" multiple size="4" style="width:100%;max-width:420px">${APPRENANTS.map(a=>`<option value="${a.id}" ${appr.some(x=>x.id===a.id)?"selected":""}>${a.nom}</option>`).join("")}</select><div style="font-size:10.5px;color:var(--ink-400);margin-top:4px">Sélection multiple : les apprenants rattachés à cette vente, donc aux cartes qui en découlent.</div>`
           : `<div style="padding:2px 0 4px">${appr.map(a=>`<span class="perschip" data-fiche="apprenant::${a.id}"><span class="avat">${initiales(a.nom)}</span>${a.nom}</span>`).join("")||'<span class="idchip">Renseignés par le client</span>'}</div>`}
-        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:10px">
-          <div style="width:280px"><div class="subh" style="margin:0 0 6px">Carte inscription</div>
+        <div class="vcards">
+          <div><div class="subh" style="margin:0 0 6px">Carte inscription</div>
             ${ic?cardHtml(ic,KB[ic.kb].cols.find(x=>x.id===ic.col),{}):`<div class="card pointer"><div class="s">Pas de carte inscription individuelle.</div></div>`}</div>
-          <div style="width:280px"><div class="subh" style="margin:0 0 6px">Carte facturation</div>
+          <div><div class="subh" style="margin:0 0 6px">Carte facturation</div>
             ${fc?cardHtml(fc,KB[fc.kb].cols.find(x=>x.id===fc.col),{}):`<div class="card pointer"><div class="t">Carte à venir</div><div class="s">${v.note||"Elle naîtra selon la règle de son rail."}</div></div>`}</div>
         </div>
         <div class="subh">Documents</div>
-        <div class="docs">${venteDocs(cl,v,ix)}</div>
+        <div class="docs">${venteDocs(cl,v,ix,ved)}</div>
       </div></details>`;
   }).join("");
   h+=`</div>`;
@@ -2799,7 +2820,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -2808,18 +2829,7 @@ document.addEventListener("click",e=>{
     const [kind,fid]=t.dataset.editsave.split("::");
     const obj=(kind==="apprenant"?APPRENANTS:kind==="session"?CARDS:kind==="compte"?COMPTES:CLIENTS).find(x=>x.id===fid);
     document.querySelectorAll("#content [data-f]").forEach(inp=>{obj[inp.dataset.f]=inp.value});
-    document.querySelectorAll("#content [data-vdoc]").forEach(inp=>{const [vi,dk]=inp.dataset.vdoc.split("::");if(obj.ventes&&obj.ventes[vi])obj.ventes[vi].docs[dk]=inp.value.trim()||null;});
-    document.querySelectorAll("#content [data-vsel]").forEach(sel=>{const [vi,ky]=sel.dataset.vsel.split("::");const v=obj.ventes&&obj.ventes[vi];if(!v)return;const val=sel.value||null;
-      if(ky==="fin"){ if(val&&val!==v.fin){ v.fin=val; [v.inscId,v.factId].filter(Boolean).forEach(cid=>{const c=CARDS.find(x=>x.id===cid);if(c)changeFin(c,val);}); } return; }
-      v[ky]=val;
-      [v.inscId,v.factId].filter(Boolean).forEach(cid=>{const c=CARDS.find(x=>x.id===cid);if(c)c[ky]=val;});});
-    document.querySelectorAll("#content [data-vaps]").forEach(sel=>{const v=obj.ventes&&obj.ventes[sel.dataset.vaps];if(!v)return;
-      const ids=[...sel.selectedOptions].map(o=>o.value); v.apprenants=ids;
-      const srcId=v.inscId||v.factId;
-      if(srcId) APPRENANTS.forEach(a=>{const has=a.insc.includes(srcId);const want=ids.includes(a.id);
-        if(want&&!has) a.insc=a.insc.concat([srcId]);
-        if(!want&&has) a.insc=a.insc.filter(x=>x!==srcId);});
-      obj.apprenants=[...new Set((obj.ventes||[]).flatMap(x=>x.apprenants||[]).concat(obj.apprenants||[]))];});
+    applyVenteInputs(obj);
     if(kind==="apprenant"){obj.nom=((obj.prenom||"")+" "+(obj.fam||"")).trim()||obj.nom;}
     if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.cap=parseInt(obj.cap)||12;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===obj.sess);if(fs){fs.frm=obj.frm;fs.dt=obj.dt;fs.cap=obj.cap;}}
     S.editing=null;render();
@@ -2852,6 +2862,15 @@ document.addEventListener("click",e=>{
     S.fSessView="kanban";render();return}
   if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===cd.sess);if(fs)fs.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
+  if(t.dataset.vedit){S.editVente=t.dataset.vedit;S.editing=null;render();return}
+  if(t.dataset.vcancel){S.editVente=null;render();return}
+  if(t.dataset.vsave){
+    const [cid]=t.dataset.vsave.split("::");
+    const obj=CLIENTS.find(c=>c.id===cid);
+    if(obj) applyVenteInputs(obj);
+    S.editVente=null;render();
+    toast("Vente enregistrée : <b>"+(obj?obj.nom:"")+"</b>");
+    return}
   if(t.dataset.anoall!==undefined){S.anoAll=!S.anoAll;render();return}
   if(t.dataset.sesspass!==undefined){S.sessPass=!S.sessPass;render();return}
   if(t.dataset.anorun){toast(`Contrôle relancé : balayage d'ARD, Qualiobee, WEDOF, EDOF, GHL, Mollie et Qonto. Résultat dans deux minutes.`);return}
