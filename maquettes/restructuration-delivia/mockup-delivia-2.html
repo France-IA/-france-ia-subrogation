@@ -331,6 +331,39 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .cnt .nx .k{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-400);margin-right:5px}
 .cnt .nx.ok{color:var(--ok)}
 .prog{margin-top:8px}
+/* bloc paiements sous une tâche de constat de paiement */
+.paypanel{margin:2px 0 10px 25px;border:1px solid var(--line-2);border-radius:9px;background:#fff;padding:9px 11px}
+.paypanel .pph{display:flex;align-items:baseline;gap:8px;font-size:11px;color:var(--ink-500);padding-bottom:7px;border-bottom:1px solid var(--line)}
+.paypanel .pph .ttl{font-weight:600;color:var(--ink-800);font-size:11.5px}
+.paypanel .pph .rest{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink-700)}
+.paypanel .pph .rest.ok{color:var(--ok)}
+.paytbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.paytbl td{padding:5px 0;border-bottom:1px solid var(--line);color:var(--ink-600,#475569)}
+.paytbl tr:last-child td{border-bottom:none}
+.paytbl .amt{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink-800);white-space:nowrap}
+.paytbl .lib{color:var(--ink-700)}
+.paytbl .dt{color:var(--ink-400);white-space:nowrap}
+.paytbl .act{text-align:right;white-space:nowrap}
+.paynone{font-size:11.5px;color:var(--ink-400);padding:7px 0 2px}
+.payrap{margin-top:8px;border-top:1px dashed var(--line-2);padding-top:8px}
+.payrap>summary{list-style:none;cursor:pointer;font-size:11px;font-weight:600;color:var(--primary);display:flex;align-items:center;gap:6px}
+.payrap>summary::-webkit-details-marker{display:none}
+.payrap>summary .chev{transition:transform .15s;color:var(--ink-400)}
+.payrap[open]>summary .chev{transform:rotate(90deg)}
+.payrap .sub2{font-weight:400;color:var(--ink-400)}
+.payq{display:flex;align-items:center;gap:6px;border:1px solid var(--line-2);border-radius:7px;padding:3px 8px;margin:8px 0 4px;color:var(--ink-400)}
+.payq input{border:none;outline:none;font-size:11.5px;flex:1;background:transparent;color:var(--ink-800)}
+.btn-xs{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:6px;border:1px solid var(--line-2);background:#fff;color:var(--ink-700)}
+.btn-xs:hover{border-color:var(--primary);color:var(--primary)}
+.btn-xs.p{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn-xs.p:hover{opacity:.9;color:#fff}
+.facline{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.col.sepcol{margin-left:17px;position:relative}
+.col.sepcol::before{content:"";position:absolute;left:-17px;top:4px;bottom:4px;border-left:1.5px dashed var(--line-2)}
+.colbulk{display:flex;flex-direction:column;gap:5px;margin:0 2px 9px}
+.bulkbtn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;font-size:11px;font-weight:600;color:var(--ink-700);background:#fff;border:1px solid var(--line-2);border-radius:7px;padding:5px 8px;box-shadow:var(--sh-carte)}
+.bulkbtn:hover{border-color:var(--primary);color:var(--primary)}
+.bulkbtn .n{font-weight:500;color:var(--ink-400)}
 .colsec{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500);margin:10px 2px 6px;padding-top:8px;border-top:1px dashed var(--line-2)}
 .colsec span{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-400);margin-left:4px}
 .colempty{font-size:11px;color:var(--ink-300);padding:2px 4px 6px}
@@ -966,18 +999,19 @@ tasks:{
 /* ── Facturation CPF ── */
 fact_cpf:{cols:[
  {id:"sortie",  label:"Sortie de formation déclarée"},
- {id:"validee", label:"Sortie validée par EDOF"},
+ {id:"validee", label:"Sortie validée par EDOF", bulk:[["Envoyer les dossiers à Bibby","bibby"],["Importer les exports EDOF","edof"]]},
  {id:"bibby",   label:"En attente de Bibby"},
- {id:"retard",  label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1},
+ {id:"retard",  label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1, bulk:[["Relancer Bibby","relance"]]},
  {id:"recu",    label:"Paiement Bibby reçu + facture acquittée"},
- {id:"final",   label:"Paiement BBF & EDOF + facture acquittée"}],
+ {id:"final",   label:"Paiement BBF & EDOF + facture acquittée"},
+ {id:"lost",    label:"Lost / Remboursement", skip:1, sep:1}],
 tasks:{
  sortie:[{t:"Admin France IA reçoit la validation du service fait par la CDC (détecté automatiquement)",p:"fia",auto:1,note:"webhook WEDOF, délai variable"}],
  validee:[
   {t:"Admin France IA génère la facture Qonto au montant CDC (automatique)",p:"fia",auto:1},
   {t:"Admin France IA transmet le numéro de facture sur EDOF (automatique)",p:"fia",auto:1},
   {t:"Admin France IA génère les émargements signés et le dossier EDOF (automatique)",p:"fia",auto:1,tpl:1},
-  {t:"Admin France IA envoie le dossier à Bibby avec la facture, les émargements signés et le dossier EDOF complet",p:"fia",btn:"Envoyer à Bibby",tpl:1}],
+  {t:"Admin France IA envoie le dossier à Bibby avec la facture, les émargements signés et le dossier EDOF complet",p:"fia",btn:"Envoyer à Bibby",kind2:"bibby"}],
  bibby:[
   {t:"Admin France IA constate le paiement Bibby (détecté automatiquement)",p:"fia",auto:1,note:"rapprochement bancaire, attendu sous 30 jours ; passage automatique en En retard à l'échéance de la facture"},
   {t:"Admin France IA tamponne la facture acquittée (automatique)",p:"fia",auto:1,fx:"ligne_closer"}],
@@ -986,14 +1020,15 @@ tasks:{
   {t:"Admin France IA constate le paiement Bibby (détecté automatiquement)",p:"fia",auto:1},
   {t:"Admin France IA tamponne la facture acquittée (automatique)",p:"fia",auto:1,fx:"ligne_closer"}],
  recu:[{t:"Admin France IA constate le paiement EDOF vers Bibby (détecté automatiquement)",p:"fia",auto:1,note:"webhook WEDOF"}],
- final:[]}},
+ final:[], lost:[]}},
 /* ── Facturation OPCO ── */
 fact_opco:{cols:[
  {id:"raf",    label:"RAF"},
  {id:"transmettre",label:"Transmettre facture OPCO", open:"J2+1 formation", rule:"j2+1"},
  {id:"attente",label:"En attente paiement"},
  {id:"retard", label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1},
- {id:"termine",label:"Terminé"}],
+ {id:"termine",label:"Terminé"},
+ {id:"lost",   label:"Lost / Remboursement", skip:1, sep:1}],
 tasks:{
  raf:[{t:"Admin France IA constate la fin de la formation (automatique)",p:"fia",auto:1,note:"J2+1"}],
  transmettre:[
@@ -1006,13 +1041,14 @@ tasks:{
   {t:"Admin France IA relance l'OPCO via l'agence",p:"fia",btn:"Relancer",tpl:1},
   {t:"Admin France IA constate le règlement de l'OPCO (détecté automatiquement)",p:"fia",auto:1},
   {t:"Admin France IA tamponne la facture acquittée (automatique)",p:"fia",auto:1,fx:"ligne_closer"}],
- termine:[]}},
+ termine:[], lost:[]}},
 /* ── Facturation fonds propres (Entreprise Virement, Entreprise Mandat, Particulier Mandat) ── */
 fact_fp:{cols:[
  {id:"raf",    label:"RAF", fin:["fp_ent_vir"]},
  {id:"attente",label:"En attente paiement"},
  {id:"retard", label:"En retard à relancer", open:"échéance de la facture", rule:"echeance", skip:1},
- {id:"termine",label:"Terminé"}],
+ {id:"termine",label:"Terminé"},
+ {id:"lost",   label:"Lost / Remboursement", skip:1, sep:1}],
 tasks:{
  raf:[{t:"Closeur constate la fin de la formation (automatique)",p:"closer",auto:1,note:"J2+1",fin:["fp_ent_vir"]}],
  attente:[
@@ -1029,7 +1065,7 @@ tasks:{
   {t:"Closeur relance le client",p:"closer",btn:"Relancer",tpl:1,fin:["fp_ent_vir"]},
   {t:"Closeur constate le paiement reçu (détecté automatiquement)",p:"closer",auto:1,fin:["fp_ent_vir"]},
   {t:"Closeur tamponne la facture acquittée (automatique)",p:"closer",auto:1,fin:["fp_ent_vir"],fx:"ligne_closer"}],
- termine:[]}},
+ termine:[], lost:[]}},
 /* ── Facturation formateur ── */
 fact_frm:{cols:[
  {id:"valider",label:"Valider facture"},
@@ -1066,6 +1102,14 @@ const FIN = {
  setter:    {lbl:"Setteur",  cls:"neutral"},
 };
 const MODES_CLIENT = ["cpf","fp_ent_vir","fp_ent_man","opco","fp_part"];
+/* virements reçus sur le compte Qonto et pas encore rattachés à une facture (relevé remonté toutes les heures) */
+const QONTO_ENC = [
+ {id:"tx-01a01d21",d:"2026-08-20",lib:"ATLAS SOUTENIR LES COMPETENCES",m:1650,ref:"FACT F-2026-0708"},
+ {id:"tx-019ffb66",d:"2026-08-19",lib:"HOTEL DU PARC SAS",m:1650,ref:"virement OPCO AKTO"},
+ {id:"tx-019ffaae",d:"2026-08-18",lib:"ADMINISTRATION DELEGUEE OUTSOURCING",m:2850,ref:"sans référence"},
+ {id:"tx-019ff641",d:"2026-08-17",lib:"ACME CONSEIL",m:1650,ref:"F-2026-0533 formation N1"},
+ {id:"tx-019fe902",d:"2026-08-14",lib:"Stichting Mollie Payments",m:3591.95,ref:"règlement Mollie du 14/08"},
+];
 /* vues du kanban Facturation : quatre vues client */
 const FACT_VIEWS = {cpf:{lbl:"CPF",fins:["cpf"]}, mandat:{lbl:"Mandat",fins:["fp_ent_man","fp_part"]}, virement:{lbl:"Virement",fins:["fp_ent_vir"]}, opco:{lbl:"OPCO",fins:["opco"]}};
 const SESS = {
@@ -1118,16 +1162,20 @@ let CARDS = [
  {id:"c1", kb:"coaching", offre:"coaching", dt:{prevue:"2026-09-05"}, title:"Awa Diallo",  closer:"Alex R.",  setter:"Sam T.", ard:"2026-08-08T19:14", fin:"fp_part",    col:"preparer", lieu:"Visio"},
  {id:"c2", kb:"coaching", offre:"coaching", title:"Nexa Digital",                          closer:"Yanis B.", setter:null,     ard:"2026-08-18T08:56", fin:"fp_ent_vir", col:"demande",  lieu:"Station F, Paris 13e"},
  /* facturation clients (stock existant) */
- {id:"f1", kb:"fact_cpf",  offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Hugo Martin",   fin:"cpf",        m:"1 650 €", src:"i6", col:"validee"},
- {id:"f2", kb:"fact_cpf",  offre:"n1", sess:"bordeaux", dt:{j1:"2026-06-20",j2:"2026-06-21",echeance:"2026-09-15"}, title:"Emma Bianchi", fin:"cpf", m:"1 650 €", col:"bibby", lieu:"Quai des Chartrons, Bordeaux"},
+ {id:"f1", kb:"fact_cpf",  offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Hugo Martin",   fin:"cpf",        m:"1 650 €", src:"i6", col:"validee", fac:{num:"F-2026-0731",envoi:null,paye:0}},
+ {id:"f2", kb:"fact_cpf",  offre:"n1", sess:"bordeaux", dt:{j1:"2026-06-20",j2:"2026-06-21",echeance:"2026-09-15"}, title:"Emma Bianchi", fin:"cpf", m:"1 650 €", col:"bibby", lieu:"Quai des Chartrons, Bordeaux", fac:{num:"F-2026-0708",envoi:"2026-08-11T14:20",paye:0}},
  {id:"f3", kb:"fact_opco", offre:"n1", sess:"bordeaux", dt:{j1:"2026-09-26",j2:"2026-09-27",echeance:"2026-10-27"}, title:"Hôtel du Parc", fin:"opco", m:"1 650 €", src:"i5", col:"raf"},
  {id:"f4", kb:"fact_fp",   offre:"n1", sess:"paris",    dt:{j1:"2026-09-12",j2:"2026-09-13",echeance:"2026-10-28"}, title:"Karim Benali",  fin:"fp_part", m:"1 650 € en 3 fois", src:"i2", col:"attente",
-   ech:[["Échéance 1/3 · 550 € · 28/08",1],["Échéance 2/3 · 550 € · 28/09",0],["Échéance 3/3 · 550 € · 28/10",0]]},
+   fac:{num:"F-2026-0512",envoi:"2026-08-01T09:12",paye:0},
+   ech:[{n:"1/3",m:550,d:"2026-08-28",st:"ok"},{n:"2/3",m:550,d:"2026-09-28",st:""},{n:"3/3",m:550,d:"2026-10-28",st:""}]},
+ {id:"f9", kb:"fact_fp",   offre:"n2", dt:{j1:"2026-07-04",j2:"2026-07-05",echeance:"2026-08-04"}, title:"ACME Conseil", fin:"fp_ent_vir", m:"1 650 € · avoir émis", col:"lost", lieu:"Station F, Paris 13e", fac:{num:"F-2026-0466",envoi:"2026-07-06T10:30",paye:0,avoir:"AV-2026-0031"}},
  {id:"f5", kb:"fact_fp",   offre:"n1", sess:"bordeaux", dt:{j1:"2026-09-26",j2:"2026-09-27",echeance:"2026-10-27"}, title:"ACME Conseil",  fin:"fp_ent_vir", m:"1 650 €", src:"i3", col:"raf"},
  {id:"f6", kb:"fact_fp",   offre:"n1", sess:"paris",    dt:{j1:"2026-09-12",j2:"2026-09-13",echeance:"2026-09-10"}, title:"BTP Sud",       fin:"fp_ent_man", m:"4 950 € en 2 fois", src:"i4", col:"retard",
-   ech:[["Échéance 1/2 · 2 475 € · 10/08 · refusée",0],["Échéance 2/2 · 2 475 € · 10/09",0]]},
+   fac:{num:"F-2026-0501",envoi:"2026-07-28T16:40",paye:0},
+   ech:[{n:"1/2",m:2475,d:"2026-08-10",st:"ko"},{n:"2/2",m:2475,d:"2026-09-10",st:""}]},
  {id:"f8", kb:"fact_fp",   offre:"coaching", dt:{prevue:"2026-09-05",echeance:"2026-09-22"}, title:"Awa Diallo", fin:"fp_part", m:"1 200 € en 1 fois", src:"c1", col:"attente", lieu:"Visio",
-   ech:[["Échéance 1/1 · 1 200 € · 22/08",0]]},
+   fac:{num:"F-2026-0522",envoi:"2026-08-08T11:05",paye:0},
+   ech:[{n:"1/1",m:1200,d:"2026-08-22",st:""}]},
  /* facturation externes */
  {id:"f7", kb:"fact_frm", offre:"n1", sess:"paris", dt:SESS.paris.dt, title:"Sarah K.", frm:"Sarah K.", m:"1 400 €", col:"valider"},
  {id:"m1", kb:"fact_com", title:"Alex R. · août 2026", who:"Alex R.", mois:"Août 2026", fin:"closer", col:"valider",
@@ -1170,7 +1218,7 @@ CARDS.push(
 /* Fiches : fausses identités reliées aux cartes */
 const CLIENTS=[
  {id:"cl_acme",nom:"ACME Conseil",type:"Entreprise",adr:"5 rue de la Bourse, 33000 Bordeaux",vat:"FR 42 842391557",resp:{n:"Jean Petit",e:"jean.petit@acme.fr",t:"06 78 41 20 19",app:1},siret:"842 391 557 00023",ref:"Jean Petit · jean.petit@acme.fr",mode:"Virement",mandat:null,
-  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_ent_vir",factId:"f5",inscId:"i3"}],apprenants:["ap_jean"],docs:["Devis DE-2026-0412 · signé","Convention · signée","Facture FA-2026-0533 · émise","Certificat de réalisation · à venir"]},
+  ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_ent_vir",factId:"f5",inscId:"i3"},{lbl:"Formation N2 · annulée",m:"1 650 €",fin:"fp_ent_vir",factId:"f9",inscId:null,note:"apprenant absent le J1, avoir émis le 4 août"}],apprenants:["ap_jean"],docs:["Devis DE-2026-0412 · signé","Convention · signée","Facture FA-2026-0533 · émise","Certificat de réalisation · à venir"]},
  {id:"cl_btp",nom:"BTP Sud",type:"Entreprise",note:"Première échéance refusée (provision insuffisante). Léa a demandé un rejeu après le 15/09, à confirmer par le closeur.",adr:"120 route de Narbonne, 31400 Toulouse",vat:"FR 17 512887224",resp:{n:"Léa Costa",e:"l.costa@btpsud.fr",t:"06 51 88 34 02",app:1},siret:"512 887 224 00011",ref:"Léa Costa · l.costa@btpsud.fr",mode:"Mandat SDD",mandat:"Actif · 2 échéances (1 refusée)",
   ventes:[{lbl:"Formation N1 · 3 apprenants",m:"4 950 €",fin:"fp_ent_man",factId:"f6",inscId:"i4"}],apprenants:["ap_lea"],docs:["Devis DE-2026-0388 · signé","Convention · signée","Facture FA-2026-0501 · émise","Certificat de réalisation · à venir"]},
  {id:"cl_hotel",nom:"Hôtel du Parc",type:"Entreprise (OPCO)",note:"OPCO AKTO, dossier déposé par Sofia le 12/08. La DRH veut la facture au nom du groupe, pas de l'hôtel : vérifier le SIRET avant génération.",adr:"2 esplanade des Quinconces, 33000 Bordeaux",vat:"FR 88 399120448",resp:{n:"Sofia Ricci",e:"s.ricci@hotelduparc.fr",t:"07 81 55 60 43",app:1},siret:"399 120 448 00034",ref:"Sofia Ricci · s.ricci@hotelduparc.fr",mode:"OPCO (AKTO)",mandat:null,
@@ -1256,7 +1304,7 @@ function allDone(card){
   const tks=tasksFor(card,card.col);
   if(!tks.length) return false;
   return tks.every((tk,i)=>{
-    if(tk.sub && card.ech) return card.ech.every(e=>e[1]);
+    if(tk.sub && card.ech) return card.ech.every(e=>e.st==="ok");
     return S.checks[key(card,card.col,i)];
   });
 }
@@ -1317,10 +1365,10 @@ function clickTask(cardId,colId,i){
   if(colId===card.col) tryAdvance(card);
   render();
 }
-function clickEch(cardId,j){
+function clickEch(cardId,j){ /* réservé : les échéances se pilotent depuis le bloc paiements */
   const card=CARDS.find(c=>c.id===cardId);
-  card.ech[j][1]=card.ech[j][1]?0:1;
-  if(card.ech.every(e=>e[1])) toast(`Toutes les échéances encaissées : <b>${card.title}</b>`);
+  card.ech[j].st=card.ech[j].st==="ok"?"":"ok";
+  if(card.ech.every(e=>e.st==="ok")) toast(`Toutes les échéances encaissées : <b>${card.title}</b>`);
   tryAdvance(card);
   render();
 }
@@ -1335,6 +1383,63 @@ function unlockCol(kb,colId){
 function badge(fin){ if(!fin||!FIN[fin]) return ""; const f=FIN[fin]; return `<span class="badge b-${f.cls}">${f.lbl}</span>` }
 function badgeOffre(offre){ if(!offre) return ""; return `<span class="badge b-offre">${OFFRES[offre]||offre}</span>` }
 function isFact(card){ return card.kb.startsWith("fact_"); }
+/* ── argent : facture Qonto, échéances, virements reçus ── */
+function amtOf(str){ const m=String(str||"").match(/([\d\s\u00a0]+)\s*€/); return m?parseInt(m[1].replace(/\D/g,""),10)||0:0; }
+function eur(n){ return n.toLocaleString("fr-FR",{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2})+" €"; }
+function fmtJour(iso){ return new Date(iso+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"short"}); }
+function facUrl(f){ return "https://app.qonto.com/invoicing/client-invoices/"+f.num; }
+function facFld(card){
+  const f=card.fac;
+  if(!f) return `<span class="muted">Pas encore générée</span>`;
+  const env=f.envoi?`<span class="chip ok">Transmise le ${fmtDT(f.envoi)}</span>`:`<span class="chip warn">Non transmise</span>`;
+  const st=f.avoir?`<span class="chip warn">Avoir ${f.avoir}</span>`:(f.paye?`<span class="chip ok">Acquittée</span>`:`<span class="chip">Non acquittée</span>`);
+  return `<div class="facline"><a class="ilink" href="${facUrl(f)}" target="_blank" rel="noopener">${f.num}</a>${env}${st}</div>`;
+}
+function finFld(card){
+  const cur=FIN[card.fin]?FIN[card.fin].lbl:"";
+  if(S.editFin!==card.id) return `<span class="facline">${cur}<a class="ilink" style="font-size:11px" data-finedit="${card.id}">Modifier</a></span>`;
+  const opts=modesForOffre(card.offre||"n1");
+  return `<span class="facline"><select class="edin" id="finsel" style="max-width:180px">${opts.map(m=>`<option value="${m}" ${m===card.fin?"selected":""}>${FIN[m].lbl}</option>`).join("")}</select><button class="btn-xs p" data-finsave="${card.id}">Enregistrer</button><button class="btn-xs" data-fincancel="1">Annuler</button></span>`;
+}
+/* le bloc paiements s'affiche sous la première tâche de constat de paiement de l'étape */
+function payKind(card,tk){
+  if(!isFact(card)||card.kb==="fact_frm"||card.kb==="fact_com") return null;
+  const l=tk.t.toLowerCase();
+  if(l.includes("edof vers bibby")) return null;
+  if(tk.sub) return "ech";
+  if(/constate le paiement|constate le règlement|encaisse|rejeu/.test(l)) return card.ech?"ech":"vir";
+  return null;
+}
+function payPanel(card){
+  const tot=amtOf(card.m), f=card.fac, enc=card.enc||[];
+  const recu = card.ech ? card.ech.filter(e=>e.st==="ok").reduce((a,e)=>a+e.m,0) : enc.reduce((a,e)=>a+e.m,0);
+  const reste=Math.max(0,tot-recu);
+  let h=`<div class="paypanel"><div class="pph"><span class="ttl">Paiements</span>`
+    +(f?`<span>facture <a class="ilink" href="${facUrl(f)}" target="_blank" rel="noopener">${f.num}</a> · ${eur(tot)}</span>`:`<span>facture pas encore générée · ${eur(tot)}</span>`)
+    +`<span class="rest ${reste?"":"ok"}">${reste?"Reste dû "+eur(reste):"Soldée"}</span></div>`;
+  if(card.ech){
+    h+=`<table class="paytbl">`+card.ech.map((e,j)=>`<tr><td class="lib">Échéance ${e.n}</td><td class="dt">${fmtJour(e.d)}</td><td class="amt">${eur(e.m)}</td><td class="act">`
+      +(e.st==="ok"?`<span class="chip ok">Encaissée</span>`
+        :e.st==="ko"?`<span class="chip" style="background:var(--err-50);color:var(--err)">Refusée</span> <button class="btn-xs" data-rejeu="${card.id}::${j}">Rejouer</button>`
+        :`<span class="chip">À venir</span>`)+`</td></tr>`).join("")+`</table>`;
+  } else if(enc.length){
+    h+=`<table class="paytbl">`+enc.map(e=>`<tr><td class="dt">${fmtJour(e.d)}</td><td class="lib">${e.lib}<div style="color:var(--ink-400);font-size:10.5px">${e.ref||""}</div></td><td class="amt">+${eur(e.m)}</td><td class="act"><span class="chip ok">Rapproché</span></td></tr>`).join("")+`</table>`;
+  } else {
+    h+=`<div class="paynone">Aucun virement rattaché à cette facture pour l'instant.</div>`;
+  }
+  if(reste>0&&!card.ech) h+=rapBlock(card);
+  return h+`</div>`;
+}
+function rapBlock(card){
+  const q=(S.rapQ||"").toLowerCase();
+  const list=QONTO_ENC.filter(t=>!q||[t.lib,t.ref,String(t.m)].join(" ").toLowerCase().includes(q));
+  return `<details class="payrap" data-k="rap"${S.rapOpen?" open":""}><summary><span class="chev">▸</span>Rapprocher un virement reçu <span class="sub2">${QONTO_ENC.length} virement(s) sans facture sur le compte Qonto</span></summary>
+    <div class="payq">${ICO.search}<input type="text" data-fq="rapQ" value="${(S.rapQ||"").replace(/"/g,"&quot;")}" placeholder="Nom, référence, montant…"></div>
+    <table class="paytbl">`
+    +(list.map(t=>`<tr><td class="dt">${fmtJour(t.d)}</td><td class="lib">${t.lib}<div style="color:var(--ink-400);font-size:10.5px">${t.ref}</div></td><td class="amt">+${eur(t.m)}</td><td class="act"><button class="btn-xs p" data-rap="${card.id}::${t.id}">Rapprocher</button></td></tr>`).join("")
+      ||`<tr><td class="paynone" colspan="4">Aucun virement ne correspond à cette recherche.</td></tr>`)
+    +`</table><div class="paynone" style="padding-top:6px">Le rapprochement part dans Qonto : c'est lui qui tamponne la facture acquittée, DELIV'IA relit ensuite son statut.</div></details>`;
+}
 function cardBadge(card){
   if(card.kb==="fact_com") return "";
   if(isFact(card)) return badgeOffre(card.offre);
@@ -1347,7 +1452,7 @@ function evRow(ev,state){ /* state : done | now | later */
 }
 function taskHtml(card,colId,i,tk,ghost){
   const k=key(card,colId,i);
-  const done=tk.sub&&card.ech ? card.ech.every(e=>e[1]) : !!S.checks[k];
+  const done=tk.sub&&card.ech ? card.ech.every(e=>e.st==="ok") : !!S.checks[k];
   const can=canCheck(tk);
   let h="";
   if(tk.grp) h+=`<div class="tgrp">${tk.grp}</div>`;
@@ -1355,8 +1460,9 @@ function taskHtml(card,colId,i,tk,ghost){
     <span class="box"></span>
     <span><span class="lbl">${tk.t}</span>${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
   </div>`;
-  if(tk.sub&&card.ech){
-    h+=`<div class="sub">`+card.ech.map((e,j)=>`<div class="task other ${e[1]?"done":""}" style="cursor:default"><span class="box"></span><span class="lbl" style="font-size:11px">${e[0]}</span></div>`).join("")+`</div>`;
+  if(payKind(card,tk)){
+    const all=tasksFor(card,colId);
+    if(all.findIndex(x=>payKind(card,x))===i) h+=payPanel(card);
   }
   const ev = tk.ev || ((tk.fx && (!tk.fxfin || tk.fxfin.includes(card.fin))) ? tk.fx : null);
   if(ev) h+=evRow(ev, done?"done":"now");
@@ -1376,7 +1482,7 @@ function openDateStr(card,col){
   return "le "+dt.toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
 }
 function taskState(card,colId,i,tk){
-  if(tk.sub&&card.ech) return card.ech.every(e=>e[1]);
+  if(tk.sub&&card.ech) return card.ech.every(e=>e.st==="ok");
   return !!S.checks[key(card,colId,i)];
 }
 /* inscrits réels / en cours (dont réservations) / capacité d'une session */
@@ -1548,12 +1654,12 @@ function infoFor(card){
   rows.push(["Client",clName||card.title]);
   if(apsHtml.length) rows.push([aps.length>1?"Apprenants · "+aps.length:"Apprenant",apsHtml.join(", "),aps.length>2?"wide":""]);
   else rows.push(["Apprenants","À renseigner par le client"]);
-  if(isFact(card)) rows.push(["Mode de paiement",FIN[card.fin]?FIN[card.fin].lbl:""]);
+  if(isFact(card)) rows.push(["Mode de paiement",finFld(card)]);
   else rows.push(["Offre",OFFRES[card.offre]+(card.nb?" · "+card.nb:"")]);
   rows.push(["Date",fmtDates(card)||"À caler"],["Lieu",card.lieu||"À confirmer"]);
   const src = card.src ? CARDS.find(c=>c.id===card.src) : card;
   rows.push(["Closeur / Setteur",[src&&src.closer,src&&src.setter].filter(Boolean).join(" / ")||"Sans setteur"]);
-  if(isFact(card)) rows.push(["Montant",card.m]);
+  if(isFact(card)) rows.push(["Montant",card.m],["Facture",facFld(card)]);
   else rows.push(["Transmission ARD",card.ard?fmtDT(card.ard):null]);
   return rows;
 }
@@ -1617,8 +1723,9 @@ function boardHtml(kbId, cards, opts={}){
   for(const col of kb.cols){
     if(col.fin && opts.fin && !col.fin.includes(opts.fin)) continue;
     const inCol=cards.filter(c=>c.col===col.id);
-    h+=`<div class="col"><div class="col-h"><span class="pill"></span><h3>${col.label}</h3><span class="n">${inCol.length}</span></div>`;
+    h+=`<div class="col ${col.sep?"sepcol":""}"><div class="col-h"><span class="pill"></span><h3>${col.label}</h3><span class="n">${inCol.length}</span></div>`;
     if(col.note) h+=`<div class="col-open">${col.note}</div>`;
+    if(col.bulk&&inCol.length) h+=`<div class="colbulk">`+col.bulk.map(([lbl,kind])=>`<button class="bulkbtn" data-bulk="${kind}::${inCol.length}">${lbl}<span class="n">${inCol.length}</span></button>`).join("")+`</div>`;
     const render1=c=>cardHtml(c,col,opts);
     if(opts.aPrendre && col.id==="shotgun") h+=pointerCard();
     else if(opts.sections && col.id==="valider"){
@@ -2059,6 +2166,18 @@ function reserveModalHtml(){
     <div class="ifld wide"><div class="k">Durée</div><div class="seg"><button class="on">48 h</button><button>24 h</button><button>14 jours (RAC France Travail)</button><button>Autre</button></div></div>
   </div></div><div class="mactions"><button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p" data-reserveconfirm="${c.id}">Bloquer la place</button></div></div></div></div>`;
 }
+function bibbyModalHtml(){
+  const c=CARDS.find(x=>x.id===S.bibbyFor); if(!c) return "";
+  const piece=(lbl,ok,sub,btn)=>`<div class="mpanel drow"><div><div class="tt">${lbl}</div><div class="sm">${sub}</div></div><div class="dbtns">${ok?`<span class="chip ok">Prête</span>`:(btn?`<button class="btn btn-s" data-bibbydepot="1">${btn}</button>`:`<span class="chip warn">Manquante</span>`)}</div></div>`;
+  return `<div id="modal2"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Dossier Bibby</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">${c.title} · ${c.fac?c.fac.num:"facture à générer"} · ${c.m} · affacturage de la créance CPF</div></div>
+  <div class="mbody">
+   ${piece("Facture Qonto au montant CDC",!!c.fac,c.fac?c.fac.num+" · générée automatiquement à la validation EDOF":"à générer")}
+   ${piece("Émargements signés",true,"générés depuis Qualiobee, un fichier par journée")}
+   ${piece("Dossier EDOF complet",!!S.bibbyEdof,S.bibbyEdof?"export déposé le 23 août":"export à déposer depuis EDOF (fichier .xls)","Déposer l'export EDOF")}
+   ${piece("Certificat de réalisation",true,"généré par Qualiobee")}
+   <div class="mactions"><button class="btn btn-s" data-close2="1">Fermer</button><button class="btn btn-p" data-bibbysend="${c.id}">Valider et envoyer à Bibby</button></div>
+  </div></div></div>`;
+}
 function switchModalHtml(){
   const i=CARDS.find(x=>x.id===S.switchFor); if(!i) return "";
   const targets=Object.entries(SESS).filter(([k])=>k!==i.sess);
@@ -2301,6 +2420,7 @@ function render(){
   if(S.newSess) document.body.insertAdjacentHTML("beforeend", newSessionModalHtml());
   if(S.demandesFor) document.body.insertAdjacentHTML("beforeend", demandesModalHtml());
   if(S.switchFor) document.body.insertAdjacentHTML("beforeend", switchModalHtml());
+  if(S.bibbyFor) document.body.insertAdjacentHTML("beforeend", bibbyModalHtml());
   if(S.reserveFor) document.body.insertAdjacentHTML("beforeend", reserveModalHtml());
   if(S.lostFor) document.body.insertAdjacentHTML("beforeend", lostModalHtml());
   if(S.modal){
@@ -2322,20 +2442,29 @@ document.addEventListener("click",e=>{
   if(e.target.id==="tplmodal"||e.target.closest("[data-closetpl]")){S.tpl=null;document.getElementById("tplmodal")?.remove();return}
   const tplBtn=e.target.closest("[data-tpl]");
   if(tplBtn){e.stopPropagation();S.tpl=tplBtn.dataset.tpl;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
+  const bk=e.target.closest("[data-bulk]");
+  if(bk){e.stopPropagation();const [kind,n]=bk.dataset.bulk.split("::");
+    if(kind==="bibby") toast(`<b>Envoi groupé à Bibby</b> : ${n} dossier(s) complets, facture + émargements signés + export EDOF.`);
+    else if(kind==="edof") toast(`<b>Import des exports EDOF</b> : dépôt du fichier exporté depuis EDOF, les dossiers sont rapprochés automatiquement.`);
+    else toast(`<b>Relance groupée</b> : ${n} dossier(s) Bibby en retard.`);
+    return}
   const tb=e.target.closest("[data-tbtn]");
   if(tb){e.stopPropagation();const [c,col,i]=tb.dataset.tbtn.split("::");const cd=CARDS.find(x=>x.id===c);const tk=tasksFor(cd,col)[parseInt(i)];
     if(tk.kind2==="demandes"){S.demandesFor=c;S.demandesTask=[c,col,parseInt(i)];render();return}
+    if(tk.kind2==="bibby"){S.bibbyFor=c;S.bibbyTask=[c,col,parseInt(i)];render();return}
     if(!taskState(cd,col,parseInt(i),tk)){toast(`<b>${tk.btn}</b> : ${cd.title}`);clickTask(c,col,parseInt(i));}return}
   const ms=e.target.closest(".msec2>summary");
   if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
-  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;document.getElementById("modal2")?.remove();return}
+  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;document.getElementById("modal2")?.remove();return}
+  const rapS=e.target.closest(".payrap>summary");
+  if(rapS){S.rapOpen=!rapS.parentElement.open}
   if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;S.newSess=null;document.getElementById("modal")?.remove();return}
   const acc=e.target.closest("details.acc>summary, details.pvmonth>summary");
   if(acc){const d=acc.parentElement;S.openAcc[d.dataset.acc]=!d.open}
   if(e.target.closest("[data-sopen]")){openSearch();return}
   if(e.target.closest("[data-sclose]")){closeSearch();return}
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
-  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -2376,6 +2505,39 @@ document.addEventListener("click",e=>{
     S.fSessView="kanban";render();return}
   if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===cd.sess);if(fs)fs.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
+  if(t.dataset.finedit){e.stopPropagation();S.editFin=t.dataset.finedit;render();return}
+  if(t.dataset.fincancel){e.stopPropagation();S.editFin=null;render();return}
+  if(t.dataset.finsave){e.stopPropagation();
+    const card=CARDS.find(c=>c.id===t.dataset.finsave), v=document.getElementById("finsel").value;
+    if(v!==card.fin){
+      const kb = v==="cpf"?"fact_cpf" : v==="opco"?"fact_opco" : "fact_fp";
+      card.fin=v;
+      if(kb!==card.kb){ card.kb=kb; card.col=KB[kb].cols.find(c=>!c.skip).id; }
+      const mandat=["fp_part","fp_ent_man"].includes(v);
+      if(mandat&&!card.ech) card.ech=[{n:"1/1",m:amtOf(card.m),d:(card.dt&&card.dt.echeance)||"2026-09-30",st:""}];
+      if(!mandat) card.ech=null;
+      S.fFact=factFilterFor(card);
+      toast(`Mode de paiement de <b>${card.title}</b> : ${FIN[v].lbl}. La carte suit désormais le rail ${FACT_VIEWS[S.fFact]?FACT_VIEWS[S.fFact].lbl:S.fFact}.`);
+    }
+    S.editFin=null;render();return}
+  if(t.dataset.rap){e.stopPropagation();
+    const [cid,txid]=t.dataset.rap.split("::");
+    const card=CARDS.find(c=>c.id===cid), ix=QONTO_ENC.findIndex(x=>x.id===txid);
+    if(ix<0) return; const tx=QONTO_ENC[ix];
+    card.enc=(card.enc||[]).concat([tx]); QONTO_ENC.splice(ix,1);
+    if(card.fac&&card.enc.reduce((a,e)=>a+e.m,0)>=amtOf(card.m)) card.fac.paye=1;
+    toast(`Virement de <b>${eur(tx.m)}</b> rapproché${card.fac?" à la facture "+card.fac.num:""} : l'information part dans Qonto, qui tamponne la facture acquittée.`);
+    render();return}
+  if(t.dataset.rejeu){e.stopPropagation();
+    const [cid,j]=t.dataset.rejeu.split("::");
+    const card=CARDS.find(c=>c.id===cid);
+    toast(`Prélèvement de l'échéance <b>${card.ech[parseInt(j)].n}</b> rejoué : réponse de la banque sous 3 jours ouvrés.`);
+    return}
+  if(t.dataset.bibbydepot){e.stopPropagation();S.bibbyEdof=1;toast(`Export EDOF déposé : le dossier Bibby est complet.`);render();return}
+  if(t.dataset.bibbysend){e.stopPropagation();
+    const [c,col,i]=S.bibbyTask; S.bibbyFor=null;
+    toast(`Dossier envoyé à Bibby : <b>${CARDS.find(x=>x.id===c).title}</b>. Réponse attendue sous 48 h.`);
+    clickTask(c,col,i);return}
   if(t.dataset.switch){S.switchFor=t.dataset.switch;render();return}
   if(t.dataset.switchto){const [iid,k]=t.dataset.switchto.split("::");const i=CARDS.find(x=>x.id===iid);i.movedFrom=i.sess;i.sess=k;i.dt=SESS[k].dt;i.lieu=SESS[k].lieu;S.switchFor=null;toast(`<b>${i.title}</b> déplacée vers ${SESS[k].lbl}.`);render();return}
   if(t.dataset.lost){S.lostFor=t.dataset.lost;render();return}
