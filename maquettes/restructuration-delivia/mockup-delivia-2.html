@@ -2514,7 +2514,7 @@ function ficheSessionHtml(id){
       h+=`<tr><td>${i.title}<div class="sm">Réservée jusqu'au ${fmtDT(i.expires)}${i.resNote?" · "+i.resNote:""}</div></td><td><span class="fintxt">À définir</span></td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td class="acts"><a class="ilink" data-prolong="${i.id}">Prolonger</a><a class="ilink danger" data-cancelres="${i.id}">Annuler</a></td></tr>`;
       return;
     }
-    h+=`<tr class="${g===2||g===3?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}${moved?`<div class="sm">Déplacée vers ${SESS[i.sess].lbl}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><a class="ilink" data-open="${i.id}">Ouvrir la carte</a></td></tr>`;
+    h+=`<tr class="${g===2||g===3?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}${moved?`<div class="sm">Déplacée vers ${SESS[i.sess].lbl}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><a class="ilink" data-open="${i.id}">${colLabel(i)}</a></td></tr>`;
   });
   if(!inscs.length) h+=`<tr><td colspan="4" class="muted">Aucun apprenant inscrit.</td></tr>`;
   h+=`</tbody></table></div></div>`;
