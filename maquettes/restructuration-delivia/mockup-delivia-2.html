@@ -458,11 +458,62 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal .mnote .notes-ta:focus{background:#f1f5f9;box-shadow:none}
 #modal .lines .ln{font-size:12.5px;padding:4px 2px}
 #modal .openline{border-radius:8px}
+/* ── bande maquette, voir comme, recherche, menu utilisateur, états des cartes ── */
+#mockband{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:12px;padding:6px 16px;background:#0f172a;color:#e2e8f0;font-size:11.5px;border-bottom:2px dashed #475569}
+#mockband .mb-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:#fbbf24;color:#0f172a;border-radius:999px;padding:2px 8px}
+#mockband .mb-txt{color:#cbd5e1;flex:1}
+#mockband #roleWrap{margin-left:auto}
+#mockband .rolesel{background:rgba(255,255,255,.1)}
+#mockband .rolesel button{color:#cbd5e1}
+#mockband .rolesel button.active{background:#fff;color:#0f172a}
+#mockband .lbl{color:#94a3b8}
+#sidebar{top:34px;height:calc(100vh - 34px)}
+#topbar{top:34px}
+#topbar{gap:16px}
+#gsearch{position:relative;flex:1;max-width:460px;margin:0 auto;display:flex;align-items:center;gap:8px;background:#f1f5f9;border-radius:9px;padding:6px 10px;color:var(--ink-400)}
+#gsearch input{flex:1;border:none;background:transparent;font:inherit;font-size:13px;color:var(--ink-900);outline:none;min-width:0}
+#gsearch input::placeholder{color:var(--ink-400)}
+#gsearch .kbd{font-size:10px;color:var(--ink-400);border:1px solid var(--line-2);border-radius:4px;padding:0 5px;background:#fff}
+#gsearchRes{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border-radius:12px;box-shadow:0 16px 40px rgb(15 23 42/.16),0 0 0 1px rgb(15 23 42/.05);padding:6px;z-index:80;max-height:360px;overflow-y:auto}
+#gsearchRes.on{display:block}
+#gsearchRes .grp{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);padding:8px 10px 4px}
+#gsearchRes .it{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:8px;font-size:13px;color:var(--ink-800);cursor:pointer}
+#gsearchRes .it:hover{background:#f1f5f9}
+#gsearchRes .it .sm{margin-left:auto;font-size:11px;color:var(--ink-400)}
+#gsearchRes .none{padding:12px;font-size:12.5px;color:var(--ink-400)}
+#topright{display:flex;align-items:center;gap:8px}
+.vcbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-2);border-radius:8px;padding:5px 10px;font-size:12.5px;font-weight:500;color:var(--ink-700);background:#fff;position:relative}
+.vcbtn:hover{background:#f8fafc}
+.vcmenu{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#fff;border-radius:10px;box-shadow:0 12px 32px rgb(15 23 42/.16),0 0 0 1px rgb(15 23 42/.05);padding:6px;min-width:170px;z-index:80}
+.vcmenu.on{display:block}
+.vcmenu button{display:block;width:100%;text-align:left;padding:7px 10px;border-radius:7px;font-size:13px;color:var(--ink-800)}
+.vcmenu button:hover{background:#f1f5f9}
+#visionbanner:empty{display:none}
+#visionbanner{margin:14px 24px 0;background:#fffbeb;border:1px solid #fde68a;color:#92400e;border-radius:10px;padding:9px 14px;font-size:12.5px;display:flex;align-items:center;gap:10px}
+#visionbanner b{font-weight:600}
+#visionbanner button{margin-left:auto;font-size:12px;font-weight:600;color:#92400e;border:1px solid #fcd34d;border-radius:7px;padding:4px 9px;background:#fff}
+#usermenu{margin-top:auto;border-top:1px solid var(--line);padding:10px 12px 12px;display:flex;align-items:center;gap:9px}
+#usermenu .avat{width:32px;height:32px;font-size:11px;border-radius:9px}
+#usermenu .un{font-size:12.5px;font-weight:600;color:var(--ink-900);line-height:1.2}
+#usermenu .ue{font-size:11px;color:var(--ink-400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
+#usermenu .out{margin-left:auto;color:var(--ink-400);width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center}
+#usermenu .out:hover{background:#f1f5f9;color:var(--err)}
+/* états des cartes : noir = à moi, gris = à quelqu'un d'autre ou automatique, cadenas = attente d'une date */
+.card.st-other .t{color:var(--ink-500);font-weight:500}
+.card.st-other{background:#fbfcfd}
+.card.st-other .nx{color:var(--ink-400)}
+.card.st-other .badge{opacity:.75}
+.card.st-mine .t{color:var(--ink-900);font-weight:600}
+.card.st-mine .nx{color:var(--ink-800)}
+.card.st-locked .t{color:var(--ink-500)}
+.card.over{box-shadow:0 0 0 1.5px var(--err),var(--sh-carte)}
+.badge.b-over{background:var(--err-50);color:var(--err);font-weight:600}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-@media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}}
+@media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}#gsearch{display:none}}
 </style>
 </head>
 <body>
+<div id="mockband"><span class="mb-tag">Maquette</span><span class="mb-txt">Cette bande n'existe que dans la maquette : elle change la vision pour explorer DELIV'IA 2.0. En dessous, l'écran est celui de la version finale.</span><div id="roleWrap"><span class="lbl">Vision</span><div class="rolesel" id="roleSel"></div></div></div>
 <div id="app">
   <aside id="sidebar">
     <div class="brand">
@@ -475,15 +526,15 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
       <nav id="appTabs"></nav>
     </div>
     <nav id="subnav"></nav>
-      </aside>
+    <div id="usermenu"></div>
+  </aside>
   <div id="main">
     <header id="topbar">
       <div id="crumb"></div>
-      <div id="roleWrap">
-        <span class="lbl">Vision</span>
-        <div class="rolesel" id="roleSel"></div>
-      </div>
+      <div id="gsearch"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="gsearchIn" type="text" placeholder="Rechercher un apprenant, un client, une session…" autocomplete="off"><span class="kbd">⌘K</span><div id="gsearchRes"></div></div>
+      <div id="topright"></div>
     </header>
+    <div id="visionbanner"></div>
     <main id="content"></main>
   </div>
 </div>
@@ -502,6 +553,7 @@ const ROLES = {admin:"Admin", closer:"Closeur", formateur:"Formateur", setter:"S
 const ROLE_APPS = {admin:["delivia","apprenant","dash"], closer:["delivia","dash"], formateur:["delivia","apprenant"], setter:["delivia","dash"]};
 const ROLE_OWNS = {admin:"fia", closer:"closer", formateur:"formateur", setter:"setter"};
 /* acteurs : qui FAIT la tâche (le libellé commence toujours par lui) */
+const USERS = {admin:{n:"Côme Aubert",e:"come@franceia.com"}, closer:{n:"Alex Rivière",e:"alex@franceia.com"}, formateur:{n:"Sarah Koné",e:"sarah.kone@gmail.com"}, setter:{n:"Sam Tessier",e:"sam@franceia.com"}};
 const WHO = {fia:"Admin France IA", closer:"Closeur", formateur:"Formateur", client:"Client", setter:"Setteur", auto:"DELIV'IA", ard:"ARD"};
 /* événements clés du process (affichés dans l'enchaînement, entre deux tâches) */
 const EV = {
@@ -897,11 +949,11 @@ const SESS = {
 };
 let CARDS = [
  /* sessions N1/N2 : rail France IA + rail formateur (même session, deux cartes) */
- {id:"s1", kb:"session_fia", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"9/12", col:"demarree"},
+ {id:"s1", kb:"session_fia", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"13/12", over:1, col:"demarree"},
  {id:"s2", kb:"session_fia", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:SESS.bordeaux.lbl, lieu:SESS.bordeaux.lieu, frm:"Marc D.",  places:"4/12", col:"prete"},
  {id:"s3", kb:"session_fia", offre:"n1", sess:"lyon",     dt:SESS.lyon.dt,     title:SESS.lyon.lbl,     lieu:SESS.lyon.lieu,     frm:null,       places:"0/12", col:"brouillon"},
  {id:"s4", kb:"session_fia", offre:"n2", sess:"parisn2",  dt:SESS.parisn2.dt,  title:SESS.parisn2.lbl,  lieu:SESS.parisn2.lieu,  frm:null,       places:"2/12", col:"brouillon"},
- {id:"fs1",kb:"session_frm", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"9/12", col:"preparer", mine:1},
+ {id:"fs1",kb:"session_frm", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"13/12", over:1, col:"preparer", mine:1},
  {id:"fs2",kb:"session_frm", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:SESS.bordeaux.lbl, lieu:SESS.bordeaux.lieu, frm:"Sarah K.", places:"4/12", col:"shotgun", mine:1},
  /* inscriptions N1 / N2 */
  {id:"i1", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Marie Dupont",              closer:"Alex R.",  setter:"Sam T.", ard:"2026-08-11T10:42", fin:"cpf",        col:"attente"},
@@ -1004,7 +1056,7 @@ const APPRENANTS=[
 ];
 APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } });
 CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
-const S = {role:"admin", app:"delivia", tab:"inscription",
+const S = {role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
   fSession:"n1", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false};
 
@@ -1105,7 +1157,7 @@ function isFact(card){ return card.kb.startsWith("fact_"); }
 function cardBadge(card){
   if(card.kb==="fact_com") return "";
   if(isFact(card)) return badgeOffre(card.offre);
-  if(card.kb.startsWith("session")||card.kb==="intra_frm"||card.kb==="coaching_frm") return card.places?`<span class="badge b-neutral">${card.places} places</span>`:"";
+  if(card.kb.startsWith("session")||card.kb==="intra_frm"||card.kb==="coaching_frm") return card.places?`<span class="badge ${card.over?"b-over":"b-neutral"}">${card.places} places${card.over?" · surbooking":""}</span>`:"";
   return badge(card.fin);
 }
 function evRow(ev,state){ /* state : done | now | later */
@@ -1145,14 +1197,22 @@ function taskState(card,colId,i,tk){
   if(tk.sub&&card.ech) return card.ech.every(e=>e[1]);
   return !!S.checks[key(card,colId,i)];
 }
+function cardState(card,colId){
+  if(card.waiting) return "locked";
+  const tks=tasksFor(card,colId);
+  const nextTk=tks.find((tk,i)=>!taskState(card,colId,i,tk));
+  if(!nextTk) return "other";
+  return canCheck(nextTk) ? "mine" : "other";
+}
 function cardHtml(card, colDef, opts={}){
   const isGhost = opts.ghostCols && colDef.ghost;
   const tks=tasksFor(card,colDef.id);
+  const st=cardState(card,colDef.id);
   const factLink = isGhost ? findFactCard(card) : null;
   const done=tks.filter((tk,i)=>taskState(card,colDef.id,i,tk)).length;
   const nextTk=tks.find((tk,i)=>!taskState(card,colDef.id,i,tk));
   const lockInfo = card.waiting ? {c:KB[card.kb].cols.find(x=>x.id===card.waiting),pref:true} : null;
-  let h=`<div class="card ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${lockInfo?"haslock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
+  let h=`<div class="card st-${st} ${card.over?"over":""} ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${lockInfo?"haslock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
   if(lockInfo){
     const lc=lockInfo.c;
     h+=`<div class="lockstrip">🔒 <span>${lockInfo.pref?`<b>${lc.label}</b> · `:""}Ouverture ${openDateStr(card,lc)} <span class="dim">(${lc.open})</span></span></div>`;
@@ -1467,6 +1527,8 @@ function pageAPrendre(){
   return h;
 }
 const ICO={
+ eye:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+ out:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>',
  mail:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>',
  phone:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
  user:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
@@ -1790,6 +1852,12 @@ function render(){
     : ((groups.flatMap(g=>g[1]).find(t=>t[0]===S.tab)||["",""])[1]||"");
   $("#crumb").innerHTML=`${APPS[S.app].name}<span class="sep">/</span><span style="color:var(--ink-500);font-weight:500">${crumbEnd}</span>`;
   $("#roleSel").innerHTML=Object.entries(ROLES).map(([id,lbl])=>`<button class="${S.role===id?"active":""}" data-role="${id}">${lbl}</button>`).join("");
+  /* bouton Voir comme (réel : réservé aux admins), bannière de vision, menu utilisateur */
+  const realAdmin = S.realRole==="admin";
+  $("#topright").innerHTML = realAdmin && !S.voirComme ? `<div class="vcbtn" data-vcopen="1">${ICO.eye}Voir comme<div class="vcmenu" id="vcmenu"><button data-voircomme="closer">Closeur</button><button data-voircomme="formateur">Formateur</button><button data-voircomme="setter">Setteur</button></div></div>` : "";
+  $("#visionbanner").innerHTML = S.voirComme ? `<span>👁</span><span>Vision <b>${ROLES[S.voirComme]}</b> : tu vois DELIV'IA exactement comme ce rôle (navigation, pages, droits).</span><button data-vcback="1">Revenir en admin</button>` : "";
+  const U=USERS[S.realRole];
+  $("#usermenu").innerHTML=`<span class="avat">${initiales(U.n)}</span><div><div class="un">${U.n}</div><div class="ue">${U.e}</div></div><button class="out" data-logout="1" title="Déconnexion">${ICO.out}</button>`;
   /* content */
   let h="";
   if(S.app==="apprenant") h=pageApprenant();
@@ -1836,7 +1904,9 @@ document.addEventListener("click",e=>{
   if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;document.getElementById("modal")?.remove();return}
   const acc=e.target.closest("details.acc>summary");
   if(acc){const d=acc.parentElement;S.openAcc[d.dataset.acc]=!d.open}
-  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave]");
+  if(!e.target.closest("#gsearch")) $("#gsearchRes").classList.remove("on");
+  if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
+  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.fiche={t:ty,id:fid};S.app="delivia";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -1865,8 +1935,16 @@ document.addEventListener("click",e=>{
     return;
   }
   if(t.dataset.tab){S.tab=t.dataset.tab;S.fiche=null;render();return}
+  if(t.dataset.vcopen!==undefined){const m=document.getElementById("vcmenu"); if(m&&!e.target.closest("[data-voircomme]")) m.classList.toggle("on");}
+  if(t.dataset.voircomme){S.voirComme=t.dataset.voircomme; S.role=t.dataset.voircomme; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; if(S.role==="setter") S.tab="facturation"; S.fFact=S.role==="closer"?"virement":S.role==="setter"?"setteur":"cpf"; render(); return}
+  if(t.dataset.vcback){S.voirComme=null; S.role=S.realRole; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; S.fFact="cpf"; render(); return}
+  if(t.dataset.logout){toast("Déconnexion : retour à l'écran de connexion SSO France IA."); return}
+  if(t.dataset.gs){const [ty,id]=t.dataset.gs.split("::"); $("#gsearchIn").value=""; $("#gsearchRes").classList.remove("on");
+    if(ty==="apprenant"||ty==="client"){S.modal=null;S.fiche={t:ty,id};S.app="delivia";render();}
+    else if(ty==="session"){S.app="delivia";S.fiche=null;S.tab=S.role==="formateur"?"services":"sessions";S.modal=id;render();}
+    return}
   if(t.dataset.role){
-    S.role=t.dataset.role; S.app="delivia"; S.fiche=null; S.modal=null;
+    S.role=t.dataset.role; S.realRole=t.dataset.role; S.voirComme=null; S.app="delivia"; S.fiche=null; S.modal=null;
     S.tab=DELIVIA_TABS[S.role][0][1][0][0];
     if(S.role==="setter") S.tab="facturation";
     S.fFact = S.role==="closer"?"virement":S.role==="setter"?"setteur":"cpf";
@@ -1884,7 +1962,25 @@ document.addEventListener("click",e=>{
   if(t.dataset.open){S.modal=t.dataset.open;render();return}
 });
 document.addEventListener("input",e=>{const ta=e.target.closest("[data-note]");if(!ta)return;const o=CLIENTS.find(c=>c.id===ta.dataset.note)||APPRENANTS.find(a=>a.id===ta.dataset.note);if(o)o.note=ta.value;});
-document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;
+/* recherche globale */
+function gsearch(q){
+  q=q.trim().toLowerCase(); const box=$("#gsearchRes");
+  if(q.length<2){box.classList.remove("on");return}
+  const norm=x=>(x||"").toLowerCase();
+  const aps=APPRENANTS.filter(a=>norm(a.nom).includes(q)||norm(a.email).includes(q)).slice(0,5);
+  const cls=CLIENTS.filter(c=>norm(c.nom).includes(q)||norm(c.siret).includes(q)).slice(0,5);
+  const sess=CARDS.filter(c=>c.kb==="session_fia"&&(norm(c.title).includes(q)||norm(c.lieu).includes(q)||norm(c.frm).includes(q))).slice(0,5);
+  let h="";
+  if(aps.length) h+=`<div class="grp">Apprenants</div>`+aps.map(a=>`<div class="it" data-gs="apprenant::${a.id}"><span class="avat" style="width:22px;height:22px;font-size:9px;border-radius:999px">${initiales(a.nom)}</span>${a.nom}<span class="sm">${a.email}</span></div>`).join("");
+  if(cls.length) h+=`<div class="grp">Clients</div>`+cls.map(c=>`<div class="it" data-gs="client::${c.id}"><span class="avat" style="width:22px;height:22px;font-size:9px;border-radius:999px">${c.type.startsWith("Particulier")?initiales(c.nom):"🏢"}</span>${c.nom}<span class="sm">${c.type}</span></div>`).join("");
+  if(sess.length) h+=`<div class="grp">Sessions</div>`+sess.map(c=>`<div class="it" data-gs="session::${c.id}">📅 ${c.title}<span class="sm">${c.lieu}</span></div>`).join("");
+  box.innerHTML=h||`<div class="none">Aucun résultat pour « ${q} »</div>`; box.classList.add("on");
+}
+document.getElementById("gsearchIn").addEventListener("input",e=>gsearch(e.target.value));
+document.getElementById("gsearchIn").addEventListener("focus",e=>gsearch(e.target.value));
+document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();$("#gsearchIn").focus();return}
+  if(e.key!=="Escape")return;
+  $("#gsearchRes").classList.remove("on");
   if(S.tpl){S.tpl=null;document.getElementById("tplmodal")?.remove();return}
   if(S.modal){S.modal=null;document.getElementById("modal")?.remove()}});
 render();
