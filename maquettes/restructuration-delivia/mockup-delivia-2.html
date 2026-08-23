@@ -514,6 +514,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .fsearch{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:6px 10px;color:var(--ink-400);min-width:260px}
 .fsearch input{border:none;outline:none;font:inherit;font-size:13px;color:var(--ink-900);flex:1;background:transparent}
 .fsel{font:inherit;font-size:13px;color:var(--ink-700);background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:6px 10px}
+.duo{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:12px;align-items:start;margin-bottom:12px}
+.duo .fsec{margin-bottom:0}
+.duo .notes-ta{min-height:96px}
+@media (max-width:900px){.duo{grid-template-columns:1fr}}
 .tblwrap{overflow-x:auto;background:#fff;border-radius:12px;box-shadow:var(--sh-carte)}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
 .tbl th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;padding:11px 14px;border-bottom:1px solid var(--line-2)}
@@ -1466,7 +1470,9 @@ function infoFor(card){
     return rows;
   }
   if(card.kb.startsWith("session")){
-    rows.push(["Session",card.kb==="session_fia"?`<a class="ilink" data-fiche="session::${card.id}">${card.title}</a>`:card.title],["Offre",OFFRES[card.offre]],["Dates",fmtDates(card)],["Lieu",card.lieu],["Formateur",card.frm||"À confirmer"],["Inscrits",(()=>{const c=sessCounts(card);return `<b>${c.ins}</b> inscrit${c.ins>1?"s":""} · <b>${c.enc}</b> en cours · ${c.cap} places ${c.over?'<span class="badge b-over">Surbooking</span>':c.risk?'<span class="badge b-risk">Risque de surbooking</span>':""}`})()]);
+    rows.push(["Session",card.kb==="session_fia"?`<a class="ilink" data-fiche="session::${card.id}">${card.title}</a>`:card.title],["Offre",OFFRES[card.offre]],["Dates",fmtDates(card)]);
+    if(card.lieuJ2&&card.lieuJ2!==card.lieu) rows.push(["Lieu J1",card.lieu],["Lieu J2",card.lieuJ2]); else rows.push(["Lieu J1 et J2",card.lieu]);
+    rows.push(["Formateur",card.frm||"À confirmer"],["Inscrits",(()=>{const c=sessCounts(card);return `<b>${c.ins}</b> inscrit${c.ins>1?"s":""} · <b>${c.enc}</b> en cours · ${c.cap} places ${c.over?'<span class="badge b-over">Surbooking</span>':c.risk?'<span class="badge b-risk">Risque de surbooking</span>':""}`})()]);
     if(card.kb==="session_fia"){
       rows.push(["Lien Mon CPF",`<a class="ilink" data-copy="${card.cpfLink||""}">Copier le lien</a>`],["Lien Qualiobee",`<a class="ilink" href="${card.qlbLink||"#"}" target="_blank" rel="noopener">Ouvrir la session</a>`]);
       rows.push(["Identifiants techniques",`<span class="idchip">qualiobee_session_id · ${card.qlbId||"s_"+(card.id.replace(/\D/g,"")||"1")+"842"}</span> <span class="idchip">edof_session_id · ${card.edofId||"EDF-2026-0"+(card.id.replace(/\D/g,"")||"1")+"17"}</span> <span class="idchip">drive_folder_id · 1aQz${card.id}</span>`,"wide"]);
@@ -1919,10 +1925,9 @@ function ficheSessionHtml(id){
     ${fld("Lien Mon CPF",`<a class="ilink" data-copy="${c.cpfLink}">Copier le lien</a>`)}
     ${fld("Lien Qualiobee",`<a class="ilink" href="${c.qlbLink}" target="_blank" rel="noopener">Ouvrir la session</a>`)}
   </div></div>`;
-  /* section 2 : notes */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.file}Notes</div><textarea class="notes-ta" data-note="${c.id}">${c.note||""}</textarea></div>`;
-  /* section 3 : planification = la carte cliquable */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Planification <span class="n2">la carte ouvre le détail des tâches</span></div><div style="max-width:300px;margin-top:10px">${cardHtml(c,KB[c.kb].cols.find(x=>x.id===c.col),{})}</div></div>`;
+  /* sections 2 et 3 côte à côte : notes (large) et planification (la carte cliquable) */
+  h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Notes</div><textarea class="notes-ta" data-note="${c.id}">${c.note||""}</textarea></div>
+  <div class="fsec"><div class="sect-h">${ICO.cap}Planification <span class="n2">la carte ouvre le détail des tâches</span></div><div style="margin-top:10px">${cardHtml(c,KB[c.kb].cols.find(x=>x.id===c.col),{})}</div></div></div>`;
   /* section 4 : apprenants */
   const inscs=CARDS.filter(i=>i.kb==="insc"&&(i.sess===c.sess||i.movedFrom===c.sess)).map(i=>({i,g:i.movedFrom===c.sess?4:sessionStatusGroup(i)})).sort((a,b)=>a.g-b.g);
   const GL=["Inscrits","Réservations en cours (48 h)","Pas encore inscrits","Lost","Changés de session"];
