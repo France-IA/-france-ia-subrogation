@@ -598,6 +598,14 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .accrow.fixed{cursor:default;color:var(--ink-500)}
 .sw{display:inline-block;width:34px;height:20px;border-radius:999px;background:#cbd5e1;position:relative;flex-shrink:0;transition:background .15s;cursor:pointer;vertical-align:middle}
 .swrow{display:flex;align-items:center;gap:10px}
+.closegrid{display:flex;flex-direction:column;gap:2px}
+.closerow{display:flex;align-items:center;gap:12px;padding:7px 2px;border-top:1px solid var(--line);font-size:13px}
+.closerow .chip{min-width:96px;justify-content:center}
+.closerow .cd{color:var(--ink-900);font-weight:500;min-width:130px}
+.closerow .cl{color:var(--ok);font-weight:600}
+.closerow .cl.warn{color:var(--warn)}
+.closerow .cl.off{color:var(--ink-400);font-weight:500}
+.closerow .cr{margin-left:auto;font-size:11.5px;color:var(--ink-400)}
 .sw i{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgb(0 0 0/.2);transition:left .15s}
 .sw.on{background:var(--primary)}
 .sw.on i{left:16px}
@@ -1114,6 +1122,19 @@ let CARDS = [
 ];
 CARDS.forEach(c=>{ if(c.places){ c.cap=parseInt(c.places.split("/")[1])||12; if(c.sess==="paris") c.cap=5; } });
 CARDS.forEach(c=>{ if(c.sess&&!c.lieu) c.lieu=SESS[c.sess].lieu; if(c.kb==="session_fia"&&c.sess){ const S0=SESS[c.sess]; c.ville=S0.ville; c.niveau=S0.niveau; c.lieuJ2=c.lieuJ2||c.lieu; c.cpfLink="https://www.moncompteformation.gouv.fr/espace-prive/html/#/formation/"+c.id; c.qlbLink="https://app.qualiobee.fr/sessions/"+c.id; c.note=c.note||""; c.qlbId=c.qlbId||"s_"+c.id.replace(/\D/g,"")+"842"; c.edofId=c.edofId||"EDF-2026-0"+c.id.replace(/\D/g,"")+"17"; c.driveId=c.driveId||"1aQz"+c.id; } });
+/* fermeture des inscriptions ARD par mode de paiement : CPF = 11 jours ouvrés avant J1, entreprise = J-1, particulier = J-14 */
+function ardClosings(card){
+  if(!card.dt||!card.dt.j1) return [];
+  const j1=new Date(card.dt.j1+"T12:00:00");
+  const minusBiz=(d,n)=>{const x=new Date(d);let k=0;while(k<n){x.setDate(x.getDate()-1);if(x.getDay()!==0&&x.getDay()!==6)k++;}return x;};
+  const minus=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()-n);return x;};
+  const today=new Date(); today.setHours(12,0,0,0);
+  const f=d=>d.toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
+  return [["CPF",minusBiz(j1,11),"11 jours ouvrés avant le J1"],["Entreprise",minus(j1,1),"jusqu'à J-1"],["Particulier",minus(j1,14),"J-14"]].map(([lbl,d,rule])=>{
+    const left=Math.round((d-today)/86400000);
+    return {lbl,rule,date:f(d),left,txt:left<0?"fermée":left===0?"ferme aujourd'hui":left+" jour"+(left>1?"s":"")+" restant"+(left>1?"s":"")};
+  });
+}
 /* lien : cliquable en lecture, URL modifiable en édition */
 function linkFld(label,key,obj,ed){
   const url=obj[key]||"";
@@ -1981,8 +2002,9 @@ function ficheSessionHtml(id){
       <div class="fld"><div class="k">Visible sur ARD</div><div class="v swrow"><span class="sw ${vis?"on":""}" data-ardtoggle="${c.id}"><i></i></span><span class="${vis?"":"muted"}">${vis?"Activée : la session apparaît sur le formulaire d'inscription":"Désactivée : la session est masquée sur ARD"}</span></div></div>
       <div class="fld"><div class="k">Places réelles restantes</div><div class="v">${Math.max(0,sc.cap-sc.ins-sc.enc)} sur ${sc.cap} <span class="muted">(${sc.ins} inscrits, ${sc.enc} en cours)</span></div></div>
       <div class="fld"><div class="k">Places affichées sur ARD (plafond)</div><div class="v">${c.plafond||sc.cap}</div></div>
-      <div class="fld"><div class="k">Délai d'inscription</div><div class="v">${c.delai||"Normal (11 jours ouvrés pour le CPF)"}</div></div>
-    </div></div>`;
+    </div>
+    <div class="subh">Fermeture des inscriptions</div>
+    <div class="closegrid">${ardClosings(c).map(x=>`<div class="closerow"><span class="chip">${x.lbl}</span><span class="cd">${x.date}</span><span class="cl ${x.left<0?"off":x.left<=3?"warn":""}">${x.txt}</span><span class="cr">${x.rule}</span></div>`).join("")}</div></div>`;
   }
   return h;
 }
