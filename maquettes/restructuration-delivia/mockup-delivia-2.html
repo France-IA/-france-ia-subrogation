@@ -518,7 +518,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .pmat th{text-align:center;padding:6px 6px 8px;vertical-align:top;font-weight:500}
 .pmat th.pl,.pmat td.pl{text-align:left;min-width:320px}
 .pmat td{padding:7px 6px;border-top:1px solid var(--line);text-align:center;vertical-align:top}
-.pmat .pgrp td{background:#f8fafc;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500);padding:7px 8px;border-top:none}
+.pmat .pmsec td{background:#eef2ff;color:#3730a3;text-align:left;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:8px;border-top:none}
+.pmat .pmsec.sep td{border-top:2px dashed var(--line-2)}
+.pmat .pmgrp td{background:#f8fafc;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-500);padding:6px 8px;border-top:none}
+.pmat thead th.pl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400)}
+.pmat thead tr:last-child th{padding-bottom:10px;border-bottom:1px solid var(--line-2)}
+.pmat .pn{font-size:12.5px;color:var(--ink-800)}
+.pmat .plk{font-size:11px;margin-left:6px}
 .pav{width:30px;height:30px;font-size:11px;border-radius:9px;margin:0 auto;cursor:pointer}
 .pname{font-size:11px;color:var(--ink-700);margin:4px 0 3px}
 .tbtn{display:inline-flex;align-items:center;border-radius:6px;padding:2px 9px;font-size:11px;font-weight:600;background:var(--primary);color:#fff;margin-left:6px;vertical-align:middle}
@@ -2785,15 +2791,25 @@ function preuvesSessionHtml(sess){
   const pct=tot?Math.round(ok/tot*100):0;
   const k="pv-"+sess;
   let h=`<details class="acc pvs" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span><span class="tt">${fmtDates(c)} · ${c.frm||"formateur à confirmer"}</span><span class="sm">${c.lieu}</span><span class="end"><span class="sm">${aps.length} apprenant${aps.length>1?"s":""} · ${ok} déposée${ok>1?"s":""}</span><span class="pvpct">${pct} %</span></span></summary><div class="inner" style="padding-left:2px">`;
-  h+=`<div style="overflow-x:auto"><table class="pmat"><thead><tr><th class="pl">Preuve</th>`+aps.map(x=>`<th><div class="pname"><a class="ilink" data-fiche="client::${x.cl?x.cl.id:""}">${x.cl?x.cl.nom:""}</a>${x.cl&&x.cl.nom!==x.ap.nom?`<br>`:""}${x.cl&&x.cl.nom!==x.ap.nom?`<a class="ilink" data-fiche="apprenant::${x.ap.id}">${x.ap.nom}</a>`:""}</div>${badge(x.insc.fin)}</th>`).join("")+`</tr></thead><tbody>`;
-  h+=`<tr class="pgrp"><td colspan="${aps.length+1}">Preuves de la session</td></tr>`;
-  PREUVES.session.forEach(g=>g.items.forEach(it=>{const st=preuveState(it,null,stage);const p=PSTATE[st];
-    h+=`<tr><td class="pl"><div class="pn">${it.n}<span class="chip">${g.lieu}</span></div><div class="pd">${it.d}</div></td><td colspan="${aps.length||1}" style="text-align:left"><i class="pst ${p[1]}">${p[0]}</i> <span class="sm">${p[2]}</span></td></tr>`;}));
+  const nc=aps.length||1;
+  h+=`<div style="overflow-x:auto"><table class="pmat"><thead>`
+   +`<tr><th class="pl">Client</th>`+aps.map(x=>`<th>${x.cl?`<a class="ilink" data-fiche="client::${x.cl.id}">${x.cl.nom}</a>`:"—"}</th>`).join("")+`</tr>`
+   +`<tr><th class="pl">Apprenant</th>`+aps.map(x=>`<th><a class="ilink" data-fiche="apprenant::${x.ap.id}">${x.ap.nom}</a></th>`).join("")+`</tr>`
+   +`<tr><th class="pl">Mode de paiement</th>`+aps.map(x=>`<th><span class="fintxt">${FIN[x.insc.fin]?FIN[x.insc.fin].lbl:""}</span></th>`).join("")+`</tr>`
+   +`</thead><tbody>`;
+  /* 1 · preuves de la session : un seul état pour tout le monde, avec le lien de l'endroit où elles vivent */
+  h+=`<tr class="pmsec"><td colspan="${nc+1}">Preuves de la session</td></tr>`;
+  PREUVES.session.forEach(g=>g.items.forEach(it=>{const st=preuveState(it,null,stage);const pp=PSTATE[st];
+    const lien = it.n.startsWith("CV")||it.n.startsWith("Contrat") ? `<a class="ilink" data-frmfiche="${c.frm||""}">fiche formateur</a>`
+      : it.n.startsWith("Conversation") ? `<a class="ilink" data-wa="${c.id}">ouvrir l'export</a>` : "";
+    h+=`<tr><td class="pl"><div class="pn">${it.n}${lien?` <span class="plk">${lien}</span>`:""}</div></td><td colspan="${nc}" style="text-align:left"><i class="pst ${pp[1]}">${pp[0]}</i> <span class="sm">${pp[2]}</span></td></tr>`;}));
+  /* 2 · preuves individuelles, groupées par endroit comme sur la fiche apprenant */
+  h+=`<tr class="pmsec sep"><td colspan="${nc+1}">Preuves individuelles</td></tr>`;
   PREUVES.apprenant.forEach(g=>{
-    h+=`<tr class="pgrp"><td colspan="${aps.length+1}">Preuves de l'apprenant · ${g.lieu}</td></tr>`;
+    h+=`<tr class="pmgrp"><td colspan="${nc+1}">${g.lieu}</td></tr>`;
     g.items.forEach(it=>{
-      h+=`<tr><td class="pl"><div class="pn">${it.n}<span class="chip">${it.src}</span>${it.cpf?'<span class="badge b-cpf">CPF</span>':""}${it.noncpf?'<span class="badge b-neutral">hors CPF</span>':""}</div><div class="pd">${it.d}</div></td>`;
-      h+=aps.map(x=>{const st=preuveState(it,x.insc,stage);const p=PSTATE[st];return `<td><i class="pst ${p[1]}" title="${x.ap.nom} · ${p[2]}">${p[0]}</i></td>`}).join("");
+      h+=`<tr><td class="pl"><div class="pn">${it.n}${it.cpf?' <span class="badge b-cpf">CPF</span>':""}${it.noncpf?' <span class="badge b-neutral">hors CPF</span>':""}</div></td>`;
+      h+=aps.map(x=>{const st=preuveState(it,x.insc,stage);const pp=PSTATE[st];return `<td><i class="pst ${pp[1]}" title="${x.ap.nom} · ${pp[2]}">${pp[0]}</i></td>`}).join("")||`<td>—</td>`;
       h+=`</tr>`;
     });
   });
@@ -2802,7 +2818,7 @@ function preuvesSessionHtml(sess){
 }
 function pagePreuves(){
   const f=S.fPreuvesOffre||"all";
-  let h=`<div class="pagehead row"><h1>Preuves</h1><button class="btn btn-s" data-syncdrive="1">${ICO.refresh}Synchroniser avec le Drive</button></div>`;
+  let h=`<div class="pagehead"><h1>Preuves</h1></div>`;
   h+=`<div class="fbar">`+chips([["Offre",[["all","Toutes"],["n1","Niveau 1"],["n2","Niveau 2"],["intra","Intra"],["coaching","Coaching"]]]], f, "fPreuvesOffre")
     +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fPreuvesQ" value="${(S.fPreuvesQ||"").replace(/"/g,"&quot;")}" placeholder="Apprenant, client, date, formateur…"></div></div>`;
   h+=`<div class="plegend">${Object.values(PSTATE).map(p=>`<span><i class="pst ${p[1]}">${p[0]}</i>${p[2]}</span>`).join("")}</div>`;
@@ -3001,7 +3017,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3065,6 +3081,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
   if(t.dataset.qard){e.stopPropagation();S.qard=t.dataset.qard;render();return}
   if(t.dataset.wa){e.stopPropagation();S.wa=t.dataset.wa;render();return}
+  if(t.dataset.frmfiche!==undefined){S.fiche=null;S.tab="utilisateurs";S.fUsers="formateurs";render();toast(`Annuaire des formateurs : le CV et le contrat de <b>${t.dataset.frmfiche||"la session"}</b> vivent dans son coffre.`);return}
   if(t.dataset.drive){toast("Ouverture du dossier Drive de preuves de l'apprenant dans un nouvel onglet.");return}
   if(t.dataset.idlink){e.stopPropagation();S.idLink=t.dataset.idlink;render();return}
   if(t.dataset.idlinksave){e.stopPropagation();
