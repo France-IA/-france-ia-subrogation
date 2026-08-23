@@ -559,6 +559,21 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .ul{margin:6px 0 0 18px;font-size:13px;color:var(--ink-700);line-height:1.7}
 #modal[data-kind="newsession"] .igrid{grid-template-columns:repeat(2,1fr)}
 #modal[data-kind="newsession"] .edin{margin-top:3px}
+/* ── preuves v39 : par mois, par session ── */
+.pvmonth{background:transparent;margin-bottom:10px}
+.pvmonth>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:14px 18px}
+.pvmonth>summary::-webkit-details-marker{display:none}
+.pvmonth .mt{font-size:15px;font-weight:600;color:var(--ink-900)}
+.pvmonth .ms{font-size:12px;color:var(--ink-400);margin-top:2px}
+.pvmonth .mpct{margin-left:auto;display:flex;align-items:center;gap:10px}
+.pvmonth .mpct .bar{width:140px;height:6px;background:#f1f5f9;border-radius:999px;overflow:hidden}
+.pvmonth .mpct .bar i{display:block;height:100%;background:#34d399;border-radius:999px}
+.pvmonth .mpct b{font-size:15px;color:var(--ink-900);font-variant-numeric:tabular-nums;min-width:46px;text-align:right}
+.pvmonth.old .mt{color:var(--ink-500)}
+.pvs summary .tt{font-size:13.5px}
+.pvpct{font-size:13px;font-weight:700;color:var(--ok);font-variant-numeric:tabular-nums}
+.pmat th .pname a{display:block;font-size:11.5px;line-height:1.35}
+.pmat th{min-width:120px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (max-width:900px){#sidebar{width:200px}.rolesel button{padding:4px 7px}#gsearch{display:none}}
 </style>
@@ -1129,7 +1144,7 @@ const APPRENANTS=[
 APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } });
 CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
 const S = {role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
-  fSession:"n1", fSessView:"kanban", fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
+  fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false};
 
 const $ = s=>document.querySelector(s);
@@ -1663,6 +1678,7 @@ function pageAPrendre(){
   return h;
 }
 const ICO={
+ refresh:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>',
  search:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
  eye:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
  out:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>',
@@ -1934,35 +1950,58 @@ function preuveState(item, insc, stage){
   return stage>=item.at ? "ok" : "later";
 }
 const PSTATE={ok:["✓","ok","disponible"],later:["○","later","à venir"],na:["–","na","non applicable"],ko:["✕","ko","absent"]};
-function pagePreuves(){
-  const sess=SESS[S.fPreuves]?S.fPreuves:"paris";
+function preuvesSessionHtml(sess){
+  const c=CARDS.find(x=>x.kb==="session_fia"&&x.sess===sess); if(!c) return "";
   const stage=sessStage(sess);
-  const sCard=CARDS.find(c=>c.kb==="session_fia"&&c.sess===sess);
-  const inscs=CARDS.filter(c=>c.kb==="insc"&&c.sess===sess&&c.col!=="lost");
-  const aps=inscs.map(i=>({insc:i,ap:peopleFor(i).aps[0]})).filter(x=>x.ap);
-  let h=`<div class="pagehead"><h1>Preuves</h1><p>Où se trouve chaque preuve de réalisation, regroupée par niveau (session ou apprenant) puis par lieu.</p></div>`;
-  h+=chips([["Session",Object.entries(SESS).map(([k,v])=>[k,v.lbl])]], sess, "fPreuves");
-  h+=`<div class="plegend">${Object.values(PSTATE).map(p=>`<span><i class="pst ${p[1]}">${p[0]}</i>${p[2]}</span>`).join("")}<span class="chip" style="margin-left:auto">${sCard?colLabel(sCard):""}</span></div>`;
-  /* niveau session */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Preuves de la session <span class="n2">un document pour toute la session</span></div>`;
-  PREUVES.session.forEach(g=>{
-    h+=`<div class="subh">${g.lieu}</div>`;
-    g.items.forEach(it=>{const st=preuveState(it,null,stage);const p=PSTATE[st];
-      h+=`<div class="prow"><i class="pst ${p[1]}">${p[0]}</i><div><div class="pn">${it.n}<span class="chip">${it.src}</span></div><div class="pd">${it.d}</div></div><span class="chip ${st==="ok"?"ok":""}">${p[2]}</span></div>`;});
-  });
-  h+=`</div>`;
-  /* niveau apprenant : matrice */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Preuves de l'apprenant <span class="n2">${aps.length} apprenant${aps.length>1?"s":""} sur cette session · une colonne par apprenant</span></div>`;
-  h+=`<div style="overflow-x:auto"><table class="pmat"><thead><tr><th class="pl">Preuve</th>`+aps.map(x=>`<th><span class="avat pav" title="${x.ap.nom}" data-fiche="apprenant::${x.ap.id}">${initiales(x.ap.nom)}</span><div class="pname">${x.ap.prenom}</div>${badge(x.insc.fin)}</th>`).join("")+`</tr></thead><tbody>`;
+  const q=(S.fPreuvesQ||"").toLowerCase();
+  let inscs=CARDS.filter(i=>i.kb==="insc"&&i.sess===sess&&i.col!=="lost");
+  const aps=inscs.map(i=>{const {cl,aps:a}=peopleFor(i);return {insc:i,ap:a[0],cl}}).filter(x=>x.ap)
+    .filter(x=>!q||[x.ap.nom,x.cl&&x.cl.nom,c.title,c.lieu,c.frm].join(" ").toLowerCase().includes(q));
+  if(q&&!aps.length&&![c.title,c.lieu,c.frm].join(" ").toLowerCase().includes(q)) return null;
+  const items=PREUVES.apprenant.flatMap(g=>g.items);
+  let tot=0,ok=0;
+  aps.forEach(x=>items.forEach(it=>{const st=preuveState(it,x.insc,stage);if(st!=="na"){tot++;if(st==="ok")ok++;}}));
+  PREUVES.session.flatMap(g=>g.items).forEach(it=>{tot++;if(preuveState(it,null,stage)==="ok")ok++;});
+  const pct=tot?Math.round(ok/tot*100):0;
+  const k="pv-"+sess;
+  let h=`<details class="acc pvs" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span><span class="tt">${fmtDates(c)} · ${c.frm||"formateur à confirmer"}</span><span class="sm">${c.lieu}</span><span class="end"><span class="sm">${aps.length} apprenant${aps.length>1?"s":""} · ${ok} déposée${ok>1?"s":""}</span><span class="pvpct">${pct} %</span></span></summary><div class="inner" style="padding-left:2px">`;
+  h+=`<div style="overflow-x:auto"><table class="pmat"><thead><tr><th class="pl">Preuve</th>`+aps.map(x=>`<th><div class="pname"><a class="ilink" data-fiche="client::${x.cl?x.cl.id:""}">${x.cl?x.cl.nom:""}</a>${x.cl&&x.cl.nom!==x.ap.nom?`<br>`:""}${x.cl&&x.cl.nom!==x.ap.nom?`<a class="ilink" data-fiche="apprenant::${x.ap.id}">${x.ap.nom}</a>`:""}</div>${badge(x.insc.fin)}</th>`).join("")+`</tr></thead><tbody>`;
+  h+=`<tr class="pgrp"><td colspan="${aps.length+1}">Preuves de la session</td></tr>`;
+  PREUVES.session.forEach(g=>g.items.forEach(it=>{const st=preuveState(it,null,stage);const p=PSTATE[st];
+    h+=`<tr><td class="pl"><div class="pn">${it.n}<span class="chip">${g.lieu}</span></div><div class="pd">${it.d}</div></td><td colspan="${aps.length||1}" style="text-align:left"><i class="pst ${p[1]}">${p[0]}</i> <span class="sm">${p[2]}</span></td></tr>`;}));
   PREUVES.apprenant.forEach(g=>{
-    h+=`<tr class="pgrp"><td colspan="${aps.length+1}">${g.lieu}</td></tr>`;
+    h+=`<tr class="pgrp"><td colspan="${aps.length+1}">Preuves de l'apprenant · ${g.lieu}</td></tr>`;
     g.items.forEach(it=>{
       h+=`<tr><td class="pl"><div class="pn">${it.n}<span class="chip">${it.src}</span>${it.cpf?'<span class="badge b-cpf">CPF</span>':""}${it.noncpf?'<span class="badge b-neutral">hors CPF</span>':""}</div><div class="pd">${it.d}</div></td>`;
       h+=aps.map(x=>{const st=preuveState(it,x.insc,stage);const p=PSTATE[st];return `<td><i class="pst ${p[1]}" title="${x.ap.nom} · ${p[2]}">${p[0]}</i></td>`}).join("");
       h+=`</tr>`;
     });
   });
-  h+=`</tbody></table></div></div>`;
+  h+=`</tbody></table></div></div></details>`;
+  return {h,ok,tot,pct,n:aps.length};
+}
+function pagePreuves(){
+  const f=S.fPreuvesOffre||"all";
+  let h=`<div class="pagehead row"><h1>Preuves</h1><button class="btn btn-s" data-syncdrive="1">${ICO.refresh}Synchroniser avec le Drive</button></div>`;
+  h+=`<div class="fbar">`+chips([["Offre",[["all","Toutes"],["n1","Niveau 1"],["n2","Niveau 2"],["intra","Intra"],["coaching","Coaching"]]]], f, "fPreuvesOffre")
+    +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fPreuvesQ" value="${(S.fPreuvesQ||"").replace(/"/g,"&quot;")}" placeholder="Apprenant, client, date, formateur…"></div></div>`;
+  h+=`<div class="plegend">${Object.values(PSTATE).map(p=>`<span><i class="pst ${p[1]}">${p[0]}</i>${p[2]}</span>`).join("")}</div>`;
+  const sessions=CARDS.filter(c=>c.kb==="session_fia"&&c.sess&&(f==="all"||c.offre===f));
+  const months={};
+  sessions.forEach(c=>{const m=c.dt.j1.slice(0,7);(months[m]=months[m]||[]).push(c);});
+  const keys=Object.keys(months).sort().reverse();
+  if(!keys.length) h+=`<div class="stub"><p>Aucune session datée pour cette offre : les preuves intra et coaching vivent sur la fiche client.</p></div>`;
+  keys.forEach((m,ix)=>{
+    const list=months[m];
+    const lbl=new Date(m+"-01T12:00:00").toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+    const blocks=list.map(c=>preuvesSessionHtml(c.sess)).filter(Boolean);
+    if(!blocks.length) return;
+    const nAp=blocks.reduce((a,b)=>a+b.n,0), ok=blocks.reduce((a,b)=>a+b.ok,0), tot=blocks.reduce((a,b)=>a+b.tot,0);
+    const pct=tot?Math.round(ok/tot*100):0;
+    const k="pvm-"+m;
+    h+=`<details class="pvmonth" data-acc="${k}" ${(accKey(k)||(ix===0&&S.openAcc[k]===undefined))?"open":""}><summary><div><div class="mt">${lbl.charAt(0).toUpperCase()+lbl.slice(1)}</div><div class="ms">${list.length} session${list.length>1?"s":""} · ${nAp} apprenant${nAp>1?"s":""} · ${ok} déposée${ok>1?"s":""}</div></div><div class="mpct"><div class="bar"><i style="width:${pct}%"></i></div><b>${pct} %</b></div></summary><div class="fsec" style="margin-top:8px">${blocks.map(b=>b.h).join("")}</div></details>`;
+  });
+  h+=`<details class="pvmonth old" data-acc="pvm-old"><summary><div><div class="mt">Ancienne offre (avant le 4 mai)</div><div class="ms">94 sessions · 716 apprenants · 3 982 déposées</div></div><div class="mpct"><div class="bar"><i style="width:84%"></i></div><b>84 %</b></div></summary><div class="fsec" style="margin-top:8px"><p class="muted" style="font-size:12.5px">Sessions de l'ancienne offre, consultables à l'identique.</p></div></details>`;
   return h;
 }
 function preuvesApprenantHtml(insc){
@@ -2104,11 +2143,11 @@ document.addEventListener("click",e=>{
   if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
   if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;document.getElementById("modal2")?.remove();return}
   if(e.target.id==="modal"||e.target.closest("[data-close]")){S.modal=null;S.newSess=null;document.getElementById("modal")?.remove();return}
-  const acc=e.target.closest("details.acc>summary");
+  const acc=e.target.closest("details.acc>summary, details.pvmonth>summary");
   if(acc){const d=acc.parentElement;S.openAcc[d.dataset.acc]=!d.open}
   if(!e.target.closest("#gsearch")) $("#gsearchRes").classList.remove("on");
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
-  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy]");
+  const t=e.target.closest("[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -2156,6 +2195,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.espace){toast("Ouverture de l'espace apprenant dans un nouvel onglet.");return}
   if(t.dataset.delsession){if(confirm("Supprimer cette session ? Les inscriptions payées bloqueront la suppression dans la vraie application.")){const c=CARDS.find(x=>x.id===t.dataset.delsession);CARDS.splice(CARDS.indexOf(c),1);S.fiche=null;toast("Session supprimée.");render();}return}
   if(t.dataset.copy){toast("Lien copié dans le presse-papier.");return}
+  if(t.dataset.syncdrive){toast("Synchronisation avec le Drive lancée : les preuves déposées hors DELIV'IA seront reconnues dans quelques minutes.");return}
   if(t.dataset.vcback){S.voirComme=null; S.role=S.realRole; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; S.fFact="cpf"; render(); return}
   if(t.dataset.logout){toast("Déconnexion : retour à l'écran de connexion SSO France IA."); return}
   if(t.dataset.gs){const [ty,id]=t.dataset.gs.split("::"); $("#gsearchIn").value=""; $("#gsearchRes").classList.remove("on");
