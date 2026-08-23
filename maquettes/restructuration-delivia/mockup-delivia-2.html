@@ -204,6 +204,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .acc summary .end{margin-left:auto;display:flex;gap:6px;align-items:center;flex-shrink:0}
 .acc .inner{padding:2px 2px 16px 23px;width:100%}
 .vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 18px;margin:6px 0 2px}
+.pd2{font-size:10.5px;color:var(--ink-400);line-height:1.45;margin-top:4px}
 .vbar{display:flex;justify-content:flex-end;gap:8px;margin:0 0 2px}
 .vcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:10px}
 .acc .inner .docs{max-width:none}
@@ -2369,24 +2370,27 @@ function ficheClientHtml(id){
   /* ── Identité ── */
   h+=`<div class="fichehead"><div class="fh-top">
     <div class="avat">${isPart?initiales(cl.nom):ICO.building}</div>
-    <div><h1>${cl.nom}</h1>
-      <div class="fh-contact">${cl.resp?`<span>${ICO.user}${cl.resp.n}${cl.resp.app?' <span class="chip ok" style="margin-left:4px">aussi apprenant</span>':""}</span><span>${ICO.mail}${cl.resp.e}</span><span>${ICO.phone}${cl.resp.t}</span>`:""}</div>
-      <div class="fh-badges"><span class="chip">${cl.type}</span><span class="chip">${cl.mode}</span>${cl.mandat?`<span class="chip ok">Mandat SDD actif</span>`:""}</div></div>
-    <div class="fh-right">${editBtns("client",cl.id)}</div>
+    <div><h1>${cl.nom}</h1></div>
+    <div class="fh-right">${editBtns("client",cl.id)}${S.editing?"":`<button class="btn btn-s" data-syncghl="${cl.id}">Synchroniser GHL</button>`}</div>
   </div>
   <div class="idgrid">
     ${fld("Adresse",cl.adr,"adr",cl)}
     ${fld("SIRET",cl.siret,"siret",cl)}
     ${fld("Numéro de TVA",cl.vat,"vat",cl)}
-    ${fld("Type",cl.type)}
-    ${fld("Responsable",cl.resp?cl.resp.n:null)}
+    ${S.editing===("client::"+cl.id)
+      ? `<div class="fld"><div class="k">Type</div><select class="edin" data-f="type">${["Entreprise","Entreprise (OPCO)","Particulier"].map(t2=>`<option ${cl.type===t2?"selected":""}>${t2}</option>`).join("")}</select><div class="pd2">Un particulier n'est lié qu'à un seul apprenant.</div></div>`
+      : fld("Type",cl.type)}
+    ${fld("Responsable",cl.resp?`${cl.resp.n}${cl.resp.app?' <span class="chip ok">aussi apprenant</span>':""}`:null)}
     ${fld("Email responsable",cl.resp?cl.resp.e:null)}
     ${fld("Téléphone responsable",cl.resp?cl.resp.t:null)}
+    ${fld("Mandat SEPA",cl.mandat)}
   </div>
   <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>
     ${idFld("ghl_contact_id","ghl",cl)}${idFld("qonto_client_id","qonto",cl)}${idFld("qualiobee_customer_id","qlb",cl)}</div>
   <div class="idchips flexrow" style="border-top:none;padding-top:4px"><span class="lbl">Apprenants liés</span>
-    ${(cl.apprenants||[]).map(aid=>{const a=APPRENANTS.find(x=>x.id===aid);return a?`<span class="perschip" data-fiche="apprenant::${a.id}"><span class="avat">${initiales(a.nom)}</span>${a.nom}</span>`:""}).join("")||'<span class="idchip">Aucun</span>'}
+    ${S.editing===("client::"+cl.id)
+      ? `<select class="edin" data-claps="1" multiple size="5" style="width:100%;max-width:420px">${APPRENANTS.map(a=>`<option value="${a.id}" ${(cl.apprenants||[]).includes(a.id)?"selected":""}>${a.nom}</option>`).join("")}</select><div class="pd2">Sélection multiple pour lier ou délier des apprenants. Un client particulier n'en garde qu'un seul.</div>`
+      : ((cl.apprenants||[]).map(aid=>{const a=APPRENANTS.find(x=>x.id===aid);return a?`<span class="perschip" data-fiche="apprenant::${a.id}"><span class="avat">${initiales(a.nom)}</span>${a.nom}</span>`:""}).join("")||'<span class="idchip">Aucun</span>')}
   </div>
   </div>`;
   /* ── Notes ── */
@@ -2818,7 +2822,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -2828,6 +2832,13 @@ document.addEventListener("click",e=>{
     const obj=(kind==="apprenant"?APPRENANTS:kind==="session"?CARDS:kind==="compte"?COMPTES:CLIENTS).find(x=>x.id===fid);
     document.querySelectorAll("#content [data-f]").forEach(inp=>{obj[inp.dataset.f]=inp.value});
     applyVenteInputs(obj);
+    const clAps=document.querySelector("#content [data-claps]");
+    if(clAps){
+      let ids=[...clAps.selectedOptions].map(o=>o.value);
+      if((obj.type||"").startsWith("Particulier")&&ids.length>1){ ids=ids.slice(0,1); toast("Client particulier : un seul apprenant lié, seul le premier a été gardé."); }
+      obj.apprenants=ids;
+      ids.forEach(i2=>{const a=APPRENANTS.find(x=>x.id===i2); if(a) a.client=obj.id;});
+    }
     if(kind==="apprenant"){obj.nom=((obj.prenom||"")+" "+(obj.fam||"")).trim()||obj.nom;}
     if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.cap=parseInt(obj.cap)||12;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===obj.sess);if(fs){fs.frm=obj.frm;fs.dt=obj.dt;fs.cap=obj.cap;}}
     S.editing=null;render();
@@ -2860,6 +2871,7 @@ document.addEventListener("click",e=>{
     S.fSessView="kanban";render();return}
   if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===cd.sess);if(fs)fs.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
+  if(t.dataset.syncghl){const cl=CLIENTS.find(c=>c.id===t.dataset.syncghl);toast(`Fiche <b>${cl?cl.nom:""}</b> resynchronisée avec GHL : coordonnées, responsable et opportunités relus.`);return}
   if(t.dataset.vedit){S.editVente=t.dataset.vedit;S.editing=null;render();return}
   if(t.dataset.vcancel){S.editVente=null;render();return}
   if(t.dataset.vsave){
