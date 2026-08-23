@@ -863,6 +863,7 @@ coaching:{cols:[
  {id:"termine", label:"Terminé"}],
 tasks:{
  demande:[
+  {t:"Client désigne l'apprenant sur sa plateforme",p:"client",fin:["fp_ent_vir","fp_ent_man"]},
   {t:"Closeur génère le devis (automatique)",p:"closer",auto:1,fin:["fp_ent_vir"]},
   {t:"Client signe la convention (détecté automatiquement)",p:"client",auto:1,fin:["fp_ent_vir"]},
   {t:"Closeur génère la facture et la transmet au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_ent_vir"],fx:"carte_client"},
@@ -1631,7 +1632,7 @@ function newSessionModalHtml(){
   return `<div id="modal" data-kind="newsession"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Nouvelle session</div><button class="mclose" data-close="1" aria-label="Fermer">✕</button></div></div>
   <div class="mbody"><div class="mpanel">
     <div class="igrid">
-      <div class="ifld wide"><div class="k">Type de session</div><div class="seg"><button class="${!isIntra?"on":""}" data-nstype="inter">Inter</button><button class="${isIntra?"on":""}" data-nstype="intra">Intra (entreprise)</button></div></div>
+      <div class="ifld wide"><div class="pd">Une session inter (Niveau 1 ou Niveau 2). Les formations intra et les coachings naissent toujours d'une inscription ARD.</div></div>
       ${isIntra?`<div class="ifld wide"><div class="k">Client (entreprise)</div><select class="edin"><option>Cabinet Verne & Associés</option><option>Garage Moderne</option><option>Nexa Digital</option><option>+ Nouvelle entreprise…</option></select></div>
       <div class="ifld wide"><div class="k">Intitulé</div><div class="v">INTRA · Maîtriser l'IA générative dans son quotidien professionnel <span class="muted">· 7 900 € HT</span></div></div>
       <div class="ifld"><div class="k">Date 1</div><input class="edin" type="date" value="2026-11-05"></div><div class="ifld"><div class="k">Date 2</div><input class="edin" type="date" value="2026-11-06"></div>
