@@ -459,14 +459,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal .lines .ln{font-size:12.5px;padding:4px 2px}
 #modal .openline{border-radius:8px}
 /* ── bande maquette, voir comme, recherche, menu utilisateur, états des cartes ── */
-#mockband{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:12px;padding:6px 16px;background:#0f172a;color:#e2e8f0;font-size:11.5px;border-bottom:2px dashed #475569}
-#mockband .mb-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:#fbbf24;color:#0f172a;border-radius:999px;padding:2px 8px}
-#mockband .mb-txt{color:#cbd5e1;flex:1}
+#mockband{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:12px;padding:6px 16px;background:#fff;color:var(--ink-500);font-size:11.5px;border-bottom:2px dashed var(--ink-300)}
+#mockband .mb-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:#f1f5f9;color:var(--ink-700);border-radius:999px;padding:2px 8px}
+#mockband .mb-txt{color:var(--ink-400);flex:1}
 #mockband #roleWrap{margin-left:auto}
-#mockband .rolesel{background:rgba(255,255,255,.1)}
-#mockband .rolesel button{color:#cbd5e1}
-#mockband .rolesel button.active{background:#fff;color:#0f172a}
-#mockband .lbl{color:#94a3b8}
+#mockband .lbl{color:var(--ink-400)}
 #sidebar{top:34px;height:calc(100vh - 34px)}
 #topbar{top:34px}
 #topbar{gap:16px}
@@ -508,6 +505,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .card.st-locked .t{color:var(--ink-500)}
 .card.over{box-shadow:0 0 0 1.5px var(--err),var(--sh-carte)}
 .badge.b-over{background:var(--err-50);color:var(--err);font-weight:600}
+.badge.b-risk{background:var(--warn-50);color:var(--warn);font-weight:600}
 /* ── sessions : filtres, liste, calendrier, fiche, modales secondaires ── */
 .pagehead.row{display:flex;align-items:center;gap:12px}
 .pagehead.row .btn{margin-left:auto}
@@ -1095,6 +1093,7 @@ let CARDS = [
  {id:"m2", kb:"fact_com", title:"Sam T. · août 2026", who:"Sam T.", mois:"Août 2026", fin:"setter", col:"valider",
    lines:[["Fixe mensuel","1 200 €"],["Set · Marie Dupont","30 €"],["Set · Karim Benali","30 €"],["Set · Studio Nova","30 €"],["Close · Awa Diallo","80 €"]]},
 ];
+CARDS.forEach(c=>{ if(c.places){ c.cap=parseInt(c.places.split("/")[1])||12; if(c.sess==="paris") c.cap=5; } });
 CARDS.forEach(c=>{ if(c.sess&&!c.lieu) c.lieu=SESS[c.sess].lieu; if(c.kb==="session_fia"&&c.sess){ const S0=SESS[c.sess]; c.ville=S0.ville; c.niveau=S0.niveau; c.lieuJ2=c.lieuJ2||c.lieu; c.cpfLink="https://www.moncompteformation.gouv.fr/espace-prive/html/#/formation/"+c.id; c.qlbLink="https://app.qualiobee.fr/sessions/"+c.id; c.note=c.note||""; } });
 /* inscriptions supplémentaires pour la fiche session (Lost et changé de session) */
 CARDS.push(
@@ -1271,7 +1270,8 @@ function isFact(card){ return card.kb.startsWith("fact_"); }
 function cardBadge(card){
   if(card.kb==="fact_com") return "";
   if(isFact(card)) return badgeOffre(card.offre);
-  if(card.kb.startsWith("session")||card.kb==="intra_frm"||card.kb==="coaching_frm") return card.places?`<span class="badge ${card.over?"b-over":"b-neutral"}">${card.places} places${card.over?" · surbooking":""}</span>`:"";
+  if(card.kb.startsWith("session")) return placesBadge(card);
+  if(card.kb==="intra_frm"||card.kb==="coaching_frm") return card.places?`<span class="badge b-neutral">${card.places} places</span>`:"";
   return badge(card.fin);
 }
 function evRow(ev,state){ /* state : done | now | later */
@@ -1311,6 +1311,19 @@ function taskState(card,colId,i,tk){
   if(tk.sub&&card.ech) return card.ech.every(e=>e[1]);
   return !!S.checks[key(card,colId,i)];
 }
+/* inscrits réels / en cours (dont réservations) / capacité d'une session */
+function sessCounts(card){
+  const sess=card.sess; const cap=card.cap||12;
+  if(!sess) return {ins:0,enc:0,cap,over:false,risk:false,txt:"0 + 0 / "+cap};
+  const list=CARDS.filter(i=>i.kb==="insc"&&i.sess===sess&&i.col!=="lost"&&!i.movedFrom);
+  const ins=list.filter(i=>["validee","absent","termine"].includes(i.col)).length;
+  const enc=list.length-ins;
+  return {ins,enc,cap,over:ins>cap,risk:ins<=cap&&ins+enc>cap,txt:`${ins} + ${enc} / ${cap}`};
+}
+function placesBadge(card){
+  const c=sessCounts(card);
+  return `<span class="badge ${c.over?"b-over":c.risk?"b-risk":"b-neutral"}" title="${c.ins} inscrit(s), ${c.enc} en cours d'inscription, ${c.cap} places">${c.txt}${c.over?" · surbooking":c.risk?" · risque":""}</span>`;
+}
 function cardState(card,colId){
   if(card.waiting) return "locked";
   const tks=tasksFor(card,colId);
@@ -1326,7 +1339,8 @@ function cardHtml(card, colDef, opts={}){
   const done=tks.filter((tk,i)=>taskState(card,colDef.id,i,tk)).length;
   const nextTk=tks.find((tk,i)=>!taskState(card,colDef.id,i,tk));
   const lockInfo = card.waiting ? {c:KB[card.kb].cols.find(x=>x.id===card.waiting),pref:true} : null;
-  let h=`<div class="card st-${st} ${card.over?"over":""} ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${lockInfo?"haslock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
+  const over=card.kb.startsWith("session")&&sessCounts(card).over;
+  let h=`<div class="card st-${st} ${over?"over":""} ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${lockInfo?"haslock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
   if(lockInfo){
     const lc=lockInfo.c;
     h+=`<div class="lockstrip">🔒 <span>${lockInfo.pref?`<b>${lc.label}</b> · `:""}Ouverture ${openDateStr(card,lc)} <span class="dim">(${lc.open})</span></span></div>`;
@@ -1452,7 +1466,7 @@ function infoFor(card){
     return rows;
   }
   if(card.kb.startsWith("session")){
-    rows.push(["Session",card.kb==="session_fia"?`<a class="ilink" data-fiche="session::${card.id}">${card.title}</a>`:card.title],["Offre",OFFRES[card.offre]],["Dates",fmtDates(card)],["Lieu",card.lieu],["Formateur",card.frm||"À confirmer"],["Places",card.over?`<span class="badge b-over">${card.places} · surbooking</span>`:card.places]);
+    rows.push(["Session",card.kb==="session_fia"?`<a class="ilink" data-fiche="session::${card.id}">${card.title}</a>`:card.title],["Offre",OFFRES[card.offre]],["Dates",fmtDates(card)],["Lieu",card.lieu],["Formateur",card.frm||"À confirmer"],["Inscrits",(()=>{const c=sessCounts(card);return `<b>${c.ins}</b> inscrit${c.ins>1?"s":""} · <b>${c.enc}</b> en cours · ${c.cap} places ${c.over?'<span class="badge b-over">Surbooking</span>':c.risk?'<span class="badge b-risk">Risque de surbooking</span>':""}`})()]);
     if(card.kb==="session_fia"){
       rows.push(["Lien Mon CPF",`<a class="ilink" data-copy="${card.cpfLink||""}">Copier le lien</a>`],["Lien Qualiobee",`<a class="ilink" href="${card.qlbLink||"#"}" target="_blank" rel="noopener">Ouvrir la session</a>`]);
       rows.push(["Identifiants techniques",`<span class="idchip">qualiobee_session_id · ${card.qlbId||"s_"+(card.id.replace(/\D/g,"")||"1")+"842"}</span> <span class="idchip">edof_session_id · ${card.edofId||"EDF-2026-0"+(card.id.replace(/\D/g,"")||"1")+"17"}</span> <span class="idchip">drive_folder_id · 1aQz${card.id}</span>`,"wide"]);
@@ -1488,11 +1502,11 @@ function modalHtml(){
   h+=`<div class="mbody">`;
   /* Informations */
   if(card.kb==="session_fia"&&card.col!=="brouillon"){
-    const [pr,pm]=(card.places||"0/12").split("/");
+    const sc=sessCounts(card);
     h+=`<div class="mpanel ardbloc"><div class="k2" style="margin-bottom:8px">Publication ARD <span class="chip ok">visible sur ARD</span></div><div class="igrid">
       <div class="ifld"><div class="k">Visible sur ARD</div><div class="v"><span class="sw on" data-ardtoggle="${card.id}"><i></i></span></div></div>
-      <div class="ifld"><div class="k">Places réelles restantes</div><div class="v">${Math.max(0,parseInt(pm)-parseInt(pr))} sur ${pm}</div></div>
-      <div class="ifld"><div class="k">Places affichées sur ARD (plafond)</div><div class="v">${card.plafond||pm}</div></div>
+      <div class="ifld"><div class="k">Places réelles restantes</div><div class="v">${Math.max(0,sc.cap-sc.ins-sc.enc)} sur ${sc.cap} <span class="muted">(${sc.ins} inscrits, ${sc.enc} en cours)</span></div></div>
+      <div class="ifld"><div class="k">Places affichées sur ARD (plafond)</div><div class="v">${card.plafond||sc.cap}</div></div>
       <div class="ifld"><div class="k">Délai d'inscription</div><div class="v">${card.delai||"Normal (11 jours ouvrés pour le CPF)"}</div></div>
       <div class="ifld wide"><div class="k">Lien d'inscription pré-filtré</div><div class="v"><a class="ilink" data-copy="https://formulaire.franceia-dev.com/?session=${card.id}">Copier le lien ARD de cette session</a></div></div>
     </div></div>`;
@@ -1579,7 +1593,7 @@ function pageSessions(){
       + `<div class="slist">`
       + open.map(s=>`
         <div class="srow"><div><div class="d">${s.title}</div><div class="v">${s.lieu} · ${s.frm||"formateur à confirmer"}</div></div>
-        <span class="pl">${s.places} places</span>
+        <span class="pl">${(()=>{const sc=sessCounts(s);return Math.max(0,sc.cap-sc.ins-sc.enc)+" place(s) restante(s)"})()}</span>
         <button class="btn btn-p" data-resa="${s.id}">Réserver une place (48 h)</button></div>`).join("")
       + (open.length?"":`<div class="stub"><p>Aucune session ouverte à l'inscription pour cette offre.</p></div>`)
       + `</div>`;
@@ -1607,7 +1621,7 @@ function pageSessions(){
 function sessionListHtml(list){
   if(!list.length) return `<div class="stub"><p>Aucune session ne correspond aux filtres.</p></div>`;
   return `<div class="tblwrap"><table class="tbl"><thead><tr><th>Dates</th><th>Offre</th><th>Formateur</th><th>Ville</th><th>Lieu</th><th>Inscrits</th><th>Statut</th></tr></thead><tbody>`
-    +list.sort((a,b)=>a.dt.j1.localeCompare(b.dt.j1)).map(c=>`<tr class="rowlink" data-fiche="session::${c.id}"><td><b>${fmtDates(c)}</b></td><td>${badgeOffre(c.offre)}</td><td>${c.frm||'<span class="muted">À confirmer</span>'}</td><td>${c.ville||""}</td><td>${c.lieu}</td><td>${c.over?`<span class="badge b-over">${c.places}</span>`:c.places}</td><td><span class="chip">${colLabel(c)}</span></td></tr>`).join("")
+    +list.sort((a,b)=>a.dt.j1.localeCompare(b.dt.j1)).map(c=>`<tr class="rowlink" data-fiche="session::${c.id}"><td><b>${fmtDates(c)}</b></td><td>${badgeOffre(c.offre)}</td><td>${c.frm||'<span class="muted">À confirmer</span>'}</td><td>${c.ville||""}</td><td>${c.lieu}</td><td>${placesBadge(c)}</td><td><span class="chip">${colLabel(c)}</span></td></tr>`).join("")
     +`</tbody></table></div>`;
 }
 function calendarHtml(list){
@@ -1894,14 +1908,14 @@ function ficheSessionHtml(id){
   const ed=S.editing==="session::"+c.id;
   let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
   /* section 1 : informations générales, sans titre */
-  h+=`<div class="fichehead"><div class="fh-top"><div><h1>${c.title}</h1><div class="fh-badges">${badgeOffre(c.offre)}<span class="chip">${colLabel(c)}</span>${c.over?'<span class="badge b-over">Surbooking</span>':""}</div></div>
+  h+=`<div class="fichehead"><div class="fh-top"><div><h1>${c.title}</h1><div class="fh-badges">${badgeOffre(c.offre)}<span class="chip">${colLabel(c)}</span>${placesBadge(c)}</div></div>
     <div class="fh-right">${ed?`<button class="btn btn-p" data-editsave="session::${c.id}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`:`<button class="btn btn-s" data-editstart="session::${c.id}">Modifier</button><button class="btn btn-s danger" data-delsession="${c.id}">Supprimer</button>`}</div></div>
   <div class="idgrid">
     ${ed?`<div class="fld"><div class="k">Jour 1</div><input class="edin" type="date" data-f="j1" value="${c.dt.j1}"></div><div class="fld"><div class="k">Jour 2</div><input class="edin" type="date" data-f="j2" value="${c.dt.j2}"></div>`:fld("Période",fmtDates(c))}
     ${ed?`<div class="fld"><div class="k">Formateur</div><select class="edin" data-f="frm"><option value="">À confirmer</option>${FORMATEURS.map(f=>`<option ${c.frm===f?"selected":""}>${f}</option>`).join("")}</select></div>`:fld("Formateur",c.frm||"À confirmer")}
     ${ed?`<div class="fld"><div class="k">Lieu J1</div><select class="edin" data-f="lieu">${LIEUX.map(l=>`<option ${c.lieu===l?"selected":""}>${l}</option>`).join("")}</select></div><div class="fld"><div class="k">Lieu J2</div><select class="edin" data-f="lieuJ2">${LIEUX.map(l=>`<option ${c.lieuJ2===l?"selected":""}>${l}</option>`).join("")}</select></div>`:(c.lieuJ2&&c.lieuJ2!==c.lieu?fld("Lieu J1",c.lieu)+fld("Lieu J2",c.lieuJ2):fld("Lieu J1 et J2",c.lieu))}
     ${ed?`<div class="fld"><div class="k">Niveau ARD</div><select class="edin" data-f="niveau">${["Plutôt débutant","Plutôt avancé","Aucun badge"].map(n=>`<option ${c.niveau===n?"selected":""}>${n}</option>`).join("")}</select></div>`:fld("Niveau ARD",c.niveau)}
-    ${ed?`<div class="fld"><div class="k">Nombre de places</div><input class="edin" data-f="places" value="${c.places}"></div>`:fld("Nombre de places",c.places)}
+    ${ed?`<div class="fld"><div class="k">Capacité (places)</div><input class="edin" type="number" data-f="cap" value="${c.cap}"></div>`:(()=>{const sc=sessCounts(c);return fld("Inscrits",`<b>${sc.ins}</b> inscrit${sc.ins>1?"s":""} · <b>${sc.enc}</b> en cours · ${sc.cap} places${sc.over?' <span class="badge b-over">Surbooking</span>':sc.risk?' <span class="badge b-risk">Risque de surbooking</span>':""}`)})()}
     ${fld("Lien Mon CPF",`<a class="ilink" data-copy="${c.cpfLink}">Copier le lien</a>`)}
     ${fld("Lien Qualiobee",`<a class="ilink" href="${c.qlbLink}" target="_blank" rel="noopener">Ouvrir la session</a>`)}
   </div></div>`;
@@ -2223,7 +2237,7 @@ document.addEventListener("click",e=>{
     const obj=(kind==="apprenant"?APPRENANTS:kind==="session"?CARDS:kind==="compte"?COMPTES:CLIENTS).find(x=>x.id===fid);
     document.querySelectorAll("#content [data-f]").forEach(inp=>{obj[inp.dataset.f]=inp.value});
     if(kind==="apprenant"){obj.nom=((obj.prenom||"")+" "+(obj.fam||"")).trim()||obj.nom;}
-    if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.over=parseInt(obj.places)>parseInt((obj.places||"0/12").split("/")[1]||12);const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===obj.sess);if(fs){fs.frm=obj.frm;fs.dt=obj.dt;fs.places=obj.places;}}
+    if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.cap=parseInt(obj.cap)||12;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===obj.sess);if(fs){fs.frm=obj.frm;fs.dt=obj.dt;fs.cap=obj.cap;}}
     S.editing=null;render();
     toast("Modifications enregistrées : <b>"+(obj.nom||obj.title)+"</b>");
     return}
@@ -2250,7 +2264,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.nssubmit){const isIntra=S.newSess&&S.newSess.type==="intra";S.newSess=null;
     const nid="ns"+Math.floor(performance.now());
     if(isIntra){CARDS.push({id:nid,kb:"intra",offre:"intra",title:"Cabinet Verne & Associés",closer:"Chloé M.",setter:null,ard:"2026-08-23T10:00",fin:"fp_ent_vir",col:"demande",lieu:"Station F, Paris 13e",nb:"5 apprenants",fresh:1});toast("Session intra créée dans le kanban Intra (Nouvelle demande).");}
-    else{CARDS.push({id:nid,kb:"session_fia",offre:S.fSession==="n2"?"n2":"n1",sess:null,dt:{j1:"2026-11-07",j2:"2026-11-08"},title:"Paris · 7-8 nov",lieu:"Station F, Paris 13e",ville:"Paris",niveau:"Plutôt débutant",frm:null,places:"0/12",col:"brouillon",fresh:1,cpfLink:"#",qlbLink:"#",note:""});toast("Session créée en Brouillon : ses tâches sont générées.");}
+    else{CARDS.push({id:nid,kb:"session_fia",offre:S.fSession==="n2"?"n2":"n1",sess:null,dt:{j1:"2026-11-07",j2:"2026-11-08"},title:"Paris · 7-8 nov",lieu:"Station F, Paris 13e",ville:"Paris",niveau:"Plutôt débutant",frm:null,places:"0/12",cap:12,col:"brouillon",fresh:1,cpfLink:"#",qlbLink:"#",note:""});toast("Session créée en Brouillon : ses tâches sont générées.");}
     S.fSessView="kanban";render();return}
   if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===cd.sess);if(fs)fs.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
@@ -2261,10 +2275,9 @@ document.addEventListener("click",e=>{
   if(t.dataset.reserve){S.reserveFor=t.dataset.reserve;render();return}
   if(t.dataset.reserveconfirm){const c=CARDS.find(x=>x.id===t.dataset.reserveconfirm);const p=(document.getElementById("resPrenom")||{}).value||"Nouveau";const n=(document.getElementById("resNom")||{}).value||"Client";const note=(document.getElementById("resNote")||{}).value||"";
     CARDS.push({id:"r"+Math.floor(performance.now()),kb:"insc",offre:c.offre,sess:c.sess,dt:c.dt,title:p+" "+n,closer:"Alex R.",setter:"Sam T.",ard:null,fin:null,col:"recue",reserved:1,expires:"2026-08-25T10:00",resNote:note});
-    const [pr,pm]=(c.places||"0/12").split("/");c.places=(parseInt(pr)+1)+"/"+pm;c.over=parseInt(pr)+1>parseInt(pm);
     S.reserveFor=null;toast(`Place bloquée 48 h pour <b>${p} ${n}</b>.`);render();return}
   if(t.dataset.prolong){const i=CARDS.find(x=>x.id===t.dataset.prolong);i.expires="2026-08-26T16:30";toast("Réservation prolongée de 48 h.");render();return}
-  if(t.dataset.cancelres){const i=CARDS.find(x=>x.id===t.dataset.cancelres);const reason=prompt("Raison de l'annulation (obligatoire) :");if(!reason)return;CARDS.splice(CARDS.indexOf(i),1);const c=CARDS.find(x=>x.kb==="session_fia"&&x.sess===i.sess);if(c){const [pr,pm]=c.places.split("/");c.places=Math.max(0,parseInt(pr)-1)+"/"+pm;c.over=parseInt(pr)-1>parseInt(pm);}toast("Réservation annulée, place libérée.");render();return}
+  if(t.dataset.cancelres){const i=CARDS.find(x=>x.id===t.dataset.cancelres);const reason=prompt("Raison de l'annulation (obligatoire) :");if(!reason)return;CARDS.splice(CARDS.indexOf(i),1);toast("Réservation annulée, place libérée.");render();return}
   if(t.dataset.ardtoggle){t.classList.toggle("on");toast(t.classList.contains("on")?"Session visible sur ARD.":"Session masquée sur ARD.");return}
   if(t.dataset.espace){toast("Ouverture de l'espace apprenant dans un nouvel onglet.");return}
   if(t.dataset.delsession){if(confirm("Supprimer cette session ? Les inscriptions payées bloqueront la suppression dans la vraie application.")){const c=CARDS.find(x=>x.id===t.dataset.delsession);CARDS.splice(CARDS.indexOf(c),1);S.fiche=null;toast("Session supprimée.");render();}return}
