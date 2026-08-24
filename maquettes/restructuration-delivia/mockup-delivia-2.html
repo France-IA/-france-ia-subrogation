@@ -420,6 +420,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tabsline button{padding:8px 14px;font-size:12.5px;font-weight:500;color:var(--ink-500);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
 .tabsline button:hover{color:var(--ink-700)}
 .tabsline button.on{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+.remmeta{display:flex;align-items:center;gap:8px;margin-top:7px}
+.remfoot{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin-top:8px;padding-top:7px;border-top:1px solid var(--line);font-size:11px;color:var(--ink-400)}
+.remfoot .sm{white-space:nowrap}
+.remfoot .vote{font-weight:600;color:var(--ink-700)}
+.remfoot .btn-xs{margin-left:auto}
+.remfoot .chip{margin-left:auto}
+.board.rembd .col{background:rgba(248,250,252,.9)}
 .autolist{display:flex;flex-direction:column;gap:8px}
 .autocard{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line-2);border-radius:11px;padding:13px 15px;cursor:pointer}
 .autocard:hover{background:#f8fafc}
@@ -2205,7 +2212,7 @@ function pageSessions(){
   }
   const f=["n1","n2","param"].includes(S.fSession)?S.fSession:"n1";
   let h=`<div class="pagehead row"><h1>Sessions</h1><button class="btn btn-p" data-newsession="1">+ Nouvelle session</button></div>`;
-  h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]],["Paramétrage",[["param","Lieux & Salles · Ressources"]]]], f, "fSession");
+  h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]],["Paramétrage",[["param","Lieux & Ressources"]]]], f, "fSession");
   if(f==="param"){
     return h+pageLieux();
   }
@@ -2230,29 +2237,83 @@ function pageSessions(){
 }
 /* référentiel des lieux : pays, ville, lieu, salles (rapatrié de Staff) */
 const LIEUX_REF=[
- {pays:"France",villes:[
-  {v:"Paris",lieux:[{n:"Station F",adr:"5 parvis Alan Turing, 75013",hal:1,qlb:"lieu_stf",salles:[["Boardroom Ada","12 places · réservée via HAL"],["Boardroom Turing","10 places · réservée via HAL"]],photos:3}]},
-  {v:"Bordeaux",lieux:[{n:"Quai des Chartrons",adr:"12 quai des Chartrons, 33000",hal:0,qlb:"lieu_bdx",salles:[["Salle Garonne","14 places"],["Salle Dordogne","8 places"]],photos:2}]},
-  {v:"Lyon",lieux:[{n:"Part-Dieu",adr:"44 rue de la Villette, 69003",hal:0,qlb:"lieu_lyo",salles:[["Salle Rhône","12 places"]],photos:1}]},
-  {v:"Toulouse",lieux:[{n:"Chez le client",adr:"adresse fournie par le client",hal:0,qlb:null,salles:[],photos:0}]},
- ]},
+ {id:"stf",n:"Station F",ville:"Paris",pays:"France",adr:"5 parvis Alan Turing, 75013 Paris",hal:1,qlb:"lieu_stf",photos:3,contact:"accueil@stationf.co · 01 84 60 00 00",accueil:"Se présenter à l'accueil du bâtiment, badge remis sur place.",
+  salles:[["Boardroom Ada",12,"HAL-ADA-12"],["Boardroom Turing",10,"HAL-TUR-10"]]},
+ {id:"bdx",n:"Quai des Chartrons",ville:"Bordeaux",pays:"France",adr:"12 quai des Chartrons, 33000 Bordeaux",hal:0,qlb:"lieu_bdx",photos:2,contact:"contact@quaideschartrons.fr · 05 56 00 11 22",accueil:"Sonner à la porte bleue, 2e étage.",
+  salles:[["Salle Garonne",14,null],["Salle Dordogne",8,null]]},
+ {id:"lyo",n:"Part-Dieu",ville:"Lyon",pays:"France",adr:"44 rue de la Villette, 69003 Lyon",hal:0,qlb:"lieu_lyo",photos:1,contact:"reservation@partdieu-espaces.fr",accueil:"Accès par le hall principal, 5e étage.",
+  salles:[["Salle Rhône",12,null]]},
+ {id:"client",n:"Chez le client",ville:"—",pays:"France",adr:"adresse fournie par le client à la confirmation",hal:0,qlb:null,photos:0,contact:null,accueil:"Le client précise l'accès dans sa fiche.",
+  salles:[]},
+];
+/* ressources : ce qui sert au formateur et ce qui part chez l'apprenant */
+const RESSOURCES=[
+ ["Supports de formation",[
+  ["Support Niveau 1","Notion","Formateur","une version par session, éditable avant le J1",1],
+  ["Support Niveau 2","Notion","Formateur","une version par session",1],
+  ["Support Intra","Notion","Formateur","adapté au cas du client",1],
+  ["Grille de préparation des apprenants","Notion","Formateur","ce que chacun doit avoir fait avant le J1",1]]],
+ ["Tutos et vidéos",[
+  ["Tuto plateforme Qualiobee","Vidéo","Formateur","émargement, quiz, compte rendu",1],
+  ["Tuto formation Notion x Canva","Vidéo","Formateur","préparer sa page de session",1],
+  ["Vidéos de préparation","Vidéo","Formateur","trois modules avant la première animation",1]]],
+ ["Canvas et modèles",[
+  ["Canvas d'atelier","PDF","Formateur","trames imprimables des exercices",1],
+  ["Checklist d'animation","Notion","Formateur","le déroulé heure par heure",1],
+  ["Livret d'accueil","PDF","Apprenant","déposé dans l'espace apprenant",1],
+  ["Guide d'accès par lieu","Notion","Apprenant","généré à partir des photos et de l'accès du lieu",1]]],
 ];
 function pageLieux(){
-  let h=`<div class="fsec"><div class="sect-h">${ICO.building}Lieux & Salles <span class="n2">le catalogue des lieux, leurs salles et leur rattachement Qualiobee</span><span class="right"><button class="btn btn-s" data-gen="${encodeURIComponent("Nouveau lieu")}">+ Nouveau lieu</button></span></div>`;
-  LIEUX_REF.forEach(p2=>p2.villes.forEach(v=>{
-    h+=`<div class="subh">${p2.pays} · ${v.v}</div>`;
-    v.lieux.forEach(l=>{
-      const k="lieu-"+l.n;
-      h+=`<details class="acc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span><span class="tt">${l.n}</span><span class="sm">${l.adr}</span><span class="end">${l.hal?`<span class="chip">HAL Station F</span>`:""}<span class="sm">${l.salles.length} salle${l.salles.length>1?"s":""}</span></span></summary>
-      <div class="inner"><div class="vgrid">${fld("Adresse",l.adr)}${fld("Réservation",l.hal?"HAL Station F, au shotgun":"réservation directe auprès du lieu")}${fld("Lieu Qualiobee",l.qlb?`<a class="ilink" href="https://app.qualiobee.fr/places/${l.qlb}" target="_blank" rel="noopener">Ouvrir sur Qualiobee</a>`:null)}${fld("Photos",l.photos?l.photos+" photo(s)":null)}</div>
-      <div class="subh">Salles</div>${l.salles.map(([n,d])=>`<div class="lrow">${n}<span class="chip">${d}</span></div>`).join("")||`<div class="lrow"><span class="sm">Aucune salle : la formation se tient chez le client.</span></div>`}
-      </div></details>`;
-    });
-  }));
-  h+=`</div><div class="fsec"><div class="sect-h">${ICO.file}Ressources formateur <span class="n2">rapatriées de BookMySessions</span></div>`;
-  h+=[["Support Niveau 1","Deck de la formation, une version par session"],["Support Niveau 2","Deck avancé"],["Canvas d'atelier","Trames imprimables"],["Vidéos de préparation","Trois modules, à voir avant la première animation"]]
-    .map(([n,d])=>`<div class="lrow">${n}<span class="sm" style="margin-left:auto">${d}</span></div>`).join("");
-  return h+`</div>`;
+  const v=["lieux","ressources"].includes(S.fParam)?S.fParam:"lieux";
+  let h=chips([["Vue",[["lieux","Lieux & Salles"],["ressources","Ressources"]]]], v, "fParam");
+  if(v==="lieux"){
+    if(S.lieuFiche) return h+ficheLieuHtml(S.lieuFiche);
+    const q=(S.fLieuQ||"").toLowerCase();
+    const villes=[...new Set(LIEUX_REF.map(l=>l.ville))];
+    const list=LIEUX_REF.filter(l=>(S.fLieuVille==="all"||!S.fLieuVille||l.ville===S.fLieuVille)&&(!q||[l.n,l.ville,l.adr].join(" ").toLowerCase().includes(q)));
+    h+=`<div class="fbar"><div class="fsearch">${ICO.search}<input type="text" data-fq="fLieuQ" value="${(S.fLieuQ||"").replace(/"/g,"&quot;")}" placeholder="Lieu, ville, adresse…"></div>
+      <select class="fsel" data-fsel="fLieuVille"><option value="all">Toutes les villes</option>${villes.map(x=>`<option value="${x}" ${S.fLieuVille===x?"selected":""}>${x}</option>`).join("")}</select>
+      <button class="btn btn-s" style="margin-left:auto" data-gen="${encodeURIComponent("Nouveau lieu")}">+ Nouveau lieu</button></div>`;
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Lieu</th><th>Ville</th><th>Salles</th><th>Capacité</th><th>Accès</th><th>Qualiobee</th><th>Sessions à venir</th></tr></thead><tbody>`
+      +list.map(l=>{
+        const cap=l.salles.length?Math.max(...l.salles.map(s2=>s2[1])):null;
+        const av=CARDS.filter(c=>c.kb==="session_fia"&&c.lieu&&c.lieu.startsWith(l.n)).length;
+        return `<tr class="rowlink" data-lieu="${l.id}"><td><b>${l.n}</b></td><td>${l.ville}</td><td>${l.salles.length||'<span class="muted">—</span>'}</td><td>${cap?cap+" places":'<span class="muted">—</span>'}</td><td>${l.hal?"HAL, au shotgun":"réservation directe"}</td><td>${l.qlb?`<a class="ilink" href="https://app.qualiobee.fr/places/${l.qlb}" target="_blank" rel="noopener">Lieu Qualiobee</a>`:'<span class="muted">non relié</span>'}</td><td>${av||'<span class="muted">aucune</span>'}</td></tr>`}).join("")
+      +`</tbody></table></div>`;
+    return h;
+  }
+  h+=`<div class="fbar"><button class="btn btn-s" style="margin-left:auto" data-gen="${encodeURIComponent("Nouvelle ressource")}">+ Nouvelle ressource</button></div>`;
+  h+=RESSOURCES.map(([fam,items])=>`<div class="fsec"><div class="sect-h">${ICO.file}${fam} <span class="n2">${items.length}</span></div>`
+    +`<div class="tblwrap"><table class="tbl"><thead><tr><th>Ressource</th><th>Format</th><th>Pour qui</th><th>À quoi ça sert</th><th>État</th></tr></thead><tbody>`
+    +items.map(([n,fmt,pub,desc,on])=>`<tr><td><b>${n}</b></td><td>${fmt}</td><td>${pub}</td><td>${desc}</td><td><span class="sw ${on?"on":""}" data-frmact="${encodeURIComponent("Ressource désactivée : elle disparaît de l'espace formateur")}"><i></i></span></td></tr>`).join("")
+    +`</tbody></table></div></div>`).join("");
+  return h;
+}
+function ficheLieuHtml(id){
+  const l=LIEUX_REF.find(x=>x.id===id); if(!l) return "";
+  const sessions=CARDS.filter(c=>c.kb==="session_fia"&&c.lieu&&c.lieu.startsWith(l.n));
+  let h=`<button class="backbtn" data-lieuback="1">← Tous les lieux</button>`;
+  h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${ICO.building}</div><div><h1>${l.n}</h1></div>
+    <div class="fh-right"><button class="btn btn-s">Modifier</button><button class="btn btn-s danger">Supprimer</button></div></div>
+  <div class="idgrid">
+    ${fld("Adresse",l.adr)}${fld("Ville",l.ville)}
+    ${fld("Réservation",l.hal?"HAL Station F, au shotgun à l'ouverture du créneau":"réservation directe auprès du lieu")}
+    ${fld("Contact",l.contact)}
+    ${fld("Lieu Qualiobee",l.qlb?`<a class="ilink" href="https://app.qualiobee.fr/places/${l.qlb}" target="_blank" rel="noopener">Ouvrir sur Qualiobee</a>`:null)}
+    ${fld("Message d'accueil",l.accueil)}
+  </div></div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Salles <span class="n2">nom, capacité et identifiant HAL</span><span class="right"><button class="btn btn-s" data-gen="${encodeURIComponent("Nouvelle salle")}">+ Nouvelle salle</button></span></div>`;
+  h+=l.salles.length?`<div class="tblwrap"><table class="tbl"><thead><tr><th>Salle</th><th>Capacité</th><th>Identifiant HAL</th><th></th></tr></thead><tbody>`
+    +l.salles.map(([n,cap,hal])=>`<tr><td><b>${n}</b></td><td>${cap} places</td><td>${hal||'<span class="muted">—</span>'}</td><td class="acts"><a class="ilink">Modifier</a><a class="ilink danger">Supprimer</a></td></tr>`).join("")
+    +`</tbody></table></div>`:`<div class="lrow"><span class="sm">Aucune salle : la formation se tient chez le client.</span></div>`;
+  h+=`</div>`;
+  h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Photos et guide d'accès <span class="n2">elles alimentent le guide envoyé aux apprenants</span></div>
+    <div class="lrow">${l.photos} photo${l.photos>1?"s":""} déposée${l.photos>1?"s":""}<button class="btn btn-s" style="margin-left:auto" data-gen="${encodeURIComponent("Ajout de photos")}">Ajouter</button></div>
+    <div class="lrow">Guide d'accès<a class="ilink" style="margin-left:auto" data-gen="${encodeURIComponent("Aperçu du guide d'accès")}">Aperçu</a></div></div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Sessions <span class="n2">tenues ici</span></div>`
+    +(sessions.map(c=>`<div class="lrow"><a class="ilink" data-fiche="session::${c.id}">${c.title}</a><span class="chip" style="margin-left:auto">${colLabel(c)}</span></div>`).join("")||`<div class="lrow"><span class="sm">Aucune session pour l'instant.</span></div>`)
+    +`</div></div>`;
+  return h;
 }
 function sessionListHtml(list){
   if(!list.length) return `<div class="stub"><p>Aucune session ne correspond aux filtres.</p></div>`;
@@ -2532,9 +2593,9 @@ const AUTOS=[
  ["Conformité","Preuves · collecte hebdomadaire","Seconde passe de rattrapage, chaque lundi.",1,"lundi"],
  ["Facturation","Facturation Bibby","Constitution et envoi des dossiers d'affacturage CPF.",1,"il y a 1 j · 9 dossiers"],
  ["Delivery","Shot-gun HAL2 · boardrooms Station F","Réservation des salles Station F dès l'ouverture du créneau.",1,"ce matin · 2 salles"],
- ["2.0","Détection des signatures","Signature du devis, de la convention, du mandat ou du contrat sur ARD et Qualiobee : la tâche se coche toute seule.",1,"nouveau dans la 2.0"],
- ["2.0","Détection des paiements","Virements Qonto et prélèvements Mollie relus en continu, la facture est tamponnée acquittée.",1,"nouveau dans la 2.0"],
- ["2.0","Création des cartes","Une carte naît de l'ARD, de la déclaration de sortie ou du dépôt d'une facture formateur, selon la règle du rail.",1,"nouveau dans la 2.0"],
+ ["Closing","Détection des signatures","Signature du devis, de la convention, du mandat ou du contrat sur ARD et Qualiobee : la tâche se coche toute seule.",1,"il y a 40 min · 9 signatures détectées"],
+ ["Facturation","Détection des paiements","Virements Qonto et prélèvements Mollie relus en continu, la facture est tamponnée acquittée.",1,"il y a 12 min · 6 paiements rapprochés"],
+ ["Delivery","Création des cartes","Une carte naît de l'ARD, de la déclaration de sortie ou du dépôt d'une facture formateur, selon la règle du rail.",1,"il y a 3 h · 14 cartes créées"],
 ];
 /* fiche type d'une automatisation : ce qu'elle fait, ses réglages, sa santé, son historique */
 const AUTO_HISTO=[
@@ -2551,7 +2612,7 @@ function ficheAutoHtml(nom){
   h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${ICO.refresh}</div><div><h1>${nom}</h1></div>
     <div class="fh-right">${on===2?`<span class="chip">Toujours active</span>`:`<span class="sw ${on?"on":""}" data-autotoggle="${encodeURIComponent(nom)}"><i></i></span>`}<button class="btn btn-s" data-autolaunch="${encodeURIComponent(nom)}">Lancer maintenant</button></div></div>
   <div class="idgrid">
-    ${fld("Catégorie",cat==="2.0"?"Nouvelle 2.0":cat)}
+    ${fld("Catégorie",cat)}
     ${fld("Déclencheur","Passage de la carte à l'étape concernée")}
     ${fld("Dernier passage",stat)}
     ${fld("Prochain passage","dans 4 h (toutes les 6 h)")}
@@ -2588,12 +2649,12 @@ function pageAutomatisations(){
   const cats=[...new Set(AUTOS.map(a=>a[0]))];
   const f=cats.includes(S.fAuto)?S.fAuto:cats[0];
   let h=`<div class="pagehead"><h1>Automatisations</h1></div>`;
-  h+=`<div class="tabsline">`+cats.map(c=>`<button class="${f===c?"on":""}" data-chip="fAuto::${c}">${c==="2.0"?"Nouvelles 2.0":c}</button>`).join("")+`</div>`;
+  h+=`<div class="tabsline">`+cats.map(c=>`<button class="${f===c?"on":""}" data-chip="fAuto::${c}">${c}</button>`).join("")+`</div>`;
   const list=AUTOS.filter(a=>a[0]===f);
   h+=`<div class="autolist">`+list.map(([cat,nom,desc,on,stat])=>`<div class="autocard" data-autorun="${encodeURIComponent(nom)}">
     <span class="ic">${ICO.refresh}</span>
     <div class="tx"><div class="nm">${nom}</div><div class="ds">${desc}</div></div>
-    <span class="catb">${cat==="2.0"?"Nouvelle 2.0":cat}</span>
+    <span class="catb">${cat}</span>
     <span class="stb ${on===2?"always":on?"on":"off"}">${on===2?"Toujours active":on?"ACTIVÉ":"DÉSACTIVÉ"}</span>
     <span class="stat">${stat}</span>
     <span class="chev">›</span></div>`).join("")+`</div>`;
@@ -2605,8 +2666,7 @@ const TPL_CATS=[
  ["Closing",["Confirmation de rendez-vous","Rappel de rendez-vous J-1","Relance no-show","Envoi du devis"]],
  ["Coaching",["Proposition de créneaux","Demande des attentes","Compte rendu de séance","Témoignage de clôture"]],
  ["Emails",["Mail de bienvenue","Envoi de facture","Relance client","Relance OPCO","Relance Bibby"]],
- ["Supports de formation",["Support Niveau 1","Support Niveau 2","Support Intra","Grille de préparation des apprenants"]],
-];
+ ];
 /* modèles de to do de session, par phase : ce que le formateur retrouve sur sa carte (rapatrié de l'admin BookMySessions) */
 const TODO_SESSION=[
  ["Avant la session",[
@@ -2647,7 +2707,7 @@ function pageTemplates(){
   const canal=n=>/WhatsApp|créneaux|attentes/i.test(n)?"WhatsApp":"Email";
   const canaux=new Set(cat[1].map(canal));
   h+=`<div class="fsec">`;
-  h+=cat[1].map(n=>`<div class="frow tplrow"><div class="tx"><div class="tt">${n}</div></div>${f==="Supports de formation"?`<button class="btn btn-s" data-tpledit="${encodeURIComponent(n)}">Ouvrir l'éditeur</button>`:`${canaux.size>1?`<span class="chip">${canal(n)}</span>`:""}<button class="btn btn-s" data-tpl="${encodeURIComponent(n)}">Aperçu</button>`}</div>`).join("");
+  h+=cat[1].map(n=>`<div class="frow tplrow"><div class="tx"><div class="tt">${n}</div></div>${canaux.size>1?`<span class="chip">${canal(n)}</span>`:""}<button class="btn btn-s" data-tpl="${encodeURIComponent(n)}">Aperçu</button></div>`).join("");
   return h+`</div>`;
 }
 function pageGenerer(){
@@ -2699,6 +2759,57 @@ function pageServices(){
   if(f==="coaching") h+=boardHtml("coaching_frm", CARDS.filter(c=>c.kb==="coaching_frm"&&c.mine), {sections:1});
   else if(f==="intra") h+=boardHtml("intra_frm", CARDS.filter(c=>c.kb==="intra_frm"&&c.mine), {aPrendre:1});
   else h+=boardHtml("session_frm", CARDS.filter(c=>c.kb==="session_frm"&&c.offre===f&&c.mine), {aPrendre:1});
+  return h;
+}
+/* FAQ : les réponses, par public ; Remontées : un seul flux pour les bugs, les idées et les questions */
+const FAQ_ENTRIES=[
+ ["Tous","Où trouver la convention signée d'un client ?","Sur la fiche client, dans le bloc Documents de la vente : le lien Qualiobee s'ouvre directement sur la pièce signée."],
+ ["Closeurs","Le client n'a pas reçu son lien de mandat, que faire ?","Ouvrez la carte inscription : la tâche « génère le lien de mandat » porte un bouton de renvoi. Si le lien n'existe pas, l'anomalie apparaît dans Pilotage."],
+ ["Closeurs","Comment changer le moyen de paiement d'une vente ?","Sur la fiche client, bouton Modifier de la vente : la carte de facturation change de rail automatiquement."],
+ ["Formateurs","Je ne peux plus animer une session","Depuis la carte de la session, « Demander à me retirer » : France IA republie la session au shotgun et valide un remplaçant."],
+ ["Formateurs","Quand ma prestation est-elle payée ?","Validez votre imputation dans le coffre-fort, créez votre facture : elle est réglée après validation. Deux verrous, l'étude de cas et l'inscription des CPF à la certification."],
+ ["Admins","Un virement n'apparaît pas sur la carte","Il est dans Anomalies, vue Facturation, ligne « Virement reçu non rapproché » : le rapprochement se fait dans Qonto, DELIV'IA relit le statut."],
+];
+const REMONTEES=[
+ {t:"bug",titre:"La recherche globale ne trouve pas les intra",qui:"Alex R.",role:"Closeur",v:6,st:"a_traiter",c:3,d:"2026-08-23"},
+ {t:"idee",titre:"Pouvoir dupliquer une session pour la semaine suivante",qui:"Jeanne D.",role:"Admin",v:11,st:"a_traiter",c:5,d:"2026-08-22"},
+ {t:"question",titre:"Qui relance le client quand l'OPCO ne répond pas ?",qui:"Chloé M.",role:"Closeuse",v:2,st:"en_cours",c:2,d:"2026-08-21"},
+ {t:"bug",titre:"Le compte rendu de coaching ne se sauvegarde pas sur mobile",qui:"Sarah K.",role:"Formatrice",v:4,st:"en_cours",c:1,d:"2026-08-20"},
+ {t:"idee",titre:"Voir les places restantes directement dans À prendre",qui:"Marc D.",role:"Formateur",v:8,st:"termine",c:4,d:"2026-08-14",faq:1},
+ {t:"question",titre:"Comment corriger un émargement signé par erreur ?",qui:"Sofia R.",role:"Admin",v:1,st:"termine",c:2,d:"2026-08-12",faq:1},
+];
+const REM_T={bug:["Bug","ko"],idee:["Idée","ok"],question:["Question",""]};
+const REM_COLS=[["a_traiter","À traiter"],["en_cours","En cours"],["termine","Terminé"]];
+function pageFaq(){
+  const v=["faq","remontees"].includes(S.fFaq)?S.fFaq:"faq";
+  let h=`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
+  h+=chips([["Vue",[["faq","FAQ"],["remontees","Remontées"]]]], v, "fFaq");
+  if(v==="faq"){
+    const pubs=["Tous","Closeurs","Formateurs","Admins"];
+    const pub=pubs.includes(S.fFaqPub)?S.fFaqPub:"Tous";
+    const q=(S.fFaqQ||"").toLowerCase();
+    h+=`<div class="fbar">`+chips([["Public",pubs.map(x=>[x,x])]], pub, "fFaqPub")
+      +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fFaqQ" value="${(S.fFaqQ||"").replace(/"/g,"&quot;")}" placeholder="Chercher une réponse…"></div>
+      <button class="btn btn-s" style="margin-left:auto" data-frmact="${encodeURIComponent("Nouvelle question ajoutée à la FAQ")}">+ Nouvelle réponse</button></div>`;
+    const list=FAQ_ENTRIES.filter(([p2,qq,r])=>(pub==="Tous"||p2===pub||p2==="Tous")&&(!q||(qq+" "+r).toLowerCase().includes(q)));
+    h+=`<div class="fsec">`+list.map(([p2,qq,r])=>`<details class="acc" data-acc="faq-${encodeURIComponent(qq).slice(0,14)}"><summary><span class="chev">▶</span><span class="tt">${qq}</span><span class="end"><span class="chip">${p2}</span></span></summary><div class="inner"><p class="pd" style="line-height:1.6">${r}</p><div class="mactions"><button class="btn btn-s" data-frmact="${encodeURIComponent("Remontée créée : cette réponse ne suffit pas")}">Cette réponse ne m'aide pas</button></div></div></details>`).join("")
+      +(list.length?"":`<div class="lrow"><span class="sm">Aucune réponse ne correspond.</span></div>`)+`</div>`;
+    return h;
+  }
+  const ft=["tout","bug","idee","question"].includes(S.fRemT)?S.fRemT:"tout";
+  const q2=(S.fRemQ||"").toLowerCase();
+  h+=`<div class="fbar">`+chips([["Type",[["tout","Tout"],["bug","Bugs"],["idee","Idées"],["question","Questions"]]]], ft, "fRemT")
+    +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fRemQ" value="${(S.fRemQ||"").replace(/"/g,"&quot;")}" placeholder="Chercher une remontée…"></div>
+    <button class="btn btn-p" style="margin-left:auto" data-frmact="${encodeURIComponent("Nouvelle remontée créée")}">+ Nouvelle remontée</button></div>`;
+  const list=REMONTEES.filter(r=>(ft==="tout"||r.t===ft)&&(!q2||r.titre.toLowerCase().includes(q2)));
+  h+=`<div class="board rembd">`+REM_COLS.map(([id,lbl])=>{
+    const inCol=list.filter(r=>r.st===id);
+    return `<div class="col"><div class="col-h"><span class="pill"></span><h3>${lbl}</h3><span class="n">${inCol.length}</span></div><div class="colbody">`
+      +inCol.map(r=>`<div class="card clickable" data-frmact="${encodeURIComponent("Détail de la remontée : "+r.titre)}"><div class="ct"><span class="t">${r.titre}</span></div>
+        <div class="remmeta"><span class="chip ${REM_T[r.t][1]}">${REM_T[r.t][0]}</span><span class="sm">${r.qui} · ${r.role}</span></div>
+        <div class="remfoot"><span class="vote">▲ ${r.v}</span><span class="sm">${r.c} commentaire${r.c>1?"s":""}</span><span class="sm">${fmtJour(r.d)}</span>${r.faq?`<span class="chip ok">dans la FAQ</span>`:r.st==="termine"?`<button class="btn-xs" data-frmact="${encodeURIComponent("Remontée promue en réponse de FAQ")}">Promouvoir en FAQ</button>`:""}</div></div>`).join("")
+      +(inCol.length?"":`<div class="colempty">Rien ici.</div>`)+`</div></div>`;
+  }).join("")+`</div>`;
   return h;
 }
 function pageRessources(){
@@ -3465,6 +3576,7 @@ function render(){
     else if(S.tab==="automatisations") h=pageAutomatisations();
     else if(S.tab==="templates") h=pageTemplates();
     else if(S.tab==="profil") h=pageProfilFormateur();
+    else if(S.tab==="faq") h=pageFaq();
     else if(S.tab==="ressources") h=pageRessources();
     else if(S.tab==="generer") h=pageGenerer();
     else if(S.tab==="preuves") h=pagePreuves();
@@ -3554,7 +3666,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3648,6 +3760,8 @@ document.addEventListener("click",e=>{
   if(t.dataset.autotoggle){const el=t.closest(".sw");el.classList.toggle("on");toast(el.classList.contains("on")?"Automatisation réactivée.":"Automatisation coupée : plus rien ne partira tant qu'elle est éteinte.");return}
   if(t.dataset.autorun){S.autoFiche=decodeURIComponent(t.dataset.autorun);render();return}
   if(t.dataset.autoback){S.autoFiche=null;render();return}
+  if(t.dataset.lieu){S.lieuFiche=t.dataset.lieu;render();return}
+  if(t.dataset.lieuback){S.lieuFiche=null;render();return}
   if(t.dataset.autolaunch){toast(`<b>${decodeURIComponent(t.dataset.autolaunch)}</b> : lancée à la main, le résultat apparaît dans l'historique et dans les logs.`);return}
   if(t.dataset.anogo){S.tab="anomalies";S.fAno="systeme";S.autoFiche=null;render();return}
   if(t.dataset.tpledit){toast(`Éditeur du support <b>${decodeURIComponent(t.dataset.tpledit)}</b> : une version par session, partagée au formateur.`);return}
