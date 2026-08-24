@@ -2515,7 +2515,7 @@ function pageActions(){
 const AUTOS=[
  ["Emails","Mail de bienvenue","Email enrichi (dates, lieu, formateur) au passage en inscription validée, individuel en B2C, groupé en B2B.",1,"il y a 2 h · 148 envois ce mois"],
  ["Emails","Envoi des factures par mail","À la génération d'une facture, elle part au client, acquittée si le paiement est déjà reçu. CPF et OPCO exclus.",1,"il y a 5 h · 61 envois"],
- ["CRM","Passage won GHL","Au passage payé et inscrit, l'opportunité GHL bascule en won, avec report du closeur et du setteur.",2,"hier · 27 bascules"],
+ ["Closing","Passage won GHL","Au passage payé et inscrit, l'opportunité GHL bascule en won, avec report du closeur et du setteur.",2,"hier · 27 bascules"],
  ["Closing","Rappels et confirmations de rendez-vous","Confirmations et rappels WhatsApp et email des rendez-vous de closing, trois scénarios, pour réduire le no-show.",1,"il y a 20 min · 12 envois aujourd'hui"],
  ["Conformité","Preuves · dossiers Drive","Création du dossier Drive de la session et de chaque apprenant.",2,"il y a 6 h"],
  ["Conformité","Preuves · collecte Qualiobee","Convocations, émargements signés, certificats de réalisation.",1,"il y a 6 h · 214 pièces"],
@@ -2536,7 +2536,55 @@ const AUTOS=[
  ["2.0","Détection des paiements","Virements Qonto et prélèvements Mollie relus en continu, la facture est tamponnée acquittée.",1,"nouveau dans la 2.0"],
  ["2.0","Création des cartes","Une carte naît de l'ARD, de la déclaration de sortie ou du dépôt d'une facture formateur, selon la règle du rail.",1,"nouveau dans la 2.0"],
 ];
+/* fiche type d'une automatisation : ce qu'elle fait, ses réglages, sa santé, son historique */
+const AUTO_HISTO=[
+ ["2026-08-24T09:12","Marie Dupont · Paris 12-13 sept","ok",1,""],
+ ["2026-08-24T09:12","Karim Benali · Paris 12-13 sept","ok",1,""],
+ ["2026-08-23T18:40","Hôtel du Parc · Bordeaux 26-27 sept","ok",2,"1re tentative refusée (boîte pleine)"],
+ ["2026-08-23T09:05","contact@garagemoderne.fr","ko",3,"Adresse invalide : mailbox unavailable"],
+ ["2026-08-22T14:31","Emma Bianchi · Bordeaux 20-21 juin","ok",1,""],
+];
+function ficheAutoHtml(nom){
+  const a=AUTOS.find(x=>x[1]===nom); if(!a) return `<div class="stub"><p>Automatisation inconnue.</p></div>`;
+  const [cat,,desc,on,stat]=a;
+  let h=`<button class="backbtn" data-autoback="1">← Toutes les automatisations</button>`;
+  h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${ICO.refresh}</div><div><h1>${nom}</h1></div>
+    <div class="fh-right">${on===2?`<span class="chip">Toujours active</span>`:`<span class="sw ${on?"on":""}" data-autotoggle="${encodeURIComponent(nom)}"><i></i></span>`}<button class="btn btn-s" data-autolaunch="${encodeURIComponent(nom)}">Lancer maintenant</button></div></div>
+  <div class="idgrid">
+    ${fld("Catégorie",cat==="2.0"?"Nouvelle 2.0":cat)}
+    ${fld("Déclencheur","Passage de la carte à l'étape concernée")}
+    ${fld("Dernier passage",stat)}
+    ${fld("Prochain passage","dans 4 h (toutes les 6 h)")}
+  </div></div>`;
+  h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Ce qu'elle fait</div>
+    <p class="pd" style="line-height:1.6">${desc}</p>
+    <div class="subh">Enchaînement</div>
+    <div class="lrow">1 · L'événement déclencheur est détecté<span class="chip ok">automatique</span></div>
+    <div class="lrow">2 · L'action part (envoi, création, dépôt)<span class="chip ok">automatique</span></div>
+    <div class="lrow">3 · La tâche de la carte se coche, horodatée<span class="chip ok">automatique</span></div>
+    <div class="lrow">4 · En cas d'échec, l'anomalie apparaît dans Pilotage<span class="chip warn">à traiter</span></div>
+  </div>
+  <div class="fsec"><div class="sect-h">${ICO.cap}Réglages</div>
+    <div class="lrow">Canal<span class="chip">Email (Brevo)</span></div>
+    <div class="lrow">Délai après l'événement<span class="chip">immédiat</span></div>
+    <div class="lrow">Nombre de tentatives<span class="chip">3, espacées de 30 min</span></div>
+    <div class="lrow">Modèle utilisé<a class="ilink" style="margin-left:auto" data-tpl="${encodeURIComponent(nom)}">Voir le template</a></div>
+    <div class="lrow">Qui est prévenu en cas d'échec<span class="chip">Admin France IA</span></div>
+  </div></div>`;
+  const ok=AUTO_HISTO.filter(x=>x[2]==="ok").length, ko=AUTO_HISTO.length-ok;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Santé sur 30 jours <span class="n2">${ok} réussite${ok>1?"s":""} · ${ko} échec${ko>1?"s":""} · ${Math.round(ok/AUTO_HISTO.length*100)} % de réussite</span></div>
+    <div class="tblwrap"><table class="tbl"><thead><tr><th>Date</th><th>Cible</th><th>Statut</th><th>Tentatives</th><th>Erreur</th><th></th></tr></thead><tbody>`
+    +AUTO_HISTO.map(([d,cible,st,n,err])=>`<tr><td>${fmtDT(d)}</td><td>${cible}</td><td><span class="chip ${st==="ok"?"ok":"warn"}">${st==="ok"?"réussi":"échec"}</span></td><td>${n}</td><td>${err||'<span class="muted">—</span>'}</td><td class="acts">${st==="ok"?"":`<a class="ilink" data-autolaunch="${encodeURIComponent(nom)}">Rejouer</a>`}</td></tr>`).join("")
+    +`</tbody></table></div></div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Ce qu'elle touche</div>
+    <div class="lrow">Tâche cochée<span class="chip">Admin France IA envoie le mail de bienvenue (automatique)</span></div>
+    <div class="lrow">Étape<span class="chip">Inscription validée</span></div>
+    <div class="lrow">Anomalie levée en cas d'échec<a class="ilink" style="margin-left:auto" data-anogo="1">Envoi d'e-mail en échec</a></div>
+  </div>`;
+  return h;
+}
 function pageAutomatisations(){
+  if(S.autoFiche) return ficheAutoHtml(S.autoFiche);
   const cats=[...new Set(AUTOS.map(a=>a[0]))];
   const f=cats.includes(S.fAuto)?S.fAuto:cats[0];
   let h=`<div class="pagehead"><h1>Automatisations</h1></div>`;
@@ -2559,10 +2607,42 @@ const TPL_CATS=[
  ["Emails",["Mail de bienvenue","Envoi de facture","Relance client","Relance OPCO","Relance Bibby"]],
  ["Supports de formation",["Support Niveau 1","Support Niveau 2","Support Intra","Grille de préparation des apprenants"]],
 ];
+/* modèles de to do de session, par phase : ce que le formateur retrouve sur sa carte (rapatrié de l'admin BookMySessions) */
+const TODO_SESSION=[
+ ["Avant la session",[
+  ["Dupliquer la page template de la section Sessions et ajouter les dates au titre (ex. « Formation France IA 15-16 septembre — Prénom »)","Notion"],
+  ["Adapter la recherche approfondie au profil de chaque participant (assistant préparé : nom + métier en entrée)","Notion"],
+  ["Regarder le tuto plateforme Qualiobee","Vidéo"],
+  ["Regarder le tuto formation Notion x Canva","Vidéo"]]],
+ ["Matin J1",[
+  ["Discuter avec TOUS les participants dès l'arrivée, mettre le bon mood, s'intéresser",null],
+  ["Acheter pains au chocolat, croissants et bouteilles d'eau",null],
+  ["Partager le Notion du jour 1 seulement (WhatsApp et/ou mail)",null],
+  ["Expliquer le fonctionnement du Notion (listes déroulantes, contenus additionnels, accès à vie, sommaire)",null],
+  ["Passer 2 minutes à expliquer la certification et le temps de préparation nécessaire",null]]],
+ ["Soir J1",[
+  ["Ajouter des contenus additionnels pertinents au profil du groupe dans la section du jour 2","Notion"],
+  ["Générer les instructions des assistants personnalisés de l'atelier 5 (assistant générateur d'assistants)","Notion"],
+  ["Ajouter l'ensemble des diapositives tout en haut de la page du jour 2",null]]],
+ ["Matin J2",[
+  ["Partager la page Notion intégralement (amont, J1, J2, préparation certification) par WhatsApp et/ou mail",null],
+  ["Présenter le contenu additionnel ajouté selon les besoins des participants",null],
+  ["Insister sur le côté sur-mesure du jour 2 (assistants, contenu additionnel)",null]]],
+ ["Soir J2",[
+  ["Vérifier que tout le monde a complété le quiz (Qualiobee), relancer sinon, les bonnes réponses comptent",null],
+  ["Vérifier que tout le monde a émargé (Qualiobee), relancer sinon",null],
+  ["Uploader les slides dans la page Notion des apprenants",null]]],
+];
 function pageTemplates(){
   const f=S.fTpl||"Delivery";
   let h=`<div class="pagehead"><h1>Templates</h1></div>`;
-  h+=chips([["Catégorie",TPL_CATS.map(([c])=>[c,c])]], f, "fTpl");
+  h+=chips([["Catégorie",TPL_CATS.map(([c])=>[c,c]).concat([["todo","ToDo sessions"]])]], f, "fTpl");
+  if(f==="todo"){
+    h+=TODO_SESSION.map(([phase,items])=>`<div class="fsec"><div class="sect-h">${ICO.cap}${phase} <span class="n2">${items.length} à faire</span><span class="right"><button class="btn btn-s" data-frmact="${encodeURIComponent("Nouveau ToDo ajouté à la phase "+phase)}">+ Nouveau ToDo</button></span></div>`
+      +items.map(([lbl,src],i)=>`<div class="frow tplrow"><span class="sm" style="width:22px">${i+1}</span><div class="tx"><div class="tt">${lbl}</div></div>${src?`<a class="ilink" data-frmact="${encodeURIComponent("Lien "+src+" ouvert")}">${src}</a>`:""}<span class="sw on" data-frmact="${encodeURIComponent("ToDo désactivé pour les prochaines sessions")}"><i></i></span></div>`).join("")
+      +`</div>`).join("");
+    return h;
+  }
   const cat=TPL_CATS.find(([c])=>c===f)||TPL_CATS[0];
   h+=`<div class="fsec"><h2>${cat[0]} <span class="n2">${cat[1].length} modèle${cat[1].length>1?"s":""}</span></h2>`;
   h+=cat[1].map(n=>`<div class="frow tplrow"><div class="tx"><div class="tt">${n}</div><div class="sm">${f==="Supports de formation"?"Support éditable, une version par session":"Variables remplies à l'envoi"}</div></div>${f==="Supports de formation"?`<button class="btn btn-s" data-tpledit="${encodeURIComponent(n)}">Ouvrir l'éditeur</button>`:`<span class="chip">${/WhatsApp|créneaux|attentes/i.test(n)?"WhatsApp":"Email"}</span><button class="btn btn-s" data-tpl="${encodeURIComponent(n)}">Aperçu</button>`}</div>`).join("");
@@ -2914,6 +2994,9 @@ function ficheFormateurHtml(key){
   h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Sessions <span class="n2">à venir et passées</span></div>`;
   h+=sessions.map(c=>`<div class="frow"><div><div class="tt"><a class="ilink" data-fiche="session::${c.id}">${c.title}</a></div><div class="sm">${OFFRES[c.offre]} · ${c.lieu}</div></div><span class="chip">${colLabel(c)}</span></div>`).join("")
     ||f.histo.map(([t,d])=>`<div class="frow"><div><div class="tt">${t}</div><div class="sm">${d}</div></div></div>`).join("");
+  h+=`</div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.file}Études de cas <span class="n2">déposées après chaque session, elles débloquent la facture</span></div>`;
+  h+=(f.histo||[]).slice(0,2).map(([t,d],i)=>`<div class="frow"><div><div class="tt">${t}</div><div class="sm">${i===0?"Contexte, objectifs, solutions, résultats renseignés":"En attente : le formateur ne l'a pas encore déposée"}</div></div><span class="chip ${i===0?"ok":"warn"}">${i===0?"déposée":"manquante"}</span>${i===0?`<button class="btn btn-s" data-frmact="${encodeURIComponent("Étude de cas ouverte")}">Lire</button>`:`<button class="btn btn-s" data-frmact="${encodeURIComponent("Relance envoyée au formateur")}">Relancer</button>`}</div>`).join("")||`<div class="lrow"><span class="sm">Aucune étude de cas attendue.</span></div>`;
   h+=`</div>`;
   h+=`<div class="fsec"><div class="sect-h">${ICO.wallet}Factures <span class="n2">une par prestation, validées sur le kanban Facturation formateur</span></div>`;
   h+=(f.factures.length?f.factures.map(([m,mt,st])=>`<div class="frow"><div><div class="tt">${m}</div><div class="sm">${mt}</div></div><span class="chip ${/payée/.test(st)?"ok":"warn"}">${st}</span></div>`).join("")
@@ -3469,7 +3552,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3519,7 +3602,7 @@ document.addEventListener("click",e=>{
     },750);
     return;
   }
-  if(t.dataset.tab){S.tab=t.dataset.tab;S.fiche=null;render();return}
+  if(t.dataset.tab){S.tab=t.dataset.tab;S.fiche=null;S.autoFiche=null;render();return}
   if(t.dataset.vcopen!==undefined){const m=document.getElementById("vcmenu"); if(m&&!e.target.closest("[data-voircomme]")) m.classList.toggle("on");}
   if(t.dataset.voircomme){S.voirComme=t.dataset.voircomme; S.role=t.dataset.voircomme; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; if(S.role==="setter") S.tab="facturation"; S.fFact=S.role==="closer"?"virement":S.role==="setter"?"setteur":"cpf"; render(); return}
   if(t.dataset.newsession){S.newSess={type:"inter"};render();return}
@@ -3561,7 +3644,10 @@ document.addEventListener("click",e=>{
   if(t.dataset.logclear){S.fLogD1="";S.fLogD2="";render();return}
   if(t.dataset.prendrequal!==undefined){S.fPrendreQual=!S.fPrendreQual;render();return}
   if(t.dataset.autotoggle){const el=t.closest(".sw");el.classList.toggle("on");toast(el.classList.contains("on")?"Automatisation réactivée.":"Automatisation coupée : plus rien ne partira tant qu'elle est éteinte.");return}
-  if(t.dataset.autorun){toast(`<b>${decodeURIComponent(t.dataset.autorun)}</b> : sa page de détail s'ouvrirait ici (état réel, historique, réglages, bouton Lancer maintenant).`);return}
+  if(t.dataset.autorun){S.autoFiche=decodeURIComponent(t.dataset.autorun);render();return}
+  if(t.dataset.autoback){S.autoFiche=null;render();return}
+  if(t.dataset.autolaunch){toast(`<b>${decodeURIComponent(t.dataset.autolaunch)}</b> : lancée à la main, le résultat apparaît dans l'historique et dans les logs.`);return}
+  if(t.dataset.anogo){S.tab="anomalies";S.fAno="systeme";S.autoFiche=null;render();return}
   if(t.dataset.tpledit){toast(`Éditeur du support <b>${decodeURIComponent(t.dataset.tpledit)}</b> : une version par session, partagée au formateur.`);return}
   if(t.dataset.relance){const c=CARDS.find(x=>x.id===t.dataset.relance);toast(`Relance de signature envoyée à <b>${c?c.title:""}</b>.`);return}
   if(t.dataset.sesspass!==undefined){S.sessPass=!S.sessPass;render();return}
