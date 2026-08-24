@@ -2644,8 +2644,10 @@ function pageTemplates(){
     return h;
   }
   const cat=TPL_CATS.find(([c])=>c===f)||TPL_CATS[0];
-  h+=`<div class="fsec"><h2>${cat[0]} <span class="n2">${cat[1].length} modèle${cat[1].length>1?"s":""}</span></h2>`;
-  h+=cat[1].map(n=>`<div class="frow tplrow"><div class="tx"><div class="tt">${n}</div><div class="sm">${f==="Supports de formation"?"Support éditable, une version par session":"Variables remplies à l'envoi"}</div></div>${f==="Supports de formation"?`<button class="btn btn-s" data-tpledit="${encodeURIComponent(n)}">Ouvrir l'éditeur</button>`:`<span class="chip">${/WhatsApp|créneaux|attentes/i.test(n)?"WhatsApp":"Email"}</span><button class="btn btn-s" data-tpl="${encodeURIComponent(n)}">Aperçu</button>`}</div>`).join("");
+  const canal=n=>/WhatsApp|créneaux|attentes/i.test(n)?"WhatsApp":"Email";
+  const canaux=new Set(cat[1].map(canal));
+  h+=`<div class="fsec">`;
+  h+=cat[1].map(n=>`<div class="frow tplrow"><div class="tx"><div class="tt">${n}</div></div>${f==="Supports de formation"?`<button class="btn btn-s" data-tpledit="${encodeURIComponent(n)}">Ouvrir l'éditeur</button>`:`${canaux.size>1?`<span class="chip">${canal(n)}</span>`:""}<button class="btn btn-s" data-tpl="${encodeURIComponent(n)}">Aperçu</button>`}</div>`).join("");
   return h+`</div>`;
 }
 function pageGenerer(){
