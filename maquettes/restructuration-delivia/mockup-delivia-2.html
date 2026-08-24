@@ -1387,6 +1387,27 @@ const SESS = {
  pn2juil: {lbl:"Paris N2 · 4-5 juillet",lieu:"Station F, Paris 13e",            ville:"Paris",    dt:{j1:"2026-07-04",j2:"2026-07-05"}, frm:"Sarah K.", niveau:"Plutôt avancé"},
 };
 const FORMATEURS = ["Sarah K.","Marc D.","Inès B."];
+/* fiches formateurs : ce que Staff porte aujourd'hui, rapatrié dans l'Annuaire */
+const FRM = {
+ "Sarah K.":{id:"frm_sarah",nom:"Sarah Koné",email:"sarah.kone@gmail.com",tel:"06 24 55 10 87",villes:["Paris","Lille"],offres:["Formation N1","Formation N2","Coaching"],
+   onboarding:[["Contrat de collaboration signé",1],["Attestation URSSAF à jour",1],["RIB déposé",1],["Assurance responsabilité civile",1],["Charte qualité France IA",1]],
+   docs:[["CV","à jour · 12 juin"],["Contrat de collaboration","signé · 3 mars"],["Attestation URSSAF","valide jusqu'au 31 décembre"],["RIB","déposé"]],
+   quali:[],retrait:null,appro:null,
+   histo:[["Paris · 12-13 sept","Formation N1"],["Paris N2 · 4-5 juillet","Formation N2"],["Coaching Awa Diallo","Coaching 4 h"]],
+   factures:[["Août 2026","1 400 €","en attente de validation"],["Juillet 2026","2 800 €","payée le 5 août"]]},
+ "Marc D.":{id:"frm_marc",nom:"Marc Dubois",email:"marc.dubois@gmail.com",tel:"07 41 02 66 30",villes:["Bordeaux","Toulouse"],offres:["Formation N1"],
+   onboarding:[["Contrat de collaboration signé",1],["Attestation URSSAF à jour",0],["RIB déposé",1],["Assurance responsabilité civile",1],["Charte qualité France IA",1]],
+   docs:[["CV","à jour · 2 août"],["Contrat de collaboration","signé · 14 janvier"],["Attestation URSSAF","expirée depuis le 30 juin"],["RIB","déposé"]],
+   quali:[["Formation N2","demandée le 19 août"]],retrait:null,appro:"Nouveau numéro de téléphone, en attente de validation",
+   histo:[["Bordeaux · 26-27 sept","Formation N1"],["Bordeaux · 20-21 juin","Formation N1"]],
+   factures:[["Juillet 2026","1 400 €","payée le 5 août"]]},
+ "Inès B.":{id:"frm_ines",nom:"Inès Bertrand",email:"ines.bertrand@gmail.com",tel:"06 88 74 21 09",villes:["Lyon"],offres:["Formation N1","Coaching"],
+   onboarding:[["Contrat de collaboration signé",1],["Attestation URSSAF à jour",1],["RIB déposé",0],["Assurance responsabilité civile",1],["Charte qualité France IA",0]],
+   docs:[["CV","à jour · 30 juillet"],["Contrat de collaboration","signé · 2 juin"],["Attestation URSSAF","valide jusqu'au 31 décembre"],["RIB","manquant"]],
+   quali:[],retrait:"Demande de retrait de la session de Lyon · 3-4 oct",appro:null,
+   histo:[["Lyon · 3-4 oct","demande en attente"]],
+   factures:[]},
+};
 /* comptes ayant un accès à DELIV'IA, avec leurs droits page par page (admin : tout, non modifiable) */
 const PAGES_ACCES = [["sessions","Sessions"],["inscription","Inscription"],["facturation","Facturation"],["anomalies","Anomalies"],["actions","Actions"],["automatisations","Automatisations"],["templates","Templates"],["utilisateurs","Annuaire"],["faq","FAQ & Feedback"],["preuves","Preuves"],["generer","Générer"]];
 const APPS_ACCES = [["apprenant","Espace client / apprenant"],["dash","Data Dashboard"]];
@@ -2040,6 +2061,9 @@ function modalHtml(){
     if(cl) h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note</div><textarea class="notes-ta" data-note="${cl.id}">${cl.note||""}</textarea></div>`;
   }
   const edofBtn = card.fin==="cpf"&&(card.kb==="insc"||card.kb==="fact_cpf") ? `<button class="btn btn-s" data-syncedof="${card.id}">Sync EDOF</button>` : "";
+  if(card.kb==="session_frm"||card.kb==="intra_frm"){
+    h+=`<div class="mact2"><button class="btn btn-s" data-frmact="${encodeURIComponent("Support de formation de cette session ouvert dans un nouvel onglet")}">Support de formation</button><button class="btn btn-s danger" data-frmact="${encodeURIComponent("Demande de retrait envoyée : France IA republie la session au shotgun")}">Demander à me retirer</button></div>`;
+  }
   if(card.kb==="insc"&&!card.reserved){
     h+=`<div class="mact2">${edofBtn}<button class="btn btn-s" data-switch="${card.id}">Changer de session</button><button class="btn btn-s danger" data-lost="${card.id}">Passer en Lost</button></div>`;
   } else if(edofBtn){
@@ -2102,7 +2126,7 @@ function pageSessions(){
   let h=`<div class="pagehead row"><h1>Sessions</h1><button class="btn btn-p" data-newsession="1">+ Nouvelle session</button></div>`;
   h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]],["Paramétrage",[["param","Lieux & Salles · Ressources"]]]], f, "fSession");
   if(f==="param"){
-    return h+`<div class="stub"><h2>Paramétrage des sessions</h2><p>Par offre : le référentiel <b>Lieux & Salles</b> (aujourd'hui dans Staff) et les <b>Ressources</b> formateur (aujourd'hui dans BookMySessions) sont rapatriés ici.</p><ul><li>Lieux & Salles : catalogue des salles, capacité, accès HAL Station F</li><li>Ressources : vidéos, canvas et supports mis à disposition des formateurs</li></ul></div>`;
+    return h+pageLieux();
   }
   h+=`<div class="fbar">`+chips([["Vue",[["kanban","Kanban"],["cal","Calendrier"],["list","Liste"]]]], S.fSessView, "fSessView")
     +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fSessQ" value="${(S.fSessQ||"").replace(/"/g,"&quot;")}" placeholder="Date, formateur, ville, apprenant…"></div>
@@ -2122,6 +2146,32 @@ function pageSessions(){
   }
   else h+=boardHtml("session_fia", list);
   return h;
+}
+/* référentiel des lieux : pays, ville, lieu, salles (rapatrié de Staff) */
+const LIEUX_REF=[
+ {pays:"France",villes:[
+  {v:"Paris",lieux:[{n:"Station F",adr:"5 parvis Alan Turing, 75013",hal:1,qlb:"lieu_stf",salles:[["Boardroom Ada","12 places · réservée via HAL"],["Boardroom Turing","10 places · réservée via HAL"]],photos:3}]},
+  {v:"Bordeaux",lieux:[{n:"Quai des Chartrons",adr:"12 quai des Chartrons, 33000",hal:0,qlb:"lieu_bdx",salles:[["Salle Garonne","14 places"],["Salle Dordogne","8 places"]],photos:2}]},
+  {v:"Lyon",lieux:[{n:"Part-Dieu",adr:"44 rue de la Villette, 69003",hal:0,qlb:"lieu_lyo",salles:[["Salle Rhône","12 places"]],photos:1}]},
+  {v:"Toulouse",lieux:[{n:"Chez le client",adr:"adresse fournie par le client",hal:0,qlb:null,salles:[],photos:0}]},
+ ]},
+];
+function pageLieux(){
+  let h=`<div class="fsec"><div class="sect-h">${ICO.building}Lieux & Salles <span class="n2">le catalogue des lieux, leurs salles et leur rattachement Qualiobee</span><span class="right"><button class="btn btn-s" data-gen="${encodeURIComponent("Nouveau lieu")}">+ Nouveau lieu</button></span></div>`;
+  LIEUX_REF.forEach(p2=>p2.villes.forEach(v=>{
+    h+=`<div class="subh">${p2.pays} · ${v.v}</div>`;
+    v.lieux.forEach(l=>{
+      const k="lieu-"+l.n;
+      h+=`<details class="acc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span><span class="tt">${l.n}</span><span class="sm">${l.adr}</span><span class="end">${l.hal?`<span class="chip">HAL Station F</span>`:""}<span class="sm">${l.salles.length} salle${l.salles.length>1?"s":""}</span></span></summary>
+      <div class="inner"><div class="vgrid">${fld("Adresse",l.adr)}${fld("Réservation",l.hal?"HAL Station F, au shotgun":"réservation directe auprès du lieu")}${fld("Lieu Qualiobee",l.qlb?`<a class="ilink" href="https://app.qualiobee.fr/places/${l.qlb}" target="_blank" rel="noopener">Ouvrir sur Qualiobee</a>`:null)}${fld("Photos",l.photos?l.photos+" photo(s)":null)}</div>
+      <div class="subh">Salles</div>${l.salles.map(([n,d])=>`<div class="lrow">${n}<span class="chip">${d}</span></div>`).join("")||`<div class="lrow"><span class="sm">Aucune salle : la formation se tient chez le client.</span></div>`}
+      </div></details>`;
+    });
+  }));
+  h+=`</div><div class="fsec"><div class="sect-h">${ICO.file}Ressources formateur <span class="n2">rapatriées de BookMySessions</span></div>`;
+  h+=[["Support Niveau 1","Deck de la formation, une version par session"],["Support Niveau 2","Deck avancé"],["Canvas d'atelier","Trames imprimables"],["Vidéos de préparation","Trois modules, à voir avant la première animation"]]
+    .map(([n,d])=>`<div class="lrow">${n}<span class="sm" style="margin-left:auto">${d}</span></div>`).join("");
+  return h+`</div>`;
 }
 function sessionListHtml(list){
   if(!list.length) return `<div class="stub"><p>Aucune session ne correspond aux filtres.</p></div>`;
@@ -2460,8 +2510,40 @@ function pageServices(){
   else h+=boardHtml("session_frm", CARDS.filter(c=>c.kb==="session_frm"&&c.offre===f&&c.mine), {aPrendre:1});
   return h;
 }
+function pageProfilFormateur(){
+  const f=FRM["Sarah K."];
+  const v=["profil","coffre"].includes(S.fProfil)?S.fProfil:"profil";
+  let h=`<div class="pagehead"><h1>Mon profil</h1></div>`;
+  h+=chips([["",[["profil","Mon profil"],["coffre","Mon coffre-fort"]]]], v, "fProfil");
+  if(v==="profil"){
+    h+=`<div class="fsec"><div class="sect-h">${ICO.user}Coordonnées <span class="n2">toute modification part en approbation chez France IA</span><span class="right"><button class="btn btn-s" data-frmact="${encodeURIComponent("Demande de modification envoyée à France IA")}">Modifier</button></span></div>
+      <div class="idgrid">${fld("Nom",f.nom)}${fld("Email",f.email)}${fld("Téléphone",f.tel)}${fld("Statut","Indépendant")}</div></div>`;
+    h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.cap}Mon onboarding</div>`
+      +f.onboarding.map(([lbl,ok])=>`<div class="lrow">${lbl}<span class="chip ${ok?"ok":"warn"}">${ok?"fait":"à faire"}</span></div>`).join("")+`</div>`;
+    h+=`<div class="fsec"><div class="sect-h">${ICO.building}Mes villes et mes offres <span class="n2">les notifications de shotgun suivent ces choix</span></div>`
+      +`<div class="lrow">Villes<span class="chip">${f.villes.join(" · ")}</span></div>`
+      +f.offres.map(o=>`<div class="lrow">${o}<span class="chip ok">qualifié</span></div>`).join("")
+      +`<div class="lrow">Formation Intra<span class="chip">non qualifié</span><button class="btn btn-s" style="margin-left:auto" data-frmact="${encodeURIComponent("Demande de qualification envoyée")}">Demander</button></div></div></div>`;
+    return h;
+  }
+  h+=`<div class="fsec"><div class="sect-h">${ICO.wallet}Mes imputations <span class="n2">une ligne par prestation : c'est ce que France IA vous doit</span></div>`;
+  h+=[["Paris · 12-13 sept","Formation N1 · 2 jours","1 400 €","à valider"],["Coaching Awa Diallo","Coaching 4 h","400 €","verrouillé : étude de cas manquante"],["Paris N2 · 4-5 juillet","Formation N2 · 2 jours","1 400 €","facturé le 1er août"]]
+    .map(([t,d,m,st])=>`<div class="frow"><div><div class="tt">${t}</div><div class="sm">${d}</div></div><span class="sm">${m}</span><span class="chip ${/facturé/.test(st)?"ok":/verrouillé/.test(st)?"warn":""}">${st}</span>${st==="à valider"?`<button class="btn btn-p" data-frmact="${encodeURIComponent("Imputation validée")}">Valider</button><button class="btn btn-s" data-frmact="${encodeURIComponent("Correction demandée à France IA")}">Corriger</button>`:""}</div>`).join("");
+  h+=`<div class="pd" style="margin-top:8px">La facture ne peut être créée que si l'étude de cas et l'inscription des apprenants CPF à la certification sont faites : ce sont les deux verrous.</div></div>`;
+  h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Mes documents administratifs</div>`
+    +f.docs.map(([lbl,st])=>`<div class="lrow">${lbl}<span class="chip ${/manquant|expirée/.test(st)?"warn":"ok"}">${st}</span></div>`).join("")
+    +`<button class="btn btn-s" style="margin-top:10px" data-frmact="${encodeURIComponent("Document déposé, il part en validation")}">Déposer un document</button></div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.wallet}Mes factures</div>`
+    +f.factures.map(([m,mt,st])=>`<div class="lrow">${m} · ${mt}<span class="chip ${/payée/.test(st)?"ok":"warn"}">${st}</span></div>`).join("")
+    +`<button class="btn btn-p" style="margin-top:10px" data-frmact="${encodeURIComponent("Facture générée depuis vos imputations validées")}">Créer ma facture</button></div></div>`;
+  return h;
+}
 function pageAPrendre(){
+  const ft=S.fPrendre||"all";
   let h=`<div class="pagehead"><h1>À prendre</h1><p>Les sessions et coachings publiés au shotgun, disponibles à la demande. France IA valide chaque demande ; pour un coaching, le formateur du présentiel de l'apprenant garde la priorité.</p></div>`;
+  h+=`<div class="fbar">`+chips([["Type",[["all","Tout"],["session","Sessions"],["intra","Intra"],["coaching","Coachings"]]]], ft, "fPrendre")
+    +`<select class="fsel" data-fsel="fPrendreLieu"><option value="all">Tous les lieux</option>${LIEUX.map(l=>`<option value="${l}" ${S.fPrendreLieu===l?"selected":""}>${l}</option>`).join("")}</select>
+    <label class="fchk" style="margin:0 0 0 auto"><input type="checkbox" data-prendrequal="1" ${S.fPrendreQual?"checked":""}> Seulement ce pour quoi je suis qualifié</label></div>`;
   h+=`<div class="fsec"><h2>Sessions à prendre</h2>
     <div class="frow"><div><div class="tt">Lyon · 3-4 oct · Formation N1</div><div class="sm">0/12 places · 700 € la journée</div></div><button class="btn btn-p" data-demande="Lyon 3-4 oct">Faire une demande</button></div>
     <div class="frow"><div><div class="tt">Paris N2 · 10-11 oct · Formation N2</div><div class="sm">2/12 places · 700 € la journée</div></div><button class="btn btn-p" data-demande="Paris N2 10-11 oct">Faire une demande</button></div>
@@ -2472,6 +2554,11 @@ function pageAPrendre(){
   </div>`;
   h+=`<div class="fsec"><h2>Coachings libres <span class="n2">refusés par le formateur prioritaire ou sans formateur naturel</span></h2>
     <div class="frow"><div><div class="tt">Marc Leroy · Nexa Digital</div><div class="sm">Coaching 4 h · Station F</div></div><span class="chip warn">Demande envoyée · en attente de validation France IA</span></div>
+  </div>`;
+  h+=`<div class="fsec"><h2>Mes demandes <span class="n2">ce que vous avez demandé, et où ça en est</span></h2>
+    <div class="frow"><div><div class="tt">Bordeaux · 26-27 sept · Formation N1</div><div class="sm">Demande du 18 août</div></div><span class="chip warn">En attente de validation</span><button class="btn btn-s" data-frmact="${encodeURIComponent("Demande retirée")}">Retirer ma demande</button></div>
+    <div class="frow"><div><div class="tt">Marc Leroy · Nexa Digital · Coaching</div><div class="sm">Demande du 21 août</div></div><span class="chip warn">En attente de validation</span><button class="btn btn-s" data-frmact="${encodeURIComponent("Demande retirée")}">Retirer ma demande</button></div>
+    <div class="frow"><div><div class="tt">Lyon · 3-4 oct · Formation N1</div><div class="sm">Demande du 19 août</div></div><span class="chip">Refusée : session prise par Inès B.</span></div>
   </div>`;
   return h;
 }
@@ -2682,6 +2769,36 @@ function ficheClientHtml(id){
   }).join("");
   h+=`</div>`;
   return h;
+}
+function ficheFormateurHtml(key){
+  const f=FRM[key]; if(!f) return `<button class="backbtn" data-ficheback="1">← Retour</button><div class="stub"><p>Formateur inconnu.</p></div>`;
+  const sessions=CARDS.filter(c=>c.kb==="session_fia"&&c.frm===key);
+  let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
+  h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${initiales(f.nom)}</div><div><h1>${f.nom}</h1></div>
+    <div class="fh-right"><button class="btn btn-s">Modifier</button><button class="btn btn-s">Ouvrir son espace formateur</button></div></div>
+  <div class="idgrid">
+    ${fld("Email",f.email)}${fld("Téléphone",f.tel)}
+    ${fld("Villes",f.villes.join(" · "))}${fld("Offres autorisées",f.offres.join(" · "))}
+  </div></div>`;
+  if(f.appro||f.quali.length||f.retrait){
+    h+=`<div class="fsec"><div class="sect-h">${ICO.eye}À traiter</div>`;
+    if(f.appro) h+=`<div class="frow"><div><div class="tt">Modification de profil en attente</div><div class="sm">${f.appro}</div></div><button class="btn btn-p" data-frmact="Approuver la modification">Approuver</button><button class="btn btn-s" data-frmact="Refuser la modification">Refuser</button></div>`;
+    f.quali.forEach(q=>{h+=`<div class="frow"><div><div class="tt">Demande de qualification · ${q[0]}</div><div class="sm">${q[1]}</div></div><button class="btn btn-p" data-frmact="Qualification acceptée">Accepter</button><button class="btn btn-s" data-frmact="Qualification refusée">Refuser</button></div>`});
+    if(f.retrait) h+=`<div class="frow"><div><div class="tt">Demande de retrait de session</div><div class="sm">${f.retrait}</div></div><button class="btn btn-p" data-frmact="Retrait accepté, la session repart au shotgun">Accepter</button><button class="btn btn-s" data-frmact="Retrait refusé">Refuser</button></div>`;
+    h+=`</div>`;
+  }
+  h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.cap}Onboarding</div>`
+    +f.onboarding.map(([lbl,ok])=>`<div class="lrow">${lbl}<span class="chip ${ok?"ok":"warn"}">${ok?"fait":"à faire"}</span></div>`).join("")+`</div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.file}Documents administratifs</div>`
+    +f.docs.map(([lbl,st])=>`<div class="lrow">${lbl}<span class="chip ${/manquant|expirée/.test(st)?"warn":"ok"}">${st}</span></div>`).join("")+`</div></div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Sessions <span class="n2">à venir et passées</span></div>`;
+  h+=sessions.map(c=>`<div class="frow"><div><div class="tt"><a class="ilink" data-fiche="session::${c.id}">${c.title}</a></div><div class="sm">${OFFRES[c.offre]} · ${c.lieu}</div></div><span class="chip">${colLabel(c)}</span></div>`).join("")
+    ||f.histo.map(([t,d])=>`<div class="frow"><div><div class="tt">${t}</div><div class="sm">${d}</div></div></div>`).join("");
+  h+=`</div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.wallet}Factures <span class="n2">une par prestation, validées sur le kanban Facturation formateur</span></div>`;
+  h+=(f.factures.length?f.factures.map(([m,mt,st])=>`<div class="frow"><div><div class="tt">${m}</div><div class="sm">${mt}</div></div><span class="chip ${/payée/.test(st)?"ok":"warn"}">${st}</span></div>`).join("")
+    :`<div class="lrow"><span class="sm">Aucune facture pour l'instant.</span></div>`);
+  return h+`</div>`;
 }
 function ficheCompteHtml(id){
   const u=COMPTES.find(x=>x.id===id); if(!u) return "";
@@ -2895,7 +3012,10 @@ function pageAnnuaire(){
       +`</tbody></table></div>`;
   } else if(f==="formateurs"){
     h+=`<h2>Formateurs <span class="n2">qualifications, profil, onboarding</span></h2>`;
-    h+=[["Sarah K.","N1 · N2 · Coaching","Paris"],["Marc D.","N1","Bordeaux · Toulouse"],["Inès B.","N1 · Coaching","Lyon"]].map(x=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(x[0])}</span><div><div class="tt">${x[0]}</div><div class="sm">Villes : ${x[2]}</div></div><span class="chip">Offres : ${x[1]}</span><span class="chip ok">Onboarding complet</span></div>`).join("");
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>Villes</th><th>Offres autorisées</th><th>Onboarding</th><th>À traiter</th><th>Fiche</th></tr></thead><tbody>`
+      +FORMATEURS.map(k=>{const f=FRM[k];const reste=f.onboarding.filter(o=>!o[1]).length;const att=(f.appro?1:0)+f.quali.length+(f.retrait?1:0);
+        return `<tr><td><b>${f.nom}</b></td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td>${reste?`<span class="chip warn">${reste} à faire</span>`:`<span class="chip ok">complet</span>`}</td><td>${att?`<span class="chip warn">${att}</span>`:`<span class="muted">rien</span>`}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche formateur</a></td></tr>`}).join("")
+      +`</tbody></table></div>`;
   } else if(f==="closeurs"||f==="setteurs"||f==="internes"){
     const role=f==="closeurs"?"closer":f==="setteurs"?"setter":"admin";
     h+=`<h2>${f==="closeurs"?"Closeurs":f==="setteurs"?"Setteurs":"Internes"} <span class="n2">${role==="admin"?"comptes France IA, accès à toutes les pages":"comptes et accès aux pages"}</span></h2>`;
@@ -3102,7 +3222,7 @@ function render(){
   const crumbEnd = S.fiche
     ? (S.fiche.t==="apprenant" ? "Fiche apprenant · "+(APPRENANTS.find(a=>a.id===S.fiche.id)||{}).nom : "Fiche client · "+(CLIENTS.find(c=>c.id===S.fiche.id)||{}).nom)
     : ((groups.flatMap(g=>g[1]).find(t=>t[0]===S.tab)||["",""])[1]||"");
-  const crumbEnd2 = S.fiche&&S.fiche.t==="session" ? "Fiche session · "+(CARDS.find(c=>c.id===S.fiche.id)||{}).title : S.fiche&&S.fiche.t==="compte" ? "Annuaire · "+(COMPTES.find(c=>c.id===S.fiche.id)||{}).nom : crumbEnd;
+  const crumbEnd2 = S.fiche&&S.fiche.t==="session" ? "Fiche session · "+(CARDS.find(c=>c.id===S.fiche.id)||{}).title : S.fiche&&S.fiche.t==="compte" ? "Annuaire · "+(COMPTES.find(c=>c.id===S.fiche.id)||{}).nom : S.fiche&&S.fiche.t==="formateur" ? "Fiche formateur · "+((FRM[S.fiche.id]||{}).nom||"") : crumbEnd;
   $("#crumb").innerHTML=`${APPS[S.app].name}<span class="sep">/</span><span style="color:var(--ink-500);font-weight:500">${crumbEnd2}</span>`;
   $("#roleSel").innerHTML=Object.entries(ROLES).map(([id,lbl])=>`<button class="${S.role===id?"active":""}" data-role="${id}">${lbl}</button>`).join("");
   /* bouton Voir comme (réel : réservé aux admins), bannière de vision, menu utilisateur */
@@ -3116,7 +3236,7 @@ function render(){
   if(S.app==="apprenant") h=pageApprenant();
   else if(S.app==="dash") h=pageDash();
   else if(S.fiche){
-    h = S.fiche.t==="apprenant" ? ficheApprenantHtml(S.fiche.id) : S.fiche.t==="session" ? ficheSessionHtml(S.fiche.id) : S.fiche.t==="compte" ? ficheCompteHtml(S.fiche.id) : ficheClientHtml(S.fiche.id);
+    h = S.fiche.t==="apprenant" ? ficheApprenantHtml(S.fiche.id) : S.fiche.t==="session" ? ficheSessionHtml(S.fiche.id) : S.fiche.t==="compte" ? ficheCompteHtml(S.fiche.id) : S.fiche.t==="formateur" ? ficheFormateurHtml(S.fiche.id) : ficheClientHtml(S.fiche.id);
   }
   else {
     if(S.tab==="sessions") h=pageSessions();
@@ -3129,6 +3249,7 @@ function render(){
     else if(S.tab==="actions") h=pageActions();
     else if(S.tab==="automatisations") h=pageAutomatisations();
     else if(S.tab==="templates") h=pageTemplates();
+    else if(S.tab==="profil") h=pageProfilFormateur();
     else if(S.tab==="generer") h=pageGenerer();
     else if(S.tab==="preuves") h=pagePreuves();
     else h=pageStub(S.tab);
@@ -3192,7 +3313,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3256,7 +3377,8 @@ document.addEventListener("click",e=>{
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
   if(t.dataset.qard){e.stopPropagation();S.qard=t.dataset.qard;render();return}
   if(t.dataset.wa){e.stopPropagation();S.wa=t.dataset.wa;render();return}
-  if(t.dataset.frmfiche!==undefined){S.fiche=null;S.tab="utilisateurs";S.fUsers="formateurs";render();toast(`Annuaire des formateurs : le CV et le contrat de <b>${t.dataset.frmfiche||"la session"}</b> vivent dans son coffre.`);return}
+  if(t.dataset.frmfiche!==undefined){const k=t.dataset.frmfiche;S.tab="utilisateurs";S.fUsers="formateurs";S.fiche=FRM[k]?{t:"formateur",id:k}:null;render();return}
+  if(t.dataset.frmact){toast(decodeURIComponent(t.dataset.frmact)+".");return}
   if(t.dataset.drive){toast("Ouverture du dossier Drive de preuves de l'apprenant dans un nouvel onglet.");return}
   if(t.dataset.idlink){e.stopPropagation();S.idLink=t.dataset.idlink;render();return}
   if(t.dataset.idlinksave){e.stopPropagation();
@@ -3278,6 +3400,7 @@ document.addEventListener("click",e=>{
     toast("Vente enregistrée : <b>"+(obj?obj.nom:"")+"</b>");
     return}
   if(t.dataset.anoall!==undefined){S.anoAll=!S.anoAll;render();return}
+  if(t.dataset.prendrequal!==undefined){S.fPrendreQual=!S.fPrendreQual;render();return}
   if(t.dataset.autotoggle){const el=t.closest(".sw");el.classList.toggle("on");toast(el.classList.contains("on")?"Automatisation réactivée.":"Automatisation coupée : plus rien ne partira tant qu'elle est éteinte.");return}
   if(t.dataset.autorun){toast(`<b>${decodeURIComponent(t.dataset.autorun)}</b> : lancée à la main, résultat dans le journal.`);return}
   if(t.dataset.tpledit){toast(`Éditeur du support <b>${decodeURIComponent(t.dataset.tpledit)}</b> : une version par session, partagée au formateur.`);return}
