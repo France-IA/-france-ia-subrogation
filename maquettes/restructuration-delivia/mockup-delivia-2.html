@@ -2537,11 +2537,11 @@ const AUTOS=[
  ["2.0","Création des cartes","Une carte naît de l'ARD, de la déclaration de sortie ou du dépôt d'une facture formateur, selon la règle du rail.",1,"nouveau dans la 2.0"],
 ];
 function pageAutomatisations(){
-  const cats=["Toutes",...new Set(AUTOS.map(a=>a[0]))];
-  const f=cats.includes(S.fAuto)?S.fAuto:"Toutes";
+  const cats=[...new Set(AUTOS.map(a=>a[0]))];
+  const f=cats.includes(S.fAuto)?S.fAuto:cats[0];
   let h=`<div class="pagehead"><h1>Automatisations</h1></div>`;
   h+=`<div class="tabsline">`+cats.map(c=>`<button class="${f===c?"on":""}" data-chip="fAuto::${c}">${c==="2.0"?"Nouvelles 2.0":c}</button>`).join("")+`</div>`;
-  const list=AUTOS.filter(a=>f==="Toutes"||a[0]===f);
+  const list=AUTOS.filter(a=>a[0]===f);
   h+=`<div class="autolist">`+list.map(([cat,nom,desc,on,stat])=>`<div class="autocard" data-autorun="${encodeURIComponent(nom)}">
     <span class="ic">${ICO.refresh}</span>
     <div class="tx"><div class="nm">${nom}</div><div class="ds">${desc}</div></div>
