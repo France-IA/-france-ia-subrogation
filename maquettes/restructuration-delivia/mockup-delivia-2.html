@@ -368,6 +368,24 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .docrow .dl{font-size:12px;font-weight:600;color:var(--ink-700);width:96px;flex-shrink:0}
 .docrow .ds{margin-left:auto;font-size:10.5px;color:var(--ink-400)}
 .docrow input{flex:1;min-width:0}
+/* page Actions */
+.acthead{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:16px 0 7px;display:flex;align-items:center;gap:8px}
+.acthead .n2{font-weight:500}
+.acthead.ov{color:var(--err)} .acthead.td{color:var(--primary)} .acthead.sn{color:var(--warn)} .acthead.lt{color:var(--ink-400)}
+.actlist{display:flex;flex-direction:column;gap:6px}
+.actrow{display:flex;align-items:flex-start;gap:11px;background:#fff;border:1px solid var(--line-2);border-radius:10px;padding:9px 12px;cursor:pointer}
+.actrow:hover{box-shadow:var(--sh-hover)}
+.actrow.ov{border-color:#fecdd3} .actrow.td{border-color:#c7d2fe} .actrow.sn{border-color:#fde68a}
+.actrow .ic{color:var(--ink-400);margin-top:2px}
+.actrow.ov .ic{color:var(--err)} .actrow.td .ic{color:var(--primary)} .actrow.sn .ic{color:var(--warn)}
+.actrow .tx{flex:1;min-width:0}
+.actrow .t{font-size:12.5px;color:var(--ink-800)}
+.actrow .ctx{font-size:11px;color:var(--ink-400);margin-top:2px}
+.actrow .u{font-size:11px;color:var(--ink-500);white-space:nowrap;margin-top:1px}
+.actrow .ar{color:var(--ink-300);margin-top:1px}
+.warnbar{background:var(--warn-50);border:1px solid #fde68a;color:#92400e;font-size:11.5px;border-radius:9px;padding:9px 12px;margin:4px 0 12px;line-height:1.5}
+.autorow .stat{margin-left:auto;white-space:nowrap;color:var(--ink-400)}
+.autorow .sw{flex-shrink:0}
 /* page Anomalies */
 .anohead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
 .anohead .ctl{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--ink-400)}
@@ -1452,6 +1470,11 @@ let CARDS = [
 ];
 CARDS.forEach(c=>{ if(c.places){ c.cap=parseInt(c.places.split("/")[1])||12; if(c.sess==="paris") c.cap=5; } });
 CARDS.forEach(c=>{ if(c.sess&&!c.lieu) c.lieu=SESS[c.sess].lieu; if(c.kb==="session_fia"&&c.sess){ const S0=SESS[c.sess]; c.ville=S0.ville; c.niveau=S0.niveau; c.lieuJ2=c.lieuJ2||c.lieu; c.cpfLink="https://www.moncompteformation.gouv.fr/espace-prive/html/#/formation/"+c.id; c.qlbLink="https://app.qualiobee.fr/sessions/"+c.id; c.note=c.note||""; c.qlbId=c.qlbId||"s_"+c.id.replace(/\D/g,"")+"842"; c.edofId=c.edofId||"EDF-2026-0"+c.id.replace(/\D/g,"")+"17"; c.driveId=c.driveId||"1aQz"+c.id; } });
+/* quelques échéances de tâche, pour que la page Actions montre les trois niveaux d'urgence */
+(()=>{ const d=n=>{const x=new Date();x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+  const set=(id,v)=>{const c=CARDS.find(x=>x.id===id); if(c) c.due=v;};
+  set("f6",d(-4)); set("i5",d(-1)); set("s2",d(0)); set("i4",d(0)); set("i1",d(3)); set("f1",d(5));
+})();
 /* fermeture des inscriptions ARD par mode de paiement : CPF = 11 jours ouvrés avant J1, entreprise = J-1, particulier = J-14 */
 function ardClosings(card){
   if(!card.dt||!card.dt.j1) return [];
@@ -2260,6 +2283,132 @@ function genLignes(){
    +lignes.map(l=>`<tr><td><input class="edin" value="${l[0]}"></td><td><input class="edin" style="width:56px" value="${l[1]}"></td><td><input class="edin" style="width:96px" value="${l[2]}"></td><td><input class="edin" style="width:70px" value="${l[3]}"></td><td class="act"><button class="btn-xs" data-gen="Supprimer la ligne">Retirer</button></td></tr>`).join("")
    +`</tbody></table></div><div class="genadd"><button class="btn-xs" data-gen="Ajouter une ligne">+ Ajouter une ligne</button><span class="tot">Total TTC : <b>1 650,00 €</b></span></div>`;
 }
+/* ── Pilotage > Actions ── */
+const JOURNAL=[
+ {d:"2026-08-23T09:12",qui:"Sofia (admin)",quoi:"a coché « Admin France IA transmet à l'OPCO les émargements et la facture »",ou:"Hôtel du Parc · Facturation OPCO",t:"action"},
+ {d:"2026-08-23T08:40",qui:"DELIV'IA",quoi:"a détecté la signature du devis sur ARD",ou:"ACME Conseil · Inscription",t:"systeme"},
+ {d:"2026-08-23T07:00",qui:"DELIV'IA",quoi:"a lancé le contrôle des anomalies (6 h)",ou:"31 contrôles, 14 anomalies ouvertes",t:"systeme"},
+ {d:"2026-08-22T18:22",qui:"Alex R. (closeur)",quoi:"a changé le mode de paiement en Entreprise OPCO",ou:"Karim Benali · Vente Formation N1",t:"action"},
+ {d:"2026-08-22T17:05",qui:"DELIV'IA",quoi:"a créé la carte facturation à la génération de la facture",ou:"Hôtel du Parc · Facturation OPCO",t:"systeme"},
+ {d:"2026-08-22T15:48",qui:"Jeanne (admin)",quoi:"a rapproché un virement Qonto de 1 650 €",ou:"ACME Conseil · Facture F-2026-0533",t:"action"},
+];
+function actionsUrgence(d){
+  if(!d) return 3;
+  const auj=new Date().toISOString().slice(0,10);
+  if(d<auj) return 0;
+  if(d===auj) return 1;
+  const j7=new Date(); j7.setDate(j7.getDate()+7);
+  return d<=j7.toISOString().slice(0,10) ? 2 : 3;
+}
+const URG=[["En retard","ov"],["Aujourd'hui","td"],["Cette semaine","sn"],["Plus tard","lt"]];
+function mesTaches(){
+  const rows=[];
+  CARDS.forEach(c=>{
+    if(c.reserved||c.waiting) return;
+    if(c.kb.endsWith("_frm")!==(S.role==="formateur")) return;
+    const tks=tasksFor(c,c.col);
+    const i=tks.findIndex((tk,ix)=>!taskState(c,c.col,ix,tk));
+    if(i<0) return;
+    const tk=tks[i];
+    if(tk.auto&&tk.p!=="client") return;
+    if(responsableOf(c,tk)!==ROLE_OWNS[S.role]) return;
+    const d=c.due||(c.dt&&(c.dt.echeance||c.dt.j1||c.dt.prevue))||null;
+    rows.push({c,tk,d,u:actionsUrgence(d)});
+  });
+  return rows.sort((a,b)=>a.u-b.u||String(a.d).localeCompare(String(b.d)));
+}
+function actionRow(r){
+  const {cl,aps}=peopleFor(r.c);
+  const ctx=[KB[r.c.kb]&&colLabel(r.c), r.c.sess?SESS[r.c.sess].lbl:(r.c.lieu||""), aps.length===1?aps[0].nom:(cl?cl.nom:"")].filter(Boolean).join(" · ");
+  const dl=r.d?new Date(r.d+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"}):"sans date";
+  return `<a class="actrow ${URG[r.u][1]}" data-open="${r.c.id}"><span class="ic">${ICO.file}</span><div class="tx"><div class="t">${r.tk.t}</div><div class="ctx">${r.c.title} · ${ctx}</div></div><span class="u">${dl}</span><span class="ar">→</span></a>`;
+}
+function pageActions(){
+  const v=["taches","signatures","journal"].includes(S.fAct)?S.fAct:"taches";
+  let h=`<div class="pagehead"><h1>Actions</h1><p>Tout ce qui vous attend, toutes cartes confondues, trié par urgence.</p></div>`;
+  h+=chips([["Vue",[["taches","Mes tâches"],["signatures","Signatures en attente"],["journal","Journal"]]]], v, "fAct");
+  if(v==="taches"){
+    const rows=mesTaches();
+    if(!rows.length) return h+`<div class="stub"><p>Rien ne vous attend : toutes les cartes dont vous répondez sont à jour.</p></div>`;
+    URG.forEach(([lbl,cls],u)=>{
+      const list=rows.filter(r=>r.u===u);
+      if(!list.length) return;
+      h+=`<div class="acthead ${cls}">${lbl} <span class="n2">${list.length}</span></div><div class="actlist">${list.map(actionRow).join("")}</div>`;
+    });
+    return h;
+  }
+  if(v==="signatures"){
+    const att=CARDS.filter(c=>c.kb==="insc"&&!c.reserved).map(c=>{
+      const tks=tasksFor(c,c.col); const i=tks.findIndex((tk,ix)=>!taskState(c,c.col,ix,tk));
+      return i<0?null:{c,tk:tks[i]};
+    }).filter(x=>x&&/signe/i.test(x.tk.t));
+    h+=`<div class="warnbar">Vue vouée à disparaître : les signatures sont détectées automatiquement sur ARD et Qualiobee. Elle ne sert qu'au rattrapage, le temps que la détection couvre tous les cas.</div>`;
+    if(!att.length) return h+`<div class="stub"><p>Aucune signature en attente.</p></div>`;
+    const bySess={};
+    att.forEach(x=>{const k=x.c.sess||"sans";(bySess[k]=bySess[k]||[]).push(x)});
+    Object.entries(bySess).forEach(([k,list])=>{
+      h+=`<div class="fsec"><h2>${k==="sans"?"Sans session":SESS[k].lbl} <span class="n2">${list.length} en attente</span></h2>`;
+      h+=list.map((x,ix)=>`<div class="frow"><div><div class="tt">${x.c.title}</div><div class="sm">${x.tk.t}</div></div><span class="chip ${ix%3===2?"warn":""}">${ix%3===0?"R0 · envoyée":ix%3===1?"R1 · relancée":"R2 · à appeler"}</span><button class="btn btn-s" data-relance="${x.c.id}">Relancer</button></div>`).join("");
+      h+=`</div>`;
+    });
+    return h;
+  }
+  h+=`<div class="fsec"><h2>Journal <span class="n2">qui a fait quoi, quand, depuis quelle carte</span></h2>`;
+  h+=JOURNAL.map(j=>`<div class="frow"><div><div class="tt">${j.qui} ${j.quoi}</div><div class="sm">${j.ou}</div></div><span class="chip ${j.t==="systeme"?"":"ok"}">${j.t==="systeme"?"Système":"Action"}</span><span class="sm">${fmtDT(j.d)}</span></div>`).join("");
+  return h+`</div>`;
+}
+/* ── Pilotage > Automatisations ── */
+const AUTOS=[
+ ["Emails","Mail de bienvenue","Email enrichi (dates, lieu, formateur) au passage en inscription validée, individuel en B2C, groupé en B2B.",1,"il y a 2 h · 148 envois ce mois"],
+ ["Emails","Envoi des factures par mail","À la génération d'une facture, elle part au client, acquittée si le paiement est déjà reçu. CPF et OPCO exclus.",1,"il y a 5 h · 61 envois"],
+ ["CRM","Passage won GHL","Au passage payé et inscrit, l'opportunité GHL bascule en won, avec report du closeur et du setteur.",1,"hier · 27 bascules"],
+ ["Closing","Rappels et confirmations de rendez-vous","Confirmations et rappels WhatsApp et email des rendez-vous de closing, trois scénarios, pour réduire le no-show.",1,"il y a 20 min · 12 envois aujourd'hui"],
+ ["Conformité","Preuves · dossiers Drive","Création du dossier Drive de la session et de chaque apprenant.",1,"il y a 6 h"],
+ ["Conformité","Preuves · collecte Qualiobee","Convocations, émargements signés, certificats de réalisation.",1,"il y a 6 h · 214 pièces"],
+ ["Conformité","Preuves · collecte ARD","Questionnaire de positionnement et justificatif du parcours.",1,"il y a 6 h"],
+ ["Conformité","Preuves · collecte des mails","Confirmation d'inscription, ajout au groupe WhatsApp, satisfaction.",1,"il y a 6 h"],
+ ["Conformité","Preuves · documents de l'apprenant","CV et diplôme déposés à l'inscription.",1,"il y a 6 h"],
+ ["Conformité","Preuves · CV et contrat du formateur","Récupérés dans le coffre du formateur.",1,"il y a 6 h"],
+ ["Conformité","Preuves · guide d'accès par lieu","Infos pratiques et accès de la salle, par lieu.",1,"il y a 6 h"],
+ ["Conformité","Preuves · collecte certification","Inscription à la certification et attestation, depuis le miroir CertifIAG.",1,"il y a 6 h"],
+ ["Conformité","Preuves · export WhatsApp","Export de la conversation du groupe de la session.",0,"jamais lancée"],
+ ["Conformité","Preuves · resynchronisation Drive","Réaligne le Drive avec l'état réel des preuves.",1,"hier"],
+ ["Conformité","Preuves · collecte automatique (J+30)","Passe de rattrapage un mois après la formation.",1,"il y a 3 j"],
+ ["Conformité","Certificat de réalisation à 17 h (jour J)","Génère les certificats le soir du J2.",1,"il y a 6 j"],
+ ["Conformité","Preuves · collecte hebdomadaire","Seconde passe de rattrapage, chaque lundi.",1,"lundi"],
+ ["Facturation","Facturation Bibby","Constitution et envoi des dossiers d'affacturage CPF.",1,"il y a 1 j · 9 dossiers"],
+ ["Delivery","Shot-gun HAL2 · boardrooms Station F","Réservation des salles Station F dès l'ouverture du créneau.",1,"ce matin · 2 salles"],
+ ["2.0","Détection des signatures","Signature du devis, de la convention, du mandat ou du contrat sur ARD et Qualiobee : la tâche se coche toute seule.",1,"nouveau dans la 2.0"],
+ ["2.0","Détection des paiements","Virements Qonto et prélèvements Mollie relus en continu, la facture est tamponnée acquittée.",1,"nouveau dans la 2.0"],
+ ["2.0","Création des cartes","Une carte naît de l'ARD, de la déclaration de sortie ou du dépôt d'une facture formateur, selon la règle du rail.",1,"nouveau dans la 2.0"],
+];
+function pageAutomatisations(){
+  let h=`<div class="pagehead"><h1>Automatisations</h1><p>Ce que DELIV'IA fait tout seul. Chaque automatisation peut être coupée, relancée à la main, et rend compte de son dernier passage.</p></div>`;
+  const cats=[...new Set(AUTOS.map(a=>a[0]))];
+  cats.forEach(cat=>{
+    h+=`<div class="fsec"><h2>${cat==="2.0"?"Nouvelles de la 2.0":cat}</h2>`;
+    h+=AUTOS.filter(a=>a[0]===cat).map(([,nom,desc,on,stat],i)=>`<div class="frow autorow"><span class="sw ${on?"on":""}" data-autotoggle="${cat}::${i}"><i></i></span><div><div class="tt">${nom}</div><div class="sm">${desc}</div></div><span class="sm stat">${stat}</span><button class="btn btn-s" data-autorun="${encodeURIComponent(nom)}">Lancer maintenant</button></div>`).join("");
+    h+=`</div>`;
+  });
+  return h;
+}
+/* ── Pilotage > Templates ── */
+const TPL_CATS=[
+ ["Delivery",["Convocation à la formation","Message de bienvenue WhatsApp","Message de fin de formation","Relance émargement","Infos pratiques et accès"]],
+ ["Closing",["Confirmation de rendez-vous","Rappel de rendez-vous J-1","Relance no-show","Envoi du devis"]],
+ ["Coaching",["Proposition de créneaux","Demande des attentes","Compte rendu de séance","Témoignage de clôture"]],
+ ["Emails",["Mail de bienvenue","Envoi de facture","Relance client","Relance OPCO","Relance Bibby"]],
+ ["Supports de formation",["Support Niveau 1","Support Niveau 2","Support Intra","Grille de préparation des apprenants"]],
+];
+function pageTemplates(){
+  const f=S.fTpl||"Delivery";
+  let h=`<div class="pagehead"><h1>Templates</h1><p>Les modèles de messages référencés par les tâches « → template » des kanbans, et les supports de formation.</p></div>`;
+  h+=chips([["Catégorie",TPL_CATS.map(([c])=>[c,c])]], f, "fTpl");
+  const cat=TPL_CATS.find(([c])=>c===f)||TPL_CATS[0];
+  h+=`<div class="fsec"><h2>${cat[0]} <span class="n2">${cat[1].length} modèle${cat[1].length>1?"s":""}</span></h2>`;
+  h+=cat[1].map(n=>`<div class="frow"><div><div class="tt">${n}</div><div class="sm">${f==="Supports de formation"?"Support éditable, une version par session":"Variables remplies à l'envoi"}</div></div>${f==="Supports de formation"?`<button class="btn btn-s" data-tpledit="${encodeURIComponent(n)}">Ouvrir l'éditeur</button>`:`<span class="chip">${/WhatsApp|créneaux|attentes/i.test(n)?"WhatsApp":"Email"}</span><a class="ilink" data-tpl="${encodeURIComponent(n)}">Aperçu</a>`}</div>`).join("");
+  return h+`</div>`;
+}
 function pageGenerer(){
   const t=["facture","devis","sdd","convention"].includes(S.genType)?S.genType:"facture";
   const isQonto=t==="facture"||t==="devis";
@@ -2776,6 +2925,7 @@ const PREUVES = {
   {lieu:"Espace apprenant", items:[
     {n:"Infos pratiques et accès", d:"Page Notion reliée à la session.", src:"Notion", at:1},
     {n:"Livret d'accueil", d:"Déposé dans l'espace apprenant.", src:"Espace apprenant", at:1},
+    {n:"Questionnaire de positionnement et recueil du besoin 2/2", d:"Seconde partie, remplie par l'apprenant depuis son espace avant la formation.", src:"Espace apprenant", at:1},
     {n:"Convocation", d:"Convocation officielle à la formation (dates, lieu, horaires).", src:"Qualiobee", at:1},
     {n:"Émargement J1", d:"Réponse d'émargement du jour 1 : présence signée OU absence justifiée / injustifiée référencée.", src:"Qualiobee", at:2},
     {n:"Émargement J2", d:"Réponse d'émargement du jour 2 : présence signée OU absence justifiée / injustifiée référencée.", src:"Qualiobee", at:2},
@@ -2976,6 +3126,9 @@ function render(){
     else if(S.tab==="aprendre") h=pageAPrendre();
     else if(S.tab==="utilisateurs") h=pageAnnuaire();
     else if(S.tab==="anomalies") h=pageAnomalies();
+    else if(S.tab==="actions") h=pageActions();
+    else if(S.tab==="automatisations") h=pageAutomatisations();
+    else if(S.tab==="templates") h=pageTemplates();
     else if(S.tab==="generer") h=pageGenerer();
     else if(S.tab==="preuves") h=pagePreuves();
     else h=pageStub(S.tab);
@@ -3039,7 +3192,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3125,6 +3278,10 @@ document.addEventListener("click",e=>{
     toast("Vente enregistrée : <b>"+(obj?obj.nom:"")+"</b>");
     return}
   if(t.dataset.anoall!==undefined){S.anoAll=!S.anoAll;render();return}
+  if(t.dataset.autotoggle){const el=t.closest(".sw");el.classList.toggle("on");toast(el.classList.contains("on")?"Automatisation réactivée.":"Automatisation coupée : plus rien ne partira tant qu'elle est éteinte.");return}
+  if(t.dataset.autorun){toast(`<b>${decodeURIComponent(t.dataset.autorun)}</b> : lancée à la main, résultat dans le journal.`);return}
+  if(t.dataset.tpledit){toast(`Éditeur du support <b>${decodeURIComponent(t.dataset.tpledit)}</b> : une version par session, partagée au formateur.`);return}
+  if(t.dataset.relance){const c=CARDS.find(x=>x.id===t.dataset.relance);toast(`Relance de signature envoyée à <b>${c?c.title:""}</b>.`);return}
   if(t.dataset.sesspass!==undefined){S.sessPass=!S.sessPass;render();return}
   if(t.dataset.anorun){toast(`Contrôle relancé : balayage d'ARD, Qualiobee, WEDOF, EDOF, GHL, Mollie et Qonto. Résultat dans deux minutes.`);return}
   if(t.dataset.anoact){const [a,c]=t.dataset.anoact.split("::");toast(`<b>${decodeURIComponent(a)}</b> · ${decodeURIComponent(c)}`);return}
