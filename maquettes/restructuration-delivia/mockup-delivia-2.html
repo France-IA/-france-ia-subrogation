@@ -59,6 +59,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .rolesel button{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:500;color:var(--ink-500)}
 .rolesel button.active{background:#fff;color:var(--ink-900);font-weight:600;box-shadow:var(--sh-carte)}
 #content{flex:1;padding:20px 24px 60px}
+#content:has(.board){padding-bottom:14px}
 .pagehead{margin-bottom:14px}
 .pagehead h1{font-size:20px;font-weight:600;letter-spacing:-.01em;color:var(--ink-900)}
 .pagehead p{font-size:13px;color:var(--ink-500);margin-top:3px;max-width:760px}
@@ -70,8 +71,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* ── Kanban ─────────────────────────────────────── */
 .kb-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink-900);margin:18px 0 10px}
 .kb-title .who{font-size:11px;font-weight:500;color:var(--ink-400)}
-.board{display:flex;gap:12px;overflow-x:auto;padding-bottom:14px;align-items:flex-start}
-.col{width:272px;flex-shrink:0;background:rgba(248,250,252,.9);border:1px solid var(--line);border-radius:12px;padding:10px}
+.board{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;padding-bottom:6px;align-items:stretch;min-height:320px}
+.col{width:272px;flex-shrink:0;background:rgba(248,250,252,.9);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;min-height:0}
+.colbody{flex:1;overflow-y:auto;min-height:0;padding-right:2px;margin-right:-2px}
+.colbody::-webkit-scrollbar{width:6px}
+.colbody::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:3px}
 .col-h{display:flex;align-items:center;gap:7px;padding:2px 4px 8px}
 .col-h .pill{width:8px;height:8px;border-radius:50%;background:var(--ink-400);flex-shrink:0}
 .col-h h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-900)}
@@ -405,6 +409,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .ok2{color:var(--ok)} .ko2{color:var(--err);font-weight:600}
 .warn2{background:var(--warn-50);color:#b45309;border:1px solid #fde68a;border-radius:5px;padding:0 5px;font-size:10px;font-weight:600}
 .warnbar{background:var(--warn-50);border:1px solid #fde68a;color:#92400e;font-size:11.5px;border-radius:9px;padding:9px 12px;margin:4px 0 12px;line-height:1.5}
+.logbar{gap:8px}
+.logbar .lb2{font-size:11.5px;color:var(--ink-400)}
+.logbar .dt{padding:5px 8px;font-size:12px}
+.logbar .ilink{font-size:11.5px}
 .tplrow .tx{flex:1;min-width:0}
 .tplrow .chip{margin-left:auto}
 .tplrow .btn{flex-shrink:0}
@@ -523,7 +531,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .swrow .l2{font-size:11px;color:var(--ink-400);margin-top:3px}
 .mact2{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;padding:14px 0 2px;border-top:1px solid var(--line);margin-top:14px}
 .col.sepcol{margin-left:17px;position:relative}
-.col.sepcol::before{content:"";position:absolute;left:-17px;top:4px;bottom:4px;border-left:1.5px dashed var(--line-2)}
+.col.sepcol::before{content:"";position:absolute;left:-17px;top:0;bottom:0;border-left:1.5px dashed var(--line-2)}
 .colbulk{display:flex;flex-direction:column;gap:5px;margin:0 2px 9px}
 .bulkbtn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;font-size:11px;font-weight:600;color:var(--ink-700);background:#fff;border:1px solid var(--line-2);border-radius:7px;padding:5px 8px;box-shadow:var(--sh-carte)}
 .bulkbtn:hover{border-color:var(--primary);color:var(--primary)}
@@ -2154,6 +2162,7 @@ function boardHtml(kbId, cards, opts={}){
     h+=`<div class="col ${col.sep?"sepcol":""}"><div class="col-h"><span class="pill"></span><h3>${col.label}</h3><span class="n">${inCol.length}</span></div>`;
     if(col.note) h+=`<div class="col-open">${col.note}</div>`;
     if(col.bulk&&inCol.length) h+=`<div class="colbulk">`+col.bulk.map(([lbl,kind])=>`<button class="bulkbtn" data-bulk="${kind}::${inCol.length}">${lbl}<span class="n">${inCol.length}</span></button>`).join("")+`</div>`;
+    h+=`<div class="colbody">`;
     const render1=c=>cardHtml(c,col,opts);
     if(opts.aPrendre && col.id==="shotgun") h+=pointerCard();
     else if(opts.sections && col.id==="valider"){
@@ -2163,7 +2172,7 @@ function boardHtml(kbId, cards, opts={}){
       h+=`<div class="colsec">Coachings libres <span>demandés spontanément</span></div>`+(libre.map(render1).join("")||`<div class="colempty">Aucun</div>`);
     }
     else h+=inCol.map(render1).join("");
-    h+=`</div>`;
+    h+=`</div></div>`;
   }
   return h+`</div>`;
 }
@@ -2483,15 +2492,18 @@ function pageActions(){
     });
     return h;
   }
-  const per=["jour","semaine","mois","tout"].includes(S.fLogPer)?S.fLogPer:"semaine";
-  const typ=["tout","action","systeme"].includes(S.fLogTyp)?S.fLogTyp:"tout";
-  const jours={jour:1,semaine:7,mois:30,tout:3650}[per];
-  const lim=new Date(); lim.setDate(lim.getDate()-jours);
-  const list=JOURNAL.filter(j=>new Date(j.d)>=lim).filter(j=>typ==="tout"||j.t===typ)
+  const auj=new Date().toISOString().slice(0,10);
+  const d1=S.fLogD1||"", d2=S.fLogD2||"";
+  const list=JOURNAL.filter(j=>{const d=j.d.slice(0,10);
+      if(d1&&d<d1) return false;
+      if(d2&&d>d2) return false;
+      if(d1&&!d2&&d!==d1) return false;
+      return true;})
     .sort((a,b)=>(S.fLogDir==="asc"?1:-1)*(new Date(b.d)-new Date(a.d))*-1);
-  h+=`<div class="fbar">`+chips([["Période",[["jour","Aujourd'hui"],["semaine","7 jours"],["mois","30 jours"],["tout","Tout"]]]], per, "fLogPer")
-    +chips([["Type",[["tout","Tout"],["action","Actions"],["systeme","Système"]]]], typ, "fLogTyp")
-    +`<a class="ilink" style="margin-left:auto;font-size:11px" data-logdir="1">⇅ ${S.fLogDir==="asc"?"Du plus ancien au plus récent":"Du plus récent au plus ancien"}</a></div>`;
+  h+=`<div class="fbar logbar"><span class="lb2">Du</span><input class="fsel dt" type="date" data-fsel="fLogD1" value="${d1}" max="${auj}">
+    <span class="lb2">au</span><input class="fsel dt" type="date" data-fsel="fLogD2" value="${d2}" max="${auj}">
+    <a class="ilink" data-logtoday="1">Aujourd'hui</a><a class="ilink" data-logclear="1">Tout</a>
+    <a class="ilink" style="margin-left:auto" data-logdir="1">⇅ ${S.fLogDir==="asc"?"Du plus ancien au plus récent":"Du plus récent au plus ancien"}</a></div>`;
   h+=`<div class="fsec"><h2>Logs <span class="n2">${list.length} entrée${list.length>1?"s":""}</span></h2>`;
   h+=list.map(j=>`<div class="frow"><div><div class="tt">${j.qui} ${j.quoi}</div><div class="sm">${j.ou}</div></div><span class="chip ${j.t==="systeme"?"":"ok"}">${j.t==="systeme"?"Système":"Action"}</span><span class="sm">${fmtDT(j.d)}</span></div>`).join("")
     ||`<div class="lrow"><span class="sm">Aucune entrée sur cette période.</span></div>`;
@@ -3205,7 +3217,7 @@ function preuvesSessionHtml(ref){
     h+=`<tr class="pmgrp"><td colspan="${nc+1}">${g.lieu}</td></tr>`;
     g.items.forEach(it=>{
       if(aps.length&&aps.every(x=>preuveState(it,x.insc,stage)==="na")) return;
-      h+=`<tr><td class="pl"><div class="pn">${it.n}${it.cpf?' <span class="badge b-cpf">CPF</span>':""}${it.noncpf?' <span class="badge b-neutral">hors CPF</span>':""}</div></td>`;
+      h+=`<tr><td class="pl"><div class="pn">${it.n}${it.cpf?' <span class="badge b-cpf">CPF</span>':""}</div></td>`;
       h+=aps.map(x=>{const st=preuveState(it,x.insc,stage);const pp=PSTATE[st];return `<td><i class="pst ${pp[1]}" title="${x.ap.nom} · ${pp[2]}">${pp[0]}</i></td>`}).join("")||`<td>—</td>`;
       h+=`</tr>`;
     });
@@ -3390,6 +3402,7 @@ function render(){
     else S.modal=null;
   }
   if(S.tpl) document.body.insertAdjacentHTML("beforeend", tplModalHtml());
+  fitBoard();
   CARDS.forEach(c=>{c.fresh=0;c.newLine=0});
   if(S.highlight){
     const elc=document.getElementById("card-"+S.highlight);
@@ -3397,6 +3410,17 @@ function render(){
     S.highlight=null;
   }
 }
+/* le kanban occupe la hauteur restante : chaque colonne défile pour elle-même */
+function fitBoard(){
+  /* la bande de maquette occupe le haut : l'application prend exactement ce qui reste */
+  const app=document.getElementById("app");
+  if(app){ const top=app.getBoundingClientRect().top+window.scrollY; app.style.minHeight=Math.max(400, window.innerHeight-top)+"px"; }
+  document.querySelectorAll(".board").forEach(bd=>{
+    const t=bd.getBoundingClientRect().top+window.scrollY;
+    bd.style.height=Math.max(320, window.innerHeight-t+window.scrollY-18)+"px";
+  });
+}
+window.addEventListener("resize",fitBoard);
 function factFilterFor(c){ return c.kb==="fact_cpf"?"cpf":c.kb==="fact_opco"?"opco":c.kb==="fact_frm"?"formateur":c.kb==="fact_com"?(c.fin==="closer"?"closeur":"setteur"):(c.fin==="fp_ent_vir"?"virement":"mandat"); }
 /* ── interactions ── */
 document.addEventListener("click",e=>{
@@ -3437,7 +3461,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3525,6 +3549,8 @@ document.addEventListener("click",e=>{
     return}
   if(t.dataset.anoall!==undefined){S.anoAll=!S.anoAll;render();return}
   if(t.dataset.logdir){S.fLogDir=S.fLogDir==="asc"?"desc":"asc";render();return}
+  if(t.dataset.logtoday){const a=new Date().toISOString().slice(0,10);S.fLogD1=a;S.fLogD2="";render();return}
+  if(t.dataset.logclear){S.fLogD1="";S.fLogD2="";render();return}
   if(t.dataset.prendrequal!==undefined){S.fPrendreQual=!S.fPrendreQual;render();return}
   if(t.dataset.autotoggle){const el=t.closest(".sw");el.classList.toggle("on");toast(el.classList.contains("on")?"Automatisation réactivée.":"Automatisation coupée : plus rien ne partira tant qu'elle est éteinte.");return}
   if(t.dataset.autorun){toast(`<b>${decodeURIComponent(t.dataset.autorun)}</b> : sa page de détail s'ouvrirait ici (état réel, historique, réglages, bouton Lancer maintenant).`);return}
