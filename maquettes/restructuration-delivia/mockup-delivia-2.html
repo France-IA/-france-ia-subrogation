@@ -2010,16 +2010,18 @@ function tplModalHtml(){
   const label=decodeURIComponent(S.tpl);
   const tp=Object.assign({},tplFor(label));
   if(TPL_OVERRIDE[label]) tp.b=TPL_OVERRIDE[label];
+  if(S.tplFrom==="task"&&S.tplOnce!=null&&!S.tplEdit) tp.b=S.tplOnce;
   if(tp.n==="Modèle de message") tp.n=label;
   const body=tp.b.replace(/\{\{([a-z_0-9]+)\}\}/g,'<span class="var">{{$1}}</span>');
-  return `<div id="tplmodal"><div class="mbox"><div class="mhead"><div class="row"><div><div class="t">${tp.n}</div><div class="s">Template lié à la tâche : ${label}</div></div><button class="mclose" data-closetpl="1" aria-label="Fermer">✕</button></div>
-  <div style="margin-top:9px"><span class="tpl-canal">${tp.c==="WhatsApp"?"💬 WhatsApp":"✉️ Email"}</span></div></div>
+  const depuisTache=S.tplFrom==="task";
+  return `<div id="tplmodal"><div class="mbox"><div class="mhead"><div class="row"><div><div class="t">${tp.n}</div></div><button class="mclose" data-closetpl="1" aria-label="Fermer">✕</button></div>
+  <div style="margin-top:9px"><span class="tpl-canal">${tp.c==="WhatsApp"?"💬 WhatsApp":"✉️ Email"}</span>${S.tplEdit==="one"?`<span class="chip warn" style="margin-left:8px">Modification pour cet envoi seulement</span>`:S.tplEdit==="all"?`<span class="chip" style="margin-left:8px">Modification du template</span>`:""}</div></div>
   <div class="mbody">
-  ${S.tplEdit?`<textarea class="tpl-edit" id="tplta">${tp.b}</textarea>
-    <div class="mactions"><button class="btn btn-s" data-tplcancel="1">Annuler</button><button class="btn btn-p" data-tplsave="1">Enregistrer</button></div>`
+  ${S.tplEdit?`<textarea class="tpl-edit" id="tplta">${S.tplEdit==="one"&&S.tplOnce!=null?S.tplOnce:tp.b}</textarea>
+    <div class="mactions"><button class="btn btn-s" data-tplcancel="1">Annuler</button><button class="btn btn-p" data-tplsave="${S.tplEdit}">Enregistrer</button></div>`
    :`<div class="tpl-body">${body}</div>
-    <div class="mactions"><button class="btn btn-s" data-tplmod="1">Modifier le message</button></div>`}
-  <div class="tpl-note">Les variables surlignées sont remplies automatiquement à l'envoi : prénom, dates, lieu, formateur, montant.</div></div></div></div>`;
+    <div class="mactions">${depuisTache?`<button class="btn btn-s" data-tplmod="one">Modifier exceptionnellement</button>`:""}<button class="btn btn-s" data-tplmod="all">Modifier le template</button></div>`}
+  </div></div></div>`;
 }
 function peopleFor(card){
   const srcId = card.src || card.id;
@@ -3425,15 +3427,21 @@ function factFilterFor(c){ return c.kb==="fact_cpf"?"cpf":c.kb==="fact_opco"?"op
 /* ── interactions ── */
 document.addEventListener("click",e=>{
   if(e.target.id==="tplmodal"||e.target.closest("[data-closetpl]")){S.tpl=null;document.getElementById("tplmodal")?.remove();return}
-  if(e.target.closest("[data-tplmod]")){e.stopPropagation();S.tplEdit=1;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
+  const modBtn=e.target.closest("[data-tplmod]");
+  if(modBtn){e.stopPropagation();S.tplEdit=modBtn.dataset.tplmod;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
   if(e.target.closest("[data-tplcancel]")){e.stopPropagation();S.tplEdit=0;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
-  if(e.target.closest("[data-tplsave]")){e.stopPropagation();
-    const ta=document.getElementById("tplta"); const lbl=decodeURIComponent(S.tpl);
-    if(ta) TPL_OVERRIDE[lbl]=ta.value;
+  const saveBtn=e.target.closest("[data-tplsave]");
+  if(saveBtn){e.stopPropagation();
+    const ta=document.getElementById("tplta"); const lbl=decodeURIComponent(S.tpl); const mode=saveBtn.dataset.tplsave;
+    if(ta&&mode==="all"){ TPL_OVERRIDE[lbl]=ta.value; S.tplOnce=null; }
+    if(ta&&mode==="one"){ S.tplOnce=ta.value; }
     S.tplEdit=0;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());
-    toast("Modèle enregistré : il sera utilisé au prochain envoi.");return}
+    toast(mode==="all"?"Template enregistré : il servira à tous les prochains envois."
+      :"Message modifié pour cet envoi seulement : le template reste inchangé.");return}
   const tplBtn=e.target.closest("[data-tpl]");
-  if(tplBtn){e.stopPropagation();S.tpl=tplBtn.dataset.tpl;S.tplEdit=0;document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
+  if(tplBtn){e.stopPropagation();S.tpl=tplBtn.dataset.tpl;S.tplEdit=0;S.tplOnce=null;
+    S.tplFrom=tplBtn.closest("#modal")||tplBtn.classList.contains("tag")?"task":"page";
+    document.getElementById("tplmodal")?.remove();document.body.insertAdjacentHTML("beforeend", tplModalHtml());return}
   const bk=e.target.closest("[data-bulk]");
   if(bk){e.stopPropagation();const [kind,n]=bk.dataset.bulk.split("::");
     if(kind==="bibby") toast(`<b>Envoi groupé à Bibby</b> : ${n} dossier(s) complets, facture + émargements signés + export EDOF.`);
