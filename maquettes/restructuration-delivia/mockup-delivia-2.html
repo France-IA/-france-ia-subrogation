@@ -2678,6 +2678,7 @@ const AUTOS=[
  ["Delivery","Création des cartes","Une carte naît de l'ARD, de la déclaration de sortie ou du dépôt d'une facture formateur, selon la règle du rail.",1,"il y a 3 h · 14 cartes créées"],
 ];
 /* fiche type d'une automatisation : ce qu'elle fait, ses réglages, sa santé, son historique */
+const AUTO_OVERRIDE={};
 const AUTO_HISTO=[
  ["2026-08-24T09:12","Marie Dupont · Paris 12-13 sept","ok",1,""],
  ["2026-08-24T09:12","Karim Benali · Paris 12-13 sept","ok",1,""],
@@ -2687,41 +2688,33 @@ const AUTO_HISTO=[
 ];
 function ficheAutoHtml(nom){
   const a=AUTOS.find(x=>x[1]===nom); if(!a) return `<div class="stub"><p>Automatisation inconnue.</p></div>`;
-  const [cat,,desc,on,stat]=a;
+  const [cat,,descBase,on,statBase]=a;
+  const o=AUTO_OVERRIDE[nom]||{};
+  const desc=o.desc??descBase, tpl=o.tpl??"Mail de bienvenue", decl=o.decl??"Passage de la carte à l'étape concernée";
+  const dernier=o.dernier??statBase, prochain=o.prochain??"dans 4 h (toutes les 6 h)";
+  const ed=S.editing==="auto::"+nom;
   let h=`<button class="backbtn" data-autoback="1">← Toutes les automatisations</button>`;
   h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${ICO.refresh}</div><div><h1>${nom}</h1></div>
-    <div class="fh-right">${on===2?`<span class="chip">Toujours active</span>`:`<span class="sw ${on?"on":""}" data-autotoggle="${encodeURIComponent(nom)}"><i></i></span>`}<button class="btn btn-s" data-autolaunch="${encodeURIComponent(nom)}">Lancer maintenant</button></div></div>
-  <div class="idgrid">
-    ${fld("Catégorie",cat)}
-    ${fld("Déclencheur","Passage de la carte à l'étape concernée")}
-    ${fld("Dernier passage",stat)}
-    ${fld("Prochain passage","dans 4 h (toutes les 6 h)")}
+    <div class="fh-right">${ed?`<button class="btn btn-p" data-autosave="${encodeURIComponent(nom)}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`
+      :`<button class="btn btn-s" data-editstart="auto::${nom}">Modifier</button><span class="sw ${on?"on":""}" data-autotoggle="${encodeURIComponent(nom)}"><i></i></span>`}</div></div>
+  <div class="idgrid g4">
+    ${ed?`<div class="fld wide"><div class="k">Ce qu'elle fait</div><input class="edin" data-af="desc" value="${desc.replace(/"/g,"&quot;")}"></div>`
+       :`<div class="fld wide"><div class="k">Ce qu'elle fait</div><div class="v">${desc}</div></div>`}
+    ${ed?`<div class="fld"><div class="k">Template</div><input class="edin" data-af="tpl" value="${tpl.replace(/"/g,"&quot;")}"></div>`
+       :`<div class="fld"><div class="k">Template</div><div class="v"><a class="ilink" data-tpl="${encodeURIComponent(tpl)}">${tpl}</a></div></div>`}
+    ${ed?`<div class="fld"><div class="k">Catégorie</div><select class="edin" data-af="cat">${[...new Set(AUTOS.map(x=>x[0]))].map(c=>`<option ${c===cat?"selected":""}>${c}</option>`).join("")}</select></div>`
+       :`<div class="fld"><div class="k">Catégorie</div><div class="v">${cat}</div></div>`}
+    ${ed?`<div class="fld"><div class="k">Déclencheur</div><input class="edin" data-af="decl" value="${decl.replace(/"/g,"&quot;")}"></div>`
+       :`<div class="fld"><div class="k">Déclencheur</div><div class="v">${decl}</div></div>`}
+    ${ed?`<div class="fld"><div class="k">Dernier passage</div><input class="edin" data-af="dernier" value="${dernier.replace(/"/g,"&quot;")}"></div>`
+       :`<div class="fld"><div class="k">Dernier passage</div><div class="v">${dernier}</div></div>`}
+    ${ed?`<div class="fld"><div class="k">Prochain passage</div><input class="edin" data-af="prochain" value="${prochain.replace(/"/g,"&quot;")}"></div>`
+       :`<div class="fld"><div class="k">Prochain passage</div><div class="v">${prochain}</div></div>`}
   </div></div>`;
-  h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Ce qu'elle fait</div>
-    <p class="pd" style="line-height:1.6">${desc}</p>
-    <div class="subh">Enchaînement</div>
-    <div class="lrow">1 · L'événement déclencheur est détecté<span class="chip ok">automatique</span></div>
-    <div class="lrow">2 · L'action part (envoi, création, dépôt)<span class="chip ok">automatique</span></div>
-    <div class="lrow">3 · La tâche de la carte se coche, horodatée<span class="chip ok">automatique</span></div>
-    <div class="lrow">4 · En cas d'échec, l'anomalie apparaît dans Pilotage<span class="chip warn">à traiter</span></div>
-  </div>
-  <div class="fsec"><div class="sect-h">${ICO.cap}Réglages</div>
-    <div class="lrow">Canal<span class="chip">Email (Brevo)</span></div>
-    <div class="lrow">Délai après l'événement<span class="chip">immédiat</span></div>
-    <div class="lrow">Nombre de tentatives<span class="chip">3, espacées de 30 min</span></div>
-    <div class="lrow">Modèle utilisé<a class="ilink" style="margin-left:auto" data-tpl="${encodeURIComponent(nom)}">Voir le template</a></div>
-    <div class="lrow">Qui est prévenu en cas d'échec<span class="chip">Admin France IA</span></div>
-  </div></div>`;
-  const ok=AUTO_HISTO.filter(x=>x[2]==="ok").length, ko=AUTO_HISTO.length-ok;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Santé sur 30 jours <span class="n2">${ok} réussite${ok>1?"s":""} · ${ko} échec${ko>1?"s":""} · ${Math.round(ok/AUTO_HISTO.length*100)} % de réussite</span></div>
+  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Logs</div>
     <div class="tblwrap"><table class="tbl"><thead><tr><th>Date</th><th>Cible</th><th>Statut</th><th>Tentatives</th><th>Erreur</th><th></th></tr></thead><tbody>`
     +AUTO_HISTO.map(([d,cible,st,n,err])=>`<tr><td>${fmtDT(d)}</td><td>${cible}</td><td><span class="chip ${st==="ok"?"ok":"warn"}">${st==="ok"?"réussi":"échec"}</span></td><td>${n}</td><td>${err||'<span class="muted">—</span>'}</td><td class="acts">${st==="ok"?"":`<a class="ilink" data-autolaunch="${encodeURIComponent(nom)}">Rejouer</a>`}</td></tr>`).join("")
     +`</tbody></table></div></div>`;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Ce qu'elle touche</div>
-    <div class="lrow">Tâche cochée<span class="chip">Admin France IA envoie le mail de bienvenue (automatique)</span></div>
-    <div class="lrow">Étape<span class="chip">Inscription validée</span></div>
-    <div class="lrow">Anomalie levée en cas d'échec<a class="ilink" style="margin-left:auto" data-anogo="1">Envoi d'e-mail en échec</a></div>
-  </div>`;
   return h;
 }
 function pageAutomatisations(){
@@ -3747,7 +3740,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3842,6 +3835,10 @@ document.addEventListener("click",e=>{
   if(t.dataset.autotoggle){const el=t.closest(".sw");el.classList.toggle("on");toast(el.classList.contains("on")?"Automatisation réactivée.":"Automatisation coupée : plus rien ne partira tant qu'elle est éteinte.");return}
   if(t.dataset.autorun){S.autoFiche=decodeURIComponent(t.dataset.autorun);render();return}
   if(t.dataset.autoback){S.autoFiche=null;render();return}
+  if(t.dataset.autosave){const nom=decodeURIComponent(t.dataset.autosave);const o=AUTO_OVERRIDE[nom]={...(AUTO_OVERRIDE[nom]||{})};
+    document.querySelectorAll("#content [data-af]").forEach(inp=>{o[inp.dataset.af]=inp.value});
+    const a=AUTOS.find(x=>x[1]===nom); if(a&&o.cat){a[0]=o.cat;}
+    S.editing=null;render();toast(`Automatisation <b>${nom}</b> mise à jour.`);return}
   if(t.dataset.lieu){S.lieuFiche=t.dataset.lieu;render();return}
   if(t.dataset.faqnew!==undefined){S.faqModal=1;render();return}
   if(t.dataset.faqsave){S.faqModal=null;render();toast(decodeURIComponent(t.dataset.faqsave)+".");return}
