@@ -2404,22 +2404,34 @@ const DEMANDES_FRM_ADMIN=[
  ["Yanis L.","Demande de retrait de la session de Lyon · 3-4 oct","hier",["Accepter","Refuser"]],
 ];
 const RESSOURCES=[
- ["Supports de formation",[
+ ["Support de formation",[
   ["Support Niveau 1","Notion","Formateur","une version par session, éditable avant le J1",1],
   ["Support Niveau 2","Notion","Formateur","une version par session",1],
   ["Support Intra","Notion","Formateur","adapté au cas du client",1],
-  ["Grille de préparation des apprenants","Notion","Formateur","ce que chacun doit avoir fait avant le J1",1]]],
- ["Tutos et vidéos",[
+  ["Canvas d'atelier","PDF","Formateur","trames imprimables des exercices",1],
+  ["Checklist d'animation","Notion","Formateur","le déroulé heure par heure",1]]],
+ ["Préparation",[
+  ["Grille de préparation des apprenants","Notion","Formateur","ce que chacun doit avoir fait avant le J1",1],
   ["Tuto plateforme Qualiobee","Vidéo","Formateur","émargement, quiz, compte rendu",1],
   ["Tuto formation Notion x Canva","Vidéo","Formateur","préparer sa page de session",1],
   ["Vidéos de préparation","Vidéo","Formateur","trois modules avant la première animation",1]]],
- ["Canvas et modèles",[
-  ["Canvas d'atelier","PDF","Formateur","trames imprimables des exercices",1],
-  ["Checklist d'animation","Notion","Formateur","le déroulé heure par heure",1],
+ ["Admin",[
+  ["Contrat de prestation","PDF","Formateur","signé une fois, valable pour toutes les sessions",1],
+  ["Modèle de facture","PDF","Formateur","repris automatiquement à chaque session animée",1],
+  ["Attestation URSSAF","PDF","Formateur","à renouveler chaque année",1],
+  ["Coordonnées bancaires","Lien","Formateur","modifiables depuis le profil",1]]],
+ ["Plateforme de certification",[
+  ["Guide de la certification RS6891","Notion","Formateur","le référentiel expliqué simplement",1],
+  ["Inscrire un apprenant à l'oral","Vidéo","Formateur","la procédure pas à pas",1],
+  ["Calendrier des oraux","Lien","Formateur","les sessions ouvertes chez Certifopac",1]]],
+ ["Vos retours et KPI",[
+  ["Verbatims de vos sessions","Lien","Formateur","ce que vos apprenants ont écrit",1],
+  ["Taux de satisfaction","Lien","Formateur","le vôtre, session par session",1],
+  ["Compte rendu de session","Notion","Formateur","le modèle attendu après chaque J2",1]]],
+ ["Espace apprenant",[
   ["Livret d'accueil","PDF","Apprenant","déposé dans l'espace apprenant",1],
   ["Guide d'accès par lieu","Notion","Apprenant","généré à partir des photos et de l'accès du lieu",1]]],
-];
-function pageLieux(v){
+];function pageLieux(v){
   let h="";
   if(v==="lieux"){
     if(S.lieuFiche) return h+ficheLieuHtml(S.lieuFiche);
@@ -2564,7 +2576,7 @@ function ficheLieuHtml(id){
     <div class="apnote">Les pastilles grisées viennent de la session (offre, dates, horaires, formateur). Le reste vient de ce lieu.</div>
     </div></div>`;
   /* 3 · salles */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Salles <span class="n2">nom, capacité et identifiant HAL</span><span class="right"><button class="btn btn-s" data-sallenew="${l.id}">+ Nouvelle salle</button></span></div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Salles <span class="right"><button class="btn btn-s" data-sallenew="${l.id}">+ Nouvelle salle</button></span></div>`;
   h+=l.salles.length?`<div class="tblwrap"><table class="tbl"><thead><tr><th>Salle</th><th>Capacité</th><th>Identifiant HAL</th><th></th></tr></thead><tbody>`
     +l.salles.map(([n,cap,hal],ix)=>`<tr><td><b>${n}</b></td><td>${cap} places</td><td>${hal?`<span class="mono">${hal}</span>`:'<span class="muted">—</span>'}</td><td class="acts"><a class="ilink" data-salleedit="${l.id}::${ix}">Modifier</a><a class="ilink danger" data-lieusave="${encodeURIComponent("Salle supprimée")}">Supprimer</a></td></tr>`).join("")
     +`</tbody></table></div>`:`<div class="lrow"><span class="sm">Aucune salle : la formation se tient chez le client.</span></div>`;
