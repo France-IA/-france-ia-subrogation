@@ -420,6 +420,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tabsline button{padding:8px 14px;font-size:12.5px;font-weight:500;color:var(--ink-500);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
 .tabsline button:hover{color:var(--ink-700)}
 .tabsline button.on{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:var(--ink-600,#475569);background:#f8fafc;border:1px solid var(--line-2);border-radius:5px;padding:1px 6px}
 .remmeta{display:flex;align-items:center;gap:8px;margin-top:7px}
 .remfoot{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin-top:8px;padding-top:7px;border-top:1px solid var(--line);font-size:11px;color:var(--ink-400)}
 .remfoot .sm{white-space:nowrap}
@@ -2210,12 +2211,10 @@ function pageSessions(){
       + (open.length?"":`<div class="stub"><p>Aucune session ouverte à l'inscription pour cette offre.</p></div>`)
       + `</div>`;
   }
-  const f=["n1","n2","param"].includes(S.fSession)?S.fSession:"n1";
+  const f=["n1","n2","lieux","ressources"].includes(S.fSession)?S.fSession:"n1";
   let h=`<div class="pagehead row"><h1>Sessions</h1><button class="btn btn-p" data-newsession="1">+ Nouvelle session</button></div>`;
-  h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]],["Paramétrage",[["param","Lieux & Ressources"]]]], f, "fSession");
-  if(f==="param"){
-    return h+pageLieux();
-  }
+  h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]],["Paramétrage",[["lieux","Lieux & Salles"],["ressources","Ressources"]]]], f, "fSession");
+  if(f==="lieux"||f==="ressources") return h+pageLieux(f);
   h+=`<div class="fbar">`+chips([["Vue",[["kanban","Kanban"],["cal","Calendrier"],["list","Liste"]]]], S.fSessView, "fSessView")
     +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fSessQ" value="${(S.fSessQ||"").replace(/"/g,"&quot;")}" placeholder="Date, formateur, ville, apprenant…"></div>
      <select class="fsel" data-fsel="fSessLieu"><option value="all">Tous les lieux</option>${LIEUX.filter(l=>l!=="Chez le client").map(l=>`<option value="${l}" ${S.fSessLieu===l?"selected":""}>${l}</option>`).join("")}</select>
@@ -2263,23 +2262,33 @@ const RESSOURCES=[
   ["Livret d'accueil","PDF","Apprenant","déposé dans l'espace apprenant",1],
   ["Guide d'accès par lieu","Notion","Apprenant","généré à partir des photos et de l'accès du lieu",1]]],
 ];
-function pageLieux(){
-  const v=["lieux","ressources"].includes(S.fParam)?S.fParam:"lieux";
-  let h=chips([["Vue",[["lieux","Lieux & Salles"],["ressources","Ressources"]]]], v, "fParam");
+function pageLieux(v){
+  let h="";
   if(v==="lieux"){
     if(S.lieuFiche) return h+ficheLieuHtml(S.lieuFiche);
-    const q=(S.fLieuQ||"").toLowerCase();
-    const villes=[...new Set(LIEUX_REF.map(l=>l.ville))];
-    const list=LIEUX_REF.filter(l=>(S.fLieuVille==="all"||!S.fLieuVille||l.ville===S.fLieuVille)&&(!q||[l.n,l.ville,l.adr].join(" ").toLowerCase().includes(q)));
-    h+=`<div class="fbar"><div class="fsearch">${ICO.search}<input type="text" data-fq="fLieuQ" value="${(S.fLieuQ||"").replace(/"/g,"&quot;")}" placeholder="Lieu, ville, adresse…"></div>
-      <select class="fsel" data-fsel="fLieuVille"><option value="all">Toutes les villes</option>${villes.map(x=>`<option value="${x}" ${S.fLieuVille===x?"selected":""}>${x}</option>`).join("")}</select>
-      <button class="btn btn-s" style="margin-left:auto" data-gen="${encodeURIComponent("Nouveau lieu")}">+ Nouveau lieu</button></div>`;
-    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Lieu</th><th>Ville</th><th>Salles</th><th>Capacité</th><th>Accès</th><th>Qualiobee</th><th>Sessions à venir</th></tr></thead><tbody>`
-      +list.map(l=>{
-        const cap=l.salles.length?Math.max(...l.salles.map(s2=>s2[1])):null;
-        const av=CARDS.filter(c=>c.kb==="session_fia"&&c.lieu&&c.lieu.startsWith(l.n)).length;
-        return `<tr class="rowlink" data-lieu="${l.id}"><td><b>${l.n}</b></td><td>${l.ville}</td><td>${l.salles.length||'<span class="muted">—</span>'}</td><td>${cap?cap+" places":'<span class="muted">—</span>'}</td><td>${l.hal?"HAL, au shotgun":"réservation directe"}</td><td>${l.qlb?`<a class="ilink" href="https://app.qualiobee.fr/places/${l.qlb}" target="_blank" rel="noopener">Lieu Qualiobee</a>`:'<span class="muted">non relié</span>'}</td><td>${av||'<span class="muted">aucune</span>'}</td></tr>`}).join("")
-      +`</tbody></table></div>`;
+    h+=`<div class="fbar"><button class="btn btn-s" style="margin-left:auto" data-lieunew="1">+ Nouveau lieu</button></div>`;
+    const pays=[...new Set(LIEUX_REF.map(l=>l.pays))];
+    const ligne=l=>{
+      const cap=l.salles.length?Math.max(...l.salles.map(s2=>s2[1])):null;
+      const av=CARDS.filter(c=>c.kb==="session_fia"&&c.lieu&&c.lieu.startsWith(l.n)).length;
+      return `<tr class="rowlink" data-lieu="${l.id}"><td><b>${l.n}</b></td><td>${l.adr}</td><td>${l.salles.length||'<span class="muted">—</span>'}</td><td>${cap?cap+" places":'<span class="muted">—</span>'}</td><td>${l.hal?"HAL, au shotgun":"réservation directe"}</td><td>${l.qlb?`<span class="mono">${l.qlb}</span>`:'<span class="muted">non relié</span>'}</td><td>${av||'<span class="muted">aucune</span>'}</td></tr>`;
+    };
+    pays.forEach((pa,ix)=>{
+      const dansPays=LIEUX_REF.filter(l=>l.pays===pa);
+      const villes=[...new Set(dansPays.map(l=>l.ville))];
+      const nbSalles=dansPays.reduce((n,l)=>n+l.salles.length,0);
+      const k="lx-"+pa;
+      h+=`<details class="pvmonth" data-acc="${k}" ${(accKey(k)||(ix===0&&S.openAcc[k]===undefined))?"open":""}><summary><div><div class="mt">${pa}</div><div class="ms">${villes.length} ville${villes.length>1?"s":""} · ${dansPays.length} lieu${dansPays.length>1?"x":""} · ${nbSalles} salle${nbSalles>1?"s":""}</div></div></summary><div class="pvbody">`;
+      villes.forEach(vi=>{
+        const dansVille=dansPays.filter(l=>l.ville===vi);
+        const ns=dansVille.reduce((n,l)=>n+l.salles.length,0);
+        const kv="lx-"+pa+"-"+vi;
+        h+=`<details class="acc pvs" data-acc="${kv}" ${accKey(kv)?"open":""}><summary><span class="chev">▶</span><span class="tt">${vi==="—"?"Chez le client":vi}</span><span class="end"><span class="sm">${dansVille.length} lieu${dansVille.length>1?"x":""} · ${ns} salle${ns>1?"s":""}</span></span></summary>
+        <div class="inner"><div class="tblwrap"><table class="tbl"><thead><tr><th>Lieu</th><th>Adresse</th><th>Salles</th><th>Capacité</th><th>Accès</th><th>Qualiobee</th><th>Sessions à venir</th></tr></thead><tbody>`
+          +dansVille.map(ligne).join("")+`</tbody></table></div></div></details>`;
+      });
+      h+=`</div></details>`;
+    });
     return h;
   }
   h+=`<div class="fbar"><button class="btn btn-s" style="margin-left:auto" data-gen="${encodeURIComponent("Nouvelle ressource")}">+ Nouvelle ressource</button></div>`;
@@ -2289,22 +2298,49 @@ function pageLieux(){
     +`</tbody></table></div></div>`).join("");
   return h;
 }
+/* formulaires de lieu et de salle */
+function lieuModalHtml(){
+  const m=S.lieuModal; if(!m) return "";
+  const l=m.lieu?LIEUX_REF.find(x=>x.id===m.lieu):null;
+  const salle=m.kind==="salle"&&m.salle!=null&&l?l.salles[m.salle]:null;
+  const titre=m.kind==="salle"?(salle?"Modifier la salle":"Nouvelle salle"):(l?"Modifier le lieu":"Nouveau lieu");
+  const sous=m.kind==="salle"?(l?l.n:""):(l?l.ville:"le catalogue sert aux sessions, aux convocations et au guide d'accès");
+  let corps;
+  if(m.kind==="salle"){
+    corps=`<div class="genrow"><div class="genfld"><div class="k">Nom de la salle</div><input class="edin" value="${salle?salle[0]:""}" placeholder="Salle Ada"></div>
+      <div class="genfld"><div class="k">Capacité</div><input class="edin" type="number" value="${salle?salle[1]:12}"></div></div>
+      <div class="genrow"><div class="genfld"><div class="k">Identifiant HAL</div><input class="edin" value="${salle&&salle[2]?salle[2]:""}" placeholder="HAL-ADA-12"><div class="pd">Seulement pour Station F : c'est lui qui sert au shotgun.</div></div>
+      <div class="genfld"><div class="k">Notes internes</div><input class="edin" placeholder="Étage, code d'accès, particularité"></div></div>`;
+  } else {
+    corps=`<div class="genrow"><div class="genfld"><div class="k">Nom du lieu</div><input class="edin" value="${l?l.n:""}" placeholder="Station F"></div>
+      <div class="genfld"><div class="k">Ville</div><input class="edin" value="${l?l.ville:""}" placeholder="Paris"></div></div>
+      <div class="genrow"><div class="genfld"><div class="k">Adresse</div><input class="edin" value="${l?l.adr:""}" placeholder="5 parvis Alan Turing, 75013 Paris"></div>
+      <div class="genfld"><div class="k">Pays</div><select class="edin"><option>France</option><option>Belgique</option><option>Suisse</option><option>Luxembourg</option></select></div></div>
+      <div class="genrow"><div class="genfld"><div class="k">Contact du lieu</div><input class="edin" value="${l&&l.contact?l.contact:""}" placeholder="accueil@lieu.fr · 01 00 00 00 00"></div>
+      <div class="genfld"><div class="k">Réservation</div><select class="edin"><option ${l&&l.hal?"selected":""}>HAL Station F, au shotgun</option><option ${l&&!l.hal?"selected":""}>Réservation directe auprès du lieu</option></select></div></div>
+      <div class="genrow"><div class="genfld"><div class="k">Identifiant Qualiobee</div><input class="edin" value="${l&&l.qlb?l.qlb:""}" placeholder="uuid du lieu chez Qualiobee"><div class="pd">Il rattache la session au lieu quand elle est créée chez Qualiobee. Qualiobee n'expose pas de page publique pour un lieu : c'est un identifiant, pas un lien.</div></div>
+      <div class="genfld"><div class="k">Message d'accueil</div><input class="edin" value="${l&&l.accueil?l.accueil:""}" placeholder="Ce que l'apprenant doit savoir en arrivant"><div class="pd">Repris dans le guide d'accès envoyé aux apprenants.</div></div></div>`;
+  }
+  return `<div id="modal2"><div class="mbox" style="max-width:640px"><div class="mhead"><div class="row"><div class="t">${titre}</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div>${sous?`<div class="s">${sous}</div>`:""}</div>
+  <div class="mbody">${corps}
+  <div class="mactions">${(l&&m.kind==="lieu")||salle?`<button class="btn btn-s danger" data-lieusave="${encodeURIComponent(m.kind==="salle"?"Salle supprimée":"Lieu supprimé")}">Supprimer</button>`:""}<button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p" data-lieusave="${encodeURIComponent(titre==="Nouveau lieu"?"Lieu créé":titre==="Nouvelle salle"?"Salle créée":"Modifications enregistrées")}">Enregistrer</button></div></div></div></div>`;
+}
 function ficheLieuHtml(id){
   const l=LIEUX_REF.find(x=>x.id===id); if(!l) return "";
   const sessions=CARDS.filter(c=>c.kb==="session_fia"&&c.lieu&&c.lieu.startsWith(l.n));
   let h=`<button class="backbtn" data-lieuback="1">← Tous les lieux</button>`;
   h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${ICO.building}</div><div><h1>${l.n}</h1></div>
-    <div class="fh-right"><button class="btn btn-s">Modifier</button><button class="btn btn-s danger">Supprimer</button></div></div>
+    <div class="fh-right"><button class="btn btn-s" data-lieuedit="${l.id}">Modifier</button><button class="btn btn-s danger" data-lieusave="${encodeURIComponent("Lieu supprimé")}">Supprimer</button></div></div>
   <div class="idgrid">
     ${fld("Adresse",l.adr)}${fld("Ville",l.ville)}
     ${fld("Réservation",l.hal?"HAL Station F, au shotgun à l'ouverture du créneau":"réservation directe auprès du lieu")}
     ${fld("Contact",l.contact)}
-    ${fld("Lieu Qualiobee",l.qlb?`<a class="ilink" href="https://app.qualiobee.fr/places/${l.qlb}" target="_blank" rel="noopener">Ouvrir sur Qualiobee</a>`:null)}
+    ${fld("Identifiant Qualiobee",l.qlb?`<span class="mono">${l.qlb}</span> <a class="ilink" data-copy="${l.qlb}">copier</a>`:null)}
     ${fld("Message d'accueil",l.accueil)}
   </div></div>`;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Salles <span class="n2">nom, capacité et identifiant HAL</span><span class="right"><button class="btn btn-s" data-gen="${encodeURIComponent("Nouvelle salle")}">+ Nouvelle salle</button></span></div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Salles <span class="n2">nom, capacité et identifiant HAL</span><span class="right"><button class="btn btn-s" data-sallenew="${l.id}">+ Nouvelle salle</button></span></div>`;
   h+=l.salles.length?`<div class="tblwrap"><table class="tbl"><thead><tr><th>Salle</th><th>Capacité</th><th>Identifiant HAL</th><th></th></tr></thead><tbody>`
-    +l.salles.map(([n,cap,hal])=>`<tr><td><b>${n}</b></td><td>${cap} places</td><td>${hal||'<span class="muted">—</span>'}</td><td class="acts"><a class="ilink">Modifier</a><a class="ilink danger">Supprimer</a></td></tr>`).join("")
+    +l.salles.map(([n,cap,hal],ix)=>`<tr><td><b>${n}</b></td><td>${cap} places</td><td>${hal?`<span class="mono">${hal}</span>`:'<span class="muted">—</span>'}</td><td class="acts"><a class="ilink" data-salleedit="${l.id}::${ix}">Modifier</a><a class="ilink danger" data-lieusave="${encodeURIComponent("Salle supprimée")}">Supprimer</a></td></tr>`).join("")
     +`</tbody></table></div>`:`<div class="lrow"><span class="sm">Aucune salle : la formation se tient chez le client.</span></div>`;
   h+=`</div>`;
   h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Photos et guide d'accès <span class="n2">elles alimentent le guide envoyé aux apprenants</span></div>
@@ -3590,6 +3626,7 @@ function render(){
   if(S.demandesFor) document.body.insertAdjacentHTML("beforeend", demandesModalHtml());
   if(S.switchFor) document.body.insertAdjacentHTML("beforeend", switchModalHtml());
   if(S.bibbyFor) document.body.insertAdjacentHTML("beforeend", bibbyModalHtml());
+  if(S.lieuModal) document.body.insertAdjacentHTML("beforeend", lieuModalHtml());
   if(S.idLink) document.body.insertAdjacentHTML("beforeend", idLinkModalHtml());
   if(S.qard) document.body.insertAdjacentHTML("beforeend", qArdModalHtml());
   if(S.wa) document.body.insertAdjacentHTML("beforeend", waModalHtml());
@@ -3653,7 +3690,7 @@ document.addEventListener("click",e=>{
   const ms=e.target.closest(".msec2>summary");
   if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
   if(e.target.id==="modal3"){S.swFull=null;render();return}
-  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
+  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.lieuModal=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
   const anoS=e.target.closest(".ano>summary");
   if(anoS){const d=anoS.parentElement;S.anoOpen=S.anoOpen||{};S.anoOpen[d.dataset.ano]=!d.open}
   const rapS=e.target.closest(".payrap>summary");
@@ -3666,7 +3703,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3761,6 +3798,12 @@ document.addEventListener("click",e=>{
   if(t.dataset.autorun){S.autoFiche=decodeURIComponent(t.dataset.autorun);render();return}
   if(t.dataset.autoback){S.autoFiche=null;render();return}
   if(t.dataset.lieu){S.lieuFiche=t.dataset.lieu;render();return}
+  if(t.dataset.lieunew!==undefined){S.lieuModal={kind:"lieu"};render();return}
+  if(t.dataset.lieuedit){S.lieuModal={kind:"lieu",lieu:t.dataset.lieuedit};render();return}
+  if(t.dataset.sallenew){S.lieuModal={kind:"salle",lieu:t.dataset.sallenew};render();return}
+  if(t.dataset.salleedit){const [lid,ix]=t.dataset.salleedit.split("::");S.lieuModal={kind:"salle",lieu:lid,salle:parseInt(ix)};render();return}
+  if(t.dataset.lieusave){S.lieuModal=null;render();toast(decodeURIComponent(t.dataset.lieusave)+".");return}
+  if(t.dataset.copy2){toast(`Identifiant <b>${t.dataset.copy2}</b> copié.`);return}
   if(t.dataset.lieuback){S.lieuFiche=null;render();return}
   if(t.dataset.autolaunch){toast(`<b>${decodeURIComponent(t.dataset.autolaunch)}</b> : lancée à la main, le résultat apparaît dans l'historique et dans les logs.`);return}
   if(t.dataset.anogo){S.tab="anomalies";S.fAno="systeme";S.autoFiche=null;render();return}
