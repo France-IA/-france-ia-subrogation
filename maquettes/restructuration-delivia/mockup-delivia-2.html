@@ -430,6 +430,21 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .actrow .ctx{font-size:11px;color:var(--ink-400);margin-top:2px}
 .actrow .u{font-size:11px;color:var(--ink-500);white-space:nowrap;margin-top:1px}
 .actrow .ar{color:var(--ink-300);margin-top:1px}
+.sigbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:2px 0 10px}
+.sigchips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.sigchips button{border:1px solid var(--line-2);border-radius:999px;padding:4px 12px;font-size:11.5px;color:var(--ink-500);background:#fff}
+.sigchips button.on{border-color:#c7d2fe;background:var(--primary-50);color:var(--primary-dark);font-weight:600}
+.sigsec{background:#fff;border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin-bottom:10px}
+.sigsec>summary{list-style:none;cursor:pointer;padding:9px 14px;background:#f8fafc;border-bottom:1px solid var(--line-2);font-size:12.5px;font-weight:600;color:var(--ink-800)}
+.sigsec>summary::-webkit-details-marker{display:none}
+.sigsec>summary .n2{font-weight:400}
+.sigsec ul{list-style:none}
+.sigsec li{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:11px 14px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--ink-800)}
+.sigsec li:last-child{border-bottom:none}
+.sigsec li.col2{display:block}
+.sigsec li.mini{padding:8px 14px;font-size:11.5px;color:var(--ink-600,#475569)}
+.sigsec li.vide{color:var(--ink-400);font-size:11.5px}
+.sigsec .right{margin-left:auto}
 .sigstats{display:flex;gap:14px;font-size:11.5px;color:var(--ink-500);margin:2px 0 10px}
 .sigstats .ko{color:var(--err)}
 .sigses{background:#fff;border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin-bottom:12px}
@@ -2674,29 +2689,42 @@ function pageActions(){
     return h;
   }
   if(v==="signatures"){
+    /* même découpage que DELIV'IA : R0, R1 (J+3), R2 (J+6), à appeler (J+9), automatique */
     const att=CARDS.filter(c=>c.kb==="insc"&&!c.reserved).map(c=>{
       const tks=tasksFor(c,c.col); const i=tks.findIndex((tk,ix)=>!taskState(c,c.col,ix,tk));
       return i<0?null:{c,tk:tks[i]};
     }).filter(x=>x&&/signe/i.test(x.tk.t));
-    h+=`<div class="warnbar">Vue vouée à disparaître : les signatures sont détectées automatiquement sur ARD et Qualiobee. Elle ne sert qu'au rattrapage, le temps que la détection couvre tous les cas.</div>`;
-    if(!att.length) return h+`<div class="stub"><p>Aucune signature en attente.</p></div>`;
-    const bySess={};
-    att.forEach(x=>{const k=x.c.sess||"sans";(bySess[k]=bySess[k]||[]).push(x)});
-    const urgents=att.filter((x,i)=>i%3===2).length;
-    h+=`<div class="sigstats"><span>✎ ${att.length} signature${att.length>1?"s":""} en attente sur ${Object.keys(bySess).length} session${Object.keys(bySess).length>1?"s":""}</span>${urgents?`<span class="ko">⚠ ${urgents} action${urgents>1?"s":""} urgente${urgents>1?"s":""}</span>`:""}</div>`;
-    Object.entries(bySess).forEach(([k,list])=>{
-      const c0=k==="sans"?null:CARDS.find(x=>x.kb==="session_fia"&&x.sess===k);
-      const j1=c0&&c0.dt&&c0.dt.j1?new Date(c0.dt.j1+"T12:00:00").toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"}):"date à confirmer";
-      h+=`<div class="sigses"><div class="sh"><b>${j1}</b><span class="sep">—</span><span>${k==="sans"?"sans session":SESS[k].lbl}</span>${c0?`<span class="dot2">·</span><span>${OFFRES[c0.offre]}</span><span class="dot2">·</span><span>${c0.frm||"formateur à confirmer"}</span><span class="dot2">·</span><span>${c0.lieu}</span>`:""}</div>`;
-      h+=list.map((x,ix)=>{
-        const {cl,aps}=peopleFor(x.c);
-        const estClient=!aps.length||(cl&&aps[0]&&cl.nom===aps[0].nom&&String(cl.type||"").startsWith("Entreprise"));
-        const rel=ix%3;
-        return `<div class="sigrow"><div class="l1"><span class="ic">${estClient?ICO.building:ICO.user}</span><a class="ilink" data-open="${x.c.id}">${x.c.title}</a><span class="dot2">·</span><span class="doc">${x.tk.t.replace(/^Client signe (le |la )?/,"").replace(/ \(détecté automatiquement\)/,"")}</span></div>
-        <div class="l2">${rel===0?`<span class="ok2">✓ envoyée le 18 août</span>`:rel===1?`<span class="ok2">✓ envoyée le 14 août</span><span class="dot2">·</span><span>relancé 1× (dernière le 20 août)</span>`:`<span class="ko2">✗ jamais envoyée</span><span class="dot2">·</span><span class="warn2">⚠ 3+ relances</span>`}<button class="btn btn-s" data-relance="${x.c.id}">${rel===2?"Appeler":"Relancer"}</button></div></div>`;
-      }).join("");
-      h+=`</div>`;
-    });
+    const fs=["tout","non_envoyes","relances_3_plus","j3_et_moins"].includes(S.fSig)?S.fSig:"tout";
+    /* palier : dérivé du rang de la carte, faute d'historique réel dans la maquette */
+    const palier=(x,i)=>["r0","r1","r2","appel"][i%4];
+    let lignes=att.map((x,i)=>({...x,p:palier(x,i),rel:i%4,sess:x.c.sess?SESS[x.c.sess].lbl:"sans session"}));
+    if(fs==="non_envoyes") lignes=lignes.filter(x=>x.p==="r0");
+    if(fs==="relances_3_plus") lignes=lignes.filter(x=>x.p==="appel");
+    if(fs==="j3_et_moins") lignes=lignes.filter(x=>x.p==="r1"||x.p==="r2");
+    const par=k=>lignes.filter(x=>x.p===k);
+    h+=`<div class="sigbar"><button class="btn btn-p" data-sigcheck="1">${ICO.refresh} Vérifier maintenant les signatures</button>
+      <span class="sm">fenêtre J-14 à J+0, contrôle sur Qualiobee</span></div>`;
+    h+=`<div class="sigchips">`+[["tout","Tout"],["non_envoyes","Non envoyés"],["relances_3_plus","Relancés 3+"],["j3_et_moins","J-3 et moins"]]
+      .map(([k,lb])=>`<button class="${fs===k?"on":""}" data-chip="fSig::${k}">${lb}</button>`).join("")+`</div>`;
+    const nom=x=>`<a class="ilink" data-open="${x.c.id}">${x.c.title}</a><span class="sm"> · ${x.sess}</span>`;
+    const section=(titre,badge,contenu)=>`<details class="sigsec" open><summary>${titre} <span class="n2">· ${badge}</span></summary><ul>${contenu}</ul></details>`;
+    h+=section("En attente (R0)",par("r0").length,
+      par("r0").map(x=>`<li>${nom(x)}<span class="sm right">Demande envoyée · en attente</span></li>`).join("")
+      ||`<li class="vide">Aucune signature en attente récente.</li>`);
+    h+=section("R1 (J+3)",par("r1").length,
+      par("r1").map(x=>`<li>${nom(x)}<button class="btn btn-s right" data-relance="${x.c.id}">Relancer</button></li>`).join("")
+      ||`<li class="vide">Aucune relance R1 due.</li>`);
+    h+=section("R2 (J+6)",par("r2").length,
+      par("r2").map(x=>`<li>${nom(x)}<button class="btn btn-s right" data-relance="${x.c.id}">Relancer</button></li>`).join("")
+      ||`<li class="vide">Aucune relance R2 due.</li>`);
+    h+=section("À appeler (J+9)",par("appel").length,
+      par("appel").map(x=>{const {cl,aps}=peopleFor(x.c);const per2=aps[0]||{};const tel=per2.tel||(cl&&cl.resp?cl.resp.t:null);const mail=per2.email||(cl&&cl.resp?cl.resp.e:null);
+        return `<li class="col2"><div class="tt">${x.c.title}</div><div class="sm">${tel?`📞 ${tel}`:""}${mail?`  ✉️ ${mail}`:""} · ${x.sess}</div></li>`}).join("")
+      ||`<li class="vide">Personne à appeler.</li>`);
+    const relances=lignes.filter(x=>x.rel>0);
+    h+=section("Automatique",`${relances.length} relancé(s)`,
+      relances.map(x=>`<li class="mini">${x.c.title}<span class="sm right">${x.rel} relance(s) · dernière ${fmtJour("2026-08-2"+x.rel)}</span></li>`).join("")
+      ||`<li class="vide">Aucune relance envoyée.</li>`);
     return h;
   }
   const auj=new Date().toISOString().slice(0,10);
@@ -3809,7 +3837,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-faqedit],[data-espedit],[data-espsave],[data-photos],[data-photoact],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-photos],[data-photoact],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3928,6 +3956,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.autolaunch){toast(`<b>${decodeURIComponent(t.dataset.autolaunch)}</b> : lancée à la main, le résultat apparaît dans l'historique et dans les logs.`);return}
   if(t.dataset.anogo){S.tab="anomalies";S.fAno="systeme";S.autoFiche=null;render();return}
   if(t.dataset.tpledit){toast(`Éditeur du support <b>${decodeURIComponent(t.dataset.tpledit)}</b> : une version par session, partagée au formateur.`);return}
+  if(t.dataset.sigcheck){toast("Contrôle des signatures lancé sur Qualiobee, fenêtre J-14 à J+0 : les signatures détectées cochent leur tâche.");return}
   if(t.dataset.relance){const c=CARDS.find(x=>x.id===t.dataset.relance);toast(`Relance de signature envoyée à <b>${c?c.title:""}</b>.`);return}
   if(t.dataset.sesspass!==undefined){S.sessPass=!S.sessPass;render();return}
   if(t.dataset.anorun){toast(`Contrôle relancé : balayage d'ARD, Qualiobee, WEDOF, EDOF, GHL, Mollie et Qonto. Résultat dans deux minutes.`);return}
