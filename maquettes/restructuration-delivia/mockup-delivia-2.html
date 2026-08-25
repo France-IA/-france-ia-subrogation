@@ -1041,6 +1041,7 @@ tasks:{
   {t:"Admin France IA crée, ouvre et lie la session EDOF",p:"fia",btn:"Ouvrir EDOF"}],
  prete:[
   {t:"Admin France IA désactive les contrats Qualiobee (CPF)",p:"fia",btn:"Vérifier"},
+  {t:"Admin France IA ferme l'inscription EDOF",p:"fia",btn:"Fermer sur EDOF",note:"la session n'est plus réservable sur Mon Compte Formation"},
   {t:"Admin France IA lance la session Qualiobee",p:"fia",btn:"Lancer"},
   {t:"Admin France IA crée le groupe WhatsApp et envoie le message de bienvenue",p:"fia",btn:"Créer le groupe",tpl:1},
   {t:"Admin France IA envoie la demande de signature contrat / convention au client",p:"fia",btn:"Envoyer à tous",tpl:1}],
@@ -1404,9 +1405,6 @@ const ANO = [
   d:"Les inscrits Qualiobee ne correspondent pas à ceux de DELIV'IA : convocation manquante ou en trop, identifiant apprenant vide.",
   cas:[{tt:"Bordeaux · 26-27 sept",sm:"Lucas Moreau inscrit chez nous, absent de Qualiobee",act:["Ajouter à Qualiobee","Ignorer"]},
        {tt:"Paris · 12-13 sept",sm:"une convocation en trop : apprenant retiré côté DELIV'IA",act:["Supprimer la convocation","Ignorer"]}]},
- {v:"session",fam:"Synchronisation",t:"Fermeture EDOF dépassée",g:"err",src:"EDOF",
-  d:"Session sans session EDOF liée à moins de 11 jours ouvrés du J1 : les dossiers CPF ne pourront plus être déclarés.",
-  cas:[{tt:"Paris · 12-13 sept",sm:"aucune session EDOF liée, J1 dans 20 jours",fiche:"session::s1",act:["Créer la session EDOF"]}]},
  {v:"session",fam:"Synchronisation",t:"Écart entre les trois systèmes",g:"warn",src:"DELIV'IA · espace · Qualiobee",
   d:"Inscrits ou e-mails divergents entre DELIV'IA, l'espace apprenants et Qualiobee ; apprenant non provisionné ou documents absents de son espace.",
   cas:[{tt:"Emma Bianchi",sm:"non provisionnée sur l'espace apprenants",act:["Re-provisionner","Resynchroniser"]}]},
