@@ -2467,7 +2467,6 @@ function pageLieux(v){
       +`</div>`;
     return h;
   }
-  h+=`<div class="fbar"><button class="btn btn-s" style="margin-left:auto" data-resnew="1">+ Nouvelle ressource</button></div>`;
   h+=RESSOURCES.map(([fam,items])=>`<div class="fsec"><div class="sect-h">${ICO.file}${fam} <span class="n2">${items.length}</span></div>`
     +`<div class="tblwrap"><table class="tbl"><thead><tr><th>Ressource</th><th>Format</th><th>État</th><th></th></tr></thead><tbody>`
     +items.map(([n,url,fmt,on])=>`<tr><td>${url&&url!=="#"?`<a class="ilink" href="${url}" target="_blank" rel="noopener"><b>${n}</b></a>`:`<b>${n}</b> <span class="sm">lien à renseigner</span>`}</td><td>${fmt}</td><td><span class="sw ${on?"on":""}" data-frmact="${encodeURIComponent("Ressource désactivée : elle disparaît de l'espace formateur")}"><i></i></span></td><td class="acts"><a class="ilink" data-resnew="1">Modifier</a></td></tr>`).join("")
@@ -2476,7 +2475,7 @@ function pageLieux(v){
 }
 /* nouvelle ressource : ce que le formateur retrouvera dans son espace */
 function resModalHtml(){
-  const cats=RESSOURCES.map(([fam])=>fam);
+  const cats=ressourcesDe(String(S.resNew).split("::")[0]).map(([fam])=>fam);
   return `<div id="modal2"><div class="mbox" style="max-width:560px"><div class="mhead"><div class="row"><div class="t">Nouvelle ressource</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div></div>
   <div class="mbody">
     <div class="espin"><label>Titre</label><input class="edin" placeholder="Tuto plateforme Qualiobee"></div>
@@ -3846,23 +3845,48 @@ const RESSOURCES_INT=[
   ["Conformité Qualiopi : ce qu'un audit regarde","#","Notion",1],
   ["Procédures de fin de mois","#","Notion",1]]],
 ];
-function tableauRessources(src){
-  return src.map(([fam,items])=>`<div class="fsec"><div class="sect-h">${ICO.file}${fam} <span class="n2">${items.length}</span></div>`
+function tableauRessources(src,cle){
+  let h=`<div class="fbar"><button class="btn btn-s" style="margin-left:auto" data-resnew="${cle}">+ Nouvelle ressource</button><button class="btn btn-s" data-ressec="${cle}">+ Nouvelle section</button></div>`;
+  h+=src.map(([fam,items],fi)=>`<div class="fsec"><div class="sect-h">${ICO.file}${fam} <span class="n2">${items.length}</span>
+      <span class="right"><a class="ilink" data-resmovesec="${cle}::${fi}::-1">↑</a><a class="ilink" data-resmovesec="${cle}::${fi}::1">↓</a><a class="ilink danger" data-resdelsec="${cle}::${fi}">Supprimer la section</a></span></div>`
     +`<div class="tblwrap"><table class="tbl"><thead><tr><th>Ressource</th><th>Format</th><th>État</th><th></th></tr></thead><tbody>`
-    +items.map(([n,url,fmt,on])=>`<tr><td>${url&&url!=="#"?`<a class="ilink" href="${url}" target="_blank" rel="noopener"><b>${n}</b></a>`:`<b>${n}</b> <span class="sm">lien à renseigner</span>`}</td><td>${fmt}</td><td><span class="sw ${on?"on":""}" data-frmact="${encodeURIComponent("Ressource désactivée : elle disparaît de l'espace")}"><i></i></span></td><td class="acts"><a class="ilink" data-resnew="1">Modifier</a></td></tr>`).join("")
+    +(items.map(([n,url,fmt,on],ii)=>`<tr><td>${url&&url!=="#"?`<a class="ilink" href="${url}" target="_blank" rel="noopener"><b>${n}</b></a>`:`<b>${n}</b> <span class="sm">lien à renseigner</span>`}</td><td>${fmt}</td><td><span class="sw ${on?"on":""}" data-restoggle="${cle}::${fi}::${ii}"><i></i></span></td><td class="acts"><a class="ilink" data-resmove="${cle}::${fi}::${ii}::-1">↑</a><a class="ilink" data-resmove="${cle}::${fi}::${ii}::1">↓</a><a class="ilink" data-resnew="${cle}::${fi}::${ii}">Modifier</a><a class="ilink danger" data-resdel="${cle}::${fi}::${ii}">Supprimer</a></td></tr>`).join("")
+      ||`<tr><td colspan="4" class="paynone">Aucune ressource dans cette section.</td></tr>`)
     +`</tbody></table></div></div>`).join("");
+  return h;
 }
-/* parcours d'arrivée : ce que chacun doit avoir fait pour être opérationnel */
-const ONBOARDING_COM=["Contrat signé","Compte GHL créé","Accès DELIV'IA","Formation aux outils","Script validé en écoute"];
-const ONBOARDING_INT=["Contrat signé","Comptes créés (GHL, Qualiobee)","Accès DELIV'IA","Tour des process","Accès Drive et coffre-fort"];
+function ressourcesDe(cle){ return cle==="formateurs"?RESSOURCES:cle==="interne"?RESSOURCES_INT:RESSOURCES_COM; }
+/* parcours d'arrivée : des to do groupées en sections, ajoutables et réordonnables */
+const ONBOARDING={
+ formateurs:[["Administratif",["Contrat de collaboration signé","Attestation URSSAF à jour","RIB déposé","Assurance responsabilité civile"]],
+             ["Qualité",["Charte qualité France IA"]]],
+ closeurs:[["Administratif",["Contrat signé","Compte GHL créé"]],
+           ["Outils",["Accès DELIV'IA","Formation aux outils"]],
+           ["Vente",["Script validé en écoute"]]],
+ setteurs:[["Administratif",["Contrat signé","Compte GHL créé"]],
+           ["Outils",["Accès DELIV'IA","Formation aux outils"]],
+           ["Prise de rendez-vous",["Script de setting validé en écoute"]]],
+ interne:[["Administratif",["Contrat signé","Comptes créés (GHL, Qualiobee)"]],
+          ["Outils",["Accès DELIV'IA","Accès Drive et coffre-fort"]],
+          ["Process",["Tour des process avec l'équipe"]]],
+};
 function onboardingHtml(pop){
-  const etapes = pop==="formateurs" ? Object.values(FRM)[0].onboarding.map(o=>o[0])
-               : pop==="interne" ? ONBOARDING_INT : ONBOARDING_COM;
+  const secs=ONBOARDING[pop]||[];
+  const etapes=secs.flatMap(([,its])=>its);
   const gens = pop==="formateurs"
-    ? FORMATEURS.map(k=>({nom:FRM[k].nom, faits:FRM[k].onboarding.map(o=>!!o[1]), fiche:"formateur::"+k}))
+    ? FORMATEURS.map(k=>({nom:FRM[k].nom, faits:etapes.map((_,j)=>j<FRM[k].onboarding.filter(o=>o[1]).length), fiche:"formateur::"+k}))
     : COMPTES.filter(u=>pop==="interne"?u.role==="admin":u.role===(pop==="closeurs"?"closer":"setter"))
         .map((u,i)=>({nom:u.nom, faits:etapes.map((_,j)=>j<=((i+3)%(etapes.length+1))-1), fiche:"compte::"+u.id}));
-  return `<div class="tblwrap"><table class="tbl matrice"><thead><tr><th>Personne</th>`
+  /* le parcours lui-même */
+  let h=`<div class="fbar"><button class="btn btn-s" style="margin-left:auto" data-onbnew="${pop}">+ Nouvelle to do</button><button class="btn btn-s" data-onbsec="${pop}">+ Nouvelle section</button></div>`;
+  h+=secs.map(([fam,items],fi)=>`<div class="fsec"><div class="sect-h">${ICO.cap}${fam} <span class="n2">${items.length}</span>
+      <span class="right"><a class="ilink" data-onbmovesec="${pop}::${fi}::-1">↑</a><a class="ilink" data-onbmovesec="${pop}::${fi}::1">↓</a><a class="ilink" data-onbnew="${pop}::${fi}">+ To do</a><a class="ilink danger" data-onbdelsec="${pop}::${fi}">Supprimer la section</a></span></div>`
+    +(items.map((lbl,ii)=>`<div class="lrow">${lbl}<span class="acts" style="margin-left:auto"><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::-1">↑</a><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::1">↓</a><a class="ilink danger" data-onbdel="${pop}::${fi}::${ii}">Supprimer</a></span></div>`).join("")
+      ||`<div class="lrow"><span class="sm">Aucune to do dans cette section.</span></div>`)
+    +`</div>`).join("");
+  /* où en est chacun */
+  h+=`<div class="sect-h" style="margin:18px 0 10px">${ICO.eye}Où en est chacun</div>`;
+  return h+`<div class="tblwrap"><table class="tbl matrice"><thead><tr><th>Personne</th>`
     +etapes.map(e=>`<th class="cash">${e}</th>`).join("")
     +`<th>Avancement</th><th>Fiche</th></tr></thead><tbody>`
     +gens.map(g=>{const n=g.faits.filter(Boolean).length;
@@ -3883,7 +3907,7 @@ function pageEquipe(){
   h+=chips([["",pops]], pop, "fEq");
   h+=chips([["",vues]], v, "fEqV");
   if(v==="onboarding") return h+onboardingHtml(pop);
-  if(v==="ressources") return h+tableauRessources(pop==="formateurs"?RESSOURCES:pop==="interne"?RESSOURCES_INT:RESSOURCES_COM);
+  if(v==="ressources") return h+tableauRessources(ressourcesDe(pop),pop);
   if(v==="faq") return h+pageFaq({pub:pop==="formateurs"?"Formateurs":pop==="setteurs"?"Setteurs":pop==="interne"?"Admins":"Closeurs"});
   if(v==="demandes"){
     return h+`<div class="fsec">`
@@ -4275,7 +4299,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -4425,8 +4449,38 @@ document.addEventListener("click",e=>{
     const n=CARDS.filter(c=>c.kb===kb&&c.col===col).length;
     if(n){toast(`Impossible : ${n} carte(s) vivent à cette étape. Une étape occupée s'archive, elle ne se supprime pas.`);return}
     d.cols=d.cols.filter(c=>c.id!==col);delete d.tasks[col];render();toast("Étape supprimée.");return}
-  if(t.dataset.resnew!==undefined){S.resNew=1;render();return}
-  if(t.dataset.ressave){S.resNew=null;render();toast("Ressource ajoutée : elle apparaît dans l'espace du public choisi.");return}
+  if(t.dataset.resnew!==undefined){S.resNew=t.dataset.resnew||"formateurs";render();return}
+  if(t.dataset.ressave){const [cle]=String(S.resNew).split("::");
+    const g=i=>document.querySelectorAll("#modal2 .mbody input, #modal2 .mbody select")[i];
+    const src=ressourcesDe(cle);
+    const titre=(g(0).value||"").trim()||"Nouvelle ressource", url=(g(1).value||"").trim()||"#";
+    const fam=g(2).value, type=g(3).value;
+    const sec=src.find(x=>x[0]===fam)||src[0];
+    sec[1].push([titre,url,type,1]);
+    S.resNew=null;render();toast(`<b>${titre}</b> ajoutée dans « ${sec[0]} ».`);return}
+  if(t.dataset.ressec){const src=ressourcesDe(t.dataset.ressec);
+    src.push(["Nouvelle section",[]]);render();toast("Section ajoutée : renomme-la et remplis-la.");return}
+  if(t.dataset.resdelsec){const [cle,fi]=t.dataset.resdelsec.split("::");const src=ressourcesDe(cle);
+    const nom=src[+fi][0];src.splice(+fi,1);render();toast(`Section <b>${nom}</b> supprimée.`);return}
+  if(t.dataset.resmovesec){const [cle,fi,d]=t.dataset.resmovesec.split("::");const src=ressourcesDe(cle);const j=+fi + +d;
+    if(j<0||j>=src.length)return;[src[+fi],src[j]]=[src[j],src[+fi]];render();return}
+  if(t.dataset.resmove){const [cle,fi,ii,d]=t.dataset.resmove.split("::");const arr=ressourcesDe(cle)[+fi][1];const j=+ii + +d;
+    if(j<0||j>=arr.length)return;[arr[+ii],arr[j]]=[arr[j],arr[+ii]];render();return}
+  if(t.dataset.resdel){const [cle,fi,ii]=t.dataset.resdel.split("::");const arr=ressourcesDe(cle)[+fi][1];
+    const nom=arr[+ii][0];arr.splice(+ii,1);render();toast(`<b>${nom}</b> retirée.`);return}
+  if(t.dataset.restoggle){const [cle,fi,ii]=t.dataset.restoggle.split("::");const r=ressourcesDe(cle)[+fi][1][+ii];
+    r[3]=r[3]?0:1;render();toast(r[3]?"Ressource réactivée.":"Ressource désactivée : elle disparaît de l'espace.");return}
+  if(t.dataset.onbnew){const [pop,fi]=t.dataset.onbnew.split("::");const secs=ONBOARDING[pop];
+    (secs[fi!==undefined?+fi:0]||secs[0])[1].push("Nouvelle to do");render();toast("To do ajoutée au parcours.");return}
+  if(t.dataset.onbsec){ONBOARDING[t.dataset.onbsec].push(["Nouvelle section",[]]);render();toast("Section ajoutée au parcours.");return}
+  if(t.dataset.onbdelsec){const [pop,fi]=t.dataset.onbdelsec.split("::");const nom=ONBOARDING[pop][+fi][0];
+    ONBOARDING[pop].splice(+fi,1);render();toast(`Section <b>${nom}</b> supprimée.`);return}
+  if(t.dataset.onbmovesec){const [pop,fi,d]=t.dataset.onbmovesec.split("::");const secs=ONBOARDING[pop];const j=+fi + +d;
+    if(j<0||j>=secs.length)return;[secs[+fi],secs[j]]=[secs[j],secs[+fi]];render();return}
+  if(t.dataset.onbmove){const [pop,fi,ii,d]=t.dataset.onbmove.split("::");const arr=ONBOARDING[pop][+fi][1];const j=+ii + +d;
+    if(j<0||j>=arr.length)return;[arr[+ii],arr[j]]=[arr[j],arr[+ii]];render();return}
+  if(t.dataset.onbdel){const [pop,fi,ii]=t.dataset.onbdel.split("::");const arr=ONBOARDING[pop][+fi][1];
+    const nom=arr[+ii];arr.splice(+ii,1);render();toast(`<b>${nom}</b> retirée du parcours.`);return}
   if(t.dataset.tplnew!==undefined){S.tplNew=1;S.tkEdit=null;render();return}
   if(t.dataset.tplsave){S.tplNew=null;render();toast("Template créé : il est liable à une tâche et à une automatisation.");return}
   if(t.dataset.photos){S.photos=t.dataset.photos;S.photosEdit=null;render();return}
