@@ -861,6 +861,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .pagehead.row{display:flex;align-items:center;gap:12px}
 .pagehead.row .btn:first-of-type{margin-left:auto}
 .fbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-6px 0 14px}
+.faqbloc{margin-bottom:26px}
+.faqbloc>.sect-h{margin-bottom:14px}
+.faqbloc>.fbar{margin-top:0}
 .fbar .chips{margin:0}
 .fsearch{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:6px 10px;color:var(--ink-400);min-width:260px}
 .fsearch input{border:none;outline:none;font:inherit;font-size:13px;color:var(--ink-900);flex:1;background:transparent}
@@ -3252,10 +3255,8 @@ function remonteesSectionHtml(){
 function pageFaq(opt){
   const pub=opt&&opt.pub;
   let h=pub?"":`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
-  h+=`<div class="sect-h">${ICO.file}Questions et réponses</div>`;
-  h+=faqSectionHtml(pub);
-  h+=`<div class="sect-h" style="margin-top:20px">${ICO.file}Tickets et remontées</div>`;
-  h+=remonteesSectionHtml();
+  h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Questions et réponses</div>`+faqSectionHtml(pub)+`</div>`;
+  h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Tickets et remontées</div>`+remonteesSectionHtml()+`</div>`;
   return h;
 }
 
@@ -3765,7 +3766,8 @@ function lostModalHtml(){
   COMPTES.forEach((u,i)=>{ u.cree=["2026-01-08","2026-02-19","2026-03-04","2026-04-15","2026-05-22","2026-06-10","2026-07-01"][i%7];
     u.closes30=[7,5,4,3][i%4]; u.panier=["1 890 €","2 140 €","1 650 €","2 310 €"][i%4]; u.rdv30=[42,35,28][i%3]; });
   Object.values(FRM).forEach((f,i)=>{ f.qlbId=f.qlbId||"frm_"+String(f.nom).toLowerCase().replace(/[^a-z]/g,"").slice(0,6);
-    f.dispos30=[6,4,9,3,7][i%5]; });
+    f.dispos30=[6,4,9,3,7][i%5];
+    f.cree=["2026-02-11","2026-03-27","2026-05-06","2026-06-18","2026-07-09"][i%5]; });
 })();
 /* date d'entrée dans la base, déterministe : la première fiche est la plus ancienne */
 (()=>{ const d0=new Date("2026-03-02");
@@ -3851,26 +3853,20 @@ function pageEquipe(){
   }
   h+=`<div class="fsec">`;
   if(pop==="formateurs"){
-    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>E-mail</th><th>Téléphone</th><th>Villes</th><th>Offres autorisées</th><th>Identifiant Qualiobee</th><th>Dispos 30 j</th><th>Sessions à venir</th><th>Onboarding</th><th>À traiter</th><th>Fiche</th></tr></thead><tbody>`
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>E-mail</th><th>Téléphone</th><th>Villes</th><th>Offres autorisées</th><th>Identifiant Qualiobee</th><th>Sessions à venir</th><th>Créé le</th><th>Fiche</th></tr></thead><tbody>`
       +FORMATEURS.map(k=>{const f=FRM[k];
-        const reste=f.onboarding.filter(o=>!o[1]).length;
-        const att=(f.appro?1:0)+f.quali.length+(f.retrait?1:0);
         const futures=CARDS.filter(c=>c.kb==="session_frm"&&c.frm===k&&c.col!=="termine").length;
-        return `<tr><td><b>${f.nom}</b></td><td>${f.email}</td><td>${f.tel}</td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td><span class="mono">${f.qlbId}</span></td><td>${f.dispos30} jour(s)</td><td>${futures}</td><td>${reste?`<span class="chip warn">${reste} à faire</span>`:`<span class="chip ok">complet</span>`}</td><td>${att?`<span class="chip warn">${att}</span>`:'<span class="muted">—</span>'}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche</a></td></tr>`}).join("")
+        return `<tr><td><b>${f.nom}</b></td><td>${f.email}</td><td>${f.tel}</td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td><span class="mono">${f.qlbId}</span></td><td>${futures}</td><td>${fmtJour(f.cree)}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche</a></td></tr>`}).join("")
       +`</tbody></table></div>`;
   } else if(pop==="closeurs"||pop==="setteurs"){
     const role=pop==="closeurs"?"closer":"setter";
     const list=COMPTES.filter(u=>u.role===role);
-    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>${pop==="closeurs"?"Closeur":"Setteur"}</th><th>E-mail</th><th>Téléphone</th><th>Identifiant GHL</th><th>Compte</th>`
-      +(role==="closer"?`<th>Closes 30 j</th><th>Panier moyen</th>`:`<th>Rendez-vous posés 30 j</th>`)
-      +`<th>Fiche</th></tr></thead><tbody>`
-      +list.map(u=>`<tr><td><b>${u.nom}</b></td><td>${u.email}</td><td>${u.tel}</td><td><span class="mono">${u.ghl}</span></td><td><span class="chip ok">actif</span></td>`
-        +(role==="closer"?`<td>${u.closes30}</td><td>${u.panier}</td>`:`<td>${u.rdv30}</td>`)
-        +`<td><a class="ilink" data-fiche="compte::${u.id}">Fiche</a></td></tr>`).join("")
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>${pop==="closeurs"?"Closeur":"Setteur"}</th><th>E-mail</th><th>Téléphone</th><th>Identifiant GHL</th><th>Créé le</th><th>Fiche</th></tr></thead><tbody>`
+      +list.map(u=>`<tr><td><b>${u.nom}</b></td><td>${u.email}</td><td>${u.tel}</td><td><span class="mono">${u.ghl}</span></td><td>${fmtJour(u.cree)}</td><td><a class="ilink" data-fiche="compte::${u.id}">Fiche</a></td></tr>`).join("")
       +`</tbody></table></div>`;
   } else {
-    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Membre</th><th>E-mail</th><th>Téléphone</th><th>Rôle</th><th>Identifiant GHL</th><th>Identifiant Qualiobee</th><th>Créé le</th><th>Compte</th><th>Fiche</th></tr></thead><tbody>`
-      +COMPTES.filter(u=>u.role==="admin").map(u=>`<tr><td><b>${u.nom}</b></td><td>${u.email}</td><td>${u.tel}</td><td>${u.titre}</td><td><span class="mono">${u.ghl}</span></td><td><span class="mono">${u.qlb}</span></td><td>${fmtJour(u.cree)}</td><td><span class="chip ok">actif</span></td><td><a class="ilink" data-fiche="compte::${u.id}">Fiche</a></td></tr>`).join("")
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Membre</th><th>E-mail</th><th>Téléphone</th><th>Rôle</th><th>Identifiant GHL</th><th>Identifiant Qualiobee</th><th>Créé le</th><th>Fiche</th></tr></thead><tbody>`
+      +COMPTES.filter(u=>u.role==="admin").map(u=>`<tr><td><b>${u.nom}</b></td><td>${u.email}</td><td>${u.tel}</td><td>${u.titre}</td><td><span class="mono">${u.ghl}</span></td><td><span class="mono">${u.qlb}</span></td><td>${fmtJour(u.cree)}</td><td><a class="ilink" data-fiche="compte::${u.id}">Fiche</a></td></tr>`).join("")
       +`</tbody></table></div>`;
   }
   return h+`</div>`;
