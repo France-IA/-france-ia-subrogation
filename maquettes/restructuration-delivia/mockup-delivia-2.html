@@ -394,6 +394,18 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tbl.matrice td.cas.on{color:var(--primary)}
 .tbl.matrice td.cas:hover{background:var(--primary-50)}
 .tbl.matrice .acts{white-space:nowrap}
+.todobloc{border:1px solid var(--line);border-radius:10px;margin:6px 0;background:#fff}
+.todobloc>summary{display:flex;align-items:center;gap:9px;padding:8px 11px;cursor:pointer;list-style:none;font-size:13px;color:var(--ink-700)}
+.todobloc>summary::-webkit-details-marker{display:none}
+.todobloc>summary .box{width:15px;height:15px;border:1.5px solid var(--line-2);border-radius:4px;flex-shrink:0}
+.todobloc>summary .box.on{background:var(--primary);border-color:var(--primary);position:relative}
+.todobloc>summary .box.on::after{content:"✓";position:absolute;inset:0;color:#fff;font-size:11px;line-height:12px;text-align:center}
+.todobloc .cnt3{margin-left:auto;font-size:11px;color:var(--ink-400);font-variant-numeric:tabular-nums}
+.todobloc>summary .chev{color:var(--ink-300);font-size:11px;transition:transform .15s}
+.todobloc[open]>summary .chev{transform:rotate(90deg)}
+.todobloc.done>summary .lbl{color:var(--ink-400);text-decoration:line-through}
+.todolist{padding:2px 11px 10px 11px;border-top:1px solid var(--line)}
+.todolist .tgrp{margin-top:8px}
 .caswrap{display:flex;flex-wrap:wrap;gap:10px 16px}
 .casck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-700)}
 .tlien{margin-left:8px;font-size:11px}
@@ -1401,20 +1413,21 @@ const ANO = [
        {tt:"Paris N2 · 4-5 juillet",sm:"créneau HAL réservé de 9 h à 13 h, la session en attend un de 9 h à 18 h",fiche:"session::s6",act:["Ouvrir HAL","Ouvrir la session"]}]},
  {v:"session",fam:"Places",t:"Surbooking, avéré ou en risque",g:"err",src:"DELIV'IA",dyn:"places",
   d:"Plus d'inscrits que de places, ou des inscriptions en cours qui feraient dépasser le plafond si elles aboutissaient toutes."},
+ {v:"session",fam:"Synchronisation",t:"Jalons Qualiobee non lancés",g:"err",src:"Qualiobee",
+  d:"La session est ouverte chez nous mais ses jalons ne sont pas partis côté Qualiobee : ni convocation, ni émargement, ni attestation ne suivront.",
+  cas:[{tt:"Lyon · 3-4 oct",sm:"session créée, jalons non lancés à J-14",fiche:"session::s3",act:["Lancer les jalons","Ouvrir Qualiobee"]}]},
  {v:"session",fam:"Synchronisation",t:"Désynchronisation Qualiobee",g:"warn",src:"Qualiobee",
   d:"Les inscrits Qualiobee ne correspondent pas à ceux de DELIV'IA : convocation manquante ou en trop, identifiant apprenant vide.",
   cas:[{tt:"Bordeaux · 26-27 sept",sm:"Lucas Moreau inscrit chez nous, absent de Qualiobee",act:["Ajouter à Qualiobee","Ignorer"]},
        {tt:"Paris · 12-13 sept",sm:"une convocation en trop : apprenant retiré côté DELIV'IA",act:["Supprimer la convocation","Ignorer"]}]},
- {v:"session",fam:"Synchronisation",t:"Écart entre les trois systèmes",g:"warn",src:"DELIV'IA · espace · Qualiobee",
-  d:"Inscrits ou e-mails divergents entre DELIV'IA, l'espace apprenants et Qualiobee ; apprenant non provisionné ou documents absents de son espace.",
+ {v:"session",fam:"Synchronisation",t:"Espace apprenant désaligné",g:"warn",src:"DELIV'IA · espace · Qualiobee",
+  d:"Le compte de l'apprenant sur son espace ne correspond pas à ce que DELIV'IA et Qualiobee disent de lui : compte jamais créé, e-mail différent d'un système à l'autre, ou compte qui survit à une inscription supprimée.",
   cas:[{tt:"Emma Bianchi",sm:"non provisionnée sur l'espace apprenants",act:["Re-provisionner","Resynchroniser"]}]},
  {v:"session",fam:"Preuves",t:"Collecte de preuve en échec",g:"warn",src:"Qualiobee · Drive",
   d:"Émargement non signé, document pas encore généré côté Qualiobee, CV du formateur absent : la preuve ne peut pas être déposée sur le Drive.",
   cas:[{tt:"Bordeaux · 26-27 sept",sm:"émargement J2 non signé par 2 apprenants",act:["Relancer la signature"]},
-       {tt:"Sarah K.",sm:"CV du formateur absent du coffre-fort",act:["Demander le CV"]}]},
- {v:"session",fam:"Preuves",t:"Tâche en retard",g:"warn",src:"DELIV'IA",
-  d:"Une tâche dont la date d'échéance est dépassée alors que l'étape est ouverte.",
-  cas:[{tt:"Bordeaux · 26-27 sept",sm:"« désactiver les contrats Qualiobee (CPF) » en retard de 3 jours",open:"s2",act:["Ouvrir la carte"]}]},
+       {tt:"Sarah K.",sm:"CV du formateur absent du coffre-fort",act:["Demander le CV"]},
+       {tt:"Paris · 12-13 sept",sm:"pièce présente sur le Drive, absente de DELIV'IA : dépôt fait à la main",act:["Resynchroniser le Drive"]}]},
 /* ── Inscription ── */
  {v:"inscription",fam:"Identité",t:"Doublon d'apprenant",g:"warn",src:"ARD · DELIV'IA",
   d:"Même e-mail ou même téléphone entre un profil arrivé par ARD et un profil existant.",
@@ -1444,6 +1457,9 @@ const ANO = [
 /* ── Facturation ── */
  {v:"facturation",fam:"Encaissements",t:"Virement reçu non rapproché",g:"warn",src:"Qonto",dyn:"qonto",
   d:"Argent reçu sur le compte Qonto sans facture rattachée. Le rapprochement se fait dans Qonto : DELIV'IA relit ensuite le statut de la facture."},
+ {v:"facturation",fam:"Encaissements",t:"Facture payée chez Qonto, pas acquittée chez nous",g:"err",src:"Qonto · DELIV'IA",
+  d:"La facture est marquée payée d'un seul côté. C'est le cas le plus coûteux : l'argent est encaissé, le dossier reste ouvert, la relance part quand même.",
+  cas:[{tt:"ACME Conseil",sm:"F-2026-0533 payée le 17 août chez Qonto, encore en attente chez nous",act:["Acquitter chez nous","Ouvrir Qonto"]}]},
  {v:"facturation",fam:"Encaissements",t:"Échec de prélèvement SEPA",g:"err",src:"Mollie",
   d:"Prélèvement refusé, non parti ou irrégulier sur un mandat actif.",
   cas:[{tt:"BTP Sud",sm:"échéance 1/2 refusée le 10 août (provision insuffisante)",open:"f6",act:["Ouvrir la carte","Rejouer"]}]},
@@ -1465,9 +1481,6 @@ const ANO = [
  {v:"facturation",fam:"Affacturage",t:"Bibby en erreur",g:"err",src:"Bibby Factor",
   d:"Transmission refusée par Bibby, ou export EDOF manquant dans le dossier envoyé.",
   cas:[{tt:"Emma Bianchi",sm:"dossier refusé : export EDOF absent",open:"f2",act:["Déposer l'export","Renvoyer"]}]},
- {v:"facturation",fam:"Affacturage",t:"Étude de cas ou témoignage manquant",g:"info",src:"DELIV'IA",
-  d:"Le formateur n'a pas déposé son étude de cas ou son témoignage de clôture : sa facture reste bloquée.",
-  cas:[{tt:"Sarah K.",sm:"étude de cas de la session de Paris non déposée",act:["Relancer le formateur"]}]},
 /* ── Système ── */
  {v:"systeme",fam:"Automatisations",t:"Instance WhatsApp déconnectée",g:"err",src:"WhatsApp",
   d:"Le compte WhatsApp qui crée les groupes n'est plus connecté : les groupes et les messages ne partent plus.",
@@ -1775,10 +1788,7 @@ function key(card,colId,i){return card.id+"::"+colId+"::"+i}
 function allDone(card){
   const tks=tasksFor(card,card.col);
   if(!tks.length) return false;
-  return tks.every((tk,i)=>{
-    if(tk.sub && card.ech) return card.ech.every(e=>e.st==="ok");
-    return S.checks[key(card,card.col,i)];
-  });
+  return tks.every((tk,i)=>taskState(card,card.col,i,tk));
 }
 function nextCol(card){
   const cols=colsFor(card);
@@ -1920,8 +1930,25 @@ function cardBadge(card){
 function evRow(ev,state){ /* state : done | now | later */
   return `<div class="evrow ${state}"><span class="dot"></span>${EV[ev]||ev}</div>`;
 }
+function todoItems(tk){ return tk.todo.flatMap(([ph,its])=>its.map(it=>({ph,lbl:it[0],src:it[1]}))); }
 function taskHtml(card,colId,i,tk,ghost){
   const k=key(card,colId,i);
+  if(tk.todo){
+    const items=todoItems(tk), can2=canCheck(tk);
+    const fait=items.filter((_,j)=>S.checks[k+"::"+j]).length, tous=fait===items.length;
+    const ak="todo-"+k;
+    let last="";
+    return `<details class="todobloc ${tous?"done":""}" data-acc="${ak}" ${accKey(ak)?"open":""}>
+      <summary><span class="box ${tous?"on":""}"></span><span class="lbl">${tk.t}</span><span class="cnt3">${fait}/${items.length}</span><span class="chev">▸</span></summary>
+      <div class="todolist">`
+      +items.map((it,j)=>{
+        const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:""; last=it.ph;
+        const d=!!S.checks[k+"::"+j];
+        return g+`<div class="task ${d?"done":""} ${can2?"":"other"}" ${can2&&!ghost?`data-todoi="${card.id}::${colId}::${i}::${j}"`:'style="cursor:default"'}>
+          <span class="box"></span><span><span class="lbl">${it.lbl}</span>${it.src?`<a class="ilink tlien" data-frmact="${encodeURIComponent(it.src+" ouvert")}">${it.src}</a>`:""}</span></div>`;
+      }).join("")
+      +`</div></details>`;
+  }
   const done=tk.sub&&card.ech ? card.ech.every(e=>e.st==="ok") : !!S.checks[k];
   const can=canCheck(tk);
   const apsTk = tk.perAp ? peopleFor(card).aps : null;
@@ -1959,6 +1986,7 @@ function openDateStr(card,col){
 }
 function taskState(card,colId,i,tk){
   if(tk.sub&&card.ech) return card.ech.every(e=>e.st==="ok");
+  if(tk.todo){const k=key(card,colId,i); return todoItems(tk).every((_,j)=>S.checks[k+"::"+j]);}
   return !!S.checks[key(card,colId,i)];
 }
 /* inscrits réels / en cours (dont réservations) / capacité d'une session */
@@ -2882,11 +2910,15 @@ const TODO_SESSION=[
   ["Vérifier que tout le monde a émargé (Qualiobee), relancer sinon",null],
   ["Uploader les slides dans la page Notion des apprenants",null]]],
 ];
-/* elles ne vivent pas à part : chaque to do rejoint l'étape du rail formateur qui la porte */
-TODO_SESSION.forEach(([phase,items])=>{
-  const col = phase==="Avant la session" ? "preparer" : "animer";
-  items.forEach(([lbl,src])=>KB.session_frm.tasks[col].push({t:lbl,p:"formateur",grp:phase,lien:src||null}));
-});
+/* elles ne vivent pas à part : chaque étape porte UNE tâche repliable, visible aussi de l'admin */
+function todoBloc(phases){
+  return {t:"ToDo session",p:"formateur",todo:TODO_SESSION.filter(([ph])=>phases.includes(ph))};
+}
+const TODO_AVANT=["Avant la session"], TODO_PENDANT=["Matin J1","Soir J1","Matin J2","Soir J2"];
+KB.session_frm.tasks.preparer.push(todoBloc(TODO_AVANT));
+KB.session_frm.tasks.animer.push(todoBloc(TODO_PENDANT));
+KB.session_fia.tasks.demarree.push(todoBloc(TODO_AVANT));
+KB.session_fia.tasks.enformation.push(todoBloc(TODO_PENDANT));
 /* ════════════════════ PARAMÉTRAGE D'UN RAIL (admin) ════════════════════
    Deux lectures du même process : la matrice montre tous les cas d'un coup et
    sert à éditer ; l'aperçu montre un cas précis, tel que l'utilisateur le verra. */
@@ -2945,7 +2977,7 @@ function pageRail(){
       +`<th>Template</th><th></th></tr></thead><tbody>`
       +(tks.map((tk,i)=>{
         const nat=natureTk(tk);
-        return `<tr><td><b>${tk.t}</b>${tk.grp?`<div class="sm">${tk.grp}</div>`:""}</td>
+        return `<tr><td><b>${tk.t}</b>${tk.grp?`<div class="sm">${tk.grp}</div>`:""}${tk.todo?`<div class="sm">${todoItems(tk).length} sous-tâches, repliées sur la carte</div>`:""}</td>
           <td>${ACTEURS[tk.p]||tk.p}</td>
           <td><span class="chip ${nat[0]==="simple"?"":"warn"}">${nat[1]}</span></td>`
           +(parCas?CAS_FIN.map(([k])=>{const on=!tk.fin||tk.fin.includes(k);
@@ -3994,7 +4026,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -4099,6 +4131,12 @@ document.addEventListener("click",e=>{
     document.querySelectorAll("[data-ef]").forEach(inp=>{l[inp.dataset.ef]=inp.value.trim()||null});
     S.espEdit=null;render();toast(`Information espace apprenant mise à jour pour <b>${l.n}</b>.`);return}
   if(t.dataset.espcancel){S.espEdit=null;render();return}
+  if(t.dataset.todoi){const [cid,col,i,j]=t.dataset.todoi.split("::");
+    const card=CARDS.find(c=>c.id===cid); const tk=tasksFor(card,col)[+i];
+    if(!canCheck(tk)) return;
+    const kk=key(card,col,+i)+"::"+j; S.checks[kk]=!S.checks[kk];
+    const ak="todo-"+key(card,col,+i); S.openAcc=S.openAcc||{}; S.openAcc[ak]=1;
+    render();return}
   if(t.dataset.railopen){S.rail={page:t.dataset.railopen,kb:(RAILS_PAGE[t.dataset.railopen]||[["",""]])[0][0]};S.railVue="matrice";render();return}
   if(t.dataset.railback){S.rail=null;render();return}
   if(t.dataset.tkcas){const [kb,col,i,cas]=t.dataset.tkcas.split("::");const tk=KB[kb].tasks[col][+i];
