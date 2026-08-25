@@ -1937,8 +1937,27 @@ function evRow(ev,state){ /* state : done | now | later */
 (()=>{ const amorce={"i4::formation::0":[9,13,3], "i6::formation::0":[11]};
   for(const base in amorce) amorce[base].forEach((n,ai)=>{ for(let j=0;j<n;j++) S.checks[`${base}::${ai}::${j}`]=true; });
 })();
-function todoItems(tk){ return tk.todo.flatMap(([ph,its])=>its.map(it=>({ph,lbl:it[0],src:it[1]}))); }
 function apTodoItems(){ return TODO_APPRENANT.flatMap(([ph,its])=>its.map(l=>({ph,lbl:l}))); }
+/* les to do du formateur, lues sur SA carte : l'admin voit l'avancement réel, sans pouvoir cocher */
+function todoRefItems(card,tk){
+  const twin=CARDS.find(x=>x.kb===tk.todoRef.kb && x.sess===card.sess);
+  if(!twin) return [];
+  return tasksFor(twin,tk.todoRef.col).map((t,i)=>({lbl:t.t,ph:t.grp,lien:t.lien,done:!!S.checks[key(twin,tk.todoRef.col,i)]}))
+    .filter(x=>x.ph);
+}
+function todoRefHtml(card,colId,i,tk){
+  const items=todoRefItems(card,tk), k=key(card,colId,i);
+  if(!items.length) return `<div class="task other" style="cursor:default"><span class="box"></span><span><span class="lbl">${tk.t}</span></span></div>`;
+  const fait=items.filter(x=>x.done).length, tous=fait===items.length, ak="tref-"+k;
+  let last="";
+  return `<details class="todobloc ${tous?"done":""}" data-acc="${ak}" ${accKey(ak)?"open":""}>
+    <summary><span class="box ${tous?"on":""}"></span><span class="lbl">${tk.t}</span><span class="cnt3">${fait}/${items.length}</span><span class="chev">▸</span></summary>
+    <div class="todolist">`
+    +items.map(it=>{ const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:""; last=it.ph;
+      return g+`<div class="task other ${it.done?"done":""}" style="cursor:default"><span class="box"></span><span><span class="lbl">${it.lbl}</span></span></div>`;
+    }).join("")
+    +`</div></details>`;
+}
 function apTodoHtml(card,colId,i,tk,ghost){
   const aps=peopleFor(card).aps, items=apTodoItems(), k=key(card,colId,i), can=canCheck(tk);
   const docsOk=DOCS_APPRENANT.filter(d=>d[1]).length;
@@ -1966,22 +1985,7 @@ function apTodoHtml(card,colId,i,tk,ghost){
 function taskHtml(card,colId,i,tk,ghost){
   const k=key(card,colId,i);
   if(tk.apTodo) return apTodoHtml(card,colId,i,tk,ghost);
-  if(tk.todo){
-    const items=todoItems(tk), can2=canCheck(tk);
-    const fait=items.filter((_,j)=>S.checks[k+"::"+j]).length, tous=fait===items.length;
-    const ak="todo-"+k;
-    let last="";
-    return `<details class="todobloc ${tous?"done":""}" data-acc="${ak}" ${accKey(ak)?"open":""}>
-      <summary><span class="box ${tous?"on":""}"></span><span class="lbl">${tk.t}</span><span class="cnt3">${fait}/${items.length}</span><span class="chev">▸</span></summary>
-      <div class="todolist">`
-      +items.map((it,j)=>{
-        const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:""; last=it.ph;
-        const d=!!S.checks[k+"::"+j];
-        return g+`<div class="task ${d?"done":""} ${can2?"":"other"}" ${can2&&!ghost?`data-todoi="${card.id}::${colId}::${i}::${j}"`:'style="cursor:default"'}>
-          <span class="box"></span><span><span class="lbl">${it.lbl}</span>${it.src?`<a class="ilink tlien" data-frmact="${encodeURIComponent(it.src+" ouvert")}">${it.src}</a>`:""}</span></div>`;
-      }).join("")
-      +`</div></details>`;
-  }
+  if(tk.todoRef) return todoRefHtml(card,colId,i,tk);
   const done=tk.sub&&card.ech ? card.ech.every(e=>e.st==="ok") : !!S.checks[k];
   const can=canCheck(tk);
   const apsTk = tk.perAp ? peopleFor(card).aps : null;
@@ -2019,7 +2023,7 @@ function openDateStr(card,col){
 }
 function taskState(card,colId,i,tk){
   if(tk.sub&&card.ech) return card.ech.every(e=>e.st==="ok");
-  if(tk.todo){const k=key(card,colId,i); return todoItems(tk).every((_,j)=>S.checks[k+"::"+j]);}
+  if(tk.todoRef){const its=todoRefItems(card,tk); return its.length>0 && its.every(x=>x.done);}
   if(tk.apTodo){const k=key(card,colId,i), aps=peopleFor(card).aps;
     return aps.length>0 && aps.every((_,ai)=>apTodoItems().every((_,j)=>S.checks[k+"::"+ai+"::"+j]));}
   return !!S.checks[key(card,colId,i)];
@@ -2284,7 +2288,7 @@ function modalHtml(){
   h+=`<details class="msec2" data-k="fut"${S.futOpen?" open":""}><summary><span class="chev">▸</span>À venir <span class="n2">0/${nFut}</span></summary><div class="minner">`;
   const apsFut=peopleFor(card).aps, multiFut=apsFut&&apsFut.length>1;
   h+=fut.map(f=>`<div class="futcol"><span class="pill"></span>${f.col.label}${f.col.open?`<span class="n2">ouverture ${openDateStr(card,f.col)} · ${f.col.open}</span>`:""}</div>`
-    +(f.tasks.length?f.tasks.map((tk,ti)=>`<div class="frow2">${tk.grp&&(!f.tasks[ti-1]||f.tasks[ti-1].grp!==tk.grp)?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${(tk.perAp&&multiFut&&tk.tPl)?tk.tPl:tk.t}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${(tk.perAp&&multiFut)?`<div class="sub">`+apsFut.map(a=>`<div class="ftask"><span class="box"></span><span style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`:""}${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
+    +(f.tasks.length?f.tasks.map((tk,ti)=>(tk.todoRef||tk.apTodo)?taskHtml(card,f.col.id,ti,tk,true):`<div class="frow2">${tk.grp&&(!f.tasks[ti-1]||f.tasks[ti-1].grp!==tk.grp)?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${(tk.perAp&&multiFut&&tk.tPl)?tk.tPl:tk.t}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${(tk.perAp&&multiFut)?`<div class="sub">`+apsFut.map(a=>`<div class="ftask"><span class="box"></span><span style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`:""}${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
       :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
   h+=`</div></details></div>`;
   if(card.kb==="session_fia"){
@@ -2963,15 +2967,21 @@ const TODO_SESSION=[
   ["Vérifier que tout le monde a émargé (Qualiobee), relancer sinon",null],
   ["Uploader les slides dans la page Notion des apprenants",null]]],
 ];
-/* elles ne vivent pas à part : chaque étape porte UNE tâche repliable, visible aussi de l'admin */
-function todoBloc(phases){
-  return {t:"ToDo session",p:"formateur",todo:TODO_SESSION.filter(([ph])=>phases.includes(ph))};
-}
+/* Le formateur les voit à plat, ce sont ses tâches. L'admin les voit repliées en un seul bloc,
+   qui reflète l'avancement réel du formateur sur sa propre carte. */
 const TODO_AVANT=["Avant la session"], TODO_PENDANT=["Matin J1","Soir J1","Matin J2","Soir J2"];
-KB.session_frm.tasks.preparer.push(todoBloc(TODO_AVANT));
-KB.session_frm.tasks.animer.push(todoBloc(TODO_PENDANT));
-KB.session_fia.tasks.demarree.push(todoBloc(TODO_AVANT));
-KB.session_fia.tasks.enformation.push(todoBloc(TODO_PENDANT));
+TODO_SESSION.forEach(([phase,items])=>{
+  const col = phase==="Avant la session" ? "preparer" : "animer";
+  items.forEach(([lbl,src])=>KB.session_frm.tasks[col].push({t:lbl,p:"formateur",grp:phase,lien:src||null}));
+});
+KB.session_fia.tasks.demarree.push({t:"ToDo session du formateur",p:"formateur",todoRef:{kb:"session_frm",col:"preparer"}});
+KB.session_fia.tasks.enformation.push({t:"ToDo session du formateur",p:"formateur",todoRef:{kb:"session_frm",col:"animer"}});
+/* avancement d'exemple : le formateur a déjà coché une partie de sa préparation */
+(()=>{ [["fs1","preparer",2],["fs1","animer",7],["fs2","preparer",3]].forEach(([cid,col,n])=>{
+  const c=CARDS.find(x=>x.id===cid); if(!c) return;
+  let done=0;
+  KB.session_frm.tasks[col].forEach((t,i)=>{ if(t.grp && done<n){ S.checks[key(c,col,i)]=true; done++; } });
+});})();
 /* ════════════════════ PARAMÉTRAGE D'UN RAIL (admin) ════════════════════
    Deux lectures du même process : la matrice montre tous les cas d'un coup et
    sert à éditer ; l'aperçu montre un cas précis, tel que l'utilisateur le verra. */
@@ -3029,7 +3039,7 @@ function pageRail(){
       +`<th>Template</th><th></th></tr></thead><tbody>`
       +(tks.map((tk,i)=>{
         const nat=natureTk(tk);
-        return `<tr><td><b>${tk.t}</b>${tk.grp?`<div class="sm">${tk.grp}</div>`:""}${tk.todo?`<div class="sm">${todoItems(tk).length} sous-tâches, repliées sur la carte</div>`:""}</td>
+        return `<tr><td><b>${tk.t}</b>${tk.grp?`<div class="sm">${tk.grp}</div>`:""}${tk.todoRef?`<div class="sm">les to do du formateur, repliées sur la carte</div>`:""}${tk.apTodo?`<div class="sm">une sous-carte par apprenant</div>`:""}</td>
           <td>${ACTEURS[tk.p]||tk.p}</td>`
           +(parCas?CAS_FIN.map(([k])=>{const on=!tk.fin||tk.fin.includes(k);
               return `<td class="cas ${on?"on":""}" data-tkcas="${kb}::${c.id}::${i}::${k}">${on?"●":"·"}</td>`}).join("")
