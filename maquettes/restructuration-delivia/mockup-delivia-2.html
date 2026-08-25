@@ -3220,22 +3220,20 @@ const REMONTEES=[
 ];
 const REM_T={bug:["Bug","ko"],idee:["Idée","ok"],question:["Question",""]};
 const REM_COLS=[["a_traiter","À traiter"],["en_cours","En cours"],["termine","Terminé"]];
-function pageFaq(opt){
-  const impose=opt&&opt.pub;
-  const v=["faq","remontees"].includes(S.fFaq)?S.fFaq:"faq";
-  let h=impose?"":`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
-  h+=chips([["Vue",[["faq","FAQ"],["remontees","Remontées"]]]], v, "fFaq");
-  if(v==="faq"){
-    const pubs=["Closeurs","Formateurs","Admins"];
-    const pub=impose||(pubs.includes(S.fFaqPub)?S.fFaqPub:"Closeurs");
+function faqSectionHtml(pubImpose){
+  const pubs=["Closeurs","Setteurs","Formateurs","Admins"];
+  const pub=pubImpose||(pubs.includes(S.fFaqPub)?S.fFaqPub:"Closeurs");
+  let h="";
     const q=(S.fFaqQ||"").toLowerCase();
-    h+=`<div class="fbar">`+(impose?"":chips([["Public",pubs.map(x=>[x,x])]], pub, "fFaqPub"))
+    h+=`<div class="fbar">`+(pubImpose?"":chips([["Public",pubs.map(x=>[x,x])]], pub, "fFaqPub"))
       +`<button class="btn btn-s" style="margin-left:auto" data-faqnew="1">+ Nouvelle question / réponse</button></div>`;
     const list=FAQ_ENTRIES.filter(([p2,qq,r])=>(p2===pub||p2==="Tous")&&(!q||(qq+" "+r).toLowerCase().includes(q)));
     h+=`<div class="fsec">`+list.map(([p2,qq,r])=>`<details class="acc" data-acc="faq-${encodeURIComponent(qq).slice(0,14)}"><summary><span class="chev">▶</span><span class="tt">${qq}</span></summary><div class="inner"><p class="pd" style="line-height:1.6">${r}</p><div class="mactions">${S.role==="admin"?`<button class="btn btn-s" data-faqedit="${encodeURIComponent(qq)}">Modifier la question / réponse</button>`:`<button class="btn btn-s" data-frmact="${encodeURIComponent("Remontée créée : cette réponse ne suffit pas")}">Cette réponse ne m'aide pas</button>`}</div></div></details>`).join("")
       +(list.length?"":`<div class="lrow"><span class="sm">Aucune réponse ne correspond.</span></div>`)+`</div>`;
-    return h;
-  }
+  return h;
+}
+function remonteesSectionHtml(){
+  let h="";
   const ft=["tout","bug","idee","question"].includes(S.fRemT)?S.fRemT:"tout";
   const q2="";
   h+=`<div class="fbar">`+chips([["Type",[["tout","Tout"],["bug","Bugs"],["idee","Idées"],["question","Questions"]]]], ft, "fRemT")
@@ -3251,6 +3249,16 @@ function pageFaq(opt){
   }).join("")+`</div>`;
   return h;
 }
+function pageFaq(opt){
+  const pub=opt&&opt.pub;
+  let h=pub?"":`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
+  h+=`<div class="sect-h">${ICO.file}Questions et réponses</div>`;
+  h+=faqSectionHtml(pub);
+  h+=`<div class="sect-h" style="margin-top:20px">${ICO.file}Tickets et remontées</div>`;
+  h+=remonteesSectionHtml();
+  return h;
+}
+
 function pageRessources(){
   let h=`<div class="pagehead"><h1>Ressources & FAQ</h1></div>`;
   h+=`<div class="fsec"><div class="sect-h">${ICO.file}Supports de formation <span class="n2">une version par session, éditable avant le J1</span></div>`;
@@ -3752,6 +3760,13 @@ function lostModalHtml(){
   <div class="mactions"><button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p danger" data-lostconfirm="${i.id}">Confirmer le passage en Lost</button></div></div></div></div>`;
 }
 /* ════════ CLIENTS & APPRENANTS, ÉQUIPE ════════ */
+/* ce que les tableaux d'équipe affichent en plus, valeurs de démonstration déterministes */
+(()=>{
+  COMPTES.forEach((u,i)=>{ u.cree=["2026-01-08","2026-02-19","2026-03-04","2026-04-15","2026-05-22","2026-06-10","2026-07-01"][i%7];
+    u.closes30=[7,5,4,3][i%4]; u.panier=["1 890 €","2 140 €","1 650 €","2 310 €"][i%4]; u.rdv30=[42,35,28][i%3]; });
+  Object.values(FRM).forEach((f,i)=>{ f.qlbId=f.qlbId||"frm_"+String(f.nom).toLowerCase().replace(/[^a-z]/g,"").slice(0,6);
+    f.dispos30=[6,4,9,3,7][i%5]; });
+})();
 /* date d'entrée dans la base, déterministe : la première fiche est la plus ancienne */
 (()=>{ const d0=new Date("2026-03-02");
   const pose=(arr)=>arr.forEach((x,i)=>{ const d=new Date(d0); d.setDate(d.getDate()+i*11+(i%3)*4); x.cree=d.toISOString().slice(0,10); });
@@ -3817,7 +3832,7 @@ function tableauRessources(src){
     +`</tbody></table></div></div>`).join("");
 }
 function pageEquipe(){
-  const pops=[["formateurs","Formateurs"],["commerciaux","Commerciaux"],["interne","Interne"]];
+  const pops=[["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["interne","Interne"]];
   const pop=pops.some(x=>x[0]===S.fEq)?S.fEq:"formateurs";
   const vues=pop==="formateurs"
     ? [["liste","Liste"],["ressources","Ressources"],["faq","FAQ & retours"],["demandes","Demandes"]]
@@ -3826,8 +3841,8 @@ function pageEquipe(){
   let h=`<div class="pagehead"><h1>Équipe</h1></div>`;
   h+=chips([["",pops]], pop, "fEq");
   h+=chips([["",vues]], v, "fEqV");
-  if(v==="ressources") return h+tableauRessources(pop==="formateurs"?RESSOURCES:pop==="commerciaux"?RESSOURCES_COM:RESSOURCES_INT);
-  if(v==="faq") return h+pageFaq({pub:pop==="formateurs"?"Formateurs":pop==="commerciaux"?"Closeurs":"Admins"});
+  if(v==="ressources") return h+tableauRessources(pop==="formateurs"?RESSOURCES:pop==="interne"?RESSOURCES_INT:RESSOURCES_COM);
+  if(v==="faq") return h+pageFaq({pub:pop==="formateurs"?"Formateurs":pop==="setteurs"?"Setteurs":pop==="interne"?"Admins":"Closeurs"});
   if(v==="demandes"){
     return h+`<div class="fsec">`
       +DEMANDES_FRM_ADMIN.map(([qui,quoi,quand,actes])=>`<div class="frow"><div class="tx"><div class="tt">${qui}</div><div class="sm">${quoi} · ${quand}</div></div>`
@@ -3836,16 +3851,31 @@ function pageEquipe(){
   }
   h+=`<div class="fsec">`;
   if(pop==="formateurs"){
-    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>Villes</th><th>Offres autorisées</th><th>Onboarding</th><th>À traiter</th><th>Fiche</th></tr></thead><tbody>`
-      +FORMATEURS.map(k=>{const f=FRM[k];const reste=f.onboarding.filter(o=>!o[1]).length;const att=(f.appro?1:0)+f.quali.length+(f.retrait?1:0);
-        return `<tr><td><b>${f.nom}</b></td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td>${reste?`<span class="chip warn">${reste} à faire</span>`:`<span class="chip ok">complet</span>`}</td><td>${att?`<span class="chip warn">${att}</span>`:'<span class="muted">—</span>'}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche formateur</a></td></tr>`}).join("")
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>E-mail</th><th>Téléphone</th><th>Villes</th><th>Offres autorisées</th><th>Identifiant Qualiobee</th><th>Dispos 30 j</th><th>Sessions à venir</th><th>Onboarding</th><th>À traiter</th><th>Fiche</th></tr></thead><tbody>`
+      +FORMATEURS.map(k=>{const f=FRM[k];
+        const reste=f.onboarding.filter(o=>!o[1]).length;
+        const att=(f.appro?1:0)+f.quali.length+(f.retrait?1:0);
+        const futures=CARDS.filter(c=>c.kb==="session_frm"&&c.frm===k&&c.col!=="termine").length;
+        return `<tr><td><b>${f.nom}</b></td><td>${f.email}</td><td>${f.tel}</td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td><span class="mono">${f.qlbId}</span></td><td>${f.dispos30} jour(s)</td><td>${futures}</td><td>${reste?`<span class="chip warn">${reste} à faire</span>`:`<span class="chip ok">complet</span>`}</td><td>${att?`<span class="chip warn">${att}</span>`:'<span class="muted">—</span>'}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche</a></td></tr>`}).join("")
+      +`</tbody></table></div>`;
+  } else if(pop==="closeurs"||pop==="setteurs"){
+    const role=pop==="closeurs"?"closer":"setter";
+    const list=COMPTES.filter(u=>u.role===role);
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>${pop==="closeurs"?"Closeur":"Setteur"}</th><th>E-mail</th><th>Téléphone</th><th>Identifiant GHL</th><th>Compte</th>`
+      +(role==="closer"?`<th>Closes 30 j</th><th>Panier moyen</th>`:`<th>Rendez-vous posés 30 j</th>`)
+      +`<th>Fiche</th></tr></thead><tbody>`
+      +list.map(u=>`<tr><td><b>${u.nom}</b></td><td>${u.email}</td><td>${u.tel}</td><td><span class="mono">${u.ghl}</span></td><td><span class="chip ok">actif</span></td>`
+        +(role==="closer"?`<td>${u.closes30}</td><td>${u.panier}</td>`:`<td>${u.rdv30}</td>`)
+        +`<td><a class="ilink" data-fiche="compte::${u.id}">Fiche</a></td></tr>`).join("")
       +`</tbody></table></div>`;
   } else {
-    const roles=pop==="commerciaux"?["closer","setter"]:["admin"];
-    h+=COMPTES.filter(u=>roles.includes(u.role)).map(u=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(u.nom)}</span><div class="tx"><div class="tt">${u.nom}</div><div class="sm">${u.titre||ROLES[u.role]} · ${u.email}</div></div><a class="ilink" data-fiche="compte::${u.id}">Fiche</a></div>`).join("");
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Membre</th><th>E-mail</th><th>Téléphone</th><th>Rôle</th><th>Identifiant GHL</th><th>Identifiant Qualiobee</th><th>Créé le</th><th>Compte</th><th>Fiche</th></tr></thead><tbody>`
+      +COMPTES.filter(u=>u.role==="admin").map(u=>`<tr><td><b>${u.nom}</b></td><td>${u.email}</td><td>${u.tel}</td><td>${u.titre}</td><td><span class="mono">${u.ghl}</span></td><td><span class="mono">${u.qlb}</span></td><td>${fmtJour(u.cree)}</td><td><span class="chip ok">actif</span></td><td><a class="ilink" data-fiche="compte::${u.id}">Fiche</a></td></tr>`).join("")
+      +`</tbody></table></div>`;
   }
   return h+`</div>`;
 }
+
 function pageAnnuaire(){
   const f=S.fUsers||"clients";
   let h=`<div class="pagehead"><h1>Annuaire</h1></div>`;
