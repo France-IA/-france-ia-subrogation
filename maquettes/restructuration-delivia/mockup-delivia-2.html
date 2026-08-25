@@ -380,6 +380,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .docrow input{flex:1;min-width:0}
 .docrow .v2{flex:1;min-width:0;font-size:12.5px;color:var(--ink-700);line-height:1.5}
 .idgrid.g4{grid-template-columns:repeat(4,minmax(0,1fr));align-items:start}
+.autogrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 18px;margin-top:14px;border-top:1px solid var(--line);padding-top:14px;align-items:start}
+.autogrid .full{grid-column:1 / -1}
+.autogrid .sp2{grid-column:span 2}
+.autogrid .edin,.autogrid textarea{width:100%}
 .idgrid.g4 .fld:last-child{grid-column:1 / -1}
 .col-open a{color:var(--ink-700);text-decoration:underline;text-underline-offset:2px}
 .apprev{background:#f8fafc;border:1px dashed var(--line-2);border-radius:12px;padding:16px;margin-top:4px}
@@ -419,6 +423,14 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .ardphoto.add:hover .ph.plus{border-color:var(--primary);color:var(--primary)}
 .ardphoto .phact{display:flex;gap:8px;margin-top:8px}
 .ardnote{font-size:12px;color:#94a3b8;margin-top:18px;line-height:1.5}
+.ardhead{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;padding-right:40px}
+.ardhead .ardtitle{margin:0;padding-right:0}
+.ardhead .ardedit{margin-left:auto;display:flex;gap:8px;flex-shrink:0}
+.ardfld{margin-bottom:14px}
+.ardfld label{display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-500);margin-bottom:5px}
+.ardfld .edin,.ardfld textarea{width:100%}
+.ardfld .pd{font-size:11px;color:var(--ink-400);margin-top:4px}
+.ardphoto .phleg{width:100%;margin-top:8px}
 .btn-xs.danger{color:var(--err);border-color:#fecdd3}
 /* page Actions */
 .acthead{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:16px 0 7px;display:flex;align-items:center;gap:8px}
@@ -2464,14 +2476,21 @@ function ficheLieuHtml(id){
 function photosModalHtml(){
   const l=LIEUX_REF.find(x=>x.id===S.photos); if(!l) return "";
   const n=l.photos||0;
-  const vues=["Entrée principale","Hall d'accueil","La salle","Coin pause"].slice(0,Math.max(n,0));
+  if(!l.legendes) l.legendes=["Entrée principale","Hall d'accueil","La salle","Coin pause"];
+  const vues=l.legendes.slice(0,Math.max(n,0));
+  const pe=!!S.photosEdit;
   return `<div id="modal3" class="ardov"><div class="ardmodal">
     <button class="ardclose" data-close3="1" aria-label="Fermer">×</button>
-    <h3 class="ardtitle">${l.n}</h3>
-    <p class="ardaddr"><span>📍 ${l.adr}</span><a class="ardmaps" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.adr)}" target="_blank" rel="noopener noreferrer">Voir sur Google Maps →</a></p>
-    <p class="arddesc">${l.msgAcces||"Aucune description pour l'instant."}</p>
-    <div class="ardphotos">${vues.map((v,i)=>`<div class="ardphoto"><div class="ph"><span>${v}</span></div><div class="phact"><button class="btn-xs" data-photoact="${encodeURIComponent("Photo remplacée : "+v)}">Remplacer</button><button class="btn-xs danger" data-photoact="${encodeURIComponent("Photo supprimée : "+v)}">Supprimer</button></div></div>`).join("")
-      +`<div class="ardphoto add" data-photoact="${encodeURIComponent("Photo ajoutée")}"><div class="ph plus">+ Ajouter une photo</div></div>`}</div>
+    <div class="ardhead"><h3 class="ardtitle">${l.n}</h3>
+      <span class="ardedit">${pe?`<button class="btn btn-p btn-s" data-photossave="${l.id}">Enregistrer</button><button class="btn btn-s" data-photoscancel="1">Annuler</button>`
+        :`<button class="btn btn-s" data-photosedit="1">Modifier le texte</button>`}</span></div>
+    ${pe?`<div class="ardfld"><label>Adresse</label><input class="edin" data-pf="adr" value="${l.adr.replace(/"/g,"&quot;")}"></div>`
+      :`<p class="ardaddr"><span>📍 ${l.adr}</span><a class="ardmaps" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.adr)}" target="_blank" rel="noopener noreferrer">Voir sur Google Maps →</a></p>`}
+    ${pe?`<div class="ardfld"><label>Texte affiché sous l'adresse</label><textarea class="tpl-edit" style="min-height:92px" data-pf="msgAcces">${l.msgAcces||""}</textarea><div class="pd">C'est le même texte que celui de l'espace apprenant : le modifier ici le modifie partout.</div></div>`
+      :`<p class="arddesc">${l.msgAcces||"Aucune description pour l'instant."}</p>`}
+    <div class="ardphotos">${vues.map((v,i)=>`<div class="ardphoto"><div class="ph"><span>${pe?"":v}</span></div>${pe?`<input class="edin phleg" data-pf="leg:${i}" value="${v.replace(/"/g,"&quot;")}" placeholder="Légende de la photo">`
+      :`<div class="phact"><button class="btn-xs" data-photoact="${encodeURIComponent("Photo remplacée : "+v)}">Remplacer</button><button class="btn-xs danger" data-photoact="${encodeURIComponent("Photo supprimée : "+v)}">Supprimer</button></div>`}</div>`).join("")
+      +(pe?"":`<div class="ardphoto add" data-photoact="${encodeURIComponent("Photo ajoutée")}"><div class="ph plus">+ Ajouter une photo</div></div>`)}</div>
     <p class="ardnote">Ces photos sont celles que le futur apprenant voit sur ARD, dans la fenêtre « Voir les photos et l'adresse » de la session.</p>
   </div></div>`;
 }
@@ -2790,19 +2809,19 @@ function ficheAutoHtml(nom){
   h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${ICO.refresh}</div><div><h1>${nom}</h1></div>
     <div class="fh-right">${ed?`<button class="btn btn-p" data-autosave="${encodeURIComponent(nom)}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`
       :`<button class="btn btn-s" data-editstart="auto::${nom}">Modifier</button><span class="sw ${on?"on":""}" data-autotoggle="${encodeURIComponent(nom)}"><i></i></span>`}</div></div>
-  <div class="idgrid g4">
-    ${ed?`<div class="fld wide"><div class="k">Ce qu'elle fait</div><input class="edin" data-af="desc" value="${desc.replace(/"/g,"&quot;")}"></div>`
-       :`<div class="fld wide"><div class="k">Ce qu'elle fait</div><div class="v">${desc}</div></div>`}
-    ${ed?`<div class="fld"><div class="k">Template</div><input class="edin" data-af="tpl" value="${tpl.replace(/"/g,"&quot;")}"></div>`
-       :`<div class="fld"><div class="k">Template</div><div class="v"><a class="ilink" data-tpl="${encodeURIComponent(tpl)}">${tpl}</a></div></div>`}
-    ${ed?`<div class="fld"><div class="k">Catégorie</div><select class="edin" data-af="cat">${[...new Set(AUTOS.map(x=>x[0]))].map(c=>`<option ${c===cat?"selected":""}>${c}</option>`).join("")}</select></div>`
-       :`<div class="fld"><div class="k">Catégorie</div><div class="v">${cat}</div></div>`}
-    ${ed?`<div class="fld"><div class="k">Déclencheur</div><input class="edin" data-af="decl" value="${decl.replace(/"/g,"&quot;")}"></div>`
-       :`<div class="fld"><div class="k">Déclencheur</div><div class="v">${decl}</div></div>`}
-    ${ed?`<div class="fld"><div class="k">Dernier passage</div><input class="edin" data-af="dernier" value="${dernier.replace(/"/g,"&quot;")}"></div>`
-       :`<div class="fld"><div class="k">Dernier passage</div><div class="v">${dernier}</div></div>`}
-    ${ed?`<div class="fld"><div class="k">Prochain passage</div><input class="edin" data-af="prochain" value="${prochain.replace(/"/g,"&quot;")}"></div>`
-       :`<div class="fld"><div class="k">Prochain passage</div><div class="v">${prochain}</div></div>`}
+  <div class="autogrid">
+    <div class="fld full"><div class="k">Ce qu'elle fait</div>
+      ${ed?`<textarea class="tpl-edit" style="min-height:62px;margin-top:3px" data-af="desc">${desc}</textarea>`:`<div class="v">${desc}</div>`}</div>
+    <div class="fld"><div class="k">Template</div>
+      ${ed?`<input class="edin" data-af="tpl" value="${tpl.replace(/"/g,"&quot;")}">`:`<div class="v"><a class="ilink" data-tpl="${encodeURIComponent(tpl)}">${tpl}</a></div>`}</div>
+    <div class="fld"><div class="k">Catégorie</div>
+      ${ed?`<select class="edin" data-af="cat">${[...new Set(AUTOS.map(x=>x[0]))].map(c=>`<option ${c===cat?"selected":""}>${c}</option>`).join("")}</select>`:`<div class="v">${cat}</div>`}</div>
+    <div class="fld sp2"><div class="k">Déclencheur</div>
+      ${ed?`<input class="edin" data-af="decl" value="${decl.replace(/"/g,"&quot;")}">`:`<div class="v">${decl}</div>`}</div>
+    <div class="fld sp2"><div class="k">Dernier passage</div>
+      ${ed?`<input class="edin" data-af="dernier" value="${dernier.replace(/"/g,"&quot;")}">`:`<div class="v">${dernier}</div>`}</div>
+    <div class="fld sp2"><div class="k">Prochain passage</div>
+      ${ed?`<input class="edin" data-af="prochain" value="${prochain.replace(/"/g,"&quot;")}">`:`<div class="v">${prochain}</div>`}</div>
   </div></div>`;
   h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Logs</div>
     <div class="tblwrap"><table class="tbl"><thead><tr><th>Date</th><th>Cible</th><th>Statut</th><th>Tentatives</th><th>Erreur</th><th></th></tr></thead><tbody>`
@@ -2955,10 +2974,9 @@ function pageFaq(){
     const pub=pubs.includes(S.fFaqPub)?S.fFaqPub:"Closeurs";
     const q=(S.fFaqQ||"").toLowerCase();
     h+=`<div class="fbar">`+chips([["Public",pubs.map(x=>[x,x])]], pub, "fFaqPub")
-      +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fFaqQ" value="${(S.fFaqQ||"").replace(/"/g,"&quot;")}" placeholder="Chercher une réponse…"></div>
-      <button class="btn btn-s" style="margin-left:auto" data-faqnew="1">+ Nouvelle question / réponse</button></div>`;
+      +`<button class="btn btn-s" style="margin-left:auto" data-faqnew="1">+ Nouvelle question / réponse</button></div>`;
     const list=FAQ_ENTRIES.filter(([p2,qq,r])=>(p2===pub||p2==="Tous")&&(!q||(qq+" "+r).toLowerCase().includes(q)));
-    h+=`<div class="fsec">`+list.map(([p2,qq,r])=>`<details class="acc" data-acc="faq-${encodeURIComponent(qq).slice(0,14)}"><summary><span class="chev">▶</span><span class="tt">${qq}</span><span class="end"><span class="chip">${p2}</span></span></summary><div class="inner"><p class="pd" style="line-height:1.6">${r}</p><div class="mactions">${S.role==="admin"?`<button class="btn btn-s" data-faqedit="${encodeURIComponent(qq)}">Modifier la question / réponse</button>`:`<button class="btn btn-s" data-frmact="${encodeURIComponent("Remontée créée : cette réponse ne suffit pas")}">Cette réponse ne m'aide pas</button>`}</div></div></details>`).join("")
+    h+=`<div class="fsec">`+list.map(([p2,qq,r])=>`<details class="acc" data-acc="faq-${encodeURIComponent(qq).slice(0,14)}"><summary><span class="chev">▶</span><span class="tt">${qq}</span></summary><div class="inner"><p class="pd" style="line-height:1.6">${r}</p><div class="mactions">${S.role==="admin"?`<button class="btn btn-s" data-faqedit="${encodeURIComponent(qq)}">Modifier la question / réponse</button>`:`<button class="btn btn-s" data-frmact="${encodeURIComponent("Remontée créée : cette réponse ne suffit pas")}">Cette réponse ne m'aide pas</button>`}</div></div></details>`).join("")
       +(list.length?"":`<div class="lrow"><span class="sm">Aucune réponse ne correspond.</span></div>`)+`</div>`;
     return h;
   }
@@ -3824,7 +3842,7 @@ document.addEventListener("click",e=>{
   const ms=e.target.closest(".msec2>summary");
   if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
   if(e.target.id==="modal3"||e.target.closest("[data-close3]")){S.swFull=null;S.photos=null;render();return}
-  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.lieuModal=null;S.faqModal=null;S.espEdit=null;S.photos=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
+  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.lieuModal=null;S.faqModal=null;S.espEdit=null;S.photos=null;S.photosEdit=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
   const anoS=e.target.closest(".ano>summary");
   if(anoS){const d=anoS.parentElement;S.anoOpen=S.anoOpen||{};S.anoOpen[d.dataset.ano]=!d.open}
   const rapS=e.target.closest(".payrap>summary");
@@ -3837,7 +3855,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-photos],[data-photoact],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3942,8 +3960,14 @@ document.addEventListener("click",e=>{
     document.querySelectorAll("[data-ef]").forEach(inp=>{l[inp.dataset.ef]=inp.value.trim()||null});
     S.espEdit=null;render();toast(`Information espace apprenant mise à jour pour <b>${l.n}</b>.`);return}
   if(t.dataset.espcancel){S.espEdit=null;render();return}
-  if(t.dataset.photos){S.photos=t.dataset.photos;render();return}
-  if(t.dataset.photoact){toast(decodeURIComponent(t.dataset.photoact)+".");return}
+  if(t.dataset.photos){S.photos=t.dataset.photos;S.photosEdit=null;render();return}
+  if(t.dataset.photosedit){S.photosEdit=1;render();return}
+  if(t.dataset.photoscancel){S.photosEdit=null;render();return}
+  if(t.dataset.photossave){const l=LIEUX_REF.find(x=>x.id===t.dataset.photossave);
+    document.querySelectorAll("#modal3 [data-pf]").forEach(inp=>{const f=inp.dataset.pf;
+      if(f.startsWith("leg:")) l.legendes[+f.slice(4)]=inp.value.trim()||l.legendes[+f.slice(4)];
+      else l[f]=inp.value.trim()||l[f];});
+    S.photosEdit=null;render();toast(`Photos ARD et texte mis à jour pour <b>${l.n}</b>.`);return}
   if(t.dataset.faqnew!==undefined){S.faqModal=1;render();return}
   if(t.dataset.faqsave){S.faqModal=null;render();toast(decodeURIComponent(t.dataset.faqsave)+".");return}
   if(t.dataset.faqedit){S.faqModal={edit:decodeURIComponent(t.dataset.faqedit)};render();return}
