@@ -2546,7 +2546,13 @@ function ficheLieuHtml(id){
        :fld("Identifiant Qualiobee",l.qlb?`<span class="mono">${l.qlb}</span> <a class="ilink" data-copy2="${l.qlb}">copier</a>`:null)}
     <div class="fld"><div class="k">Description ARD</div><div class="v">${l.photos} photo${l.photos>1?"s":""} et le texte d'accès <a class="ilink" data-photos="${l.id}">gérer</a></div></div>
   </div></div>`;
-  /* 2 · ce que l'apprenant voit, tel qu'il le voit */
+  /* 2 · salles */
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Salles <span class="right"><button class="btn btn-s" data-sallenew="${l.id}">+ Nouvelle salle</button></span></div>`;
+  h+=l.salles.length?`<div class="tblwrap"><table class="tbl"><thead><tr><th>Salle</th><th>Capacité</th><th>Identifiant HAL</th><th></th></tr></thead><tbody>`
+    +l.salles.map(([n,cap,hal],ix)=>`<tr><td><b>${n}</b></td><td>${cap} places</td><td>${hal?`<span class="mono">${hal}</span>`:'<span class="muted">—</span>'}</td><td class="acts"><a class="ilink" data-salleedit="${l.id}::${ix}">Modifier</a><a class="ilink danger" data-lieusave="${encodeURIComponent("Salle supprimée")}">Supprimer</a></td></tr>`).join("")
+    +`</tbody></table></div>`:`<div class="lrow"><span class="sm">Aucune salle : la formation se tient chez le client.</span></div>`;
+  h+=`</div>`;
+  /* 3 · ce que l'apprenant voit, tel qu'il le voit */
   const ee=S.espEdit===l.id;
   h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Information espace apprenant <span class="n2">l'aperçu exact de ce que l'apprenant lit dans son espace</span>
     <span class="right">${ee?`<button class="btn btn-p" data-espsave="${l.id}">Enregistrer</button><button class="btn btn-s" data-espcancel="1">Annuler</button>`
@@ -2575,12 +2581,6 @@ function ficheLieuHtml(id){
     </div>
     <div class="apnote">Les pastilles grisées viennent de la session (offre, dates, horaires, formateur). Le reste vient de ce lieu.</div>
     </div></div>`;
-  /* 3 · salles */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Salles <span class="right"><button class="btn btn-s" data-sallenew="${l.id}">+ Nouvelle salle</button></span></div>`;
-  h+=l.salles.length?`<div class="tblwrap"><table class="tbl"><thead><tr><th>Salle</th><th>Capacité</th><th>Identifiant HAL</th><th></th></tr></thead><tbody>`
-    +l.salles.map(([n,cap,hal],ix)=>`<tr><td><b>${n}</b></td><td>${cap} places</td><td>${hal?`<span class="mono">${hal}</span>`:'<span class="muted">—</span>'}</td><td class="acts"><a class="ilink" data-salleedit="${l.id}::${ix}">Modifier</a><a class="ilink danger" data-lieusave="${encodeURIComponent("Salle supprimée")}">Supprimer</a></td></tr>`).join("")
-    +`</tbody></table></div>`:`<div class="lrow"><span class="sm">Aucune salle : la formation se tient chez le client.</span></div>`;
-  h+=`</div>`;
   /* 4 · sessions, replié */
   const kls="lieu-sess-"+l.id;
   h+=`<details class="acc" data-acc="${kls}" ${accKey(kls)?"open":""}><summary><span class="chev">▶</span><span class="tt">Sessions tenues ici</span><span class="end"><span class="sm">${sessions.length}</span></span></summary>
