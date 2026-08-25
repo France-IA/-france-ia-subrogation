@@ -2781,16 +2781,18 @@ function pageFacturation(){
       ["Externes", isCloser?[["closeur","Ma facture"]]:[["formateur","Formateur"],["closeur","Closeur"],["setteur","Setteur"]]]];
     h+=chips(clientChips, f, "fFact");
   }
-  if(!isSetter) h+=`<div class="fbar">`+selGens("closer","fFactCloser","Tous les closeurs")+selGens("setter","fFactSetter","Tous les setteurs")+`</div>`;
+  /* les vues externes portent une carte par personne : un filtre par personne n'y sert à rien */
+  const vueExterne=["formateur","closeur","setteur"].includes(f);
+  if(!isSetter && !vueExterne) h+=`<div class="fbar">`+selGens("closer","fFactCloser","Tous les closeurs")+selGens("setter","fFactSetter","Tous les setteurs")+`</div>`;
   const view=FACT_VIEWS[f];
   const byOffre=c=>(!S.fFactCloser||S.fFactCloser==="all"||c.closer===S.fFactCloser)
     &&(!S.fFactSetter||S.fFactSetter==="all"||c.setter===S.fFactSetter);
   if(f==="cpf") h+=boardHtml("fact_cpf", CARDS.filter(c=>c.kb==="fact_cpf"&&byOffre(c)));
   else if(f==="opco") h+=boardHtml("fact_opco", CARDS.filter(c=>c.kb==="fact_opco"&&byOffre(c)));
   else if(view) h+=boardHtml("fact_fp", CARDS.filter(c=>c.kb==="fact_fp"&&view.fins.includes(c.fin)&&byOffre(c)), {fin:view.fins[0]});
-  else if(f==="formateur") h+=boardHtml("fact_frm", CARDS.filter(c=>c.kb==="fact_frm"&&(!S.fSessFrm||S.fSessFrm==="all"||c.frm===S.fSessFrm)));
-  else if(f==="closeur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="closer"&&byOffre(c)));
-  else if(f==="setteur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="setter"&&byOffre(c)));
+  else if(f==="formateur") h+=boardHtml("fact_frm", CARDS.filter(c=>c.kb==="fact_frm"));
+  else if(f==="closeur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="closer"));
+  else if(f==="setteur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="setter"));
   return h;
 }
 function anoCount(v){ return ANO.filter(a=>a.v===v).reduce((n,a)=>n+anoCas(a).length,0); }
