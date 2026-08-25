@@ -2404,34 +2404,26 @@ const DEMANDES_FRM_ADMIN=[
  ["Yanis L.","Demande de retrait de la session de Lyon · 3-4 oct","hier",["Accepter","Refuser"]],
 ];
 const RESSOURCES=[
- ["Support de formation",[
-  ["Support Niveau 1","Notion","Formateur","une version par session, éditable avant le J1",1],
-  ["Support Niveau 2","Notion","Formateur","une version par session",1],
-  ["Support Intra","Notion","Formateur","adapté au cas du client",1],
-  ["Canvas d'atelier","PDF","Formateur","trames imprimables des exercices",1],
-  ["Checklist d'animation","Notion","Formateur","le déroulé heure par heure",1]]],
+ ["Vos retours & KPIs",[
+  ["Vos KPIs, verbatims et pistes d'amélioration IA","https://retours.franceia-dev.com","Lien",1]]],
+ ["Tutos",[
+  ["Nouveau : ajoute tes apprenants sur tes sessions intra","https://delivia.franceia-dev.com/formateur/mes-sessions","Lien",1],
+  ["Tuto Qualiobee formateurs","https://cleanshot.com/share/zmB2Yb3Q","Vidéo",1],
+  ["Tuto Canva x Notion","https://cleanshot.com/share/18Mz61nJ","Vidéo",1],
+  ["Tuto BookMySessions","https://cleanshot.com/share/zkxN0Zr5","Lien",1]]],
+ ["Canvas",[
+  ["Canva Niveau 1","https://canva.link/a2n6h4ujtnd7gj8","Canva",1],
+  ["Canva Niveau 2 (à compléter par Morgan)","#","Canva",1],
+  ["Slides Canva à personnaliser","https://www.canva.com/design/DAHIDZpSGjE/uNxMcQaYtQKT2ZsNPOU84A/edit","Canva",0]]],
  ["Préparation",[
-  ["Grille de préparation des apprenants","Notion","Formateur","ce que chacun doit avoir fait avant le J1",1],
-  ["Tuto plateforme Qualiobee","Vidéo","Formateur","émargement, quiz, compte rendu",1],
-  ["Tuto formation Notion x Canva","Vidéo","Formateur","préparer sa page de session",1],
-  ["Vidéos de préparation","Vidéo","Formateur","trois modules avant la première animation",1]]],
- ["Admin",[
-  ["Contrat de prestation","PDF","Formateur","signé une fois, valable pour toutes les sessions",1],
-  ["Modèle de facture","PDF","Formateur","repris automatiquement à chaque session animée",1],
-  ["Attestation URSSAF","PDF","Formateur","à renouveler chaque année",1],
-  ["Coordonnées bancaires","Lien","Formateur","modifiables depuis le profil",1]]],
+  ["Préparez votre formation IA","https://pentagonal-latency-af7.notion.site/Pr-parez-votre-formation-IA-34a8d6d227c28022a4f6d7978f155bcc","Lien",1],
+  ["Formation Inter Niveau 1 (15h) sur Notion","https://app.notion.com/p/Formation-Inter-niveau-1-15h-2a78d6d227c2802fb438e0f3bfee3ac8","Lien",1]]],
  ["Plateforme de certification",[
-  ["Guide de la certification RS6891","Notion","Formateur","le référentiel expliqué simplement",1],
-  ["Inscrire un apprenant à l'oral","Vidéo","Formateur","la procédure pas à pas",1],
-  ["Calendrier des oraux","Lien","Formateur","les sessions ouvertes chez Certifopac",1]]],
- ["Vos retours et KPI",[
-  ["Verbatims de vos sessions","Lien","Formateur","ce que vos apprenants ont écrit",1],
-  ["Taux de satisfaction","Lien","Formateur","le vôtre, session par session",1],
-  ["Compte rendu de session","Notion","Formateur","le modèle attendu après chaque J2",1]]],
- ["Espace apprenant",[
-  ["Livret d'accueil","PDF","Apprenant","déposé dans l'espace apprenant",1],
-  ["Guide d'accès par lieu","Notion","Apprenant","généré à partir des photos et de l'accès du lieu",1]]],
-];function pageLieux(v){
+  ["Plateforme de certification (à tester en fictif)","https://certification.franceia-dev.com/","Lien",1]]],
+ ["Administratif",[
+  ["Contrat de prestations de services (modèle formateur freelance)","https://xlsyxivzlvowzlsckjvu.supabase.co/storage/v1/object/public/formateur-ressources/Contrat_Freelance_Formateur_FranceIA.docx","Document",1]]],
+];
+function pageLieux(v){
   let h="";
   if(v==="lieux"){
     if(S.lieuFiche) return h+ficheLieuHtml(S.lieuFiche);
@@ -2469,8 +2461,8 @@ const RESSOURCES=[
   }
   h+=`<div class="fbar"><button class="btn btn-s" style="margin-left:auto" data-resnew="1">+ Nouvelle ressource</button></div>`;
   h+=RESSOURCES.map(([fam,items])=>`<div class="fsec"><div class="sect-h">${ICO.file}${fam} <span class="n2">${items.length}</span></div>`
-    +`<div class="tblwrap"><table class="tbl"><thead><tr><th>Ressource</th><th>Format</th><th>Pour qui</th><th>À quoi ça sert</th><th>État</th></tr></thead><tbody>`
-    +items.map(([n,fmt,pub,desc,on])=>`<tr><td><b>${n}</b></td><td>${fmt}</td><td>${pub}</td><td>${desc}</td><td><span class="sw ${on?"on":""}" data-frmact="${encodeURIComponent("Ressource désactivée : elle disparaît de l'espace formateur")}"><i></i></span></td></tr>`).join("")
+    +`<div class="tblwrap"><table class="tbl"><thead><tr><th>Ressource</th><th>Format</th><th>État</th><th></th></tr></thead><tbody>`
+    +items.map(([n,url,fmt,on])=>`<tr><td>${url&&url!=="#"?`<a class="ilink" href="${url}" target="_blank" rel="noopener"><b>${n}</b></a>`:`<b>${n}</b> <span class="sm">lien à renseigner</span>`}</td><td>${fmt}</td><td><span class="sw ${on?"on":""}" data-frmact="${encodeURIComponent("Ressource désactivée : elle disparaît de l'espace formateur")}"><i></i></span></td><td class="acts"><a class="ilink" data-resnew="1">Modifier</a></td></tr>`).join("")
     +`</tbody></table></div></div>`).join("");
   return h;
 }
@@ -2483,9 +2475,8 @@ function resModalHtml(){
     <div class="espin"><label>URL</label><input class="edin" placeholder="https://…"></div>
     <div class="genrow">
       <div class="genfld"><div class="k">Catégorie</div><select class="edin">${cats.map(c=>`<option>${c}</option>`).join("")}</select></div>
-      <div class="genfld"><div class="k">Type</div><select class="edin"><option>Vidéo</option><option>Notion</option><option>PDF</option><option>Lien</option></select></div>
+      <div class="genfld"><div class="k">Type</div><select class="edin"><option>Vidéo</option><option>Canva</option><option>Document</option><option>Lien</option></select></div>
     </div>
-    <div class="espin"><label>Pour qui</label><select class="edin"><option>Formateur</option><option>Closeur</option><option>Admin</option><option>Apprenant</option></select></div>
     <div class="mactions"><button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p" data-ressave="1">Ajouter</button></div>
   </div></div></div>`;
 }
