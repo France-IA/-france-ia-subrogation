@@ -3560,12 +3560,13 @@ function ficheCompteHtml(id){
   const u=COMPTES.find(x=>x.id===id); if(!u) return "";
   const ed=S.editing==="compte::"+u.id;
   let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
-  h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${initiales(u.nom)}</div><div><h1>${u.nom}</h1><div class="fh-contact"><span>${ICO.mail}${u.email}</span><span>${ICO.phone}${u.tel}</span></div><div class="fh-badges"><span class="chip">${u.titre}</span><span class="chip ok">Compte actif</span></div></div>
+  h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${initiales(u.nom)}</div><div><h1>${u.nom}</h1></div>
     <div class="fh-right">${editBtns("compte",u.id)}<button class="btn btn-s">Ré-inviter</button><button class="btn btn-s danger">Désactiver</button></div></div>
   <div class="idgrid">${fld("Nom",u.nom,"nom",u)}${fld("Email",u.email,"email",u)}${fld("Téléphone",u.tel,"tel",u)}${fld("Rôle",ROLES[u.role])}</div>
   <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>${idFld("ghl_user_id","ghl",u)}${u.role==="admin"?idFld("qualiobee_user_id","qlb",u):""}</div></div>`;
-  /* droits d'accès */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Accès aux pages <span class="n2">${u.role==="admin"?"un admin accède à tout, ce paramétrage n'est pas modifiable":"les changements s'appliquent immédiatement au menu et à la navigation"}</span></div>`;
+  /* droits d'accès : seulement pour l'interne, un externe n'a que son propre espace */
+  if(u.role!=="admin") return h;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Accès aux pages</div>`;
   h+=`<div class="accgrid">`+PAGES_ACCES.map(([pid,lbl])=>{const on=u.role==="admin"||(u.acces||[]).includes(pid);return `<div class="accrow ${u.role==="admin"?"fixed":""}" ${u.role==="admin"?"":`data-acctoggle="${u.id}::${pid}"`}><span class="sw ${on?"on":""}"><i></i></span><span>${lbl}</span></div>`}).join("")+`</div>`;
   h+=`<div class="subh">Applications de la plateforme</div><div class="accgrid">`+APPS_ACCES.map(([aid,lbl])=>{const on=(u.apps||[]).includes(aid);return `<div class="accrow" data-apptoggle="${u.id}::${aid}"><span class="sw ${on?"on":""}"><i></i></span><span>${lbl}</span></div>`}).join("")+`</div></div>`;
   return h;
@@ -3834,26 +3835,22 @@ function pageAnnuaire(){
   h+=chips([["",[["clients","Clients"],["apprenants","Apprenants"],["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["internes","Internes"]]]], f, "fUsers");
   h+=`<div class="fsec">`;
   if(f==="clients"){
-    h+=`<h2>Clients <span class="n2">${CLIENTS.length}</span></h2>`;
     h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Client</th><th>Apprenants</th><th>Type</th><th>Fiche</th></tr></thead><tbody>`
       +CLIENTS.map(c=>`<tr><td><b>${c.nom}</b></td><td>${(c.apprenants||[]).length}</td><td>${c.type}</td><td><a class="ilink" data-fiche="client::${c.id}">Fiche client</a></td></tr>`).join("")
       +`</tbody></table></div>`;
   } else if(f==="apprenants"){
-    h+=`<h2>Apprenants <span class="n2">${APPRENANTS.length}</span></h2>`;
     h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Apprenant</th><th>Client</th><th>Type</th><th>Fiches</th></tr></thead><tbody>`
       +APPRENANTS.map(a=>{const cl=CLIENTS.find(c=>c.id===a.client);
         const type=String(a.type||"").startsWith("Salarié")?"Salarié":"Particulier";
         return `<tr><td><b>${a.nom}</b></td><td>${cl?cl.nom:'<span class="muted">aucun</span>'}</td><td>${type}</td><td class="acts"><a class="ilink" data-fiche="apprenant::${a.id}">Fiche apprenant</a>${cl?`<a class="ilink" data-fiche="client::${cl.id}">Fiche client</a>`:""}</td></tr>`}).join("")
       +`</tbody></table></div>`;
   } else if(f==="formateurs"){
-    h+=`<h2>Formateurs <span class="n2">qualifications, profil, onboarding</span></h2>`;
     h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>Villes</th><th>Offres autorisées</th><th>Onboarding</th><th>À traiter</th><th>Fiche</th></tr></thead><tbody>`
       +FORMATEURS.map(k=>{const f=FRM[k];const reste=f.onboarding.filter(o=>!o[1]).length;const att=(f.appro?1:0)+f.quali.length+(f.retrait?1:0);
         return `<tr><td><b>${f.nom}</b></td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td>${reste?`<span class="chip warn">${reste} à faire</span>`:`<span class="chip ok">complet</span>`}</td><td>${att?`<span class="chip warn">${att}</span>`:`<span class="muted">rien</span>`}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche formateur</a></td></tr>`}).join("")
       +`</tbody></table></div>`;
   } else if(f==="closeurs"||f==="setteurs"||f==="internes"){
     const role=f==="closeurs"?"closer":f==="setteurs"?"setter":"admin";
-    h+=`<h2>${f==="closeurs"?"Closeurs":f==="setteurs"?"Setteurs":"Internes"} <span class="n2">${role==="admin"?"comptes France IA, accès à toutes les pages":"comptes et accès aux pages"}</span></h2>`;
     h+=COMPTES.filter(u=>u.role===role).map(u=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(u.nom)}</span><div><div class="tt">${u.nom}</div><div class="sm">${u.email}</div></div><span class="chip">${u.titre}</span><span class="chip">${u.acces?u.acces.length+" pages":"Toutes les pages"}</span><span class="go" data-fiche="compte::${u.id}">Fiche</span></div>`).join("");
   }
   h+=`</div>`;
