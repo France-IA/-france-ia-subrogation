@@ -1069,8 +1069,6 @@ tasks:{
   {t:"Admin France IA invite les apprenants sur HAL (2 jours)",p:"fia",btn:"Inviter sur HAL"},
   {t:"Admin France IA envoie le message WhatsApp de la veille du J1",p:"fia",btn:"Envoyer",tpl:1}],
  enformation:[
-  {t:"Formateur vérifie que tous les émargements sont faits",p:"formateur",btn:"Ouvrir les émargements Qualiobee",note:"si un apprenant n'a pas émargé mais que c'est justifié, le formateur saisit la raison"},
-  {t:"Formateur vérifie que tous les CPF sont inscrits à la certification",p:"formateur"},
   {t:"Formateur envoie le message de fin sur WhatsApp",p:"formateur",btn:"Envoyer",tpl:1},
   {t:"Formateur renseigne le compte rendu de sa session sur Qualiobee",p:"formateur",btn:"Ouvrir Qualiobee",tpl:1,note:"remarques et questions par défaut"},
   {t:"Admin France IA confirme que tous les émargements sont faits et tous les CPF inscrits à la certification",p:"fia",btn:"Ouvrir les émargements Qualiobee"},
@@ -1107,8 +1105,6 @@ tasks:{
   {t:"Admin France IA invite les apprenants sur HAL (2 jours)",p:"fia",btn:"Inviter sur HAL"},
   {t:"Admin France IA envoie le message WhatsApp de la veille du J1",p:"fia",btn:"Envoyer",tpl:1}],
  animer:[
-  {t:"Formateur vérifie que tous les émargements sont faits",p:"formateur",btn:"Ouvrir les émargements Qualiobee",note:"si un apprenant n'a pas émargé mais que c'est justifié, je saisis la raison"},
-  {t:"Formateur vérifie que tous les CPF sont inscrits à la certification",p:"formateur"},
   {t:"Formateur envoie le message de fin sur WhatsApp",p:"formateur",btn:"Envoyer",tpl:1},
   {t:"Formateur renseigne le compte rendu de sa session sur Qualiobee",p:"formateur",btn:"Ouvrir Qualiobee",tpl:1,note:"remarques et questions par défaut"},
   {t:"Admin France IA confirme que tous les émargements sont faits et tous les CPF inscrits à la certification",p:"fia"}],
@@ -2990,16 +2986,21 @@ const TODO_SESSION=[
   ["Insister sur le côté sur-mesure du jour 2 (assistants, contenu additionnel)",null]]],
  ["Soir J2",[
   ["Vérifier que tout le monde a complété le quiz (Qualiobee), relancer sinon, les bonnes réponses comptent",null],
-  ["Vérifier que tout le monde a émargé (Qualiobee), relancer sinon",null],
+  ["Vérifier que tout le monde a émargé (Qualiobee), relancer sinon ; si l'absence est justifiée, saisir la raison",null],
+  ["Vérifier que tous les apprenants CPF sont inscrits à la certification, relancer sinon",null],
   ["Uploader les slides dans la page Notion des apprenants",null]]],
 ];
 /* Le formateur les voit à plat, ce sont ses tâches. L'admin les voit repliées en un seul bloc,
    qui reflète l'avancement réel du formateur sur sa propre carte. */
 const TODO_AVANT=["Avant la session"], TODO_PENDANT=["Matin J1","Soir J1","Matin J2","Soir J2"];
-TODO_SESSION.forEach(([phase,items])=>{
-  const col = phase==="Avant la session" ? "preparer" : "animer";
-  items.forEach(([lbl,src])=>KB.session_frm.tasks[col].push({t:lbl,p:"formateur",grp:phase,lien:src||null}));
-});
+(()=>{ const parCol={preparer:[],animer:[]};
+  TODO_SESSION.forEach(([phase,items])=>{
+    const col = phase==="Avant la session" ? "preparer" : "animer";
+    items.forEach(([lbl,src])=>parCol[col].push({t:lbl,p:"formateur",grp:phase,lien:src||null}));
+  });
+  KB.session_frm.tasks.preparer.push(...parCol.preparer);
+  KB.session_frm.tasks.animer.unshift(...parCol.animer);
+})();
 KB.session_fia.tasks.demarree.unshift({t:"ToDo session du formateur",p:"formateur",todoRef:{kb:"session_frm",col:"preparer"}});
 KB.session_fia.tasks.enformation.unshift({t:"ToDo session du formateur",p:"formateur",todoRef:{kb:"session_frm",col:"animer"}});
 /* avancement d'exemple : le formateur a déjà coché une partie de sa préparation */
