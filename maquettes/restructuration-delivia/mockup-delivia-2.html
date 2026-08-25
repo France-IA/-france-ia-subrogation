@@ -378,6 +378,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .docrow .dl{font-size:12px;font-weight:600;color:var(--ink-700);width:96px;flex-shrink:0}
 .docrow .ds{margin-left:auto;font-size:10.5px;color:var(--ink-400)}
 .docrow input{flex:1;min-width:0}
+.docrow .v2{flex:1;min-width:0;font-size:12.5px;color:var(--ink-700);line-height:1.5}
+.idgrid.g4{grid-template-columns:repeat(4,minmax(0,1fr));align-items:start}
+.idgrid.g4 .fld:last-child{grid-column:1 / -1}
+.apprev{background:#f8fafc;border:1px dashed var(--line-2);border-radius:12px;padding:14px;margin-top:4px}
+.apprev .apmsg{font-size:13.5px;line-height:1.55;color:#334155;margin-bottom:10px}
 /* page Actions */
 .acthead{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:16px 0 7px;display:flex;align-items:center;gap:8px}
 .acthead .n2{font-weight:500}
@@ -2237,12 +2242,17 @@ function pageSessions(){
 /* référentiel des lieux : pays, ville, lieu, salles (rapatrié de Staff) */
 const LIEUX_REF=[
  {id:"stf",n:"Station F",ville:"Paris",pays:"France",adr:"5 parvis Alan Turing, 75013 Paris",hal:1,qlb:"lieu_stf",photos:3,contact:"accueil@stationf.co · 01 84 60 00 00",accueil:"Se présenter à l'accueil du bâtiment, badge remis sur place.",
+  msgAcces:"Votre QR code d'accès vous est envoyé la veille, par e-mail. Vous pouvez aussi vous le renvoyer ici. L'entrée se fait par l'entrée principale uniquement.",
+  livret:"https://app.qualiobee.fr/documents/livret-accueil-stf",guide:"https://app.notion.com/p/guide-acces-station-f",dejeuner:"La Félicita (code promo SF3000)",
   salles:[["Boardroom Ada",12,"HAL-ADA-12"],["Boardroom Turing",10,"HAL-TUR-10"]]},
  {id:"bdx",n:"Quai des Chartrons",ville:"Bordeaux",pays:"France",adr:"12 quai des Chartrons, 33000 Bordeaux",hal:0,qlb:"lieu_bdx",photos:2,contact:"contact@quaideschartrons.fr · 05 56 00 11 22",accueil:"Sonner à la porte bleue, 2e étage.",
+  msgAcces:"L'accès se fait par la porte bleue côté quai. Sonnez à l'interphone, on vous ouvre.",livret:"https://app.qualiobee.fr/documents/livret-accueil-bdx",guide:"https://app.notion.com/p/guide-acces-bordeaux",dejeuner:"Brasserie des Chartrons, à trois minutes à pied",
   salles:[["Salle Garonne",14,null],["Salle Dordogne",8,null]]},
  {id:"lyo",n:"Part-Dieu",ville:"Lyon",pays:"France",adr:"44 rue de la Villette, 69003 Lyon",hal:0,qlb:"lieu_lyo",photos:1,contact:"reservation@partdieu-espaces.fr",accueil:"Accès par le hall principal, 5e étage.",
+  msgAcces:"Accès par le hall principal, annoncez-vous à l'accueil : la salle est au 5e étage.",livret:"https://app.qualiobee.fr/documents/livret-accueil-lyo",guide:"https://app.notion.com/p/guide-acces-lyon",dejeuner:"Food court de la Part-Dieu, au 2e niveau",
   salles:[["Salle Rhône",12,null]]},
  {id:"client",n:"Chez le client",ville:"—",pays:"France",adr:"adresse fournie par le client à la confirmation",hal:0,qlb:null,photos:0,contact:null,accueil:"Le client précise l'accès dans sa fiche.",
+  msgAcces:"L'accès est précisé par le client à la confirmation de la session.",livret:null,guide:null,dejeuner:null,
   salles:[]},
 ];
 /* ressources : ce qui sert au formateur et ce qui part chez l'apprenant */
@@ -2327,28 +2337,52 @@ function lieuModalHtml(){
 }
 function ficheLieuHtml(id){
   const l=LIEUX_REF.find(x=>x.id===id); if(!l) return "";
+  const ed=S.editing==="lieu::"+l.id;
   const sessions=CARDS.filter(c=>c.kb==="session_fia"&&c.lieu&&c.lieu.startsWith(l.n));
   let h=`<button class="backbtn" data-lieuback="1">← Tous les lieux</button>`;
   h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${ICO.building}</div><div><h1>${l.n}</h1></div>
-    <div class="fh-right"><button class="btn btn-s" data-lieuedit="${l.id}">Modifier</button><button class="btn btn-s danger" data-lieusave="${encodeURIComponent("Lieu supprimé")}">Supprimer</button></div></div>
-  <div class="idgrid">
-    ${fld("Adresse",l.adr)}${fld("Ville",l.ville)}
-    ${fld("Réservation",l.hal?"HAL Station F, au shotgun à l'ouverture du créneau":"réservation directe auprès du lieu")}
-    ${fld("Contact",l.contact)}
-    ${fld("Identifiant Qualiobee",l.qlb?`<span class="mono">${l.qlb}</span> <a class="ilink" data-copy="${l.qlb}">copier</a>`:null)}
-    ${fld("Message d'accueil",l.accueil)}
+    <div class="fh-right">${ed?`<button class="btn btn-p" data-editsave="lieu::${l.id}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`
+      :`<button class="btn btn-s" data-editstart="lieu::${l.id}">Modifier</button><button class="btn btn-s danger" data-lieusave="${encodeURIComponent("Lieu supprimé")}">Supprimer</button>`}</div></div>
+  <div class="idgrid g4">
+    ${fld("Adresse",l.adr,"adr",l)}
+    ${fld("Ville",l.ville,"ville",l)}
+    ${ed?`<div class="fld"><div class="k">Réservation</div><select class="edin" data-f="hal"><option value="1" ${l.hal?"selected":""}>HAL Station F, au shotgun</option><option value="0" ${l.hal?"":"selected"}>Réservation directe auprès du lieu</option></select></div>`
+       :fld("Réservation",l.hal?"HAL Station F, au shotgun à l'ouverture du créneau":"Réservation directe auprès du lieu")}
+    ${fld("Contact",l.contact,"contact",l)}
+    ${ed?fld("Identifiant Qualiobee",l.qlb,"qlb",l)
+       :fld("Identifiant Qualiobee",l.qlb?`<span class="mono">${l.qlb}</span> <a class="ilink" data-copy2="${l.qlb}">copier</a>`:null)}
+    ${fld("Message d'accueil",l.accueil,"accueil",l)}
   </div></div>`;
   h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Salles <span class="n2">nom, capacité et identifiant HAL</span><span class="right"><button class="btn btn-s" data-sallenew="${l.id}">+ Nouvelle salle</button></span></div>`;
   h+=l.salles.length?`<div class="tblwrap"><table class="tbl"><thead><tr><th>Salle</th><th>Capacité</th><th>Identifiant HAL</th><th></th></tr></thead><tbody>`
     +l.salles.map(([n,cap,hal],ix)=>`<tr><td><b>${n}</b></td><td>${cap} places</td><td>${hal?`<span class="mono">${hal}</span>`:'<span class="muted">—</span>'}</td><td class="acts"><a class="ilink" data-salleedit="${l.id}::${ix}">Modifier</a><a class="ilink danger" data-lieusave="${encodeURIComponent("Salle supprimée")}">Supprimer</a></td></tr>`).join("")
     +`</tbody></table></div>`:`<div class="lrow"><span class="sm">Aucune salle : la formation se tient chez le client.</span></div>`;
   h+=`</div>`;
-  h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Photos et guide d'accès <span class="n2">elles alimentent le guide envoyé aux apprenants</span></div>
-    <div class="lrow">${l.photos} photo${l.photos>1?"s":""} déposée${l.photos>1?"s":""}<button class="btn btn-s" style="margin-left:auto" data-gen="${encodeURIComponent("Ajout de photos")}">Ajouter</button></div>
-    <div class="lrow">Guide d'accès<a class="ilink" style="margin-left:auto" data-gen="${encodeURIComponent("Aperçu du guide d'accès")}">Aperçu</a></div></div>`;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Sessions <span class="n2">tenues ici</span></div>`
-    +(sessions.map(c=>`<div class="lrow"><a class="ilink" data-fiche="session::${c.id}">${c.title}</a><span class="chip" style="margin-left:auto">${colLabel(c)}</span></div>`).join("")||`<div class="lrow"><span class="sm">Aucune session pour l'instant.</span></div>`)
-    +`</div></div>`;
+  /* ce que l'apprenant voit pour ce lieu, tel qu'il le voit */
+  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Information espace apprenant <span class="n2">l'aperçu exact de ce que l'apprenant lit dans son espace</span>
+    <span class="right">${ed?"":`<button class="btn btn-s" data-editstart="lieu::${l.id}">Modifier</button>`}</span></div>`;
+  if(ed){
+    h+=`<div class="docs">
+      <div class="docrow"><span class="dl">Message d'accès</span><input class="edin" data-f="msgAcces" value="${(l.msgAcces||"").replace(/"/g,"&quot;")}"></div>
+      <div class="docrow"><span class="dl">Livret d'accueil</span><input class="edin" data-f="livret" value="${l.livret||""}" placeholder="Lien Qualiobee"><span class="ds">Qualiobee</span></div>
+      <div class="docrow"><span class="dl">Guide d'accès</span><input class="edin" data-f="guide" value="${l.guide||""}" placeholder="Lien Notion"><span class="ds">Notion</span></div>
+      <div class="docrow"><span class="dl">Déjeuner</span><input class="edin" data-f="dejeuner" value="${(l.dejeuner||"").replace(/"/g,"&quot;")}" placeholder="Adresse conseillée et code promo"></div>
+      <div class="docrow"><span class="dl">Photos</span><span class="v2">${l.photos} photo${l.photos>1?"s":""} déposée${l.photos>1?"s":""}</span><button class="btn-xs" data-gen="${encodeURIComponent("Ajout de photos")}">Ajouter</button></div>
+    </div>`;
+  } else {
+    h+=`<div class="apprev"><div class="appframe" style="font-family:Inter,sans-serif;max-width:640px">
+      <div class="ap-body" style="padding:16px"><div class="ap-card"><div class="h"><h2>Informations pratiques et accès</h2></div><div class="b">
+        <p class="apmsg">${l.msgAcces||"Message d'accès à écrire."}</p>
+        ${l.msgAcces?`<button class="btn btn-s" style="margin:4px 0 12px">Me renvoyer mon QR code</button>`:""}
+        <span class="ap-tag">Lieu · ${l.n}</span><span class="ap-tag">Adresse · ${l.adr}</span>${l.dejeuner?`<span class="ap-tag">Déjeuner · ${l.dejeuner}</span>`:""}
+        <div class="ap-row" style="margin-top:8px">Livret d'accueil<span class="chev">${l.livret?"›":"—"}</span></div>
+        <div class="ap-row">Guide d'accès et plan${l.photos?` · ${l.photos} photo${l.photos>1?"s":""}`:""}<span class="chev">${l.guide?"›":"—"}</span></div>
+      </div></div></div></div>`;
+  }
+  h+=`</div>`;
+  const kls="lieu-sess-"+l.id;
+  h+=`<details class="acc" data-acc="${kls}" ${accKey(kls)?"open":""}><summary><span class="chev">▶</span><span class="tt">Sessions tenues ici</span><span class="end"><span class="sm">${sessions.length}</span></span></summary>
+    <div class="inner">${sessions.map(c=>`<div class="lrow"><a class="ilink" data-fiche="session::${c.id}">${c.title}</a><span class="chip" style="margin-left:auto">${colLabel(c)}</span></div>`).join("")||`<div class="lrow"><span class="sm">Aucune session pour l'instant.</span></div>`}</div></details>`;
   return h;
 }
 function sessionListHtml(list){
@@ -2821,13 +2855,13 @@ function pageFaq(){
   let h=`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
   h+=chips([["Vue",[["faq","FAQ"],["remontees","Remontées"]]]], v, "fFaq");
   if(v==="faq"){
-    const pubs=["Tous","Closeurs","Formateurs","Admins"];
-    const pub=pubs.includes(S.fFaqPub)?S.fFaqPub:"Tous";
+    const pubs=["Closeurs","Formateurs","Admins"];
+    const pub=pubs.includes(S.fFaqPub)?S.fFaqPub:"Closeurs";
     const q=(S.fFaqQ||"").toLowerCase();
     h+=`<div class="fbar">`+chips([["Public",pubs.map(x=>[x,x])]], pub, "fFaqPub")
       +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fFaqQ" value="${(S.fFaqQ||"").replace(/"/g,"&quot;")}" placeholder="Chercher une réponse…"></div>
       <button class="btn btn-s" style="margin-left:auto" data-frmact="${encodeURIComponent("Nouvelle question ajoutée à la FAQ")}">+ Nouvelle réponse</button></div>`;
-    const list=FAQ_ENTRIES.filter(([p2,qq,r])=>(pub==="Tous"||p2===pub||p2==="Tous")&&(!q||(qq+" "+r).toLowerCase().includes(q)));
+    const list=FAQ_ENTRIES.filter(([p2,qq,r])=>(p2===pub||p2==="Tous")&&(!q||(qq+" "+r).toLowerCase().includes(q)));
     h+=`<div class="fsec">`+list.map(([p2,qq,r])=>`<details class="acc" data-acc="faq-${encodeURIComponent(qq).slice(0,14)}"><summary><span class="chev">▶</span><span class="tt">${qq}</span><span class="end"><span class="chip">${p2}</span></span></summary><div class="inner"><p class="pd" style="line-height:1.6">${r}</p><div class="mactions"><button class="btn btn-s" data-frmact="${encodeURIComponent("Remontée créée : cette réponse ne suffit pas")}">Cette réponse ne m'aide pas</button></div></div></details>`).join("")
       +(list.length?"":`<div class="lrow"><span class="sm">Aucune réponse ne correspond.</span></div>`)+`</div>`;
     return h;
@@ -3710,7 +3744,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.editcancel){S.editing=null;render();return}
   if(t.dataset.editsave){
     const [kind,fid]=t.dataset.editsave.split("::");
-    const obj=(kind==="apprenant"?APPRENANTS:kind==="session"?CARDS:kind==="compte"?COMPTES:CLIENTS).find(x=>x.id===fid);
+    const obj=(kind==="apprenant"?APPRENANTS:kind==="session"?CARDS:kind==="compte"?COMPTES:kind==="lieu"?LIEUX_REF:CLIENTS).find(x=>x.id===fid);
     document.querySelectorAll("#content [data-f]").forEach(inp=>{obj[inp.dataset.f]=inp.value});
     applyVenteInputs(obj);
     const clAps=document.querySelector("#content [data-claps]");
@@ -3734,9 +3768,10 @@ document.addEventListener("click",e=>{
         }
       }
     }
+    if(kind==="lieu"){obj.hal=obj.hal==="1"||obj.hal===1;}
     if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.cap=parseInt(obj.cap)||12;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===obj.sess);if(fs){fs.frm=obj.frm;fs.dt=obj.dt;fs.cap=obj.cap;}}
     S.editing=null;render();
-    toast("Modifications enregistrées : <b>"+(obj.nom||obj.title)+"</b>");
+    toast("Modifications enregistrées : <b>"+(obj.nom||obj.title||obj.n)+"</b>");
     return}
   if(t.dataset.ficheback){S.fiche=null;render();return}
   if(t.dataset.gotoinsc){const c=CARDS.find(x=>x.id===t.dataset.gotoinsc);S.fiche=null;S.modal=null;S.app="delivia";S.tab="inscription";S.fInsc=inscFilterFor(c);S.fInscMode="all";S.highlight=c.id;render();return}
