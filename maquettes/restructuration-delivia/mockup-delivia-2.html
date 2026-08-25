@@ -892,6 +892,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 @media (max-width:1180px){.faqduo{grid-template-columns:minmax(0,1fr)}}
 .fsec .sect-h .right{display:flex;align-items:center;gap:12px}
 .lrow .acts{display:flex;align-items:center;gap:12px}
+.grosec{display:flex;align-items:center;gap:14px;margin:26px 0 14px;padding-top:18px;border-top:2px solid var(--line-2)}
+.grosec-t{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-500)}
+.grosec-a{margin-left:auto;display:flex;gap:8px}
 .demrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
 .demrow:first-of-type{border-top:none}
 .demrow .avat{width:30px;height:30px;border-radius:9px;font-size:11px;flex-shrink:0}
@@ -3341,8 +3344,8 @@ function faqSectionHtml(pubImpose){
 function remonteesSectionHtml(){
   const ft=["tout","bug","idee","question"].includes(S.fRemT)?S.fRemT:"tout";
   const fs2=["tout","a_traiter","en_cours","termine"].includes(S.fRemS)?S.fRemS:"tout";
-  let h=`<div class="fbar">`+chips([["Type",[["tout","Tout"],["bug","Bugs"],["idee","Idées"],["question","Questions"]]]], ft, "fRemT")
-    +chips([["État",[["tout","Tous"]].concat(REM_COLS)]], fs2, "fRemS")+`</div>`;
+  let h=`<div class="fbar">`+chips([["Type",[["bug","Bugs"],["idee","Idées"],["question","Questions"]]]], ft, "fRemT")
+    +chips([["État",REM_COLS]], fs2, "fRemS")+`</div>`;
   const list=REMONTEES.filter(r=>(ft==="tout"||r.t===ft)&&(fs2==="tout"||r.st===fs2));
   const lbl=Object.fromEntries(REM_COLS);
   h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Remontée</th><th>Type</th><th>Qui</th><th>Votes</th><th>Commentaires</th><th>État</th><th>Date</th><th></th></tr></thead><tbody>`
@@ -3948,12 +3951,12 @@ const RESSOURCES_INT=[
 ];
 function tableauRessources(src,cle){
   let h=`<div class="fbar"><button class="btn btn-s" style="margin-left:auto" data-resnew="${cle}">+ Nouvelle ressource</button><button class="btn btn-s" data-ressec="${cle}">+ Nouvelle section</button></div>`;
-  h+=src.map(([fam,items],fi)=>`<div class="fsec"><div class="sect-h">${ICO.file}${fam} <span class="n2">${items.length}</span>
-      <span class="right"><a class="ilink" data-resmovesec="${cle}::${fi}::-1">↑</a><a class="ilink" data-resmovesec="${cle}::${fi}::1">↓</a><a class="ilink danger" data-resdelsec="${cle}::${fi}">Supprimer la section</a></span></div>`
+  h+=src.map(([fam,items],fi)=>{const ak="res-"+cle+"-"+fi; return `<details class="accbloc" data-acc="${ak}" ${accKey(ak)?"open":""}><summary><span class="chev">▶</span><span class="tt">${fam}</span><span class="end"><span class="sm">${items.length}</span></span></summary><div class="inner">
+      <div class="fbar" style="justify-content:flex-end"><a class="ilink" data-resmovesec="${cle}::${fi}::-1">↑</a><a class="ilink" data-resmovesec="${cle}::${fi}::1">↓</a><a class="ilink danger" data-resdelsec="${cle}::${fi}">Supprimer la section</a></div>`
     +`<div class="tblwrap"><table class="tbl"><thead><tr><th>Ressource</th><th>Format</th><th>État</th><th></th></tr></thead><tbody>`
     +(items.map(([n,url,fmt,on],ii)=>`<tr><td>${url&&url!=="#"?`<a class="ilink" href="${url}" target="_blank" rel="noopener"><b>${n}</b></a>`:`<b>${n}</b> <span class="sm">lien à renseigner</span>`}</td><td>${fmt}</td><td><span class="sw ${on?"on":""}" data-restoggle="${cle}::${fi}::${ii}"><i></i></span></td><td class="acts"><a class="ilink" data-resmove="${cle}::${fi}::${ii}::-1">↑</a><a class="ilink" data-resmove="${cle}::${fi}::${ii}::1">↓</a><a class="ilink" data-resnew="${cle}::${fi}::${ii}">Modifier</a><a class="ilink danger" data-resdel="${cle}::${fi}::${ii}">Supprimer</a></td></tr>`).join("")
       ||`<tr><td colspan="4" class="paynone">Aucune ressource dans cette section.</td></tr>`)
-    +`</tbody></table></div></div>`).join("");
+    +`</tbody></table></div></div></details>`}).join("");
   return h;
 }
 function ressourcesDe(cle){ return cle==="formateurs"?RESSOURCES:cle==="interne"?RESSOURCES_INT:RESSOURCES_COM; }
@@ -4004,9 +4007,10 @@ function onboardingHtml(pop){
     ? FORMATEURS.map(k=>({nom:FRM[k].nom, faits:etapes.map((_,j)=>j<FRM[k].onboarding.filter(o=>o[1]).length), fiche:"formateur::"+k}))
     : COMPTES.filter(u=>pop==="interne"?u.role==="admin":u.role===(pop==="closeurs"?"closer":"setter"))
         .map((u,i)=>({nom:u.nom, faits:etapes.map((_,j)=>j<=((i+3)%(etapes.length+1))-1), fiche:"compte::"+u.id}));
-  /* le parcours lui-même */
-  let h=`<div class="fbar"><button class="btn btn-s" style="margin-left:auto" data-onbnew="${pop}">+ Nouvelle to do</button><button class="btn btn-s" data-onbsec="${pop}">+ Nouvelle section</button></div>`;
-  h+=secs.map(([fam,items],fi)=>`<div class="fsec"><div class="sect-h">${ICO.cap}${fam} <span class="n2">${items.length}</span>
+  /* d'abord où en est chacun, ensuite le paramétrage du parcours */
+  let h="";
+  let param=`<div class="grosec"><div class="grosec-t">Paramétrage du parcours</div><span class="grosec-a"><button class="btn btn-s" data-onbnew="${pop}">+ Nouvelle to do</button><button class="btn btn-s" data-onbsec="${pop}">+ Nouvelle section</button></span></div>`;
+  param+=secs.map(([fam,items],fi)=>`<div class="fsec"><div class="sect-h">${ICO.cap}${fam} <span class="n2">${items.length}</span>
       <span class="right"><a class="ilink" data-onbmovesec="${pop}::${fi}::-1">↑</a><a class="ilink" data-onbmovesec="${pop}::${fi}::1">↓</a><a class="ilink" data-onbnew="${pop}::${fi}">+ To do</a><a class="ilink danger" data-onbdelsec="${pop}::${fi}">Supprimer la section</a></span></div>`
     +(items.map((lbl,ii)=>`<div class="lrow">${lbl}<span class="acts" style="margin-left:auto"><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::-1">↑</a><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::1">↓</a><a class="ilink danger" data-onbdel="${pop}::${fi}::${ii}">Supprimer</a></span></div>`).join("")
       ||`<div class="lrow"><span class="sm">Aucune to do dans cette section.</span></div>`)
@@ -4033,7 +4037,7 @@ function onboardingHtml(pop){
       }).join("")
       +`</div></details>`;
   }).join("");
-  return h+`</div>`;
+  return h+`</div>`+param;
 }
 function pageEquipe(){
   const pops=[["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["interne","Interne"]];
@@ -4044,7 +4048,7 @@ function pageEquipe(){
   const v=vues.some(x=>x[0]===S.fEqV)?S.fEqV:"liste";
   let h=`<div class="pagehead"><h1>Équipe</h1></div>`;
   h+=chips([["",pops]], pop, "fEq");
-  h+=chips([["",vues]], v, "fEqV");
+  h+=`<div class="fbar" style="margin-top:-2px">`+chips([["",vues]], v, "fEqV")+`</div>`;
   if(v==="onboarding") return h+onboardingHtml(pop);
   if(v==="ressources") return h+tableauRessources(ressourcesDe(pop),pop);
   if(v==="faq") return h+pageFaq({pub:pop==="formateurs"?"Formateurs":pop==="setteurs"?"Setteurs":pop==="interne"?"Admins":"Closeurs"});
@@ -4711,6 +4715,8 @@ document.addEventListener("click",e=>{
     render();return}
   if(t.dataset.chip){const [k,v]=t.dataset.chip.split("::");
     if(k==="railKb"&&S.rail){S.rail={...S.rail,kb:v};render();return}
+    /* filtres sans option « tout » : recliquer sur le filtre actif l'enlève */
+    if(["fRemT","fRemS"].includes(k)&&S[k]===v){S[k]="tout";render();return}
     S[k]=v;render();return}
   if(t.dataset.goto){S.app="delivia";S.tab="facturation";S.fiche=null;S.modal=null;
     const c=CARDS.find(x=>x.id===t.dataset.goto);
