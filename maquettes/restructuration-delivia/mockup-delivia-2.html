@@ -405,6 +405,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .todobloc[open]>summary .chev{transform:rotate(90deg)}
 .todobloc.done>summary .lbl{color:var(--ink-400);text-decoration:line-through}
 .todolist{padding:2px 11px 10px 11px;border-top:1px solid var(--line)}
+.apbloc>summary .chip{margin-left:8px}
+.docrow{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-600);padding:4px 0}
+.docrow .dot{width:6px;height:6px;border-radius:50%;background:var(--ok,#16a34a);flex-shrink:0}
+.docrow.off{color:var(--ink-400)}
+.docrow.off .dot{background:var(--line-2)}
+.docrow .right{margin-left:auto}
 .todolist .tgrp{margin-top:8px}
 .caswrap{display:flex;flex-wrap:wrap;gap:10px 16px}
 .casck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-700)}
@@ -1119,6 +1125,7 @@ insc:{cols:[
  {id:"action", label:"Action de notre part"},
  {id:"attente",label:"En attente client"},
  {id:"validee",label:"Inscription validée", open:"J2+1 formation", rule:"j2+1", ghost:1},
+ {id:"formation",label:"Formation démarrée"},
  {id:"absent", label:"Absent", skip:1},
  {id:"termine",label:"Terminé", ghost:1},
  {id:"lost",   label:"Lost", skip:1, ghost:1, sep:1}],
@@ -1158,6 +1165,10 @@ tasks:{
   {t:"Admin France IA crée un nouveau dossier Google Drive de preuves pour l'apprenant (automatique)",tPl:"Admin France IA crée un dossier Google Drive de preuves par apprenant (automatique)",perAp:1,p:"fia",auto:1},
   {t:"Admin France IA téléverse les preuves de l'apprenant sur Google Drive (automatique)",tPl:"Admin France IA téléverse les preuves de chaque apprenant sur Google Drive (automatique)",perAp:1,p:"fia",auto:1},
   {t:"Admin France IA déclare la sortie auprès de la CDC",tPl:"Admin France IA déclare la sortie de chaque apprenant auprès de la CDC",perAp:1,p:"fia",fin:["cpf"],fx:"carte_client",btn:"Déclarer la sortie"}],
+ formation:[
+  {t:"Préparation de l'apprenant sur son espace",p:"client",apTodo:1},
+  {t:"Admin France IA confirme que les émargements sont faits",p:"fia",btn:"Ouvrir les émargements Qualiobee"},
+  {t:"Admin France IA confirme que les CPF sont inscrits à la certification",p:"fia",fin:["cpf"],btn:"Ouvrir WEDOF"}],
  absent:[
   {t:"Closeur contacte le client pour déterminer si l'absence est justifiée",p:"closer",btn:"Contacter",tpl:1,fin:["cpf"]},
   {t:"Closeur récupère la pièce justificative de l'absence",p:"closer",btn:"Déposer le justificatif",fin:["cpf"],grp:"Chemin 1 · absence justifiée"},
@@ -1612,9 +1623,9 @@ let CARDS = [
  {id:"i2", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Karim Benali",              closer:"Chloé M.", setter:"Sam T.", ard:"2026-08-12T16:05", fin:"fp_part",    col:"action"},
  {id:"i3", kb:"insc", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:"ACME Conseil",              closer:"Alex R.",  setter:"Sam T.", ard:"2026-08-13T09:18", fin:"fp_ent_vir", col:"action"},
  {id:"i9", kb:"insc", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:"Lucas Moreau",              closer:"Chloé M.", setter:"Sam T.", ard:"2026-08-21T18:30", fin:"cpf",        col:"recue"},
- {id:"i4", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"BTP Sud",                   closer:"Yanis B.", setter:"Sam T.", ard:"2026-08-05T11:27", fin:"fp_ent_man", col:"attente"},
+ {id:"i4", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"BTP Sud",                   closer:"Yanis B.", setter:"Sam T.", ard:"2026-08-05T11:27", fin:"fp_ent_man", col:"formation"},
  {id:"i5", kb:"insc", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:"Hôtel du Parc",             closer:"Alex R.",  setter:"Sam T.", ard:"2026-08-07T14:50", fin:"opco",       col:"attente"},
- {id:"i6", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Hugo Martin",               closer:"Chloé M.", setter:"Sam T.", ard:"2026-07-29T09:03", fin:"cpf",        col:"validee"},
+ {id:"i6", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Hugo Martin",               closer:"Chloé M.", setter:"Sam T.", ard:"2026-07-29T09:03", fin:"cpf",        col:"formation"},
  {id:"i7", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Nadia Slimani",             closer:"Alex R.",  setter:"Sam T.", ard:"2026-07-30T17:12", fin:"cpf",        col:"absent"},
  {id:"i8", kb:"insc", offre:"n2", sess:"parisn2",  dt:SESS.parisn2.dt,  title:"Studio Nova",               closer:"Yanis B.", setter:"Sam T.", ard:"2026-08-19T12:40", fin:"fp_ent_vir", col:"action"},
  /* intra (une carte = la formation) */
@@ -1930,9 +1941,39 @@ function cardBadge(card){
 function evRow(ev,state){ /* state : done | now | later */
   return `<div class="evrow ${state}"><span class="dot"></span>${EV[ev]||ev}</div>`;
 }
+/* avancement d'exemple : chaque apprenant en est à un point différent de sa préparation */
+(()=>{ const amorce={"i4::formation::0":[9,13,3], "i6::formation::0":[11]};
+  for(const base in amorce) amorce[base].forEach((n,ai)=>{ for(let j=0;j<n;j++) S.checks[`${base}::${ai}::${j}`]=true; });
+})();
 function todoItems(tk){ return tk.todo.flatMap(([ph,its])=>its.map(it=>({ph,lbl:it[0],src:it[1]}))); }
+function apTodoItems(){ return TODO_APPRENANT.flatMap(([ph,its])=>its.map(l=>({ph,lbl:l}))); }
+function apTodoHtml(card,colId,i,tk,ghost){
+  const aps=peopleFor(card).aps, items=apTodoItems(), k=key(card,colId,i), can=canCheck(tk);
+  const docsOk=DOCS_APPRENANT.filter(d=>d[1]).length;
+  if(!aps.length) return `<div class="task other" style="cursor:default"><span class="box"></span><span><span class="lbl">${tk.t}</span></span></div>`;
+  return aps.map((a,ai)=>{
+    const kk=j=>k+"::"+ai+"::"+j;
+    const fait=items.filter((_,j)=>S.checks[kk(j)]).length, tous=fait===items.length;
+    const ak="apt-"+k+"-"+ai;
+    const certif = card.fin==="cpf" && !a.certif;
+    let last="";
+    return `<details class="todobloc apbloc ${tous?"done":""}" data-acc="${ak}" ${accKey(ak)?"open":""}>
+      <summary><span class="box ${tous?"on":""}"></span><span class="lbl">${a.nom}</span>${certif?`<span class="chip err">certification non demandée</span>`:""}<span class="cnt3">${fait}/${items.length}</span><span class="chev">▸</span></summary>
+      <div class="todolist">`
+      +items.map((it,j)=>{
+        const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:""; last=it.ph;
+        const d=!!S.checks[kk(j)];
+        return g+`<div class="task ${d?"done":""} ${can?"":"other"}" ${can&&!ghost?`data-todoi="${card.id}::${colId}::${i}::${ai}-${j}"`:'style="cursor:default"'}>
+          <span class="box"></span><span><span class="lbl">${it.lbl}</span></span></div>`;
+      }).join("")
+      +`<div class="tgrp">Documents de son espace <span class="cnt3">${docsOk}/${DOCS_APPRENANT.length}</span></div>`
+      +DOCS_APPRENANT.map(([n,ok])=>`<div class="docrow ${ok?"":"off"}"><span class="dot"></span>${n}<span class="right sm">${ok?"disponible":"pas encore disponible"}</span></div>`).join("")
+      +`</div></details>`;
+  }).join("");
+}
 function taskHtml(card,colId,i,tk,ghost){
   const k=key(card,colId,i);
+  if(tk.apTodo) return apTodoHtml(card,colId,i,tk,ghost);
   if(tk.todo){
     const items=todoItems(tk), can2=canCheck(tk);
     const fait=items.filter((_,j)=>S.checks[k+"::"+j]).length, tous=fait===items.length;
@@ -1987,6 +2028,8 @@ function openDateStr(card,col){
 function taskState(card,colId,i,tk){
   if(tk.sub&&card.ech) return card.ech.every(e=>e.st==="ok");
   if(tk.todo){const k=key(card,colId,i); return todoItems(tk).every((_,j)=>S.checks[k+"::"+j]);}
+  if(tk.apTodo){const k=key(card,colId,i), aps=peopleFor(card).aps;
+    return aps.length>0 && aps.every((_,ai)=>apTodoItems().every((_,j)=>S.checks[k+"::"+ai+"::"+j]));}
   return !!S.checks[key(card,colId,i)];
 }
 /* inscrits réels / en cours (dont réservations) / capacité d'une session */
@@ -2884,6 +2927,24 @@ const TPL_CATS=[
  ["Coaching",["Proposition de créneaux","Demande des attentes","Compte rendu de séance","Témoignage de clôture"]],
  ["Emails",["Mail de bienvenue","Envoi de facture","Relance client","Relance OPCO","Relance Bibby"]],
  ];
+/* ce que l'apprenant coche sur son espace avant de venir, et les pièces qu'il y trouve */
+const TODO_APPRENANT=[
+ ["Comprendre",[
+  "Programme des deux journées parcouru",
+  "Pour les débutants : regarder la vidéo de mise à niveau sur ChatGPT"]],
+ ["Créer ses comptes",[
+  "Compte ChatGPT créé","Compte Claude créé","Compte NotebookLM créé","Compte Lovable créé"]],
+ ["Rassembler sa matière",[
+  "5 à 10 PDF professionnels rassemblés sur mon ordinateur",
+  "1 fichier Excel ou CSV avec des données professionnelles prêt",
+  "3 tâches répétitives identifiées",
+  "1 problème professionnel à résoudre en tête",
+  "1 idée de GPT utile pour mon métier",
+  "1 idée de site ou d'application à développer sur Lovable"]],
+ ["Le jour J",["Amener votre ordinateur portable"]],
+];
+const DOCS_APPRENANT=[["Convocation",1],["Livret d'accueil",1],["Règlement intérieur",1],["CGV",1],["Facture",1],
+ ["Convention / contrat",0],["Certificat de réalisation",0],["Attestation de fin de formation",0]];
 /* modèles de to do de session, par phase : ce que le formateur retrouve sur sa carte (rapatrié de l'admin BookMySessions) */
 const TODO_SESSION=[
  ["Avant la session",[
@@ -2972,14 +3033,13 @@ function pageRail(){
       const tks=d.tasks[c.id]||[];
       return `<div class="fsec railsec"><div class="sect-h">${c.label}${c.open?`<span class="n2">ouverture ${c.open}</span>`:""}${c.vide?`<span class="n2">étape terminale, aucune tâche attendue</span>`:""}${c.cas?`<span class="n2">seulement ${c.cas.map(k=>(CAS_FIN.find(x=>x[0]===k)||[])[1]).join(", ")}</span>`:""}
         <span class="right"><button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button>${tks.length?"":`<button class="btn btn-s danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</button>`}</span></div>
-      <div class="tblwrap"><table class="tbl matrice"><thead><tr><th>Tâche</th><th>Responsable</th><th>Nature</th>`
+      <div class="tblwrap"><table class="tbl matrice"><thead><tr><th>Tâche</th><th>Responsable</th>`
       +(parCas?CAS_FIN.map(([k,lbl])=>`<th class="cash">${lbl}</th>`).join(""):`<th class="cash">Tous les cas</th>`)
       +`<th>Template</th><th></th></tr></thead><tbody>`
       +(tks.map((tk,i)=>{
         const nat=natureTk(tk);
         return `<tr><td><b>${tk.t}</b>${tk.grp?`<div class="sm">${tk.grp}</div>`:""}${tk.todo?`<div class="sm">${todoItems(tk).length} sous-tâches, repliées sur la carte</div>`:""}</td>
-          <td>${ACTEURS[tk.p]||tk.p}</td>
-          <td><span class="chip ${nat[0]==="simple"?"":"warn"}">${nat[1]}</span></td>`
+          <td>${ACTEURS[tk.p]||tk.p}</td>`
           +(parCas?CAS_FIN.map(([k])=>{const on=!tk.fin||tk.fin.includes(k);
               return `<td class="cas ${on?"on":""}" data-tkcas="${kb}::${c.id}::${i}::${k}">${on?"●":"·"}</td>`}).join("")
             :`<td class="cas on">●</td>`)
@@ -3019,11 +3079,9 @@ function tacheModalHtml(){
       <div class="genfld"><div class="k">Responsable</div><select class="edin" data-tf="p">${Object.entries(ACTEURS).map(([k,v])=>`<option value="${k}" ${tk.p===k?"selected":""}>${v}</option>`).join("")}</select></div>
       <div class="genfld"><div class="k">Nature</div><select class="edin" data-tf="nature">
         <option value="simple" ${nat[0]==="simple"?"selected":""}>Simple : une case à cocher</option>
-        <option value="cablee" ${nat[0]==="cablee"?"selected":""}>Action câblée : un bouton qui agit</option>
-        <option value="auto" ${nat[0]==="auto"?"selected":""}>Automatique : DELIV'IA la coche seul</option></select></div>
+        <option value="cablee" ${nat[0]==="cablee"?"selected":""}>Action câblée : un bouton qui agit (à coder)</option>
+        <option value="auto" ${nat[0]==="auto"?"selected":""}>Automatique : DELIV'IA la coche seul (à coder)</option></select></div>
     </div>
-    <div class="espin"><label>Action câblée</label><select class="edin" data-tf="action"><option value="">Aucune</option>${ACTIONS_CABLEES.map(a=>`<option ${nat[1]===a?"selected":""}>${a}</option>`).join("")}</select>
-      <div class="pd">La liste est fournie par le code : on choisit une action existante, on n'en invente pas depuis cet écran.</div></div>
     ${parCas?`<div class="espin"><label>Cas d'application</label><div class="caswrap">`+CAS_FIN.map(([k,l])=>`<label class="casck"><input type="checkbox" data-tcas="${k}" ${(!tk.fin||tk.fin.includes(k))?"checked":""}> ${l}</label>`).join("")+`</div><div class="pd">Aucun coché revient à ne jamais afficher la tâche.</div></div>`:""}
     <div class="espin"><label>Template lié</label><select class="edin" data-tf="tpl"><option value="">Aucun</option>${TPL_CATS.flatMap(([,items])=>items).map(n=>`<option ${tk.tpl&&tk.tplNom===n?"selected":""}>${n}</option>`).join("")}</select>
       <a class="ilink" data-tplnew="1">Créer un template</a></div>
@@ -4134,8 +4192,10 @@ document.addEventListener("click",e=>{
   if(t.dataset.todoi){const [cid,col,i,j]=t.dataset.todoi.split("::");
     const card=CARDS.find(c=>c.id===cid); const tk=tasksFor(card,col)[+i];
     if(!canCheck(tk)) return;
-    const kk=key(card,col,+i)+"::"+j; S.checks[kk]=!S.checks[kk];
-    const ak="todo-"+key(card,col,+i); S.openAcc=S.openAcc||{}; S.openAcc[ak]=1;
+    const kbase=key(card,col,+i);
+    const kk=kbase+"::"+j.replace("-","::"); S.checks[kk]=!S.checks[kk];
+    const ak=(j.includes("-")?"apt-"+kbase+"-"+j.split("-")[0]:"todo-"+kbase);
+    S.openAcc=S.openAcc||{}; S.openAcc[ak]=1;
     render();return}
   if(t.dataset.railopen){S.rail={page:t.dataset.railopen,kb:(RAILS_PAGE[t.dataset.railopen]||[["",""]])[0][0]};S.railVue="matrice";render();return}
   if(t.dataset.railback){S.rail=null;render();return}
@@ -4156,8 +4216,8 @@ document.addEventListener("click",e=>{
     const tk=m.i!=null?KB[m.kb].tasks[m.col][m.i]:{};
     tk.t=(g("t").value||"").trim()||tk.t||"Nouvelle tâche";
     tk.p=g("p").value;
-    const nature=g("nature").value, action=g("action").value;
-    tk.auto=nature==="auto"?1:0; tk.btn=nature==="cablee"?(action||"Ouvrir"):null;
+    const nature=g("nature").value;
+    tk.auto=nature==="auto"?1:0; tk.btn=nature==="cablee"?(tk.btn||"Ouvrir"):null;
     const cases=[...document.querySelectorAll("#modal2 [data-tcas]")];
     if(cases.length){const coches=cases.filter(c=>c.checked).map(c=>c.dataset.tcas);
       tk.fin=coches.length===cases.length?null:coches;}
