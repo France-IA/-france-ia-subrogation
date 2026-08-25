@@ -114,7 +114,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .b-wait{background:var(--warn-50);color:var(--warn)}
 .b-neutral{background:#f1f5f9;color:var(--ink-500)}
 .card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.tasks{margin-top:9px;border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:2px}
+.tasks{margin-top:6px;padding-top:2px;display:flex;flex-direction:column;gap:2px}
 .tgrp{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin:5px 0 2px}
 .tor{display:flex;align-items:center;gap:8px;color:var(--ink-300);font-size:10px;font-weight:600;margin:4px 0}
 .tor::before,.tor::after{content:"";flex:1;height:1px;background:var(--line-2)}
@@ -127,6 +127,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .task.other{color:var(--ink-400)}
 .task.other .box{border-color:var(--line-2);background:var(--bg)}
 .task.other.done .box{background:var(--ink-300);border-color:var(--ink-300)}
+.hrow .who,.ftask .who{font-size:11px;font-weight:600;color:var(--ink-500);background:var(--bg);border-radius:5px;padding:1px 6px;margin-right:7px;white-space:nowrap}
 .task .who{font-size:11px;font-weight:600;color:var(--ink-500);background:var(--bg);border-radius:5px;padding:1px 6px;margin-right:7px;white-space:nowrap}
 .task.done .who{color:var(--ink-300)}
 .task.next{background:var(--primary-50);border-radius:7px;padding:5px 7px;margin:1px -5px}
@@ -696,7 +697,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .fut summary::before{content:"▸";font-size:10px;color:var(--ink-400);transition:transform .15s}
 .fut[open] summary::before{transform:rotate(90deg)}
 .fut summary .n2{font-weight:400;color:var(--ink-400);font-size:11px}
-.futcol{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-500);margin:10px 0 3px}
+.futcol{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-500);margin:14px 0 6px;padding-top:12px;border-top:1px dashed var(--line-2)}
+.futcol:first-child,.futcol.en{margin-top:2px;padding-top:0;border-top:none}
+.futcol.en .pill{background:var(--primary)}
+.futcol.en{color:var(--ink-700)}
 .futcol .pill{width:7px;height:7px;border-radius:50%;background:var(--ink-300)}
 .futcol .n2{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-400);font-size:10.5px}
 .ftask{display:flex;align-items:flex-start;gap:7px;padding:3px 2px;font-size:12px;line-height:1.4;color:var(--ink-400)}
@@ -738,7 +742,14 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .msep{border-top:1px solid var(--line);margin:16px 0 6px}
 .msec2{border-top:1px solid var(--line)}
 .msec2:first-of-type{border-top:none}
-.msec2>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;padding:10px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-700)}
+.msec2>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;padding:10px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400)}
+.msec2>summary::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--line-2);flex-shrink:0;order:-1}
+.msec2[data-k="hist"]>summary::before{background:#bbf7d0}
+.msec2[data-k="cur"]>summary::before{background:var(--primary)}
+.msec2[data-k="cur"]>summary{color:var(--ink-900)}
+.msec2[data-k="cur"]>.minner{border-left:2px solid var(--primary);padding-left:14px;margin-left:2px}
+.msec2[data-k="hist"] .hrow{opacity:.75}
+.msec2[data-k="fut"] .ftask{opacity:.8}
 .msec2>summary::-webkit-details-marker{display:none}
 .msec2>summary .chev{color:var(--ink-400);font-size:10px;transition:transform .15s}
 .msec2[open]>summary .chev{transform:rotate(90deg)}
@@ -2185,7 +2196,7 @@ function historyFor(card){
     tasksFor(card,col.id).forEach((tk,i)=>{
       const k=key(card,col.id,i);
       const d=S.when[k]?new Date(S.when[k]):(()=>{const x=new Date(base);x.setHours(9+((i*2)%8),(i*17)%60,0,0);return x})();
-      rows.push({d,t:tk.t,e:col.label});
+      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:col.label});
       const ev=evFor(card,tk); if(ev) rows.push({d:new Date(d.getTime()+60000),t:EV[ev],ev:1,e:col.label});
     });
   });
@@ -2193,7 +2204,7 @@ function historyFor(card){
     if(taskState(card,card.col,i,tk)){
       const k=key(card,card.col,i);
       const d=S.when[k]?new Date(S.when[k]):new Date();
-      rows.push({d,t:tk.t,e:cols[curIx].label});
+      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:cols[curIx].label});
       const ev=evFor(card,tk); if(ev) rows.push({d:new Date(d.getTime()+60000),t:EV[ev],ev:1,e:cols[curIx].label});
     }
   });
@@ -2334,9 +2345,10 @@ function modalHtml(){
   h+=`<details class="msec2" data-k="hist"${S.histOpen?" open":""}><summary><span class="chev">▸</span>Historique <span class="n2">${nHist}/${nHist}</span></summary><div class="minner">`;
   h+=hist.map(r=>r.ev
     ?`<div class="hrow ev"><span class="d">${fmtWhen(r.d)}</span><span class="dot"></span><span>${r.t}</span></div>`
-    :`<div class="hrow"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.t}<span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("")||`<div class="hrow"><span class="w">Aucune tâche réalisée pour l'instant.</span></div>`;
+    :`<div class="hrow"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.who?`<span class="who">${r.who}</span>`:""}${r.what||r.t}<span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("")||`<div class="hrow"><span class="w">Aucune tâche réalisée pour l'instant.</span></div>`;
   h+=`</div></details>`;
-  h+=`<details class="msec2" data-k="cur"${S.curOpen!==false?" open":""}><summary><span class="chev">▸</span>Étape en cours : ${col.label} <span class="n2">${done}/${tks.length}</span></summary><div class="minner">`;
+  h+=`<details class="msec2" data-k="cur"${S.curOpen!==false?" open":""}><summary><span class="chev">▸</span>Étape en cours <span class="n2">${done}/${tks.length}</span></summary><div class="minner">`;
+  h+=`<div class="futcol en"><span class="pill"></span>${col.label}${col.open?`<span class="n2">ouverture ${openDateStr(card,col)} · ${col.open}</span>`:""}</div>`;
   if(tks.length) h+=`<div class="tasks">`+tks.map((tk,i)=>taskHtml(card,card.col,i,tk,false)).join("")+`</div>`;
   else h+=`<p class="empty">Aucune tâche à cette étape.</p>`;
   if(card.waiting){
@@ -2349,7 +2361,7 @@ function modalHtml(){
   h+=`<details class="msec2" data-k="fut"${S.futOpen?" open":""}><summary><span class="chev">▸</span>À venir <span class="n2">0/${nFut}</span></summary><div class="minner">`;
   const apsFut=peopleFor(card).aps, multiFut=apsFut&&apsFut.length>1;
   h+=fut.map(f=>`<div class="futcol"><span class="pill"></span>${f.col.label}${f.col.open?`<span class="n2">ouverture ${openDateStr(card,f.col)} · ${f.col.open}</span>`:""}</div>`
-    +(f.tasks.length?f.tasks.map((tk,ti)=>(tk.todoRef||tk.apTodo)?taskHtml(card,f.col.id,ti,tk,true):`<div class="frow2">${tk.grp&&(!f.tasks[ti-1]||f.tasks[ti-1].grp!==tk.grp)?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${(tk.perAp&&multiFut&&tk.tPl)?tk.tPl:tk.t}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${(tk.perAp&&multiFut)?`<div class="sub">`+apsFut.map(a=>`<div class="ftask"><span class="box"></span><span style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`:""}${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
+    +(f.tasks.length?f.tasks.map((tk,ti)=>(tk.todoRef||tk.apTodo)?taskHtml(card,f.col.id,ti,tk,true):`<div class="frow2">${tk.grp&&(!f.tasks[ti-1]||f.tasks[ti-1].grp!==tk.grp)?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${(()=>{const sp=splitActeur(tk,(tk.perAp&&multiFut&&tk.tPl)?tk.tPl:tk.t);return (sp.who?`<span class="who">${sp.who}</span>`:"")+sp.what})()}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${(tk.perAp&&multiFut)?`<div class="sub">`+apsFut.map(a=>`<div class="ftask"><span class="box"></span><span style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`:""}${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
       :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
   h+=`</div></details></div>`;
   if(card.kb==="session_fia"){
