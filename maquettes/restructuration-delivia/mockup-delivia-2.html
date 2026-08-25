@@ -869,7 +869,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .duo .fsec{margin-bottom:0;display:flex;flex-direction:column}
 .duo .notes-ta{flex:1;min-height:96px;resize:none}
 @media (max-width:900px){.duo{grid-template-columns:1fr}}
-.tblwrap{overflow-x:auto;background:#fff;border-radius:12px;box-shadow:var(--sh-carte)}
+.tblwrap{overflow:auto;max-height:calc(100vh - 240px);background:#fff;border-radius:12px;box-shadow:var(--sh-carte)}
+.tblwrap .tbl thead th{position:sticky;top:0;background:#fff;z-index:2}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
 .tbl th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;padding:11px 14px;border-bottom:1px solid var(--line-2)}
 .tbl td{padding:11px 14px;border-top:1px solid var(--line);vertical-align:middle;color:var(--ink-800)}
@@ -3751,20 +3752,36 @@ function lostModalHtml(){
   <div class="mactions"><button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p danger" data-lostconfirm="${i.id}">Confirmer le passage en Lost</button></div></div></div></div>`;
 }
 /* ════════ CLIENTS & APPRENANTS, ÉQUIPE ════════ */
+/* date d'entrée dans la base, déterministe : la première fiche est la plus ancienne */
+(()=>{ const d0=new Date("2026-03-02");
+  const pose=(arr)=>arr.forEach((x,i)=>{ const d=new Date(d0); d.setDate(d.getDate()+i*11+(i%3)*4); x.cree=d.toISOString().slice(0,10); });
+  pose(CLIENTS); pose(APPRENANTS);
+})();
 function pageClients(){
   const f=S.fCli==="apprenants"?"apprenants":"clients";
   let h=`<div class="pagehead"><h1>Clients & apprenants</h1></div>`;
   h+=chips([["",[["clients","Clients"],["apprenants","Apprenants"]]]], f, "fCli");
+  const sansAcc=x=>String(x).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  const q=sansAcc(S.fCliQ||"").split(/\s+/).filter(Boolean);
+  h+=`<div class="fbar"><div class="fsearch">${ICO.search}<input type="text" data-fq="fCliQ" value="${(S.fCliQ||"").replace(/"/g,"&quot;")}" placeholder="${f==="clients"?"Nom du client, type…":"Nom, e-mail, client…"}"></div></div>`;
+  const sk=S.sortCli||"nom", sd=S.sortCliDir||1;
+  const th=(k,l)=>`<th class="sortable ${sk===k?"on":""}" data-sortcli="${k}">${l}<span class="arr">${sk===k?(sd>0?"▲":"▼"):"⇅"}</span></th>`;
+  const cmp=(get)=>(a,b)=>{const x=get(a),y=get(b);return (x>y?1:x<y?-1:0)*sd};
   h+=`<div class="fsec">`;
   if(f==="clients"){
-    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Client</th><th>Apprenants</th><th>Type</th><th>Fiche</th></tr></thead><tbody>`
-      +CLIENTS.map(c=>`<tr><td><b>${c.nom}</b></td><td>${(c.apprenants||[]).length}</td><td>${c.type}</td><td><a class="ilink" data-fiche="client::${c.id}">Fiche client</a></td></tr>`).join("")
+    const list=CLIENTS.filter(c=>q.every(w=>sansAcc([c.nom,c.type,c.resp&&c.resp.n,c.resp&&c.resp.e,(c.apprenants||[]).map(id=>(APPRENANTS.find(a=>a.id===id)||{}).nom).join(" ")].filter(Boolean).join(" ")).includes(w)));
+    const get=c=>sk==="cree"?c.cree:sk==="type"?c.type:c.nom.toLowerCase();
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr>${th("nom","Client")}<th>Apprenants</th>${th("type","Type")}${th("cree","Date de création")}<th>Fiche</th></tr></thead><tbody>`
+      +[...list].sort(cmp(get)).map(c=>`<tr><td><b>${c.nom}</b></td><td>${(c.apprenants||[]).length}</td><td>${c.type}</td><td>${fmtJour(c.cree)}</td><td><a class="ilink" data-fiche="client::${c.id}">Fiche client</a></td></tr>`).join("")
       +`</tbody></table></div>`;
   } else {
-    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Apprenant</th><th>Client</th><th>Type</th><th>Fiches</th></tr></thead><tbody>`
-      +APPRENANTS.map(a=>{const cl=CLIENTS.find(c=>c.id===a.client);
+    const nomCl=a=>{const cl=CLIENTS.find(c=>c.id===a.client);return cl?cl.nom:""};
+    const list=APPRENANTS.filter(a=>q.every(w=>sansAcc([a.nom,a.email||"",nomCl(a),a.type||""].join(" ")).includes(w)));
+    const get=a=>sk==="cree"?a.cree:sk==="type"?String(a.type||""):sk==="client"?nomCl(a).toLowerCase():a.nom.toLowerCase();
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr>${th("nom","Apprenant")}${th("client","Client")}${th("type","Type")}${th("cree","Date de création")}<th>Fiches</th></tr></thead><tbody>`
+      +[...list].sort(cmp(get)).map(a=>{const cl=CLIENTS.find(c=>c.id===a.client);
         const type=String(a.type||"").startsWith("Salarié")?"Salarié":"Particulier";
-        return `<tr><td><b>${a.nom}</b></td><td>${cl?cl.nom:'<span class="muted">aucun</span>'}</td><td>${type}</td><td class="acts"><a class="ilink" data-fiche="apprenant::${a.id}">Fiche apprenant</a>${cl?`<a class="ilink" data-fiche="client::${cl.id}">Fiche client</a>`:""}</td></tr>`}).join("")
+        return `<tr><td><b>${a.nom}</b></td><td>${cl?cl.nom:'<span class="muted">aucun</span>'}</td><td>${type}</td><td>${fmtJour(a.cree)}</td><td class="acts"><a class="ilink" data-fiche="apprenant::${a.id}">Fiche apprenant</a>${cl?`<a class="ilink" data-fiche="client::${cl.id}">Fiche client</a>`:""}</td></tr>`}).join("")
       +`</tbody></table></div>`;
   }
   return h+`</div>`;
@@ -4192,7 +4209,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -4304,6 +4321,9 @@ document.addEventListener("click",e=>{
     const kk=kbase+"::"+j.replace("-","::"); S.checks[kk]=!S.checks[kk];
     const ak=(j.includes("-")?"apt-"+kbase+"-"+j.split("-")[0]:"todo-"+kbase);
     S.openAcc=S.openAcc||{}; S.openAcc[ak]=1;
+    render();return}
+  if(t.dataset.sortcli){const k=t.dataset.sortcli;
+    if((S.sortCli||"nom")===k) S.sortCliDir=(S.sortCliDir||1)*-1; else {S.sortCli=k;S.sortCliDir=1;}
     render();return}
   if(t.dataset.railopen){S.rail={page:t.dataset.railopen,kb:(RAILS_PAGE[t.dataset.railopen]||[["",""]])[0][0]};S.railVue="matrice";render();return}
   if(t.dataset.railback){S.rail=null;render();return}
