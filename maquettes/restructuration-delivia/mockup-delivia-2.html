@@ -381,8 +381,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .docrow .v2{flex:1;min-width:0;font-size:12.5px;color:var(--ink-700);line-height:1.5}
 .idgrid.g4{grid-template-columns:repeat(4,minmax(0,1fr));align-items:start}
 .idgrid.g4 .fld:last-child{grid-column:1 / -1}
+.col-open a{color:var(--ink-700);text-decoration:underline;text-underline-offset:2px}
 .apprev{background:#f8fafc;border:1px dashed var(--line-2);border-radius:12px;padding:16px;margin-top:4px}
-.apcard{background:#fff;border-radius:14px;box-shadow:var(--sh-carte);padding:20px 22px;max-width:820px;font-family:Inter,sans-serif}
+.espin{margin:12px 0}
+.espin label{display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-500);margin-bottom:5px}
+.espin .edin,.espin textarea{width:100%}
+.espin .pd{font-size:11px;color:var(--ink-400);margin-top:4px}
+.apcard{background:#fff;border-radius:14px;box-shadow:var(--sh-carte);padding:20px 22px;width:100%;font-family:Inter,sans-serif}
 .apcard h2{font-size:19px;font-weight:600;color:#0f172a;margin-bottom:12px}
 .aptags{display:flex;flex-wrap:wrap;gap:8px}
 .ap-tag2{display:inline-flex;align-items:center;gap:6px;background:#f1f5f9;color:#334155;border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:500}
@@ -496,7 +501,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .autocard .chev{color:var(--ink-300);font-size:16px}
 /* page Anomalies */
 .anohead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
-.anohead .ctl{margin-left:auto;display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--ink-400)}
+.anohead .ctl{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:11.5px;color:var(--ink-400)}
+.anohead .ctltx{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
+.anohead .ctlapps{font-size:10.5px;color:var(--ink-400)}
 .anofam{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin:16px 0 7px}
 .anofam:first-of-type{margin-top:4px}
 .ano{background:#fff;border:1px solid #dfe4ec;border-radius:11px;box-shadow:var(--sh-carte);margin-bottom:8px;overflow:hidden}
@@ -990,7 +997,7 @@ const KB = {
 /* ── Session inter · rail France IA ── */
 session_fia:{cols:[
  {id:"brouillon",  label:"Brouillon"},
- {id:"prete",      label:"Prête", open:"J-14 formation", rule:"j-14", note:"Sessions disponibles à l'inscription"},
+ {id:"prete",      label:"Prête", open:"J-14 formation", rule:"j-14", note:"Sessions disponibles à l'inscription <a href='https://inscription.franceia-dev.com' target='_blank' rel='noopener'>ARD</a>"},
  {id:"demarree",   label:"Démarrée"},
  {id:"enformation",label:"En formation", open:"J2 formation", rule:"j2"},
  {id:"preuves",    label:"Récolter les preuves"},
@@ -1034,7 +1041,7 @@ tasks:{
 /* ── Session inter · rail Formateur ── */
 session_frm:{cols:[
  {id:"shotgun", label:"À prendre"},
- {id:"preparer",label:"Préparer", open:"J-14 formation", rule:"j-14", note:"Sessions disponibles à l'inscription"},
+ {id:"preparer",label:"Préparer", open:"J-14 formation", rule:"j-14", note:"Sessions disponibles à l'inscription <a href='https://inscription.franceia-dev.com' target='_blank' rel='noopener'>ARD</a>"},
  {id:"animer",  label:"Animer", open:"J2 formation", rule:"j2"},
  {id:"facturer",label:"Facturer"},
  {id:"termine", label:"Terminé"},
@@ -2413,8 +2420,10 @@ function ficheLieuHtml(id){
     <div class="fld"><div class="k">Photos ARD</div><div class="v">${l.photos} photo${l.photos>1?"s":""} <a class="ilink" data-photos="${l.id}">gérer</a></div></div>
   </div></div>`;
   /* 2 · ce que l'apprenant voit, tel qu'il le voit */
+  const ee=S.espEdit===l.id;
   h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Information espace apprenant <span class="n2">l'aperçu exact de ce que l'apprenant lit dans son espace</span>
-    <span class="right"><button class="btn btn-s" data-espedit="${l.id}">Modifier</button></span></div>
+    <span class="right">${ee?`<button class="btn btn-p" data-espsave="${l.id}">Enregistrer</button><button class="btn btn-s" data-espcancel="1">Annuler</button>`
+      :`<button class="btn btn-s" data-espedit="${l.id}">Modifier</button>`}</span></div>
     <div class="apprev"><div class="apcard">
       <h2>Information</h2>
       <div class="aptags">
@@ -2426,11 +2435,16 @@ function ficheLieuHtml(id){
         ${l.guide?`<span class="ap-tag2">${ICO.file}Infos de la salle : comment entrer ↗</span>`:""}
         <span class="ap-tag2 sess">${ICO.user}Sarah Koné</span>
       </div>
-      ${l.dejeuner?`<p class="apline">Pour le déjeuner : ${l.dejeuner}.</p>`:""}
+      ${ee?`<div class="espin"><label>Déjeuner</label><input class="edin" data-ef="dejeuner" value="${(l.dejeuner||"").replace(/"/g,"&quot;")}" placeholder="La Félicita (code promo SF3000)"></div>`
+        :(l.dejeuner?`<p class="apline">Pour le déjeuner : ${l.dejeuner}.</p>`:"")}
       <div class="apsep"></div>
-      <p class="apmsg">${l.msgAcces||"Message d'accès à écrire."}</p>
+      ${ee?`<div class="espin"><label>Message d'accès</label><textarea class="tpl-edit" style="min-height:104px" data-ef="msgAcces">${l.msgAcces||""}</textarea><div class="pd">Affiché juste au-dessus des boutons de renvoi du QR code.</div></div>`
+        :`<p class="apmsg">${l.msgAcces||"Message d'accès à écrire."}</p>`}
       <div class="apbtns"><button class="apbtn">Recevoir par e-mail</button><button class="apbtn">Recevoir par SMS</button></div>
-      ${l.livret?`<div class="apsep"></div><div class="ap-row">Livret d'accueil<span class="chev">›</span></div>`:""}
+      ${ee?`<div class="apsep"></div>
+        <div class="espin"><label>Livret d'accueil</label><input class="edin" data-ef="livret" value="${l.livret||""}" placeholder="https://app.qualiobee.fr/documents/…"><div class="pd">Lien Qualiobee, ouvert depuis la ligne « Livret d'accueil ».</div></div>
+        <div class="espin"><label>Guide d'accès</label><input class="edin" data-ef="guide" value="${l.guide||""}" placeholder="https://www.notion.so/…"><div class="pd">Lien Notion, repris dans la pastille « Infos de la salle : comment entrer ».</div></div>`
+        :(l.livret?`<div class="apsep"></div><div class="ap-row">Livret d'accueil<span class="chev">›</span></div>`:"")}
     </div>
     <div class="apnote">Les pastilles grisées viennent de la session (offre, dates, horaires, formateur). Le reste vient de ce lieu.</div>
     </div></div>`;
@@ -2445,19 +2459,6 @@ function ficheLieuHtml(id){
   h+=`<details class="acc" data-acc="${kls}" ${accKey(kls)?"open":""}><summary><span class="chev">▶</span><span class="tt">Sessions tenues ici</span><span class="end"><span class="sm">${sessions.length}</span></span></summary>
     <div class="inner">${sessions.map(c=>`<div class="lrow"><a class="ilink" data-fiche="session::${c.id}">${c.title}</a><span class="chip" style="margin-left:auto">${colLabel(c)}</span></div>`).join("")||`<div class="lrow"><span class="sm">Aucune session pour l'instant.</span></div>`}</div></details>`;
   return h;
-}
-/* modification de ce que l'apprenant voit */
-function espModalHtml(){
-  const l=LIEUX_REF.find(x=>x.id===S.espEdit); if(!l) return "";
-  return `<div id="modal2"><div class="mbox espbox"><div class="mhead"><div class="row"><div class="t">Information espace apprenant</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">${l.n} · ce que l'apprenant lira dans son espace</div></div>
-  <div class="mbody">
-    <div class="espfld"><label>Message d'accès</label><textarea class="tpl-edit" style="min-height:110px" data-ef="msgAcces">${l.msgAcces||""}</textarea>
-      <div class="pd">Affiché juste au-dessus des boutons de renvoi du QR code.</div></div>
-    <div class="espfld"><label>Déjeuner</label><input class="edin" data-ef="dejeuner" value="${(l.dejeuner||"").replace(/"/g,"&quot;")}" placeholder="La Félicita (code promo SF3000)"></div>
-    <div class="espfld"><label>Livret d'accueil</label><input class="edin" data-ef="livret" value="${l.livret||""}" placeholder="https://app.qualiobee.fr/documents/…"><div class="pd">Lien Qualiobee.</div></div>
-    <div class="espfld"><label>Guide d'accès</label><input class="edin" data-ef="guide" value="${l.guide||""}" placeholder="https://app.notion.com/p/…"><div class="pd">Lien Notion, repris dans la pastille « Infos de la salle : comment entrer ».</div></div>
-    <div class="mactions"><button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p" data-espsave="${l.id}">Enregistrer</button></div>
-  </div></div></div>`;
 }
 /* galerie des photos du lieu, dans la présentation d'ARD */
 function photosModalHtml(){
@@ -2586,7 +2587,7 @@ function pageAnomalies(){
   let h=`<div class="pagehead"><h1>Anomalies</h1></div>`;
   h+=`<div class="anohead">`
     +chips([["Vue",vues.map(k=>[k,`${ANO_VUES[k]} <span class="cnt2">${anoCount(k)}</span>`]).concat([["resolues","Résolues"]])]], v, "fAno")
-    +`<div class="ctl"><span>Dernier contrôle il y a 42 minutes · prochain à 18 h 00</span><button class="btn btn-s" data-anorun="1">${ICO.refresh} Relancer le contrôle</button></div></div>`;
+    +`<div class="ctl"><div class="ctltx"><span>Dernier contrôle il y a 42 minutes · prochain à 18 h 00</span><span class="ctlapps">Contrôle complet : WEDOF · GHL · Qonto · DELIV'IA · Qualiobee</span></div><button class="btn btn-s" data-anorun="1">${ICO.refresh} Relancer le contrôle</button></div></div>`;
   if(v==="resolues"){
     return h+`<div class="fsec"><h2>Anomalies résolues <span class="n2">conservées six mois</span></h2>`
       +ANO_RES.map(r=>`<div class="frow"><div><div class="tt">${r.tt}</div><div class="sm">${r.t} · ${r.sm}</div></div><span class="chip ok">Résolue le ${fmtJour(r.d)} · ${r.qui}</span></div>`).join("")
@@ -3758,7 +3759,6 @@ function render(){
   if(S.bibbyFor) document.body.insertAdjacentHTML("beforeend", bibbyModalHtml());
   if(S.lieuModal) document.body.insertAdjacentHTML("beforeend", lieuModalHtml());
   if(S.faqModal) document.body.insertAdjacentHTML("beforeend", faqModalHtml());
-  if(S.espEdit) document.body.insertAdjacentHTML("beforeend", espModalHtml());
   document.getElementById("modal3")?.remove();
   if(S.photos) document.body.insertAdjacentHTML("beforeend", photosModalHtml());
   if(S.idLink) document.body.insertAdjacentHTML("beforeend", idLinkModalHtml());
@@ -3837,7 +3837,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-photos],[data-photoact],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-photos],[data-photoact],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3939,8 +3939,9 @@ document.addEventListener("click",e=>{
   if(t.dataset.lieu){S.lieuFiche=t.dataset.lieu;render();return}
   if(t.dataset.espedit){S.espEdit=t.dataset.espedit;render();return}
   if(t.dataset.espsave){const l=LIEUX_REF.find(x=>x.id===t.dataset.espsave);
-    document.querySelectorAll("#modal2 [data-ef]").forEach(inp=>{l[inp.dataset.ef]=inp.value.trim()||null});
+    document.querySelectorAll("[data-ef]").forEach(inp=>{l[inp.dataset.ef]=inp.value.trim()||null});
     S.espEdit=null;render();toast(`Information espace apprenant mise à jour pour <b>${l.n}</b>.`);return}
+  if(t.dataset.espcancel){S.espEdit=null;render();return}
   if(t.dataset.photos){S.photos=t.dataset.photos;render();return}
   if(t.dataset.photoact){toast(decodeURIComponent(t.dataset.photoact)+".");return}
   if(t.dataset.faqnew!==undefined){S.faqModal=1;render();return}
