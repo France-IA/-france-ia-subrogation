@@ -1415,30 +1415,33 @@ tasks:{
 
 /* ════════════════════ ANOMALIES ════════════════════ */
 /* un type d'anomalie = un contrôle automatique (toutes les 6 h). v = le process où l'anomalie vit. */
-const ANO_VUES = {session:"Session", inscription:"Inscription", facturation:"Facturation", systeme:"Système"};
+const ANO_VUES = {session:"Session", inscription:"Inscription", facturation:"Facturation", autre:"Autre"};
 const ANO = [
 /* ── Session ── */
  {v:"session",fam:"Paramétrage",t:"Réservation HAL incohérente",g:"warn",src:"HAL Station F",
   d:"Les créneaux réservés sur HAL ne correspondent pas à ceux que la session attend : le contrôle compare, à chaque passage, ce que DELIV'IA doit avoir réservé et ce qui l'est réellement sur la plateforme HAL.",
   cas:[{tt:"Paris · 12-13 sept",sm:"J2 attendu sur Boardroom Ada, aucun créneau à ce nom sur HAL",fiche:"session::s1",act:["Ouvrir HAL","Ouvrir la session"]},
        {tt:"Paris N2 · 4-5 juillet",sm:"créneau HAL réservé de 9 h à 13 h, la session en attend un de 9 h à 18 h",fiche:"session::s6",act:["Ouvrir HAL","Ouvrir la session"]}]},
+ {v:"session",fam:"Automatisations",t:"Instance WhatsApp déconnectée",g:"err",src:"WhatsApp",
+  d:"Le compte WhatsApp qui crée les groupes n'est plus connecté : ni les groupes ni les messages de session ne partent.",
+  cas:[{tt:"Instance principale",sm:"déconnectée depuis 3 h",act:["Reconnecter"]}]},
  {v:"session",fam:"Places",t:"Surbooking, avéré ou en risque",g:"err",src:"DELIV'IA",dyn:"places",
   d:"Plus d'inscrits que de places, ou des inscriptions en cours qui feraient dépasser le plafond si elles aboutissaient toutes."},
  {v:"session",fam:"Synchronisation",t:"Jalons Qualiobee non lancés",g:"err",src:"Qualiobee",
   d:"La session est ouverte chez nous mais ses jalons ne sont pas partis côté Qualiobee : ni convocation, ni émargement, ni attestation ne suivront.",
   cas:[{tt:"Lyon · 3-4 oct",sm:"session créée, jalons non lancés à J-14",fiche:"session::s3",act:["Lancer les jalons","Ouvrir Qualiobee"]}]},
- {v:"session",fam:"Synchronisation",t:"Désynchronisation Qualiobee",g:"warn",src:"Qualiobee",
+ {v:"inscription",fam:"Synchronisation",t:"Désynchronisation Qualiobee / DELIV'IA",g:"warn",src:"Qualiobee",
   d:"Les inscrits Qualiobee ne correspondent pas à ceux de DELIV'IA : convocation manquante ou en trop, identifiant apprenant vide.",
   cas:[{tt:"Bordeaux · 26-27 sept",sm:"Lucas Moreau inscrit chez nous, absent de Qualiobee",act:["Ajouter à Qualiobee","Ignorer"]},
        {tt:"Paris · 12-13 sept",sm:"une convocation en trop : apprenant retiré côté DELIV'IA",act:["Supprimer la convocation","Ignorer"]}]},
- {v:"session",fam:"Synchronisation",t:"Espace apprenant désaligné",g:"warn",src:"DELIV'IA · espace · Qualiobee",
+ {v:"inscription",fam:"Synchronisation",t:"Espace apprenant désaligné",g:"warn",src:"DELIV'IA · espace · Qualiobee",
   d:"Le compte de l'apprenant sur son espace ne correspond pas à ce que DELIV'IA et Qualiobee disent de lui : compte jamais créé, e-mail différent d'un système à l'autre, ou compte qui survit à une inscription supprimée.",
   cas:[{tt:"Emma Bianchi",sm:"non provisionnée sur l'espace apprenants",act:["Re-provisionner","Resynchroniser"]}]},
- {v:"session",fam:"Preuves",t:"Collecte de preuve en échec",g:"warn",src:"Qualiobee · Drive",
-  d:"Émargement non signé, document pas encore généré côté Qualiobee, CV du formateur absent : la preuve ne peut pas être déposée sur le Drive.",
-  cas:[{tt:"Bordeaux · 26-27 sept",sm:"émargement J2 non signé par 2 apprenants",act:["Relancer la signature"]},
-       {tt:"Sarah K.",sm:"CV du formateur absent du coffre-fort",act:["Demander le CV"]},
-       {tt:"Paris · 12-13 sept",sm:"pièce présente sur le Drive, absente de DELIV'IA : dépôt fait à la main",act:["Resynchroniser le Drive"]}]},
+ {v:"inscription",fam:"Preuves",t:"Preuve d'apprenant manquante",g:"warn",src:"Qualiobee · Drive",
+  d:"Une pièce du dossier individuel n'a pas pu être déposée sur le Drive : émargement non signé, document pas encore généré côté Qualiobee, ou écart entre le Drive et DELIV'IA.",
+  cas:[{tt:"Emma Bianchi",sm:"émargement J2 non signé",act:["Relancer la signature"]},
+       {tt:"Lucas Moreau",sm:"certificat de réalisation non généré côté Qualiobee",act:["Régénérer"]},
+       {tt:"Marie Dupont",sm:"pièce présente sur le Drive, absente de DELIV'IA : dépôt fait à la main",act:["Resynchroniser le Drive"]}]},
 /* ── Inscription ── */
  {v:"inscription",fam:"Identité",t:"Doublon d'apprenant",g:"warn",src:"ARD · DELIV'IA",
   d:"Même e-mail ou même téléphone entre un profil arrivé par ARD et un profil existant.",
@@ -1456,59 +1459,48 @@ const ANO = [
   d:"Dossier CPF sans numéro WEDOF, auto-acceptation échouée, dates ARD différentes des dates WEDOF, ou montant CDC différent du prix de l'offre.",
   cas:[{tt:"Marie Dupont",sm:"dates ARD 12-13 sept, dates WEDOF 26-27 sept",act:["Accepter le devis CPF","Refuser"]},
        {tt:"Hugo Martin",sm:"montant CDC 1 500 €, prix de l'offre 1 650 €",act:["Ouvrir le dossier WEDOF"]}]},
- {v:"inscription",fam:"Synchronisation",t:"Désynchronisation GHL",g:"info",src:"GHL",
+ {v:"inscription",fam:"Synchronisation",t:"Désynchronisation DELIV'IA / GHL",g:"info",src:"GHL",
   d:"Contact CRM sans correspondance dans DELIV'IA, ou passage en « won » qui a échoué.",
   cas:[{tt:"Marc Leroy",sm:"opportunité gagnée non répercutée sur la fiche",act:["Rapprocher le contact"]}]},
+ {v:"inscription",fam:"Envois",t:"E-mail d'inscription en échec",g:"warn",src:"Brevo",
+  d:"Mail de bienvenue ou de convocation refusé par le destinataire ou par le serveur.",
+  cas:[{tt:"contact@garagemoderne.fr",sm:"mail de bienvenue rejeté (boîte pleine)",act:["Renvoyer","Corriger l'adresse"]}]},
+ {v:"inscription",fam:"Envois",t:"Rappel de rendez-vous en échec",g:"info",src:"GHL",
+  d:"Rappel ou confirmation de rendez-vous de closing non parti.",
+  cas:[]},
  {v:"inscription",fam:"Conformité",t:"Apprenant sans identifiant EDOF",g:"warn",src:"EDOF",
   d:"Apprenant CPF sans identifiant EDOF alors que sa session approche : la déclaration d'entrée sera impossible.",
   cas:[{tt:"Lucas Moreau",sm:"J1 dans 34 jours, identifiant EDOF absent",act:["Retrouver l'identifiant"]}]},
- {v:"inscription",fam:"Conformité",t:"Apprenant CPF non inscrit à la certification",g:"warn",src:"WEDOF",
-  d:"Sans inscription à la certification RS6891, la facture du formateur reste bloquée.",
-  cas:[{tt:"Emma Bianchi",sm:"certification non demandée, J2 passé depuis 4 jours",act:["Inscrire à la certification"]}]},
 /* ── Facturation ── */
  {v:"facturation",fam:"Encaissements",t:"Virement reçu non rapproché",g:"warn",src:"Qonto",dyn:"qonto",
-  d:"Argent reçu sur le compte Qonto sans facture rattachée. Le rapprochement se fait dans Qonto : DELIV'IA relit ensuite le statut de la facture."},
- {v:"facturation",fam:"Encaissements",t:"Facture payée chez Qonto, pas acquittée chez nous",g:"err",src:"Qonto · DELIV'IA",
+  d:"Argent reçu sur le compte Qonto sans facture ni dossier rattaché : personne ne le suit. Le rapprochement se fait dans Qonto, DELIV'IA relit ensuite le statut de la facture."},
+ {v:"facturation",fam:"Encaissements",t:"Désynchronisation acquittement facture Qonto / DELIV'IA",g:"err",src:"Qonto · DELIV'IA",
   d:"La facture est marquée payée d'un seul côté. C'est le cas le plus coûteux : l'argent est encaissé, le dossier reste ouvert, la relance part quand même.",
   cas:[{tt:"ACME Conseil",sm:"F-2026-0533 payée le 17 août chez Qonto, encore en attente chez nous",act:["Acquitter chez nous","Ouvrir Qonto"]}]},
  {v:"facturation",fam:"Encaissements",t:"Échec de prélèvement SEPA",g:"err",src:"Mollie",
   d:"Prélèvement refusé, non parti ou irrégulier sur un mandat actif.",
   cas:[{tt:"BTP Sud",sm:"échéance 1/2 refusée le 10 août (provision insuffisante)",open:"f6",act:["Ouvrir la carte","Rejouer"]}]},
- {v:"facturation",fam:"Encaissements",t:"Paiement orphelin",g:"warn",src:"Mollie · Qonto",
-  d:"Paiement encaissé sans inscription rattachée : personne ne le suit.",
-  cas:[{tt:"Paiement Mollie 3 591,95 €",sm:"reçu le 14 août, aucun dossier lié",act:["Rattacher à un client","Archiver"]}]},
+ {v:"facturation",fam:"Envois",t:"E-mail de facturation en échec",g:"warn",src:"Brevo",
+  d:"Envoi de facture, de relance ou de mandat refusé par le destinataire ou par le serveur.",
+  cas:[{tt:"compta@studionova.fr",sm:"facture F-2026-0702 rejetée (adresse inconnue)",act:["Renvoyer","Corriger l'adresse"]}]},
  {v:"facturation",fam:"Documents",t:"Facture ou devis orphelin, doublon ou délié",g:"info",src:"Qonto",
   d:"Document de facturation sans dossier, en double, ou dont le lien vers la vente a été perdu ; lien de paiement sans dossier.",
   cas:[{tt:"F-2026-0689",sm:"facture sans carte de facturation rattachée",act:["Lier à une vente","Annuler la facture"]}]},
  {v:"facturation",fam:"Documents",t:"Facture à générer à la main",g:"warn",src:"DELIV'IA",
   d:"La génération automatique a échoué (SIRET manquant, client sans adresse, montant à confirmer).",
   cas:[{tt:"Hôtel du Parc",sm:"SIRET du groupe à confirmer avant émission",fiche:"client::cl_hotel",act:["Ouvrir la fiche client"]}]},
- {v:"facturation",fam:"Contrôles",t:"Fausse alerte de facturation",g:"info",src:"DELIV'IA",
-  d:"Dossier rangé dans la mauvaise colonne, échéance calée sur une ancienne session, tâche sans échéance, changement de colonne proposé par WEDOF.",
-  cas:[{tt:"Karim Benali",sm:"WEDOF propose le passage en « Terminé »",open:"f4",act:["Appliquer","Ignorer"]}]},
- {v:"facturation",fam:"Contrôles",t:"Carte de facturation sur une inscription non validée",g:"warn",src:"DELIV'IA",
-  d:"Une facturation a démarré alors que l'inscription n'est pas validée : no-show présumé ou erreur de rail.",
-  cas:[{tt:"Awa Diallo",sm:"coaching facturé, séance non encore réalisée",open:"f8",act:["Ouvrir la carte","Ignorer"]}]},
  {v:"facturation",fam:"Affacturage",t:"Bibby en erreur",g:"err",src:"Bibby Factor",
   d:"Transmission refusée par Bibby, ou export EDOF manquant dans le dossier envoyé.",
   cas:[{tt:"Emma Bianchi",sm:"dossier refusé : export EDOF absent",open:"f2",act:["Déposer l'export","Renvoyer"]}]},
 /* ── Système ── */
- {v:"systeme",fam:"Automatisations",t:"Instance WhatsApp déconnectée",g:"err",src:"WhatsApp",
-  d:"Le compte WhatsApp qui crée les groupes n'est plus connecté : les groupes et les messages ne partent plus.",
-  cas:[{tt:"Instance principale",sm:"déconnectée depuis 3 h",act:["Reconnecter"]}]},
- {v:"systeme",fam:"Automatisations",t:"Envoi d'e-mail en échec",g:"warn",src:"Brevo",
-  d:"Mail de bienvenue, de facture ou de convocation refusé par le destinataire ou par le serveur.",
-  cas:[{tt:"contact@garagemoderne.fr",sm:"mail de bienvenue rejeté (boîte pleine)",act:["Renvoyer","Corriger l'adresse"]}]},
- {v:"systeme",fam:"Automatisations",t:"Rappel de rendez-vous en échec",g:"info",src:"GHL",
-  d:"Rappel ou confirmation de rendez-vous de closing non parti.",
-  cas:[]},
- {v:"systeme",fam:"Infrastructure",t:"Stockage au-delà de 80 %",g:"warn",src:"Supabase",
+ {v:"autre",fam:"Infrastructure",t:"Stockage au-delà de 80 %",g:"warn",src:"Supabase",
   d:"L'espace de stockage des preuves approche de sa limite.",
   cas:[{tt:"Bucket preuves",sm:"84 % utilisés",act:["Voir le détail"]}]},
- {v:"systeme",fam:"Formateurs",t:"Formateur à traiter",g:"warn",src:"DELIV'IA",
+ {v:"autre",fam:"Formateurs",t:"Formateur à traiter",g:"warn",src:"DELIV'IA",
   d:"Document administratif refusé ou manquant, modification de profil en attente d'approbation, demande de qualification, demande de retrait d'une session.",
   cas:[{tt:"Marc D.",sm:"attestation URSSAF expirée",act:["Demander le document"]},
-       {tt:"Julie T.",sm:"demande de qualification Niveau 2 en attente",act:["Accepter","Refuser"]}]},
+       {tt:"Julie T.",sm:"demande de qualification Niveau 2 en attente",act:["Accepter","Refuser"]},
+       {tt:"Sarah K.",sm:"CV absent du coffre-fort",act:["Demander le CV"]}]},
 ];
 /* anomalies déjà traitées, conservées six mois */
 const ANO_RES = [
@@ -3026,9 +3018,8 @@ function pageRail(){
   const anos=railAnos(kb);
   h+=anos.length
     ? `<div class="railano"><div class="k">${anos.length} point${anos.length>1?"s":""} à regarder dans ce rail</div><ul>`+anos.slice(0,6).map(a=>`<li>${a}</li>`).join("")+(anos.length>6?`<li class="sm">et ${anos.length-6} autre(s)</li>`:"")+`</ul></div>`
-    : `<div class="railok">Aucun trou détecté : chaque étape porte au moins une tâche pour chaque cas.</div>`;
+    : "";
   if(vue==="matrice"){
-    h+=`<div class="railhint">Une pastille pleine signifie que la tâche apparaît dans ce cas. Clique dessus pour l'activer ou la retirer.</div>`;
     h+=d.cols.map(c=>{
       const tks=d.tasks[c.id]||[];
       return `<div class="fsec railsec"><div class="sect-h">${c.label}${c.open?`<span class="n2">ouverture ${c.open}</span>`:""}${c.vide?`<span class="n2">étape terminale, aucune tâche attendue</span>`:""}${c.cas?`<span class="n2">seulement ${c.cas.map(k=>(CAS_FIN.find(x=>x[0]===k)||[])[1]).join(", ")}</span>`:""}
@@ -4252,7 +4243,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.copy2){toast(`Identifiant <b>${t.dataset.copy2}</b> copié.`);return}
   if(t.dataset.lieuback){S.lieuFiche=null;render();return}
   if(t.dataset.autolaunch){toast(`<b>${decodeURIComponent(t.dataset.autolaunch)}</b> : lancée à la main, le résultat apparaît dans l'historique et dans les logs.`);return}
-  if(t.dataset.anogo){S.tab="anomalies";S.fAno="systeme";S.autoFiche=null;render();return}
+  if(t.dataset.anogo){S.tab="anomalies";S.fAno="autre";S.autoFiche=null;render();return}
   if(t.dataset.tpledit){toast(`Éditeur du support <b>${decodeURIComponent(t.dataset.tpledit)}</b> : une version par session, partagée au formateur.`);return}
   if(t.dataset.sigcheck){toast("Contrôle des signatures lancé sur Qualiobee, fenêtre J-14 à J+0 : les signatures détectées cochent leur tâche.");return}
   if(t.dataset.relance){const c=CARDS.find(x=>x.id===t.dataset.relance);toast(`Relance de signature envoyée à <b>${c?c.title:""}</b>.`);return}
