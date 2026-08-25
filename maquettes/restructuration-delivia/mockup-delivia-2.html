@@ -387,6 +387,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .railhint{font-size:11.5px;color:var(--ink-400);margin:0 0 10px}
 .railsec .sect-h .right{margin-left:auto;display:flex;gap:8px}
 .railadd{margin-top:6px}
+.cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
 .tbl.matrice th.cash{text-align:center;font-size:10px;white-space:nowrap}
 .tbl.matrice th:first-child,.tbl.matrice td:first-child{min-width:320px}
 .tbl.matrice td:first-child b{font-weight:600}
@@ -2992,6 +2993,7 @@ const TODO_SESSION=[
   ["Vérifier que tout le monde a complété le quiz (Qualiobee), relancer sinon, les bonnes réponses comptent",null],
   ["Vérifier que tout le monde a émargé (Qualiobee), relancer sinon ; si l'absence est justifiée, saisir la raison",null],
   ["Vérifier que tous les apprenants CPF sont inscrits à la certification, relancer sinon",null],
+  ["Renseigner les cas d'usage évoqués par les clients pendant la formation",null],
   ["Uploader les slides dans la page Notion des apprenants",null]]],
 ];
 /* Le formateur les voit à plat, ce sont ses tâches. L'admin les voit repliées en un seul bloc,
@@ -3536,36 +3538,37 @@ function ficheClientHtml(id){
 function ficheFormateurHtml(key){
   const f=FRM[key]; if(!f) return `<button class="backbtn" data-ficheback="1">← Retour</button><div class="stub"><p>Formateur inconnu.</p></div>`;
   const sessions=CARDS.filter(c=>c.kb==="session_fia"&&c.frm===key);
+  const factures=CARDS.filter(c=>c.kb==="fact_frm"&&c.frm===key);
   let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
+  /* 1 · informations générales */
   h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${initiales(f.nom)}</div><div><h1>${f.nom}</h1></div>
     <div class="fh-right"><button class="btn btn-s">Modifier</button><button class="btn btn-s">Ouvrir son espace formateur</button></div></div>
-  <div class="idgrid">
-    ${fld("Email",f.email)}${fld("Téléphone",f.tel)}
+  <div class="fldgrid g3">
+    ${fld("E-mail",f.email)}${fld("Téléphone",f.tel)}${fld("Créé le",fmtJour(f.cree))}
     ${fld("Villes",f.villes.join(" · "))}${fld("Offres autorisées",f.offres.join(" · "))}
+    ${fld("Identifiant Qualiobee",`<span class="mono">${f.qlbId}</span>`)}
   </div></div>`;
-  if(f.appro||f.quali.length||f.retrait){
-    h+=`<div class="fsec"><div class="sect-h">${ICO.eye}À traiter</div>`;
-    if(f.appro) h+=`<div class="frow"><div><div class="tt">Modification de profil en attente</div><div class="sm">${f.appro}</div></div><button class="btn btn-p" data-frmact="Approuver la modification">Approuver</button><button class="btn btn-s" data-frmact="Refuser la modification">Refuser</button></div>`;
-    f.quali.forEach(q=>{h+=`<div class="frow"><div><div class="tt">Demande de qualification · ${q[0]}</div><div class="sm">${q[1]}</div></div><button class="btn btn-p" data-frmact="Qualification acceptée">Accepter</button><button class="btn btn-s" data-frmact="Qualification refusée">Refuser</button></div>`});
-    if(f.retrait) h+=`<div class="frow"><div><div class="tt">Demande de retrait de session</div><div class="sm">${f.retrait}</div></div><button class="btn btn-p" data-frmact="Retrait accepté, la session repart au shotgun">Accepter</button><button class="btn btn-s" data-frmact="Retrait refusé">Refuser</button></div>`;
-    h+=`</div>`;
-  }
-  h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.cap}Onboarding</div>`
-    +f.onboarding.map(([lbl,ok])=>`<div class="lrow">${lbl}<span class="chip ${ok?"ok":"warn"}">${ok?"fait":"à faire"}</span></div>`).join("")+`</div>`;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.file}Documents administratifs</div>`
-    +f.docs.map(([lbl,st])=>`<div class="lrow">${lbl}<span class="chip ${/manquant|expirée/.test(st)?"warn":"ok"}">${st}</span></div>`).join("")+`</div></div>`;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Sessions <span class="n2">à venir et passées</span></div>`;
-  h+=sessions.map(c=>`<div class="frow"><div><div class="tt"><a class="ilink" data-fiche="session::${c.id}">${c.title}</a></div><div class="sm">${OFFRES[c.offre]} · ${c.lieu}</div></div><span class="chip">${colLabel(c)}</span></div>`).join("")
-    ||f.histo.map(([t,d])=>`<div class="frow"><div><div class="tt">${t}</div><div class="sm">${d}</div></div></div>`).join("");
-  h+=`</div>`;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.file}Études de cas <span class="n2">déposées après chaque session, elles débloquent la facture</span></div>`;
-  h+=(f.histo||[]).slice(0,2).map(([t,d],i)=>`<div class="frow"><div><div class="tt">${t}</div><div class="sm">${i===0?"Contexte, objectifs, solutions, résultats renseignés":"En attente : le formateur ne l'a pas encore déposée"}</div></div><span class="chip ${i===0?"ok":"warn"}">${i===0?"déposée":"manquante"}</span>${i===0?`<button class="btn btn-s" data-frmact="${encodeURIComponent("Étude de cas ouverte")}">Lire</button>`:`<button class="btn btn-s" data-frmact="${encodeURIComponent("Relance envoyée au formateur")}">Relancer</button>`}</div>`).join("")||`<div class="lrow"><span class="sm">Aucune étude de cas attendue.</span></div>`;
-  h+=`</div>`;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.wallet}Factures <span class="n2">une par prestation, validées sur le kanban Facturation formateur</span></div>`;
-  h+=(f.factures.length?f.factures.map(([m,mt,st])=>`<div class="frow"><div><div class="tt">${m}</div><div class="sm">${mt}</div></div><span class="chip ${/payée/.test(st)?"ok":"warn"}">${st}</span></div>`).join("")
-    :`<div class="lrow"><span class="sm">Aucune facture pour l'instant.</span></div>`);
+  /* 2 · demandes */
+  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Demandes</div>`;
+  let dem="";
+  if(f.appro) dem+=`<div class="frow"><div class="tx"><div class="tt">Modification de profil en attente</div><div class="sm">${f.appro}</div></div><button class="btn btn-p" data-frmact="Approuver la modification">Approuver</button><button class="btn btn-s" data-frmact="Refuser la modification">Refuser</button></div>`;
+  f.quali.forEach(q=>{dem+=`<div class="frow"><div class="tx"><div class="tt">Demande de qualification · ${q[0]}</div><div class="sm">${q[1]}</div></div><button class="btn btn-p" data-frmact="Qualification acceptée">Accepter</button><button class="btn btn-s" data-frmact="Qualification refusée">Refuser</button></div>`});
+  if(f.retrait) dem+=`<div class="frow"><div class="tx"><div class="tt">Demande de retrait de session</div><div class="sm">${f.retrait}</div></div><button class="btn btn-p" data-frmact="Retrait accepté, la session repart au shotgun">Accepter</button><button class="btn btn-s" data-frmact="Retrait refusé">Refuser</button></div>`;
+  h+=(dem||`<div class="lrow"><span class="sm">Aucune demande en attente.</span></div>`)+`</div>`;
+  /* 3 · sessions, repliées */
+  const ks="frm-sess-"+key;
+  h+=`<details class="acc" data-acc="${ks}" ${accKey(ks)?"open":""}><summary><span class="chev">▶</span><span class="tt">Sessions</span><span class="end"><span class="sm">${sessions.length||f.histo.length}</span></span></summary><div class="inner">`;
+  h+=(sessions.map(c=>`<div class="frow"><div class="tx"><div class="tt"><a class="ilink" data-fiche="session::${c.id}">${c.title}</a></div><div class="sm">${OFFRES[c.offre]} · ${c.lieu}</div></div><span class="chip">${colLabel(c)}</span></div>`).join("")
+    ||f.histo.map(([t,d])=>`<div class="frow"><div class="tx"><div class="tt">${t}</div><div class="sm">${d}</div></div></div>`).join(""));
+  h+=`</div></details>`;
+  /* 4 · factures : les cartes du rail Facturation formateur */
+  h+=`<div class="fsec"><div class="sect-h">${ICO.wallet}Factures</div>`;
+  h+=(factures.length
+    ? `<div class="cardgrid">`+factures.map(c=>cardHtml(c, KB.fact_frm.cols.find(x=>x.id===c.col), {})).join("")+`</div>`
+    : `<div class="lrow"><span class="sm">Aucune carte de facturation pour l'instant.</span></div>`);
   return h+`</div>`;
 }
+
 function ficheCompteHtml(id){
   const u=COMPTES.find(x=>x.id===id); if(!u) return "";
   const ed=S.editing==="compte::"+u.id;
