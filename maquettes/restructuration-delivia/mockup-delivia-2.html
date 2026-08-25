@@ -127,6 +127,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .task.other{color:var(--ink-400)}
 .task.other .box{border-color:var(--line-2);background:var(--bg)}
 .task.other.done .box{background:var(--ink-300);border-color:var(--ink-300)}
+.task .who{font-size:11px;font-weight:600;color:var(--ink-500);background:var(--bg);border-radius:5px;padding:1px 6px;margin-right:7px;white-space:nowrap}
+.task.done .who{color:var(--ink-300)}
+.task.next{background:var(--primary-50);border-radius:7px;padding:5px 7px;margin:1px -5px}
+.task .nextpill{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary-dark);background:#fff;border:1px solid #c7d2fe;border-radius:999px;padding:1px 7px;margin-left:7px;white-space:nowrap}
 .task .tag{font-size:10px;color:#92400e;background:var(--warn-50);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap;cursor:pointer;border:1px solid transparent}
 .task .tag:hover{border-color:#fcd34d;text-decoration:underline;text-underline-offset:2px}
 /* popup template */
@@ -871,6 +875,30 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .fbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-6px 0 14px}
 .faqduo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
 @media (max-width:1180px){.faqduo{grid-template-columns:minmax(0,1fr)}}
+.fsec .sect-h .right{display:flex;align-items:center;gap:12px}
+.lrow .acts{display:flex;align-items:center;gap:12px}
+.demrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.demrow:first-of-type{border-top:none}
+.demrow .avat{width:30px;height:30px;border-radius:9px;font-size:11px;flex-shrink:0}
+.demrow .tx{min-width:0}
+.demrow .tt{font-size:13px;font-weight:600;color:var(--ink-900)}
+.demrow .sm{font-size:12px;color:var(--ink-500);margin-top:2px}
+.demrow .quand{margin-left:auto;font-size:11.5px;color:var(--ink-400);white-space:nowrap}
+.demrow .acts{display:flex;gap:8px;flex-shrink:0}
+.btn.btn-s.p{background:var(--primary);border-color:var(--primary);color:#fff}
+.onbrow{border-top:1px solid var(--line)}
+.onbrow:first-of-type{border-top:none}
+.onbrow>summary{list-style:none;display:flex;align-items:center;gap:12px;padding:10px 2px;cursor:pointer;font-size:13px;color:var(--ink-800)}
+.onbrow>summary::-webkit-details-marker{display:none}
+.onbrow>summary .chev{color:var(--ink-300);font-size:10px;transition:transform .15s}
+.onbrow[open]>summary .chev{transform:rotate(90deg)}
+.onbrow>summary .nm{font-weight:600;min-width:180px}
+.onbrow>summary .bar{flex:1;height:6px;border-radius:999px;background:var(--line-2);overflow:hidden;max-width:280px}
+.onbrow>summary .bar i{display:block;height:100%;background:var(--primary);border-radius:999px}
+.onbrow>summary .cnt3{font-size:11.5px;color:var(--ink-500);font-variant-numeric:tabular-nums}
+.onbrow>summary .ilink{margin-left:auto}
+.onbrow>.inner{padding:2px 0 12px 24px}
+.tbl td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .remlist{display:flex;flex-direction:column;gap:14px}
 .remgrp-h{display:flex;align-items:center;gap:8px;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;margin-bottom:6px}
 .remgrp-h .n{margin-left:auto;font-size:11px;color:var(--ink-400)}
@@ -1947,6 +1975,23 @@ function evRow(ev,state){ /* state : done | now | later */
 (()=>{ const amorce={"i4::formation::0":[9,13,3], "i6::formation::0":[11]};
   for(const base in amorce) amorce[base].forEach((n,ai)=>{ for(let j=0;j<n;j++) S.checks[`${base}::${ai}::${j}`]=true; });
 })();
+/* « Admin France IA déclare la sortie » → l'acteur d'un côté, l'action de l'autre */
+const ACTEUR_PREFIXES=[["Admin France IA","France IA"],["France IA","France IA"],["Formateur","Formateur"],["Closeur","Closeur"],["Setteur","Setteur"],["Client","Client"],["Apprenant","Apprenant"]];
+function splitActeur(tk,lbl){
+  const t=lbl||tk.t;
+  for(const pair of ACTEUR_PREFIXES){
+    if(t.startsWith(pair[0]+" ")) return {who:pair[1], what:t.slice(pair[0].length+1)};
+  }
+  return {who:ACTEURS[tk.p]||"", what:t};
+}
+/* la prochaine tâche mise en avant est celle que l'utilisateur peut cocher lui-même ;
+   à défaut, la première qui reste, pour savoir qui on attend. */
+function prochaineTache(card,colId){
+  const tks=tasksFor(card,colId);
+  for(let i=0;i<tks.length;i++) if(!taskState(card,colId,i,tks[i])&&canCheck(tks[i])) return i;
+  for(let i=0;i<tks.length;i++) if(!taskState(card,colId,i,tks[i])&&!tks[i].todoRef&&!tks[i].apTodo) return i;
+  return -1;
+}
 function apTodoItems(){ return TODO_APPRENANT.flatMap(([ph,its])=>its.map(l=>({ph,lbl:l}))); }
 /* les to do du formateur, lues sur SA carte : l'admin voit l'avancement réel, sans pouvoir cocher */
 function todoRefItems(card,tk){
@@ -2003,9 +2048,11 @@ function taskHtml(card,colId,i,tk,ghost){
   const lbl = multi && tk.tPl ? tk.tPl : tk.t;
   let h="";
   if(tk.grp){ const prev=tasksFor(card,colId)[i-1]; if(!prev||prev.grp!==tk.grp) h+=`<div class="tgrp">${tk.grp}</div>`; }
-  h+=`<div class="task ${done?"done":""} ${can?"":"other"}" ${can&&!ghost?`data-c="${card.id}" data-col="${colId}" data-i="${i}"`:'style="cursor:default"'}>
+  const parts=splitActeur(tk,lbl);
+  const suivante = !ghost && colId===card.col && i===prochaineTache(card,colId);
+  h+=`<div class="task ${done?"done":""} ${can?"":"other"} ${suivante?"next":""}" ${can&&!ghost?`data-c="${card.id}" data-col="${colId}" data-i="${i}"`:'style="cursor:default"'}>
     <span class="box"></span>
-    <span><span class="lbl">${lbl}</span>${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tbtn" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.lien?`<a class="ilink tlien" data-frmact="${encodeURIComponent(tk.lien+" ouvert")}">${tk.lien}</a>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
+    <span>${parts.who?`<span class="who">${parts.who}</span>`:""}<span class="lbl">${parts.what}</span>${suivante?`<span class="nextpill">à faire</span>`:""}${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tbtn" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.lien?`<a class="ilink tlien" data-frmact="${encodeURIComponent(tk.lien+" ouvert")}">${tk.lien}</a>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
   </div>`;
   if(multi){
     h+=`<div class="sub">`+apsTk.map(a=>`<div class="task other ${done?"done":""}" style="cursor:default"><span class="box"></span><span class="lbl" style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`;
@@ -2411,13 +2458,25 @@ const LIEUX_REF=[
   salles:[]},
 ];
 /* ressources : ce qui sert au formateur et ce qui part chez l'apprenant */
-/* ce que les formateurs attendent de l'admin : documents, qualifications, retraits */
+/* ce que les formateurs attendent de l'admin, rangé par nature */
 const DEMANDES_FRM_ADMIN=[
- ["Marc D.","Attestation URSSAF expirée","depuis 6 jours",["Demander le document"]],
- ["Julie T.","Demande de qualification Niveau 2","depuis 2 jours",["Accepter","Refuser"]],
- ["Sarah K.","CV absent du coffre-fort","depuis 12 jours",["Demander le CV"]],
- ["Yanis L.","Demande de retrait de la session de Lyon · 3-4 oct","hier",["Accepter","Refuser"]],
+ ["Documents",[
+  ["Marc D.","Attestation URSSAF expirée le 31 juillet","depuis 6 jours",["Demander le document"]],
+  ["Sarah K.","CV absent du coffre-fort","depuis 12 jours",["Demander le CV"]]]],
+ ["Qualifications",[
+  ["Julie T.","Demande de qualification Niveau 2","depuis 2 jours",["Accepter","Refuser"]]]],
+ ["Sessions",[
+  ["Yanis L.","Retrait de la session de Lyon · 3-4 oct","hier",["Accepter","Refuser"]],
+  ["Marc D.","Modification de profil : tarif journalier","depuis 3 jours",["Approuver","Refuser"]]]],
 ];
+function demandesHtml(){
+  return DEMANDES_FRM_ADMIN.map(([fam,items])=>`<div class="fsec"><div class="sect-h">${ICO.eye}${fam} <span class="n2">${items.length}</span></div>`
+    +items.map(([qui,quoi,quand,actes])=>`<div class="demrow"><span class="avat">${initiales(qui)}</span>
+      <div class="tx"><div class="tt">${qui}</div><div class="sm">${quoi}</div></div>
+      <span class="quand">${quand}</span>
+      <span class="acts">`+actes.map((a,i)=>`<button class="btn btn-s ${i===0?"p":""}" data-frmact="${encodeURIComponent(a+" : "+qui)}">${a}</button>`).join("")+`</span></div>`).join("")
+    +`</div>`).join("");
+}
 const RESSOURCES=[
  ["Vos retours & KPIs",[
   ["Vos KPIs, verbatims et pistes d'amélioration IA","https://retours.franceia-dev.com","Lien",1]]],
@@ -3251,28 +3310,32 @@ function faqSectionHtml(pubImpose){
   return h;
 }
 function remonteesSectionHtml(){
-  let h="";
   const ft=["tout","bug","idee","question"].includes(S.fRemT)?S.fRemT:"tout";
-  const q2="";
-  h+=`<div class="fbar">`+chips([["Type",[["tout","Tout"],["bug","Bugs"],["idee","Idées"],["question","Questions"]]]], ft, "fRemT")+`</div>`;
-  const list=REMONTEES.filter(r=>(ft==="tout"||r.t===ft)&&(!q2||r.titre.toLowerCase().includes(q2)));
-  h+=`<div class="remlist">`+REM_COLS.map(([id,lbl])=>{
-    const inCol=list.filter(r=>r.st===id);
-    return `<div class="remgrp"><div class="remgrp-h">${lbl}<span class="n">${inCol.length}</span></div>`
-      +inCol.map(r=>`<div class="card clickable" data-frmact="${encodeURIComponent("Détail de la remontée : "+r.titre)}"><div class="ct"><span class="t">${r.titre}</span></div>
-        <div class="remmeta"><span class="chip ${REM_T[r.t][1]}">${REM_T[r.t][0]}</span><span class="sm">${r.qui} · ${r.role}</span></div>
-        <div class="remfoot"><span class="vote">▲ ${r.v}</span><span class="sm">${r.c} commentaire${r.c>1?"s":""}</span><span class="sm">${fmtJour(r.d)}</span>${r.faq?`<span class="chip ok">dans la FAQ</span>`:r.st==="termine"?`<button class="btn-xs" data-frmact="${encodeURIComponent("Remontée promue en réponse de FAQ")}">Promouvoir en FAQ</button>`:""}</div></div>`).join("")
-      +(inCol.length?"":`<div class="colempty">Rien ici.</div>`)+`</div>`;
-  }).join("")+`</div>`;
+  const fs2=["tout","a_traiter","en_cours","termine"].includes(S.fRemS)?S.fRemS:"tout";
+  let h=`<div class="fbar">`+chips([["Type",[["tout","Tout"],["bug","Bugs"],["idee","Idées"],["question","Questions"]]]], ft, "fRemT")
+    +chips([["État",[["tout","Tous"]].concat(REM_COLS)]], fs2, "fRemS")+`</div>`;
+  const list=REMONTEES.filter(r=>(ft==="tout"||r.t===ft)&&(fs2==="tout"||r.st===fs2));
+  const lbl=Object.fromEntries(REM_COLS);
+  h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Remontée</th><th>Type</th><th>Qui</th><th>Votes</th><th>Commentaires</th><th>État</th><th>Date</th><th></th></tr></thead><tbody>`
+    +(list.map(r=>`<tr class="rowlink" data-frmact="${encodeURIComponent("Détail de la remontée : "+r.titre)}">
+      <td><b>${r.titre}</b>${r.faq?` <span class="chip ok">dans la FAQ</span>`:""}</td>
+      <td><span class="chip ${REM_T[r.t][1]}">${REM_T[r.t][0]}</span></td>
+      <td>${r.qui}<div class="sm">${r.role}</div></td>
+      <td class="num">▲ ${r.v}</td>
+      <td class="num">${r.c}</td>
+      <td><span class="chip ${r.st==="termine"?"ok":r.st==="en_cours"?"warn":""}">${lbl[r.st]}</span></td>
+      <td>${fmtJour(r.d)}</td>
+      <td class="acts">${!r.faq&&r.st==="termine"?`<a class="ilink" data-frmact="${encodeURIComponent("Remontée promue en réponse de FAQ")}">Promouvoir en FAQ</a>`:""}</td></tr>`).join("")
+      ||`<tr><td colspan="8" class="paynone">Aucune remontée ne correspond.</td></tr>`)
+    +`</tbody></table></div>`;
   return h;
 }
+
 function pageFaq(opt){
   const pub=opt&&opt.pub;
   let h=pub?"":`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
-  h+=`<div class="faqduo">
-    <div class="faqbloc"><div class="sect-h">${ICO.file}Questions et réponses<span class="right"><button class="btn btn-s" data-faqnew="1">+ Nouvelle question / réponse</button></span></div>${faqSectionHtml(pub)}</div>
-    <div class="faqbloc"><div class="sect-h">${ICO.file}Tickets et remontées<span class="right"><button class="btn btn-p" data-frmact="${encodeURIComponent("Nouvelle remontée créée")}">+ Nouvelle remontée</button></span></div>${remonteesSectionHtml()}</div>
-  </div>`;
+  h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Questions et réponses<span class="right"><button class="btn btn-s" data-faqnew="1">+ Nouvelle question / réponse</button></span></div>${faqSectionHtml(pub)}</div>`;
+  h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Tickets et remontées<span class="right"><button class="btn btn-p" data-frmact="${encodeURIComponent("Nouvelle remontée créée")}">+ Nouvelle remontée</button></span></div>${remonteesSectionHtml()}</div>`;
   return h;
 }
 
@@ -3867,8 +3930,34 @@ function tableauRessources(src,cle){
 function ressourcesDe(cle){ return cle==="formateurs"?RESSOURCES:cle==="interne"?RESSOURCES_INT:RESSOURCES_COM; }
 /* parcours d'arrivée : des to do groupées en sections, ajoutables et réordonnables */
 const ONBOARDING={
- formateurs:[["Administratif",["Contrat de collaboration signé","Attestation URSSAF à jour","RIB déposé","Assurance responsabilité civile"]],
-             ["Qualité",["Charte qualité France IA"]]],
+ formateurs:[
+  ["Côté formateur",[
+   "Suivre le tuto Qualiobee formateurs (onglet Ressources)",
+   "Suivre le tuto Canva x Notion (onglet Ressources)",
+   "Suivre le tuto BookMySessions (onglet Ressources)",
+   "Prendre connaissance des modalités de la certification RS6891",
+   "Personnaliser les slides Canva avec sa présentation",
+   "Assister à une session de formation avant sa première",
+   "Faire la demande d'exonération de TVA (si TVA facturée aujourd'hui)",
+   "Ajouter France IA comme expérience sur LinkedIn"]],
+  ["Côté France IA",[
+   "Créer le dossier au nom du formateur dans le dossier RH du Drive",
+   "Dupliquer le template de contrat et l'envoyer à signer",
+   "Classer les docs reçus : CV, NDA, contrat signé, URSSAF, exonération TVA",
+   "Donner accès à Qualiobee (partie prenante + description formateur)",
+   "Ajouter le formateur sur DELIV'IA",
+   "Partager le lien BookMySessions",
+   "Ajouter au groupe WhatsApp des formateurs",
+   "Inviter à assister à une session de formation",
+   "Donner accès aux slides",
+   "Donner accès au Notion formateur partagé aux apprenants",
+   "Si CPF : ajouter à la liste des formateurs",
+   "Ajouter dans la page TEAM",
+   "Ajouter dans le trombinoscope",
+   "Ajouter sur la landing page",
+   "Faire un post LinkedIn d'annonce",
+   "Organiser le passage de la certification"]],
+  ["Documents à recevoir",["CV","NDA","Attestation URSSAF","Exonération de TVA","Attestation Qualiopi","Contrat signé"]]],
  closeurs:[["Administratif",["Contrat signé","Compte GHL créé"]],
            ["Outils",["Accès DELIV'IA","Formation aux outils"]],
            ["Vente",["Script validé en écoute"]]],
@@ -3893,17 +3982,29 @@ function onboardingHtml(pop){
     +(items.map((lbl,ii)=>`<div class="lrow">${lbl}<span class="acts" style="margin-left:auto"><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::-1">↑</a><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::1">↓</a><a class="ilink danger" data-onbdel="${pop}::${fi}::${ii}">Supprimer</a></span></div>`).join("")
       ||`<div class="lrow"><span class="sm">Aucune to do dans cette section.</span></div>`)
     +`</div>`).join("");
-  /* où en est chacun */
-  h+=`<div class="sect-h" style="margin:18px 0 10px">${ICO.eye}Où en est chacun</div>`;
-  return h+`<div class="tblwrap"><table class="tbl matrice"><thead><tr><th>Personne</th>`
-    +etapes.map(e=>`<th class="cash">${e}</th>`).join("")
-    +`<th>Avancement</th><th>Fiche</th></tr></thead><tbody>`
-    +gens.map(g=>{const n=g.faits.filter(Boolean).length;
-      return `<tr><td><b>${g.nom}</b></td>`
-        +g.faits.map(ok=>`<td class="cas ${ok?"on":""}">${ok?"●":"·"}</td>`).join("")
-        +`<td>${n===etapes.length?`<span class="chip ok">complet</span>`:`<span class="chip warn">${n}/${etapes.length}</span>`}</td>`
-        +`<td><a class="ilink" data-fiche="${g.fiche}">Fiche</a></td></tr>`}).join("")
-    +`</tbody></table></div>`;
+  /* où en est chacun : une ligne par personne, le détail se déplie */
+  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Où en est chacun</div>`;
+  h+=gens.map((g,gi)=>{
+    const n=g.faits.filter(Boolean).length, pc=Math.round(n/etapes.length*100);
+    const reste=etapes.filter((_,j)=>!g.faits[j]);
+    const ak="onb-"+pop+"-"+gi;
+    return `<details class="onbrow" data-acc="${ak}" ${accKey(ak)?"open":""}><summary>
+      <span class="chev">▶</span><span class="nm">${g.nom}</span>
+      <span class="bar"><i style="width:${pc}%"></i></span>
+      <span class="cnt3">${n}/${etapes.length}</span>
+      ${n===etapes.length?`<span class="chip ok">complet</span>`:`<span class="sm">${reste.length} à faire</span>`}
+      <a class="ilink" data-fiche="${g.fiche}">Fiche</a></summary>
+      <div class="inner">`
+      +secs.map(([fam,items])=>{
+        const base=etapes.indexOf(items[0]);
+        return `<div class="tgrp">${fam}</div>`+items.map((lbl,ii)=>{
+          const ok=g.faits[base+ii];
+          return `<div class="task ${ok?"done":""} other" style="cursor:default"><span class="box"></span><span><span class="lbl">${lbl}</span></span></div>`;
+        }).join("");
+      }).join("")
+      +`</div></details>`;
+  }).join("");
+  return h+`</div>`;
 }
 function pageEquipe(){
   const pops=[["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["interne","Interne"]];
@@ -3918,12 +4019,7 @@ function pageEquipe(){
   if(v==="onboarding") return h+onboardingHtml(pop);
   if(v==="ressources") return h+tableauRessources(ressourcesDe(pop),pop);
   if(v==="faq") return h+pageFaq({pub:pop==="formateurs"?"Formateurs":pop==="setteurs"?"Setteurs":pop==="interne"?"Admins":"Closeurs"});
-  if(v==="demandes"){
-    return h+`<div class="fsec">`
-      +DEMANDES_FRM_ADMIN.map(([qui,quoi,quand,actes])=>`<div class="frow"><div class="tx"><div class="tt">${qui}</div><div class="sm">${quoi} · ${quand}</div></div>`
-        +actes.map(a=>`<button class="btn btn-s" data-frmact="${encodeURIComponent(a+" : "+qui)}">${a}</button>`).join("")+`</div>`).join("")
-      +`</div>`;
-  }
+  if(v==="demandes") return h+demandesHtml();
   h+=`<div class="fsec">`;
   if(pop==="formateurs"){
     h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>E-mail</th><th>Téléphone</th><th>Villes</th><th>Offres autorisées</th><th>Identifiant Qualiobee</th><th>Sessions à venir</th><th>Créé le</th><th>Fiche</th></tr></thead><tbody>`
