@@ -1394,16 +1394,12 @@ tasks:{
 const ANO_VUES = {session:"Session", inscription:"Inscription", facturation:"Facturation", systeme:"Système"};
 const ANO = [
 /* ── Session ── */
- {v:"session",fam:"Paramétrage",t:"Session en paramétrage incomplet",g:"warn",src:"DELIV'IA",
-  d:"Session sans formateur, sans lieu, ou dont le lieu n'est pas relié à Qualiobee : la convocation ne partira pas.",
-  cas:[{tt:"Lyon · 3-4 oct",sm:"aucun formateur assigné, J1 dans 41 jours",fiche:"session::s3",act:["Ouvrir la session"]}]},
- {v:"session",fam:"Paramétrage",t:"Réservation HAL incomplète",g:"warn",src:"HAL Station F",
-  d:"Session à Station F dont les créneaux de salle ne sont pas tous réservés sur HAL.",
-  cas:[{tt:"Paris · 12-13 sept",sm:"J2 sans salle réservée",fiche:"session::s1",act:["Ouvrir HAL","Ouvrir la session"]}]},
- {v:"session",fam:"Places",t:"Surbooking",g:"err",src:"DELIV'IA",dyn:"over",
-  d:"Plus d'inscrits que de places : la seule alerte rouge portée sur une carte."},
- {v:"session",fam:"Places",t:"Risque de surbooking",g:"warn",src:"DELIV'IA",dyn:"risk",
-  d:"Les inscriptions en cours, si elles aboutissent toutes, dépassent le nombre de places."},
+ {v:"session",fam:"Paramétrage",t:"Réservation HAL incohérente",g:"warn",src:"HAL Station F",
+  d:"Les créneaux réservés sur HAL ne correspondent pas à ceux que la session attend : le contrôle compare, à chaque passage, ce que DELIV'IA doit avoir réservé et ce qui l'est réellement sur la plateforme HAL.",
+  cas:[{tt:"Paris · 12-13 sept",sm:"J2 attendu sur Boardroom Ada, aucun créneau à ce nom sur HAL",fiche:"session::s1",act:["Ouvrir HAL","Ouvrir la session"]},
+       {tt:"Paris N2 · 4-5 juillet",sm:"créneau HAL réservé de 9 h à 13 h, la session en attend un de 9 h à 18 h",fiche:"session::s6",act:["Ouvrir HAL","Ouvrir la session"]}]},
+ {v:"session",fam:"Places",t:"Surbooking, avéré ou en risque",g:"err",src:"DELIV'IA",dyn:"places",
+  d:"Plus d'inscrits que de places, ou des inscriptions en cours qui feraient dépasser le plafond si elles aboutissaient toutes."},
  {v:"session",fam:"Synchronisation",t:"Désynchronisation Qualiobee",g:"warn",src:"Qualiobee",
   d:"Les inscrits Qualiobee ne correspondent pas à ceux de DELIV'IA : convocation manquante ou en trop, identifiant apprenant vide.",
   cas:[{tt:"Bordeaux · 26-27 sept",sm:"Lucas Moreau inscrit chez nous, absent de Qualiobee",act:["Ajouter à Qualiobee","Ignorer"]},
@@ -1500,9 +1496,9 @@ const ANO_RES = [
 ];
 function anoCas(a){
   if(a.dyn==="qonto") return QONTO_ENC.map(t=>({tt:t.lib,sm:`${fmtJour(t.d)} · ${eur(t.m)} · ${t.ref}`,act:["Rapprocher","Archiver"]}));
-  if(a.dyn==="over"||a.dyn==="risk") return CARDS.filter(c=>c.kb==="session_fia"&&sessCounts(c)[a.dyn]).map(c=>{
+  if(a.dyn==="places") return CARDS.filter(c=>c.kb==="session_fia"&&(sessCounts(c).over||sessCounts(c).risk)).map(c=>{
     const sc=sessCounts(c);
-    return {tt:c.title,sm:`${sc.ins} inscrit(s) et ${sc.enc} en cours pour ${sc.cap} places`,fiche:"session::"+c.id,act:["Ouvrir la session","Ajuster le plafond"]};
+    return {tt:c.title,sm:`${sc.over?"surbooking":"risque"} · ${sc.ins} inscrit(s) et ${sc.enc} en cours pour ${sc.cap} places`,fiche:"session::"+c.id,act:["Ouvrir la session","Ajuster le plafond"]};
   });
   return a.cas||[];
 }
@@ -2624,7 +2620,7 @@ function pageAnomalies(){
   let h=`<div class="pagehead"><h1>Anomalies</h1></div>`;
   h+=`<div class="anohead">`
     +chips([["Vue",vues.map(k=>[k,`${ANO_VUES[k]} <span class="cnt2">${anoCount(k)}</span>`]).concat([["resolues","Résolues"]])]], v, "fAno")
-    +`<div class="ctl"><div class="ctltx"><span>Dernier contrôle il y a 42 minutes · prochain à 18 h 00</span><span class="ctlapps">Contrôle complet : WEDOF · GHL · Qonto · DELIV'IA · Qualiobee</span></div><button class="btn btn-s" data-anorun="1">${ICO.refresh} Relancer le contrôle</button></div></div>`;
+    +`<div class="ctl"><div class="ctltx"><span>Dernier contrôle il y a 42 minutes · prochain à 18 h 00</span><span class="ctlapps">Contrôle complet : WEDOF · GHL · Qonto · HAL · DELIV'IA · Qualiobee</span></div><button class="btn btn-s" data-anorun="1">${ICO.refresh} Relancer le contrôle</button></div></div>`;
   if(v==="resolues"){
     return h+`<div class="fsec"><h2>Anomalies résolues <span class="n2">conservées six mois</span></h2>`
       +ANO_RES.map(r=>`<div class="frow"><div><div class="tt">${r.tt}</div><div class="sm">${r.t} · ${r.sm}</div></div><span class="chip ok">Résolue le ${fmtJour(r.d)} · ${r.qui}</span></div>`).join("")
