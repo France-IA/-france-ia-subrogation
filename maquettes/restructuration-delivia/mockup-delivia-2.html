@@ -1024,7 +1024,7 @@ const OFFRES = {n1:"Niveau 1", n2:"Niveau 2", intra:"Intra", coaching:"Coaching"
 const DELIVIA_TABS = {
   admin:[["Processus",[["sessions","Sessions"],["inscription","Inscription"],["facturation","Facturation"]]],
          ["Pilotage",[["anomalies","Anomalies"],["actions","Actions"],["generer","Générer"],["automatisations","Automatisations"],["templates","Templates"]]],
-         ["Divers",[["utilisateurs","Annuaire"],["faq","FAQ & Feedback"],["preuves","Preuves"]]]],
+         ["Divers",[["clients","Clients & apprenants"],["equipe","Équipe"],["preuves","Preuves"]]]],
   closer:[["Processus",[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]],
           ["Divers",[["anomalies","Anomalies"],["generer","Générer"],["faq","FAQ & Feedback"]]]],
   formateur:[["Mon activité",[["services","Mes services"],["aprendre","À prendre"]]],
@@ -2355,10 +2355,10 @@ function pageSessions(){
       + (open.length?"":`<div class="stub"><p>Aucune session ouverte à l'inscription pour cette offre.</p></div>`)
       + `</div>`;
   }
-  const f=["n1","n2","lieux","ressources","demandes"].includes(S.fSession)?S.fSession:"n1";
+  const f=["n1","n2","lieux"].includes(S.fSession)?S.fSession:"n1";
   let h=`<div class="pagehead row"><h1>Sessions</h1>${S.role==="admin"?`<button class="btn btn-s" data-railopen="sessions">Paramétrer le rail</button>`:""}<button class="btn btn-p" data-newsession="1">+ Nouvelle session</button></div>`;
-  h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]],["Paramétrage",[["lieux","Lieux & Salles"],["ressources","Ressources"],["demandes","Demandes formateur"]]]], f, "fSession");
-  if(f==="lieux"||f==="ressources"||f==="demandes") return h+pageLieux(f);
+  h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]],["Paramétrage",[["lieux","Lieux & Salles"]]]], f, "fSession");
+  if(f==="lieux") return h+pageLieux(f);
   h+=`<div class="fbar">`+chips([["Vue",[["kanban","Kanban"],["cal","Calendrier"],["list","Liste"]]]], S.fSessView, "fSessView")
     +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fSessQ" value="${(S.fSessQ||"").replace(/"/g,"&quot;")}" placeholder="Date, formateur, ville, apprenant…"></div>
      <select class="fsel" data-fsel="fSessLieu"><option value="all">Tous les lieux</option>${LIEUX.filter(l=>l!=="Chez le client").map(l=>`<option value="${l}" ${S.fSessLieu===l?"selected":""}>${l}</option>`).join("")}</select>
@@ -3218,15 +3218,16 @@ const REMONTEES=[
 ];
 const REM_T={bug:["Bug","ko"],idee:["Idée","ok"],question:["Question",""]};
 const REM_COLS=[["a_traiter","À traiter"],["en_cours","En cours"],["termine","Terminé"]];
-function pageFaq(){
+function pageFaq(opt){
+  const impose=opt&&opt.pub;
   const v=["faq","remontees"].includes(S.fFaq)?S.fFaq:"faq";
-  let h=`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
+  let h=impose?"":`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
   h+=chips([["Vue",[["faq","FAQ"],["remontees","Remontées"]]]], v, "fFaq");
   if(v==="faq"){
     const pubs=["Closeurs","Formateurs","Admins"];
-    const pub=pubs.includes(S.fFaqPub)?S.fFaqPub:"Closeurs";
+    const pub=impose||(pubs.includes(S.fFaqPub)?S.fFaqPub:"Closeurs");
     const q=(S.fFaqQ||"").toLowerCase();
-    h+=`<div class="fbar">`+chips([["Public",pubs.map(x=>[x,x])]], pub, "fFaqPub")
+    h+=`<div class="fbar">`+(impose?"":chips([["Public",pubs.map(x=>[x,x])]], pub, "fFaqPub"))
       +`<button class="btn btn-s" style="margin-left:auto" data-faqnew="1">+ Nouvelle question / réponse</button></div>`;
     const list=FAQ_ENTRIES.filter(([p2,qq,r])=>(p2===pub||p2==="Tous")&&(!q||(qq+" "+r).toLowerCase().includes(q)));
     h+=`<div class="fsec">`+list.map(([p2,qq,r])=>`<details class="acc" data-acc="faq-${encodeURIComponent(qq).slice(0,14)}"><summary><span class="chev">▶</span><span class="tt">${qq}</span></summary><div class="inner"><p class="pd" style="line-height:1.6">${r}</p><div class="mactions">${S.role==="admin"?`<button class="btn btn-s" data-faqedit="${encodeURIComponent(qq)}">Modifier la question / réponse</button>`:`<button class="btn btn-s" data-frmact="${encodeURIComponent("Remontée créée : cette réponse ne suffit pas")}">Cette réponse ne m'aide pas</button>`}</div></div></details>`).join("")
@@ -3747,6 +3748,85 @@ function lostModalHtml(){
   <div class="k2" style="margin-top:10px">Raison</div><textarea class="notes-ta" placeholder="Obligatoire"></textarea></div>
   <div class="mactions"><button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p danger" data-lostconfirm="${i.id}">Confirmer le passage en Lost</button></div></div></div></div>`;
 }
+/* ════════ CLIENTS & APPRENANTS, ÉQUIPE ════════ */
+function pageClients(){
+  const f=S.fCli==="apprenants"?"apprenants":"clients";
+  let h=`<div class="pagehead"><h1>Clients & apprenants</h1></div>`;
+  h+=chips([["",[["clients","Clients"],["apprenants","Apprenants"]]]], f, "fCli");
+  h+=`<div class="fsec">`;
+  if(f==="clients"){
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Client</th><th>Apprenants</th><th>Type</th><th>Fiche</th></tr></thead><tbody>`
+      +CLIENTS.map(c=>`<tr><td><b>${c.nom}</b></td><td>${(c.apprenants||[]).length}</td><td>${c.type}</td><td><a class="ilink" data-fiche="client::${c.id}">Fiche client</a></td></tr>`).join("")
+      +`</tbody></table></div>`;
+  } else {
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Apprenant</th><th>Client</th><th>Type</th><th>Fiches</th></tr></thead><tbody>`
+      +APPRENANTS.map(a=>{const cl=CLIENTS.find(c=>c.id===a.client);
+        const type=String(a.type||"").startsWith("Salarié")?"Salarié":"Particulier";
+        return `<tr><td><b>${a.nom}</b></td><td>${cl?cl.nom:'<span class="muted">aucun</span>'}</td><td>${type}</td><td class="acts"><a class="ilink" data-fiche="apprenant::${a.id}">Fiche apprenant</a>${cl?`<a class="ilink" data-fiche="client::${cl.id}">Fiche client</a>`:""}</td></tr>`}).join("")
+      +`</tbody></table></div>`;
+  }
+  return h+`</div>`;
+}
+/* ce qui remplace le Notion d'onboarding des commerciaux, et le peu que l'interne partage */
+const RESSOURCES_COM=[
+ ["Onboarding",[
+  ["Parcours d'arrivée closeur (semaine 1)","#","Lien",1],
+  ["Parcours d'arrivée setteur (semaine 1)","#","Lien",1],
+  ["Nos offres, nos prix, nos financements","#","Notion",1]]],
+ ["Vendre",[
+  ["Script de closing","#","Notion",1],
+  ["Traitement des objections","#","Notion",1],
+  ["Script de setting et prise de rendez-vous","#","Notion",1],
+  ["Ce qu'on a le droit de dire sur le CPF","#","Notion",1]]],
+ ["Outils",[
+  ["Tuto GHL : pipeline, tâches, rappels","#","Vidéo",1],
+  ["Tuto DELIV'IA : suivre ses inscriptions et ses factures","#","Vidéo",1],
+  ["Générer un devis, une convention, un lien de mandat","#","Vidéo",1]]],
+ ["Vos retours & KPIs",[
+  ["Vos chiffres : rendez-vous, closing, encaissement","#","Lien",1]]],
+];
+const RESSOURCES_INT=[
+ ["Process internes",[
+  ["Qui fait quoi chez France IA","#","Notion",1],
+  ["Conformité Qualiopi : ce qu'un audit regarde","#","Notion",1],
+  ["Procédures de fin de mois","#","Notion",1]]],
+];
+function tableauRessources(src){
+  return src.map(([fam,items])=>`<div class="fsec"><div class="sect-h">${ICO.file}${fam} <span class="n2">${items.length}</span></div>`
+    +`<div class="tblwrap"><table class="tbl"><thead><tr><th>Ressource</th><th>Format</th><th>État</th><th></th></tr></thead><tbody>`
+    +items.map(([n,url,fmt,on])=>`<tr><td>${url&&url!=="#"?`<a class="ilink" href="${url}" target="_blank" rel="noopener"><b>${n}</b></a>`:`<b>${n}</b> <span class="sm">lien à renseigner</span>`}</td><td>${fmt}</td><td><span class="sw ${on?"on":""}" data-frmact="${encodeURIComponent("Ressource désactivée : elle disparaît de l'espace")}"><i></i></span></td><td class="acts"><a class="ilink" data-resnew="1">Modifier</a></td></tr>`).join("")
+    +`</tbody></table></div></div>`).join("");
+}
+function pageEquipe(){
+  const pops=[["formateurs","Formateurs"],["commerciaux","Commerciaux"],["interne","Interne"]];
+  const pop=pops.some(x=>x[0]===S.fEq)?S.fEq:"formateurs";
+  const vues=pop==="formateurs"
+    ? [["liste","Liste"],["ressources","Ressources"],["faq","FAQ & retours"],["demandes","Demandes"]]
+    : [["liste","Liste"],["ressources","Ressources"],["faq","FAQ & retours"]];
+  const v=vues.some(x=>x[0]===S.fEqV)?S.fEqV:"liste";
+  let h=`<div class="pagehead"><h1>Équipe</h1></div>`;
+  h+=chips([["",pops]], pop, "fEq");
+  h+=chips([["",vues]], v, "fEqV");
+  if(v==="ressources") return h+tableauRessources(pop==="formateurs"?RESSOURCES:pop==="commerciaux"?RESSOURCES_COM:RESSOURCES_INT);
+  if(v==="faq") return h+pageFaq({pub:pop==="formateurs"?"Formateurs":pop==="commerciaux"?"Closeurs":"Admins"});
+  if(v==="demandes"){
+    return h+`<div class="fsec">`
+      +DEMANDES_FRM_ADMIN.map(([qui,quoi,quand,actes])=>`<div class="frow"><div class="tx"><div class="tt">${qui}</div><div class="sm">${quoi} · ${quand}</div></div>`
+        +actes.map(a=>`<button class="btn btn-s" data-frmact="${encodeURIComponent(a+" : "+qui)}">${a}</button>`).join("")+`</div>`).join("")
+      +`</div>`;
+  }
+  h+=`<div class="fsec">`;
+  if(pop==="formateurs"){
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>Villes</th><th>Offres autorisées</th><th>Onboarding</th><th>À traiter</th><th>Fiche</th></tr></thead><tbody>`
+      +FORMATEURS.map(k=>{const f=FRM[k];const reste=f.onboarding.filter(o=>!o[1]).length;const att=(f.appro?1:0)+f.quali.length+(f.retrait?1:0);
+        return `<tr><td><b>${f.nom}</b></td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td>${reste?`<span class="chip warn">${reste} à faire</span>`:`<span class="chip ok">complet</span>`}</td><td>${att?`<span class="chip warn">${att}</span>`:'<span class="muted">—</span>'}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche formateur</a></td></tr>`}).join("")
+      +`</tbody></table></div>`;
+  } else {
+    const roles=pop==="commerciaux"?["closer","setter"]:["admin"];
+    h+=COMPTES.filter(u=>roles.includes(u.role)).map(u=>`<div class="frow"><span class="avat" style="width:28px;height:28px;font-size:11px;border-radius:8px">${initiales(u.nom)}</span><div class="tx"><div class="tt">${u.nom}</div><div class="sm">${u.titre||ROLES[u.role]} · ${u.email}</div></div><a class="ilink" data-fiche="compte::${u.id}">Fiche</a></div>`).join("");
+  }
+  return h+`</div>`;
+}
 function pageAnnuaire(){
   const f=S.fUsers||"clients";
   let h=`<div class="pagehead"><h1>Annuaire</h1></div>`;
@@ -4010,6 +4090,8 @@ function render(){
     else if(S.tab==="services") h=pageServices();
     else if(S.tab==="aprendre") h=pageAPrendre();
     else if(S.tab==="utilisateurs") h=pageAnnuaire();
+    else if(S.tab==="clients") h=pageClients();
+    else if(S.tab==="equipe") h=pageEquipe();
     else if(S.tab==="anomalies") h=pageAnomalies();
     else if(S.tab==="actions") h=pageActions();
     else if(S.tab==="automatisations") h=pageAutomatisations();
