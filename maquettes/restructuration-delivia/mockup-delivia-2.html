@@ -388,6 +388,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .railsec .sect-h .right{margin-left:auto;display:flex;gap:8px}
 .railadd{margin-top:6px}
 .cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.accbloc{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);margin-bottom:12px;overflow:hidden}
+.accbloc>summary{list-style:none;display:flex;align-items:center;gap:10px;padding:14px 20px;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-900)}
+.accbloc>summary::-webkit-details-marker{display:none}
+.accbloc>summary .chev{color:var(--ink-300);font-size:10px;transition:transform .15s}
+.accbloc[open]>summary .chev{transform:rotate(90deg)}
+.accbloc>summary .end{margin-left:auto;font-weight:400}
+.accbloc>.inner{padding:0 20px 16px}
 .tbl.matrice th.cash{text-align:center;font-size:10px;white-space:nowrap}
 .tbl.matrice th:first-child,.tbl.matrice td:first-child{min-width:320px}
 .tbl.matrice td:first-child b{font-weight:600}
@@ -3555,18 +3562,20 @@ function ficheFormateurHtml(key){
   f.quali.forEach(q=>{dem+=`<div class="frow"><div class="tx"><div class="tt">Demande de qualification · ${q[0]}</div><div class="sm">${q[1]}</div></div><button class="btn btn-p" data-frmact="Qualification acceptée">Accepter</button><button class="btn btn-s" data-frmact="Qualification refusée">Refuser</button></div>`});
   if(f.retrait) dem+=`<div class="frow"><div class="tx"><div class="tt">Demande de retrait de session</div><div class="sm">${f.retrait}</div></div><button class="btn btn-p" data-frmact="Retrait accepté, la session repart au shotgun">Accepter</button><button class="btn btn-s" data-frmact="Retrait refusé">Refuser</button></div>`;
   h+=(dem||`<div class="lrow"><span class="sm">Aucune demande en attente.</span></div>`)+`</div>`;
-  /* 3 · sessions, repliées */
+  /* 3 · factures : les cartes du rail Facturation formateur, repliées */
+  const kf="frm-fact-"+key;
+  h+=`<details class="accbloc" data-acc="${kf}" ${accKey(kf)?"open":""}><summary><span class="chev">▶</span><span class="tt">Factures</span><span class="end"><span class="sm">${factures.length}</span></span></summary><div class="inner">`
+    +(factures.length
+      ? `<div class="cardgrid">`+factures.map(c=>cardHtml(c, KB.fact_frm.cols.find(x=>x.id===c.col), {})).join("")+`</div>`
+      : `<div class="lrow"><span class="sm">Aucune carte de facturation pour l'instant.</span></div>`)
+    +`</div></details>`;
+  /* 4 · sessions, tout en bas */
   const ks="frm-sess-"+key;
-  h+=`<details class="acc" data-acc="${ks}" ${accKey(ks)?"open":""}><summary><span class="chev">▶</span><span class="tt">Sessions</span><span class="end"><span class="sm">${sessions.length||f.histo.length}</span></span></summary><div class="inner">`;
-  h+=(sessions.map(c=>`<div class="frow"><div class="tx"><div class="tt"><a class="ilink" data-fiche="session::${c.id}">${c.title}</a></div><div class="sm">${OFFRES[c.offre]} · ${c.lieu}</div></div><span class="chip">${colLabel(c)}</span></div>`).join("")
-    ||f.histo.map(([t,d])=>`<div class="frow"><div class="tx"><div class="tt">${t}</div><div class="sm">${d}</div></div></div>`).join(""));
-  h+=`</div></details>`;
-  /* 4 · factures : les cartes du rail Facturation formateur */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.wallet}Factures</div>`;
-  h+=(factures.length
-    ? `<div class="cardgrid">`+factures.map(c=>cardHtml(c, KB.fact_frm.cols.find(x=>x.id===c.col), {})).join("")+`</div>`
-    : `<div class="lrow"><span class="sm">Aucune carte de facturation pour l'instant.</span></div>`);
-  return h+`</div>`;
+  h+=`<details class="accbloc" data-acc="${ks}" ${accKey(ks)?"open":""}><summary><span class="chev">▶</span><span class="tt">Sessions</span><span class="end"><span class="sm">${sessions.length||f.histo.length}</span></span></summary><div class="inner">`
+    +(sessions.map(c=>`<div class="frow"><div class="tx"><div class="tt"><a class="ilink" data-fiche="session::${c.id}">${c.title}</a></div><div class="sm">${OFFRES[c.offre]} · ${c.lieu}</div></div><span class="chip">${colLabel(c)}</span></div>`).join("")
+      ||f.histo.map(([t,d])=>`<div class="frow"><div class="tx"><div class="tt">${t}</div><div class="sm">${d}</div></div></div>`).join(""))
+    +`</div></details>`;
+  return h;
 }
 
 function ficheCompteHtml(id){
