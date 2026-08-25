@@ -3466,12 +3466,12 @@ function preuvesSessionHtml(ref){
   return {h,ok,tot,pct,n:aps.length};
 }
 function pagePreuves(){
-  const f=S.fPreuvesOffre||"all";
+  const f=["n1","n2","intra"].includes(S.fPreuvesOffre)?S.fPreuvesOffre:"n1";
   let h=`<div class="pagehead"><h1>Preuves</h1></div>`;
-  h+=`<div class="fbar">`+chips([["Offre",[["all","Toutes"],["n1","Niveau 1"],["n2","Niveau 2"],["intra","Intra"]]]], f, "fPreuvesOffre")
+  h+=`<div class="fbar">`+chips([["Offre",[["n1","Niveau 1"],["n2","Niveau 2"],["intra","Intra"]]]], f, "fPreuvesOffre")
     +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fPreuvesQ" value="${(S.fPreuvesQ||"").replace(/"/g,"&quot;")}" placeholder="Apprenant, client, date, formateur…"></div></div>`;
   h+=`<div class="plegend">${Object.values(PSTATE).map(p=>`<span><i class="pst ${p[1]}">${p[0]}</i>${p[2]}</span>`).join("")}</div>`;
-  const sessions=CARDS.filter(c=>(c.kb==="session_fia"&&c.sess||c.kb==="intra")&&(f==="all"||c.offre===f));
+  const sessions=CARDS.filter(c=>(c.kb==="session_fia"&&c.sess||c.kb==="intra")&&c.offre===f);
   const months={};
   sessions.forEach(c=>{const m=(c.dt&&c.dt.j1)?c.dt.j1.slice(0,7):"0000-00";(months[m]=months[m]||[]).push(c);});
   const keys=Object.keys(months).sort().reverse();
