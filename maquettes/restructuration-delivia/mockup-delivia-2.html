@@ -869,6 +869,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .pagehead.row{display:flex;align-items:center;gap:12px}
 .pagehead.row .btn:first-of-type{margin-left:auto}
 .fbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-6px 0 14px}
+.faqduo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:1180px){.faqduo{grid-template-columns:minmax(0,1fr)}}
+.remlist{display:flex;flex-direction:column;gap:14px}
+.remgrp-h{display:flex;align-items:center;gap:8px;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;margin-bottom:6px}
+.remgrp-h .n{margin-left:auto;font-size:11px;color:var(--ink-400)}
+.remgrp .card{margin-bottom:8px}
+.remgrp .colempty{font-size:12px;color:var(--ink-300);padding:2px 0}
 .faqbloc{margin-bottom:26px}
 .faqbloc>.sect-h{margin-bottom:14px;align-items:center}
 .faqbloc>.sect-h .right{margin-left:auto}
@@ -3249,21 +3256,23 @@ function remonteesSectionHtml(){
   const q2="";
   h+=`<div class="fbar">`+chips([["Type",[["tout","Tout"],["bug","Bugs"],["idee","Idées"],["question","Questions"]]]], ft, "fRemT")+`</div>`;
   const list=REMONTEES.filter(r=>(ft==="tout"||r.t===ft)&&(!q2||r.titre.toLowerCase().includes(q2)));
-  h+=`<div class="board rembd">`+REM_COLS.map(([id,lbl])=>{
+  h+=`<div class="remlist">`+REM_COLS.map(([id,lbl])=>{
     const inCol=list.filter(r=>r.st===id);
-    return `<div class="col"><div class="col-h"><span class="pill"></span><h3>${lbl}</h3><span class="n">${inCol.length}</span></div><div class="colbody">`
+    return `<div class="remgrp"><div class="remgrp-h">${lbl}<span class="n">${inCol.length}</span></div>`
       +inCol.map(r=>`<div class="card clickable" data-frmact="${encodeURIComponent("Détail de la remontée : "+r.titre)}"><div class="ct"><span class="t">${r.titre}</span></div>
         <div class="remmeta"><span class="chip ${REM_T[r.t][1]}">${REM_T[r.t][0]}</span><span class="sm">${r.qui} · ${r.role}</span></div>
         <div class="remfoot"><span class="vote">▲ ${r.v}</span><span class="sm">${r.c} commentaire${r.c>1?"s":""}</span><span class="sm">${fmtJour(r.d)}</span>${r.faq?`<span class="chip ok">dans la FAQ</span>`:r.st==="termine"?`<button class="btn-xs" data-frmact="${encodeURIComponent("Remontée promue en réponse de FAQ")}">Promouvoir en FAQ</button>`:""}</div></div>`).join("")
-      +(inCol.length?"":`<div class="colempty">Rien ici.</div>`)+`</div></div>`;
+      +(inCol.length?"":`<div class="colempty">Rien ici.</div>`)+`</div>`;
   }).join("")+`</div>`;
   return h;
 }
 function pageFaq(opt){
   const pub=opt&&opt.pub;
   let h=pub?"":`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
-  h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Questions et réponses<span class="right"><button class="btn btn-s" data-faqnew="1">+ Nouvelle question / réponse</button></span></div>`+faqSectionHtml(pub)+`</div>`;
-  h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Tickets et remontées<span class="right"><button class="btn btn-p" data-frmact="${encodeURIComponent("Nouvelle remontée créée")}">+ Nouvelle remontée</button></span></div>`+remonteesSectionHtml()+`</div>`;
+  h+=`<div class="faqduo">
+    <div class="faqbloc"><div class="sect-h">${ICO.file}Questions et réponses<span class="right"><button class="btn btn-s" data-faqnew="1">+ Nouvelle question / réponse</button></span></div>${faqSectionHtml(pub)}</div>
+    <div class="faqbloc"><div class="sect-h">${ICO.file}Tickets et remontées<span class="right"><button class="btn btn-p" data-frmact="${encodeURIComponent("Nouvelle remontée créée")}">+ Nouvelle remontée</button></span></div>${remonteesSectionHtml()}</div>
+  </div>`;
   return h;
 }
 
