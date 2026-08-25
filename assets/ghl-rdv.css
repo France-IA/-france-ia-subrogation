@@ -111,3 +111,15 @@ html {
 #__nuxt #appointment_widgets--revamp .widgets-action-buttons .btn-schedule:hover {
   background: rgb(48, 102, 224) !important;
 }
+
+/* ---- libellé du bouton d'étape : « Continuer » -> « Discutons » (demande Tanguy 25/08).
+   GHL ne permet pas de changer ce texte ; on le masque (font-size 0) et on affiche le nôtre.
+   Le texte d'origine reste lu par les lecteurs d'écran. ---- */
+#__nuxt #appointment_widgets--revamp .widgets-action-buttons .btn-schedule {
+  font-size: 0 !important;
+}
+#__nuxt #appointment_widgets--revamp .widgets-action-buttons .btn-schedule::after {
+  content: "Discutons";
+  font-size: 16px;
+  font-weight: 700;
+}
