@@ -380,10 +380,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .docrow input{flex:1;min-width:0}
 .docrow .v2{flex:1;min-width:0;font-size:12.5px;color:var(--ink-700);line-height:1.5}
 .idgrid.g4{grid-template-columns:repeat(4,minmax(0,1fr));align-items:start}
-.autogrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 18px;margin-top:14px;border-top:1px solid var(--line);padding-top:14px;align-items:start}
-.autogrid .full{grid-column:1 / -1}
-.autogrid .sp2{grid-column:span 2}
-.autogrid .edin,.autogrid textarea{width:100%}
+.fldgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 18px;margin-top:14px;border-top:1px solid var(--line);padding-top:14px;align-items:start}
+.fldgrid.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.fldgrid .full{grid-column:1 / -1}
+.fldgrid .sp2{grid-column:span 2}
+.fldgrid .edin,.fldgrid textarea,.fldgrid select{width:100%}
 .idgrid.g4 .fld:last-child{grid-column:1 / -1}
 .col-open a{color:var(--ink-700);text-decoration:underline;text-underline-offset:2px}
 .apprev{background:#f8fafc;border:1px dashed var(--line-2);border-radius:12px;padding:16px;margin-top:4px}
@@ -2421,15 +2422,15 @@ function ficheLieuHtml(id){
   h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${ICO.building}</div><div><h1>${l.n}</h1></div>
     <div class="fh-right">${ed?`<button class="btn btn-p" data-editsave="lieu::${l.id}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`
       :`<button class="btn btn-s" data-editstart="lieu::${l.id}">Modifier</button><button class="btn btn-s danger" data-lieusave="${encodeURIComponent("Lieu supprimé")}">Supprimer</button>`}</div></div>
-  <div class="idgrid g4">
+  <div class="fldgrid g3">
     ${fld("Adresse",l.adr,"adr",l)}
     ${fld("Ville",l.ville,"ville",l)}
+    ${fld("Contact",l.contact,"contact",l)}
     ${ed?`<div class="fld"><div class="k">Réservation</div><select class="edin" data-f="hal"><option value="1" ${l.hal?"selected":""}>HAL Station F, au shotgun</option><option value="0" ${l.hal?"":"selected"}>Réservation directe auprès du lieu</option></select></div>`
        :fld("Réservation",l.hal?"HAL Station F, au shotgun à l'ouverture du créneau":"Réservation directe auprès du lieu")}
-    ${fld("Contact",l.contact,"contact",l)}
     ${ed?fld("Identifiant Qualiobee",l.qlb,"qlb",l)
        :fld("Identifiant Qualiobee",l.qlb?`<span class="mono">${l.qlb}</span> <a class="ilink" data-copy2="${l.qlb}">copier</a>`:null)}
-    <div class="fld"><div class="k">Photos ARD</div><div class="v">${l.photos} photo${l.photos>1?"s":""} <a class="ilink" data-photos="${l.id}">gérer</a></div></div>
+    <div class="fld"><div class="k">Description ARD</div><div class="v">${l.photos} photo${l.photos>1?"s":""} et le texte d'accès <a class="ilink" data-photos="${l.id}">gérer</a></div></div>
   </div></div>`;
   /* 2 · ce que l'apprenant voit, tel qu'il le voit */
   const ee=S.espEdit===l.id;
@@ -2714,18 +2715,11 @@ function pageActions(){
       const tks=tasksFor(c,c.col); const i=tks.findIndex((tk,ix)=>!taskState(c,c.col,ix,tk));
       return i<0?null:{c,tk:tks[i]};
     }).filter(x=>x&&/signe/i.test(x.tk.t));
-    const fs=["tout","non_envoyes","relances_3_plus","j3_et_moins"].includes(S.fSig)?S.fSig:"tout";
     /* palier : dérivé du rang de la carte, faute d'historique réel dans la maquette */
     const palier=(x,i)=>["r0","r1","r2","appel"][i%4];
     let lignes=att.map((x,i)=>({...x,p:palier(x,i),rel:i%4,sess:x.c.sess?SESS[x.c.sess].lbl:"sans session"}));
-    if(fs==="non_envoyes") lignes=lignes.filter(x=>x.p==="r0");
-    if(fs==="relances_3_plus") lignes=lignes.filter(x=>x.p==="appel");
-    if(fs==="j3_et_moins") lignes=lignes.filter(x=>x.p==="r1"||x.p==="r2");
     const par=k=>lignes.filter(x=>x.p===k);
-    h+=`<div class="sigbar"><button class="btn btn-p" data-sigcheck="1">${ICO.refresh} Vérifier maintenant les signatures</button>
-      <span class="sm">fenêtre J-14 à J+0, contrôle sur Qualiobee</span></div>`;
-    h+=`<div class="sigchips">`+[["tout","Tout"],["non_envoyes","Non envoyés"],["relances_3_plus","Relancés 3+"],["j3_et_moins","J-3 et moins"]]
-      .map(([k,lb])=>`<button class="${fs===k?"on":""}" data-chip="fSig::${k}">${lb}</button>`).join("")+`</div>`;
+    h+=`<div class="sigbar"><button class="btn btn-p" data-sigcheck="1">${ICO.refresh} Vérifier maintenant les signatures</button></div>`;
     const nom=x=>`<a class="ilink" data-open="${x.c.id}">${x.c.title}</a><span class="sm"> · ${x.sess}</span>`;
     const section=(titre,badge,contenu)=>`<details class="sigsec" open><summary>${titre} <span class="n2">· ${badge}</span></summary><ul>${contenu}</ul></details>`;
     h+=section("En attente (R0)",par("r0").length,
@@ -2809,7 +2803,7 @@ function ficheAutoHtml(nom){
   h+=`<div class="fichehead"><div class="fh-top"><div class="avat">${ICO.refresh}</div><div><h1>${nom}</h1></div>
     <div class="fh-right">${ed?`<button class="btn btn-p" data-autosave="${encodeURIComponent(nom)}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`
       :`<button class="btn btn-s" data-editstart="auto::${nom}">Modifier</button><span class="sw ${on?"on":""}" data-autotoggle="${encodeURIComponent(nom)}"><i></i></span>`}</div></div>
-  <div class="autogrid">
+  <div class="fldgrid">
     <div class="fld full"><div class="k">Ce qu'elle fait</div>
       ${ed?`<textarea class="tpl-edit" style="min-height:62px;margin-top:3px" data-af="desc">${desc}</textarea>`:`<div class="v">${desc}</div>`}</div>
     <div class="fld"><div class="k">Template</div>
@@ -3967,7 +3961,7 @@ document.addEventListener("click",e=>{
     document.querySelectorAll("#modal3 [data-pf]").forEach(inp=>{const f=inp.dataset.pf;
       if(f.startsWith("leg:")) l.legendes[+f.slice(4)]=inp.value.trim()||l.legendes[+f.slice(4)];
       else l[f]=inp.value.trim()||l[f];});
-    S.photosEdit=null;render();toast(`Photos ARD et texte mis à jour pour <b>${l.n}</b>.`);return}
+    S.photosEdit=null;render();toast(`Description ARD mise à jour pour <b>${l.n}</b>.`);return}
   if(t.dataset.faqnew!==undefined){S.faqModal=1;render();return}
   if(t.dataset.faqsave){S.faqModal=null;render();toast(decodeURIComponent(t.dataset.faqsave)+".");return}
   if(t.dataset.faqedit){S.faqModal={edit:decodeURIComponent(t.dataset.faqedit)};render();return}
