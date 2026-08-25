@@ -2309,6 +2309,16 @@ function pageLieux(v){
   return h;
 }
 /* formulaires de lieu et de salle */
+function faqModalHtml(){
+  return `<div id="modal2"><div class="mbox" style="max-width:620px"><div class="mhead"><div class="row"><div class="t">Nouvelle question / réponse</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">Elle rejoint la FAQ du public choisi</div></div>
+  <div class="mbody">
+    <div class="genrow"><div class="genfld"><div class="k">Question</div><input class="edin" placeholder="Le client n'a pas reçu son lien de mandat, que faire ?"></div></div>
+    <div class="genrow"><div class="genfld"><div class="k">Réponse</div><textarea class="tpl-edit" style="min-height:150px" placeholder="La réponse, étape par étape : où cliquer, quoi vérifier, qui prévenir."></textarea></div></div>
+    <div class="genrow"><div class="genfld"><div class="k">Public</div><select class="edin"><option>Closeurs</option><option>Formateurs</option><option>Admins</option><option>Tous</option></select></div></div>
+    <p class="pd">Une question posée sans réponse part dans les remontées, type Question : elle rejoindra la FAQ une fois traitée.</p>
+    <div class="mactions"><button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-s" data-faqsave="${encodeURIComponent("Question envoyée dans les remontées, elle sera traitée puis publiée")}">Poser la question sans réponse</button><button class="btn btn-p" data-faqsave="${encodeURIComponent("Question et réponse publiées dans la FAQ")}">Publier</button></div>
+  </div></div></div>`;
+}
 function lieuModalHtml(){
   const m=S.lieuModal; if(!m) return "";
   const l=m.lieu?LIEUX_REF.find(x=>x.id===m.lieu):null;
@@ -2860,17 +2870,16 @@ function pageFaq(){
     const q=(S.fFaqQ||"").toLowerCase();
     h+=`<div class="fbar">`+chips([["Public",pubs.map(x=>[x,x])]], pub, "fFaqPub")
       +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fFaqQ" value="${(S.fFaqQ||"").replace(/"/g,"&quot;")}" placeholder="Chercher une réponse…"></div>
-      <button class="btn btn-s" style="margin-left:auto" data-frmact="${encodeURIComponent("Nouvelle question ajoutée à la FAQ")}">+ Nouvelle réponse</button></div>`;
+      <button class="btn btn-s" style="margin-left:auto" data-faqnew="1">+ Nouvelle question / réponse</button></div>`;
     const list=FAQ_ENTRIES.filter(([p2,qq,r])=>(p2===pub||p2==="Tous")&&(!q||(qq+" "+r).toLowerCase().includes(q)));
     h+=`<div class="fsec">`+list.map(([p2,qq,r])=>`<details class="acc" data-acc="faq-${encodeURIComponent(qq).slice(0,14)}"><summary><span class="chev">▶</span><span class="tt">${qq}</span><span class="end"><span class="chip">${p2}</span></span></summary><div class="inner"><p class="pd" style="line-height:1.6">${r}</p><div class="mactions"><button class="btn btn-s" data-frmact="${encodeURIComponent("Remontée créée : cette réponse ne suffit pas")}">Cette réponse ne m'aide pas</button></div></div></details>`).join("")
       +(list.length?"":`<div class="lrow"><span class="sm">Aucune réponse ne correspond.</span></div>`)+`</div>`;
     return h;
   }
   const ft=["tout","bug","idee","question"].includes(S.fRemT)?S.fRemT:"tout";
-  const q2=(S.fRemQ||"").toLowerCase();
+  const q2="";
   h+=`<div class="fbar">`+chips([["Type",[["tout","Tout"],["bug","Bugs"],["idee","Idées"],["question","Questions"]]]], ft, "fRemT")
-    +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fRemQ" value="${(S.fRemQ||"").replace(/"/g,"&quot;")}" placeholder="Chercher une remontée…"></div>
-    <button class="btn btn-p" style="margin-left:auto" data-frmact="${encodeURIComponent("Nouvelle remontée créée")}">+ Nouvelle remontée</button></div>`;
+    +`<button class="btn btn-p" style="margin-left:auto" data-frmact="${encodeURIComponent("Nouvelle remontée créée")}">+ Nouvelle remontée</button></div>`;
   const list=REMONTEES.filter(r=>(ft==="tout"||r.t===ft)&&(!q2||r.titre.toLowerCase().includes(q2)));
   h+=`<div class="board rembd">`+REM_COLS.map(([id,lbl])=>{
     const inCol=list.filter(r=>r.st===id);
@@ -3661,6 +3670,7 @@ function render(){
   if(S.switchFor) document.body.insertAdjacentHTML("beforeend", switchModalHtml());
   if(S.bibbyFor) document.body.insertAdjacentHTML("beforeend", bibbyModalHtml());
   if(S.lieuModal) document.body.insertAdjacentHTML("beforeend", lieuModalHtml());
+  if(S.faqModal) document.body.insertAdjacentHTML("beforeend", faqModalHtml());
   if(S.idLink) document.body.insertAdjacentHTML("beforeend", idLinkModalHtml());
   if(S.qard) document.body.insertAdjacentHTML("beforeend", qArdModalHtml());
   if(S.wa) document.body.insertAdjacentHTML("beforeend", waModalHtml());
@@ -3724,7 +3734,7 @@ document.addEventListener("click",e=>{
   const ms=e.target.closest(".msec2>summary");
   if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
   if(e.target.id==="modal3"){S.swFull=null;render();return}
-  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.lieuModal=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
+  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.lieuModal=null;S.faqModal=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
   const anoS=e.target.closest(".ano>summary");
   if(anoS){const d=anoS.parentElement;S.anoOpen=S.anoOpen||{};S.anoOpen[d.dataset.ano]=!d.open}
   const rapS=e.target.closest(".payrap>summary");
@@ -3737,7 +3747,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -3833,6 +3843,8 @@ document.addEventListener("click",e=>{
   if(t.dataset.autorun){S.autoFiche=decodeURIComponent(t.dataset.autorun);render();return}
   if(t.dataset.autoback){S.autoFiche=null;render();return}
   if(t.dataset.lieu){S.lieuFiche=t.dataset.lieu;render();return}
+  if(t.dataset.faqnew!==undefined){S.faqModal=1;render();return}
+  if(t.dataset.faqsave){S.faqModal=null;render();toast(decodeURIComponent(t.dataset.faqsave)+".");return}
   if(t.dataset.lieunew!==undefined){S.lieuModal={kind:"lieu"};render();return}
   if(t.dataset.lieuedit){S.lieuModal={kind:"lieu",lieu:t.dataset.lieuedit};render();return}
   if(t.dataset.sallenew){S.lieuModal={kind:"salle",lieu:t.dataset.sallenew};render();return}
