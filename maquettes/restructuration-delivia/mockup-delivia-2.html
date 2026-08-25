@@ -1070,8 +1070,8 @@ insc:{cols:[
  {id:"attente",label:"En attente client"},
  {id:"validee",label:"Inscription validée", open:"J2+1 formation", rule:"j2+1", ghost:1},
  {id:"absent", label:"Absent", skip:1},
- {id:"lost",   label:"Lost", skip:1, ghost:1},
- {id:"termine",label:"Terminé", ghost:1}],
+ {id:"termine",label:"Terminé", ghost:1},
+ {id:"lost",   label:"Lost", skip:1, ghost:1, sep:1}],
 tasks:{
  recue:[
   {t:"Closeur lie le compte GHL (automatique)",p:"closer",auto:1,btnAuto:"Lier à la main",kind3:"ghl",note:"rattaché à la réception de l'ARD ; à saisir à la main si le rapprochement échoue"},
@@ -1122,8 +1122,8 @@ intra:{cols:[
  {id:"convention",label:"Signer convention"},
  {id:"preparer",  label:"Préparer formation"},
  {id:"enformation",label:"En formation", open:"J2 formation", rule:"j2"},
- {id:"lost",      label:"Lost", skip:1},
- {id:"termine",   label:"Terminé"}],
+ {id:"termine",   label:"Terminé"},
+ {id:"lost",      label:"Lost", skip:1, sep:1}],
 tasks:{
  demande:[
   {t:"Closeur lie le compte GHL (automatique)",p:"closer",auto:1,btnAuto:"Lier à la main",kind3:"ghl",note:"rattaché à la réception de l'ARD"},
@@ -1166,8 +1166,8 @@ intra_frm:{cols:[
  {id:"preparer",  label:"Préparer"},
  {id:"animer",    label:"Animer", open:"J2 formation", rule:"j2"},
  {id:"facturer",  label:"Facturer"},
- {id:"lost",      label:"Lost", skip:1},
- {id:"termine",   label:"Terminé"}],
+ {id:"termine",   label:"Terminé"},
+ {id:"lost",      label:"Lost", skip:1, sep:1}],
 tasks:{
  shotgun:[
   {t:"Formateur fait une demande",p:"formateur",btn:"Faire une demande"},
@@ -1193,8 +1193,8 @@ coaching:{cols:[
  {id:"whatsapp",label:"Créer groupe WhatsApp"},
  {id:"preparer",label:"Préparer"},
  {id:"jourj",   label:"Jour J", open:"date prévue de la séance", rule:"prevue"},
- {id:"lost",    label:"Lost", skip:1},
- {id:"termine", label:"Terminé"}],
+ {id:"termine", label:"Terminé"},
+ {id:"lost",    label:"Lost", skip:1, sep:1}],
 tasks:{
  demande:[
   {t:"Closeur lie le compte GHL (automatique)",p:"closer",auto:1,btnAuto:"Lier à la main",kind3:"ghl",note:"rattaché à la réception de l'ARD"},
@@ -1233,8 +1233,8 @@ coaching_frm:{cols:[
  {id:"preparer",label:"Préparer"},
  {id:"animer",  label:"Animer", open:"date prévue de la séance", rule:"prevue"},
  {id:"facturer",label:"Facturer"},
- {id:"lost",    label:"Lost", skip:1},
- {id:"termine", label:"Terminé"}],
+ {id:"termine", label:"Terminé"},
+ {id:"lost",    label:"Lost", skip:1, sep:1}],
 tasks:{
  valider:[
   {t:"Formateur valide son coaching",p:"formateur",btn:"Valider",kind:["prio"],note:"votre apprenant du présentiel : vous avez la main en premier ; en cas de refus, le coaching part sur la page À prendre"},
