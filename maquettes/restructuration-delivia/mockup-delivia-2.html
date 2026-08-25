@@ -118,7 +118,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tgrp{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin:5px 0 2px}
 .tor{display:flex;align-items:center;gap:8px;color:var(--ink-300);font-size:10px;font-weight:600;margin:4px 0}
 .tor::before,.tor::after{content:"";flex:1;height:1px;background:var(--line-2)}
-.task{display:flex;align-items:flex-start;gap:7px;padding:3px 2px;border-radius:6px;font-size:12px;line-height:1.4;color:var(--ink-700);cursor:pointer}
+.task{display:flex;align-items:flex-start;gap:8px;padding:4px 2px;border-radius:6px;font-size:13px;line-height:1.45;color:var(--ink-700);cursor:pointer}
 .task:hover{background:var(--bg)}
 .task .box{width:14px;height:14px;border:1.5px solid var(--ink-300);border-radius:4px;flex-shrink:0;margin-top:1.5px;display:flex;align-items:center;justify-content:center;transition:all .12s}
 .task.done .box{background:var(--primary);border-color:var(--primary)}
@@ -697,10 +697,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .fut summary::before{content:"▸";font-size:10px;color:var(--ink-400);transition:transform .15s}
 .fut[open] summary::before{transform:rotate(90deg)}
 .fut summary .n2{font-weight:400;color:var(--ink-400);font-size:11px}
-.futcol{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-500);margin:14px 0 6px;padding-top:12px;border-top:1px dashed var(--line-2)}
+.futcol{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-500);margin:16px 0 8px;padding-top:14px;border-top:1px dashed var(--line-2);text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:5px}
 .futcol:first-child,.futcol.en{margin-top:2px;padding-top:0;border-top:none}
-.futcol.en .pill{background:var(--primary)}
-.futcol.en{color:var(--ink-700)}
+.futcol .pill{display:none}
+.futcol.en{color:var(--primary-dark);text-decoration-color:#c7d2fe}
 .futcol .pill{width:7px;height:7px;border-radius:50%;background:var(--ink-300)}
 .futcol .n2{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-400);font-size:10.5px}
 .ftask{display:flex;align-items:flex-start;gap:7px;padding:3px 2px;font-size:12px;line-height:1.4;color:var(--ink-400)}
@@ -743,11 +743,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .msec2{border-top:1px solid var(--line)}
 .msec2:first-of-type{border-top:none}
 .msec2>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;padding:10px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400)}
-.msec2>summary::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--line-2);flex-shrink:0;order:-1}
-.msec2[data-k="hist"]>summary::before{background:#bbf7d0}
-.msec2[data-k="cur"]>summary::before{background:var(--primary)}
 .msec2[data-k="cur"]>summary{color:var(--ink-900)}
-.msec2[data-k="cur"]>.minner{border-left:2px solid var(--primary);padding-left:14px;margin-left:2px}
 .msec2[data-k="hist"] .hrow{opacity:.75}
 .msec2[data-k="fut"] .ftask{opacity:.8}
 .msec2>summary::-webkit-details-marker{display:none}
@@ -760,7 +756,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .minner .empty{font-size:12px;color:var(--ink-400)}
 .minner .futcol:first-child{margin-top:2px}
 
-.mpanel{background:#fff;border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;margin-top:12px}
+.mpanel{background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:12px 14px;margin-top:14px}
 .mpanel:first-child{margin-top:0}
 .mtasks{padding-top:2px;padding-bottom:2px}
 .mtasks .msec2:first-of-type{border-top:none}
@@ -781,8 +777,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal .mclose{width:30px;height:30px;border-radius:50%;background:#f1f5f9;color:var(--ink-500);font-size:14px}
 #modal .mclose:hover{background:#e2e8f0;color:var(--ink-900)}
 #modal .mbody{padding:0 26px 22px;background:#fff;border-radius:0 0 18px 18px}
-#modal .mpanel{background:transparent;border:none;border-radius:0;padding:16px 0 14px;margin:0;border-top:1px solid var(--line-2)}
+#modal .mpanel{background:transparent;border:none;border-radius:0;padding:18px 0 16px;margin:0;border-top:1.5px solid #cbd5e1}
 #modal .mpanel:first-child{border-top:none;padding-top:10px}
+#modal .mpanel.mtasks{border-top-width:1.5px}
 #modal .igrid{gap:13px 22px}
 #modal .ifld .k{font-size:11px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink-400)}
 #modal .ifld .v{font-size:13.5px;color:var(--ink-900);margin-top:2px}
@@ -795,11 +792,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal .msec2>summary .chev{width:20px;height:20px;border-radius:50%;background:#f1f5f9;display:inline-flex;align-items:center;justify-content:center;font-size:14px;line-height:1;color:var(--ink-600,#475569)}
 #modal .msec2>summary .n2{font-size:12px;font-weight:600;color:var(--ink-500);background:#f1f5f9;border-radius:999px;padding:2px 9px}
 #modal .minner{padding:0 0 12px 31px}
-#modal .task{padding:5px 2px;font-size:12.5px}
+#modal .task{padding:6px 2px;font-size:13.5px}
 #modal .task .box{border-radius:5px;width:15px;height:15px}
 #modal .task.other .box{background:#f8fafc}
-#modal .futcol{text-transform:none;letter-spacing:0;font-size:12px;color:var(--ink-700);margin:12px 0 4px}
-#modal .futcol .pill{width:6px;height:6px}
+#modal .futcol{text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--ink-600);margin:16px 0 8px}
+#modal .futcol.en{color:var(--primary-dark)}
 #modal .hrow{font-size:12px;padding:4px 0;border-bottom:none}
 #modal .hrow .d{width:112px}
 #modal .mnote .k{text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--ink-900)}
@@ -976,7 +973,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal2 .mbox{max-width:520px;border-radius:18px;box-shadow:0 24px 64px rgb(15 23 42/.18)}
 #modal2 .mhead{border-bottom:none;padding:20px 24px 4px}
 #modal2 .mbody{background:#fff;padding:6px 24px 20px;border-radius:0 0 18px 18px}
-#modal2 .mpanel{background:transparent;border:none;padding:12px 0;border-top:1px solid var(--line-2)}
+#modal2 .mpanel{background:transparent;border:none;padding:14px 0;border-top:1.5px solid #cbd5e1}
 #modal2 .mpanel:first-child{border-top:none}
 .drow{display:flex;align-items:center;gap:12px}
 .drow>div:first-child{flex:1}
