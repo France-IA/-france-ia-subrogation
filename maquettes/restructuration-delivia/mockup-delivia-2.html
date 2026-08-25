@@ -828,6 +828,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .vcbtn .chev{font-size:9px}
 .vcmenu{display:none;position:absolute;top:calc(100% + 4px);right:0;background:#fff;border:1px solid var(--line-2);border-radius:8px;box-shadow:0 10px 15px -3px rgb(0 0 0/.1),0 4px 6px -4px rgb(0 0 0/.1);padding:4px 0;width:144px;z-index:80}
 .vcmenu.on{display:block}
+.vcmenu{max-height:60vh;overflow:auto;min-width:220px}
+.vcgrp{padding:4px 0;border-top:1px solid var(--line)}
+.vcgrp:first-child{border-top:none}
+.vcgrp-h{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;padding:6px 12px 2px}
 .vcmenu button{display:block;width:100%;text-align:left;padding:6px 12px;font-size:12px;color:var(--ink-700)}
 .vcmenu button:hover{background:#f8fafc}
 #visionbanner:empty{display:none}
@@ -2744,12 +2748,21 @@ function demandesModalHtml(){
   return `<div id="modal2"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Demandes de formateurs</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">${card.title} · premier arrivé, premier servi : la première demande validée assigne le formateur et refuse les autres</div></div>
   <div class="mbody">${list.length?list.map((d,i)=>`<div class="mpanel drow"><div><div class="tt">${d.f}</div><div class="sm">Demande du ${new Date(d.d+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"})}${d.m?" · « "+d.m+" »":""}</div></div><div class="dbtns"><button class="btn btn-p" data-dvalid="${card.id}::${i}">Valider</button><button class="btn btn-s" data-drefus="${card.id}::${i}">Refuser</button></div></div>`).join(""):`<p class="empty">Aucune demande pour l'instant : la session est visible sur la page À prendre des formateurs.</p>`}</div></div></div>`;
 }
+/* les personnes qui portent les cartes, telles qu'elles y sont nommées */
+function gensDuRole(role){ return [...new Set(CARDS.map(c=>role==="closer"?c.closer:c.setter).filter(Boolean))].sort(); }
+function selGens(role,cle,lbl){
+  const v=S[cle]||"all";
+  return `<select class="fsel" data-fsel="${cle}"><option value="all">${lbl}</option>`
+    +gensDuRole(role).map(n=>`<option value="${n}" ${v===n?"selected":""}>${n}</option>`).join("")+`</select>`;
+}
 function pageInscription(){
   const f=S.fInsc;
   let h=`<div class="pagehead row"><h1>Inscription</h1>${S.role==="admin"?`<button class="btn btn-s" data-railopen="inscription">Paramétrer le rail</button>`:""}</div>`;
   h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"],["intra","Formation Intra"],["coaching","Coaching"]]]], f, "fInsc");
+  h+=`<div class="fbar">`+selGens("closer","fInscCloser","Tous les closeurs")+selGens("setter","fInscSetter","Tous les setteurs")+`</div>`;
   const ghost = S.role==="closer";
-  const byMode=c=>true;
+  const byMode=c=>(!S.fInscCloser||S.fInscCloser==="all"||c.closer===S.fInscCloser)
+    &&(!S.fInscSetter||S.fInscSetter==="all"||c.setter===S.fInscSetter);
   if(f==="n1"||f==="n2") h+=boardHtml("insc", CARDS.filter(c=>c.kb==="insc"&&c.offre===f&&!c.reserved&&byMode(c)), {ghostCols:ghost});
   else if(f==="intra")   h+=boardHtml("intra", CARDS.filter(c=>c.kb==="intra"&&byMode(c)), {ghostCols:ghost});
   else                   h+=boardHtml("coaching", CARDS.filter(c=>c.kb==="coaching"&&byMode(c)), {ghostCols:ghost});
@@ -2768,14 +2781,16 @@ function pageFacturation(){
       ["Externes", isCloser?[["closeur","Ma facture"]]:[["formateur","Formateur"],["closeur","Closeur"],["setteur","Setteur"]]]];
     h+=chips(clientChips, f, "fFact");
   }
+  if(!isSetter) h+=`<div class="fbar">`+selGens("closer","fFactCloser","Tous les closeurs")+selGens("setter","fFactSetter","Tous les setteurs")+`</div>`;
   const view=FACT_VIEWS[f];
-  const byOffre=c=>true;
+  const byOffre=c=>(!S.fFactCloser||S.fFactCloser==="all"||c.closer===S.fFactCloser)
+    &&(!S.fFactSetter||S.fFactSetter==="all"||c.setter===S.fFactSetter);
   if(f==="cpf") h+=boardHtml("fact_cpf", CARDS.filter(c=>c.kb==="fact_cpf"&&byOffre(c)));
   else if(f==="opco") h+=boardHtml("fact_opco", CARDS.filter(c=>c.kb==="fact_opco"&&byOffre(c)));
   else if(view) h+=boardHtml("fact_fp", CARDS.filter(c=>c.kb==="fact_fp"&&view.fins.includes(c.fin)&&byOffre(c)), {fin:view.fins[0]});
-  else if(f==="formateur") h+=boardHtml("fact_frm", CARDS.filter(c=>c.kb==="fact_frm"));
-  else if(f==="closeur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="closer"));
-  else if(f==="setteur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="setter"));
+  else if(f==="formateur") h+=boardHtml("fact_frm", CARDS.filter(c=>c.kb==="fact_frm"&&(!S.fSessFrm||S.fSessFrm==="all"||c.frm===S.fSessFrm)));
+  else if(f==="closeur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="closer"&&byOffre(c)));
+  else if(f==="setteur") h+=boardHtml("fact_com", CARDS.filter(c=>c.kb==="fact_com"&&c.fin==="setter"&&byOffre(c)));
   return h;
 }
 function anoCount(v){ return ANO.filter(a=>a.v===v).reduce((n,a)=>n+anoCas(a).length,0); }
@@ -4281,8 +4296,15 @@ function render(){
   $("#roleSel").innerHTML=Object.entries(ROLES).map(([id,lbl])=>`<button class="${S.role===id?"active":""}" data-role="${id}">${lbl}</button>`).join("");
   /* bouton Voir comme (réel : réservé aux admins), bannière de vision, menu utilisateur */
   const realAdmin = S.realRole==="admin";
-  $("#topright").innerHTML = realAdmin && !S.voirComme ? `<div class="vcbtn" data-vcopen="1">${ICO.eye}Voir comme<span class="chev">▼</span><div class="vcmenu" id="vcmenu"><button data-voircomme="closer">Closeur</button><button data-voircomme="formateur">Formateur</button><button data-voircomme="setter">Setteur</button></div></div>` : "";
-  $("#visionbanner").innerHTML = S.voirComme ? `${ICO.eye}<span>Vision <b>${ROLES[S.voirComme]}</b> : tu vois DELIV'IA exactement comme ce rôle (navigation, pages, droits).</span><button data-vcback="1">Revenir en admin</button>` : "";
+  const vcGroupe=(role,lbl,gens)=>`<div class="vcgrp"><div class="vcgrp-h">${lbl}</div>`
+    +`<button data-voircomme="${role}">Vue par défaut</button>`
+    +gens.map(g=>`<button data-voircomme="${role}::${g}">${g}</button>`).join("")+`</div>`;
+  $("#topright").innerHTML = realAdmin && !S.voirComme ? `<div class="vcbtn" data-vcopen="1">${ICO.eye}Voir comme<span class="chev">▼</span><div class="vcmenu" id="vcmenu">`
+    +vcGroupe("closer","Closeurs",COMPTES.filter(u=>u.role==="closer").map(u=>u.nom))
+    +vcGroupe("setter","Setteurs",COMPTES.filter(u=>u.role==="setter").map(u=>u.nom))
+    +vcGroupe("formateur","Formateurs",FORMATEURS.map(k=>FRM[k].nom))
+    +`</div></div>` : "";
+  $("#visionbanner").innerHTML = S.voirComme ? `${ICO.eye}<span>Vision <b>${ROLES[S.voirComme]}${S.voirQui?" · "+S.voirQui:""}</b> : tu vois DELIV'IA exactement comme ce rôle (navigation, pages, droits).</span><button data-vcback="1">Revenir en admin</button>` : "";
   const U=USERS[S.realRole];
   $("#usermenu").innerHTML=`<span class="avat">${initiales(U.n)}</span><div><div class="un">${U.n}</div><div class="ue">${U.e}</div></div><button class="out" data-logout="1" title="Déconnexion">${ICO.out}</button>`;
   /* content */
@@ -4457,7 +4479,8 @@ document.addEventListener("click",e=>{
   }
   if(t.dataset.tab){S.tab=t.dataset.tab;S.fiche=null;S.autoFiche=null;render();return}
   if(t.dataset.vcopen!==undefined){const m=document.getElementById("vcmenu"); if(m&&!e.target.closest("[data-voircomme]")) m.classList.toggle("on");}
-  if(t.dataset.voircomme){S.voirComme=t.dataset.voircomme; S.role=t.dataset.voircomme; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; if(S.role==="setter") S.tab="facturation"; S.fFact=S.role==="closer"?"virement":S.role==="setter"?"setteur":"cpf"; render(); return}
+  if(t.dataset.voircomme){const [r,qui]=t.dataset.voircomme.split("::");
+    S.voirComme=r; S.voirQui=qui||null; S.role=r; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; if(S.role==="setter") S.tab="facturation"; S.fFact=S.role==="closer"?"virement":S.role==="setter"?"setteur":"cpf"; render(); return}
   if(t.dataset.newsession){S.newSess={type:"inter"};render();return}
   if(t.dataset.nstype){S.newSess={type:t.dataset.nstype};render();return}
   if(t.dataset.nssubmit){const isIntra=S.newSess&&S.newSess.type==="intra";S.newSess=null;
@@ -4658,7 +4681,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.acctoggle){const [uid,pid]=t.dataset.acctoggle.split("::");const u=COMPTES.find(x=>x.id===uid);u.acces=u.acces||[];const ix=u.acces.indexOf(pid);if(ix>=0)u.acces.splice(ix,1);else u.acces.push(pid);toast(`Accès <b>${PAGES_ACCES.find(p=>p[0]===pid)[1]}</b> ${ix>=0?"retiré":"accordé"} à ${u.nom}.`);render();return}
   if(t.dataset.apptoggle){const [uid,aid]=t.dataset.apptoggle.split("::");const u=COMPTES.find(x=>x.id===uid);u.apps=u.apps||[];const ix=u.apps.indexOf(aid);if(ix>=0)u.apps.splice(ix,1);else u.apps.push(aid);render();return}
   if(t.dataset.syncdrive){toast("Synchronisation avec le Drive lancée : les preuves déposées hors DELIV'IA seront reconnues dans quelques minutes.");return}
-  if(t.dataset.vcback){S.voirComme=null; S.role=S.realRole; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; S.fFact="cpf"; render(); return}
+  if(t.dataset.vcback){S.voirComme=null; S.voirQui=null; S.role=S.realRole; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; S.fFact="cpf"; render(); return}
   if(t.dataset.logout){toast("Déconnexion : retour à l'écran de connexion SSO France IA."); return}
   if(t.dataset.gs){const [ty,id]=t.dataset.gs.split("::"); closeSearch();
     if(ty==="apprenant"||ty==="client"){S.modal=null;S.fiche={t:ty,id};S.app="delivia";render();}
