@@ -3659,25 +3659,25 @@ function pageProfilFormateur(){
       +`</tbody></table></div></div>`;
     return h;
   }
-  /* 1 · coordonnées */
+  /* 1 · le parcours d'arrivée, en tête : c'est ce qui reste à faire */
+  const faits=ONB_FRM.filter(o=>o[1]).length;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Mon parcours d'arrivée <span class="n2">${faits} sur ${ONB_FRM.length}</span></div><div class="blocs">`
+    +`<details class="pvmonth" data-acc="onbfrm" ${accKey("onbfrm")?"open":""}><summary><div><div class="mt">Ce qu'il me reste à faire</div><div class="ms">${ONB_FRM.length-faits} geste${ONB_FRM.length-faits>1?"s":""} en attente</div></div><span class="cnt3">${ONB_FRM.length-faits}</span><span class="chev end">▸</span></summary><div class="pvbody">`
+    +ONB_FRM.map(([lbl,done],i)=>`<div class="task ${done?"done":""}" data-frmact="${encodeURIComponent(done?"Étape décochée":"Étape cochée : France IA le voit de son côté")}"><span class="box"></span><span><span class="lbl">${lbl}</span></span></div>`).join("")
+    +`</div></details></div></div>`;
+  /* 2 · coordonnées */
   h+=`<div class="fsec"><div class="sect-h">${ICO.user}Mes coordonnées <span class="n2">toute modification part en approbation chez France IA</span>
     <span class="right"><button class="btn btn-s" data-frmact="${encodeURIComponent("Modification envoyée : France IA valide puis elle s'applique")}">Modifier</button></span></div>
     <div class="idgrid">`+fld("E-mail (non modifiable)",f.email)
     +PROFIL_CHAMPS.map(([k,v])=>fld(k,v)).join("")+`</div>`
     +(f.appro?`<div class="railhint">En attente de validation : ${f.appro}</div>`:"")+`</div>`;
-  /* 2 · onboarding, plié comme côté admin */
-  const faits=ONB_FRM.filter(o=>o[1]).length;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Mon parcours d'arrivée <span class="n2">${faits} sur ${ONB_FRM.length}</span></div><div class="blocs">`
-    +`<details class="pvmonth" data-acc="onbfrm" ${accKey("onbfrm")?"open":""}><summary><div><div class="mt">Ce qu'il me reste à faire</div><div class="ms">les gestes d'arrivée demandés par France IA</div></div><span class="cnt3">${ONB_FRM.length-faits}</span><span class="chev end">▸</span></summary><div class="pvbody">`
-    +ONB_FRM.map(([lbl,done],i)=>`<div class="task ${done?"done":""}" data-frmact="${encodeURIComponent(done?"Étape décochée":"Étape cochée : France IA le voit de son côté")}"><span class="box"></span><span><span class="lbl">${lbl}</span></span></div>`).join("")
-    +`</div></details></div></div>`;
   /* 3 · villes et offres, pleine largeur, deux moitiés nettement séparées */
   h+=`<div class="fsec vofsec"><div class="sect-h">${ICO.cap}Mes villes et mes offres <span class="n2">ce que je vois dans « À prendre » en dépend</span></div>
     <div class="vof">`;
   /* villes : une cascade par pays, tout replié */
   const paysList=[...new Set(LIEUX_REF.filter(l=>l.ville!=="—").map(l=>l.pays))].sort();
   h+=`<div class="vofcol"><div class="vofh">Mes villes <span>${f.villes.length} suivie${f.villes.length>1?"s":""}</span></div>
-    <div class="pd">Cochez les villes où vous acceptez d'animer. Une session hors de vos villes reste visible en décochant le filtre de la page À prendre.</div><div class="blocs">`;
+    <div class="blocs">`;
   paysList.forEach(p=>{
     const villes=[...new Set(LIEUX_REF.filter(l=>l.pays===p&&l.ville!=="—").map(l=>l.ville))].sort();
     const suivies=villes.filter(v=>f.villes.includes(v)).length;
@@ -3689,7 +3689,7 @@ function pageProfilFormateur(){
   h+=`</div></div>`;
   /* offres : qualifié ou non, la demande porte sa justification */
   h+=`<div class="vofcol"><div class="vofh">Mes offres <span>${f.offres.length} qualifiée${f.offres.length>1?"s":""}</span></div>
-    <div class="pd">Une offre non qualifiée s'ouvre après validation de France IA. Expliquez ce qui vous rend légitime, c'est ce que l'admin lira.</div>`;
+`;
   h+=NIVEAUX_QUALIF.map(([n,sous])=>{
     const ok=f.offres.includes(n);
     const dem=(f.quali||[]).find(q=>q[0]===n);
