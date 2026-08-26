@@ -124,13 +124,16 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .task.done .box{background:var(--primary);border-color:var(--primary)}
 .task.done .box::after{content:"";width:8px;height:4.5px;border-left:1.8px solid #fff;border-bottom:1.8px solid #fff;transform:rotate(-45deg) translate(0.5px,-1px)}
 .task.done .lbl{color:var(--ink-400);text-decoration:line-through}
-.task.other{color:var(--ink-400)}
+.task.notmine{color:var(--ink-400)}
 .task.other .box{border-color:var(--line-2);background:var(--bg)}
 .task.other.done .box{background:var(--ink-300);border-color:var(--ink-300)}
 .hrow .who,.ftask .who{font-size:11px;font-weight:600;color:var(--ink-500);background:var(--bg);border-radius:5px;padding:1px 6px;margin-right:7px;white-space:nowrap}
 .task .who{font-size:11px;font-weight:600;color:var(--ink-500);background:var(--bg);border-radius:5px;padding:1px 6px;margin-right:7px;white-space:nowrap}
+.task:not(.notmine) .who{color:var(--ink-600)}
 .task.done .who{color:var(--ink-300)}
 .task.next{background:var(--primary-50);border-radius:7px;padding:5px 7px;margin:1px -5px}
+.task.next.notmine{background:#f1f5f9}
+.task.next.notmine .nextpill{color:var(--ink-500);border-color:var(--line-2)}
 .task .nextpill{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary-dark);background:#fff;border:1px solid #c7d2fe;border-radius:999px;padding:1px 7px;margin-left:7px;white-space:nowrap}
 .task .tag{font-size:10px;color:#92400e;background:var(--warn-50);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap;cursor:pointer;border:1px solid transparent}
 .task .tag:hover{border-color:#fcd34d;text-decoration:underline;text-underline-offset:2px}
@@ -256,7 +259,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .hist[open] summary::before{transform:rotate(90deg)}
 .hist summary:hover{color:var(--ink-700)}
 .hist summary .n2{font-weight:400;color:var(--ink-400);font-size:11px}
-.hrow{display:flex;gap:9px;font-size:11.5px;padding:3.5px 0;color:var(--ink-600,#475569);line-height:1.4;border-bottom:1px solid var(--line)}
+.hrow{display:flex;gap:9px;font-size:13px;padding:3.5px 0;color:var(--ink-600,#475569);line-height:1.45;border-bottom:1px solid var(--line)}
 .hrow:last-child{border-bottom:none}
 .hrow .d{flex-shrink:0;width:118px;color:var(--ink-400);font-variant-numeric:tabular-nums}
 .hrow .ck{color:var(--ok);flex-shrink:0}
@@ -407,7 +410,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tbl.matrice td.cas.on{color:var(--primary)}
 .tbl.matrice td.cas:hover{background:var(--primary-50)}
 .tbl.matrice .acts{white-space:nowrap}
-.todobloc>summary{display:flex;align-items:center;gap:7px;padding:3px 2px;cursor:pointer;list-style:none;font-size:12px;line-height:1.4;color:var(--ink-700)}
+.todobloc>summary{display:flex;align-items:center;gap:7px;padding:3px 2px;cursor:pointer;list-style:none;font-size:13px;line-height:1.45;color:var(--ink-700)}
 .todobloc>summary::-webkit-details-marker{display:none}
 .todobloc>summary .box{width:14px;height:14px;border:1.5px solid var(--ink-300);border-radius:4px;flex-shrink:0;position:relative}
 .todobloc>summary .box.on{background:var(--primary);border-color:var(--primary)}
@@ -544,7 +547,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .remfoot .vote{font-weight:600;color:var(--ink-700)}
 .remfoot .btn-xs{margin-left:auto}
 .remfoot .chip{margin-left:auto}
-.board.rembd .col{background:rgba(248,250,252,.9)}
+.board.rembd{overflow-x:visible;min-height:0}
+.board.rembd .col{background:rgba(248,250,252,.9);width:auto;flex:1 1 0;min-width:0}
+.board.rembd .colbody{min-height:110px}
 .autolist{display:flex;flex-direction:column;gap:8px}
 .autocard{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line-2);border-radius:11px;padding:13px 15px;cursor:pointer}
 .autocard:hover{background:#f8fafc}
@@ -679,6 +684,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .stepline b{color:var(--ink-900);font-weight:600}
 .hist{margin-top:0;border-top:none;padding-top:0;margin-bottom:8px}
 .hrow{color:var(--ink-400)}
+.hrow.mine{color:var(--ink-700)}
 .hrow.ev{color:var(--ok);font-weight:600}
 .hrow .dot{width:7px;height:7px;border-radius:50%;background:#10b981;flex-shrink:0;margin-top:5px}
 .cur{background:var(--primary-50);border:1px solid #e0e7ff;border-radius:10px;padding:10px 12px}
@@ -703,9 +709,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .futcol.en{color:var(--ink-900);text-decoration-color:var(--line-2)}
 .futcol .pill{width:7px;height:7px;border-radius:50%;background:var(--ink-300)}
 .futcol .n2{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-400);font-size:10.5px}
-.ftask{display:flex;align-items:flex-start;gap:7px;padding:3px 2px;font-size:12px;line-height:1.4;color:var(--ink-400)}
+.ftask{display:flex;align-items:flex-start;gap:7px;padding:3px 2px;font-size:13px;line-height:1.45;color:var(--ink-400)}
 .ftask .box{width:14px;height:14px;border:1.5px solid var(--line-2);border-radius:4px;flex-shrink:0;margin-top:1.5px;background:var(--bg)}
 .ftask .tag{font-size:10px;color:#b45309;background:var(--warn-50);border-radius:4px;padding:0 5px;margin-left:4px;opacity:.7}
+.ftask.mine{color:var(--ink-700)}
 .ftask.none{color:var(--ink-300);font-style:italic}
 .frow2 .tgrp{margin-left:2px}
 
@@ -744,8 +751,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .msec2:first-of-type{border-top:none}
 .msec2>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;padding:10px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400)}
 .msec2[data-k="cur"]>summary{color:var(--ink-900)}
-.msec2[data-k="hist"] .hrow{opacity:.75}
-.msec2[data-k="fut"] .ftask{opacity:.8}
+.msec2[data-k="hist"] .hrow{opacity:1}
+.msec2[data-k="fut"] .ftask{opacity:1}
 .msec2>summary::-webkit-details-marker{display:none}
 .msec2>summary .chev{color:var(--ink-400);font-size:10px;transition:transform .15s}
 .msec2[open]>summary .chev{transform:rotate(90deg)}
@@ -797,8 +804,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal .task.other .box{background:#f8fafc}
 #modal .futcol{text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--ink-600);margin:16px 0 8px}
 #modal .futcol.en{color:var(--ink-900);font-weight:700}
-#modal .hrow{font-size:12px;padding:4px 0;border-bottom:none}
-#modal .hrow .d{width:112px}
+#modal .hrow{font-size:13.5px;padding:4px 0;border-bottom:none}
+#modal .ftask{font-size:13.5px;padding:5px 2px}
+#modal .todobloc>summary{font-size:13.5px}
+#modal .hrow .d{width:124px}
 #modal .mnote .k{text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--ink-900)}
 #modal .mnote .k svg{display:none}
 #modal .mnote .notes-ta{border:none;background:#f8fafc;border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13px}
@@ -1892,6 +1901,8 @@ function runFx(card, tk, k){
   }
 }
 function canCheck(tk){ return tk.p===ROLE_OWNS[S.role] && !tk.auto; }
+/* noir = j'en reponds (meme si c'est une automatisation ou le client qui agit) ; gris = quelqu'un d'autre */
+function isMine(card,tk){ return responsableOf(card,tk)===ROLE_OWNS[S.role]; }
 function clickTask(cardId,colId,i){
   const card=CARDS.find(c=>c.id===cardId);
   const tk=tasksFor(card,colId)[i];
@@ -2017,21 +2028,21 @@ function todoRefItems(card,tk){
 }
 function todoRefHtml(card,colId,i,tk){
   const items=todoRefItems(card,tk), k=key(card,colId,i);
-  if(!items.length) return `<div class="task other" style="cursor:default"><span class="box"></span><span><span class="lbl">${tk.t}</span></span></div>`;
+  if(!items.length) return `<div class="task other notmine" style="cursor:default"><span class="box"></span><span><span class="lbl">${tk.t}</span></span></div>`;
   const fait=items.filter(x=>x.done).length, tous=fait===items.length, ak="tref-"+k;
   let last="";
   return `<details class="todobloc ${tous?"done":""}" data-acc="${ak}" ${accKey(ak)?"open":""}>
     <summary><span class="box ${tous?"on":""}"></span><span class="lbl">${tk.t}</span><span class="cnt3">${fait}/${items.length}</span><span class="chev">▸</span></summary>
     <div class="todolist">`
     +items.map(it=>{ const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:""; last=it.ph;
-      return g+`<div class="task other ${it.done?"done":""}" style="cursor:default"><span class="box"></span><span><span class="lbl">${it.lbl}</span></span></div>`;
+      return g+`<div class="task other notmine ${it.done?"done":""}" style="cursor:default"><span class="box"></span><span><span class="lbl">${it.lbl}</span></span></div>`;
     }).join("")
     +`</div></details>`;
 }
 function apTodoHtml(card,colId,i,tk,ghost){
   const aps=peopleFor(card).aps, items=apTodoItems(), k=key(card,colId,i), can=canCheck(tk);
   const docsOk=DOCS_APPRENANT.filter(d=>d[1]).length;
-  if(!aps.length) return `<div class="task other" style="cursor:default"><span class="box"></span><span><span class="lbl">${tk.t}</span></span></div>`;
+  if(!aps.length) return `<div class="task other notmine" style="cursor:default"><span class="box"></span><span><span class="lbl">${tk.t}</span></span></div>`;
   return aps.map((a,ai)=>{
     const kk=j=>k+"::"+ai+"::"+j;
     const fait=items.filter((_,j)=>S.checks[kk(j)]).length, tous=fait===items.length;
@@ -2044,7 +2055,7 @@ function apTodoHtml(card,colId,i,tk,ghost){
       +items.map((it,j)=>{
         const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:""; last=it.ph;
         const d=!!S.checks[kk(j)];
-        return g+`<div class="task ${d?"done":""} ${can?"":"other"}" ${can&&!ghost?`data-todoi="${card.id}::${colId}::${i}::${ai}-${j}"`:'style="cursor:default"'}>
+        return g+`<div class="task notmine ${d?"done":""} ${can?"":"other"}" ${can&&!ghost?`data-todoi="${card.id}::${colId}::${i}::${ai}-${j}"`:'style="cursor:default"'}>
           <span class="box"></span><span><span class="lbl">${it.lbl}</span></span></div>`;
       }).join("")
       +`<div class="tgrp">Documents de son espace <span class="cnt3">${docsOk}/${DOCS_APPRENANT.length}</span></div>`
@@ -2057,7 +2068,7 @@ function taskHtml(card,colId,i,tk,ghost){
   if(tk.apTodo) return apTodoHtml(card,colId,i,tk,ghost);
   if(tk.todoRef) return todoRefHtml(card,colId,i,tk);
   const done=tk.sub&&card.ech ? card.ech.every(e=>e.st==="ok") : !!S.checks[k];
-  const can=canCheck(tk);
+  const can=canCheck(tk), mine=isMine(card,tk);
   const apsTk = tk.perAp ? peopleFor(card).aps : null;
   const multi = apsTk && apsTk.length>1;
   const lbl = multi && tk.tPl ? tk.tPl : tk.t;
@@ -2065,12 +2076,12 @@ function taskHtml(card,colId,i,tk,ghost){
   if(tk.grp){ const prev=tasksFor(card,colId)[i-1]; if(!prev||prev.grp!==tk.grp) h+=`<div class="tgrp">${tk.grp}</div>`; }
   const parts=splitActeur(tk,lbl);
   const suivante = !ghost && colId===card.col && i===prochaineTache(card,colId);
-  h+=`<div class="task ${done?"done":""} ${can?"":"other"} ${suivante?"next":""}" ${can&&!ghost?`data-c="${card.id}" data-col="${colId}" data-i="${i}"`:'style="cursor:default"'}>
+  h+=`<div class="task ${done?"done":""} ${can?"":"other"} ${mine?"":"notmine"} ${suivante?"next":""}" ${can&&!ghost?`data-c="${card.id}" data-col="${colId}" data-i="${i}"`:'style="cursor:default"'}>
     <span class="box"></span>
-    <span>${parts.who?`<span class="who">${parts.who}</span>`:""}<span class="lbl">${parts.what}</span>${suivante?`<span class="nextpill">à faire</span>`:""}${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tbtn" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.lien?`<a class="ilink tlien" data-frmact="${encodeURIComponent(tk.lien+" ouvert")}">${tk.lien}</a>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
+    <span>${parts.who?`<span class="who">${parts.who}</span>`:""}<span class="lbl">${parts.what}</span>${suivante?`<span class="nextpill">${mine?"à faire":"en attente"}</span>`:""}${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tbtn" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.lien?`<a class="ilink tlien" data-frmact="${encodeURIComponent(tk.lien+" ouvert")}">${tk.lien}</a>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
   </div>`;
   if(multi){
-    h+=`<div class="sub">`+apsTk.map(a=>`<div class="task other ${done?"done":""}" style="cursor:default"><span class="box"></span><span class="lbl" style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`;
+    h+=`<div class="sub">`+apsTk.map(a=>`<div class="task other notmine ${done?"done":""}" style="cursor:default"><span class="box"></span><span class="lbl" style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`;
   }
   if(payKind(card,tk)){
     const all=tasksFor(card,colId);
@@ -2196,7 +2207,7 @@ function historyFor(card){
     tasksFor(card,col.id).forEach((tk,i)=>{
       const k=key(card,col.id,i);
       const d=S.when[k]?new Date(S.when[k]):(()=>{const x=new Date(base);x.setHours(9+((i*2)%8),(i*17)%60,0,0);return x})();
-      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:col.label});
+      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:col.label,mine:isMine(card,tk)});
       const ev=evFor(card,tk); if(ev) rows.push({d:new Date(d.getTime()+60000),t:EV[ev],ev:1,e:col.label});
     });
   });
@@ -2204,7 +2215,7 @@ function historyFor(card){
     if(taskState(card,card.col,i,tk)){
       const k=key(card,card.col,i);
       const d=S.when[k]?new Date(S.when[k]):new Date();
-      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:cols[curIx].label});
+      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:cols[curIx].label,mine:isMine(card,tk)});
       const ev=evFor(card,tk); if(ev) rows.push({d:new Date(d.getTime()+60000),t:EV[ev],ev:1,e:cols[curIx].label});
     }
   });
@@ -2345,7 +2356,7 @@ function modalHtml(){
   h+=`<details class="msec2" data-k="hist"${S.histOpen?" open":""}><summary><span class="chev">▸</span>Historique <span class="n2">${nHist}/${nHist}</span></summary><div class="minner">`;
   h+=hist.map(r=>r.ev
     ?`<div class="hrow ev"><span class="d">${fmtWhen(r.d)}</span><span class="dot"></span><span>${r.t}</span></div>`
-    :`<div class="hrow"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.who?`<span class="who">${r.who}</span>`:""}${r.what||r.t}<span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("")||`<div class="hrow"><span class="w">Aucune tâche réalisée pour l'instant.</span></div>`;
+    :`<div class="hrow ${r.mine?"mine":""}"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.who?`<span class="who">${r.who}</span>`:""}${r.what||r.t}<span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("")||`<div class="hrow"><span class="w">Aucune tâche réalisée pour l'instant.</span></div>`;
   h+=`</div></details>`;
   h+=`<details class="msec2" data-k="cur"${S.curOpen!==false?" open":""}><summary><span class="chev">▸</span>Étape en cours <span class="n2">${done}/${tks.length}</span></summary><div class="minner">`;
   h+=`<div class="futcol en"><span class="pill"></span>${col.label}${col.open?`<span class="n2">ouverture ${openDateStr(card,col)} · ${col.open}</span>`:""}</div>`;
@@ -2361,7 +2372,7 @@ function modalHtml(){
   h+=`<details class="msec2" data-k="fut"${S.futOpen?" open":""}><summary><span class="chev">▸</span>À venir <span class="n2">0/${nFut}</span></summary><div class="minner">`;
   const apsFut=peopleFor(card).aps, multiFut=apsFut&&apsFut.length>1;
   h+=fut.map(f=>`<div class="futcol"><span class="pill"></span>${f.col.label}${f.col.open?`<span class="n2">ouverture ${openDateStr(card,f.col)} · ${f.col.open}</span>`:""}</div>`
-    +(f.tasks.length?f.tasks.map((tk,ti)=>(tk.todoRef||tk.apTodo)?taskHtml(card,f.col.id,ti,tk,true):`<div class="frow2">${tk.grp&&(!f.tasks[ti-1]||f.tasks[ti-1].grp!==tk.grp)?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask"><span class="box"></span><span>${(()=>{const sp=splitActeur(tk,(tk.perAp&&multiFut&&tk.tPl)?tk.tPl:tk.t);return (sp.who?`<span class="who">${sp.who}</span>`:"")+sp.what})()}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${(tk.perAp&&multiFut)?`<div class="sub">`+apsFut.map(a=>`<div class="ftask"><span class="box"></span><span style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`:""}${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
+    +(f.tasks.length?f.tasks.map((tk,ti)=>(tk.todoRef||tk.apTodo)?taskHtml(card,f.col.id,ti,tk,true):`<div class="frow2">${tk.grp&&(!f.tasks[ti-1]||f.tasks[ti-1].grp!==tk.grp)?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask ${isMine(card,tk)?"mine":""}"><span class="box"></span><span>${(()=>{const sp=splitActeur(tk,(tk.perAp&&multiFut&&tk.tPl)?tk.tPl:tk.t);return (sp.who?`<span class="who">${sp.who}</span>`:"")+sp.what})()}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${(tk.perAp&&multiFut)?`<div class="sub">`+apsFut.map(a=>`<div class="ftask"><span class="box"></span><span style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`:""}${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
       :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
   h+=`</div></details></div>`;
   if(card.kb==="session_fia"){
