@@ -1718,20 +1718,17 @@ const FORMATEURS = ["Sarah K.","Marc D.","Inès B."];
 /* fiches formateurs : ce que Staff porte aujourd'hui, rapatrié dans l'Annuaire */
 const FRM = {
  "Sarah K.":{id:"frm_sarah",nom:"Sarah Koné",email:"sarah.kone@gmail.com",tel:"06 24 55 10 87",villes:["Paris","Lille"],offres:["Niveau 1","Niveau 2","Coaching"],
-   onboarding:[["Contrat de collaboration signé",1],["Attestation URSSAF à jour",1],["RIB déposé",1],["Assurance responsabilité civile",1],["Charte qualité France IA",1]],
-   docs:[["CV","à jour · 12 juin"],["Contrat de collaboration","signé · 3 mars"],["Attestation URSSAF","valide jusqu'au 31 décembre"],["RIB","déposé"]],
+   onbFaits:5, docsEtat:{cv:"déposé le 12 juin",nda:"déposé le 3 mars",urssaf:"en attente d'approbation",contrat:"signé le 3 mars"},
    quali:[],retrait:"Demande de retrait de la session Paris N2 · 10-11 oct",appro:null,
    histo:[["Paris · 12-13 sept","Formation N1"],["Paris N2 · 4-5 juillet","Formation N2"],["Coaching Awa Diallo","Coaching 4 h"]],
    factures:[["Août 2026","1 400 €","en attente de validation"],["Juillet 2026","2 800 €","payée le 5 août"]]},
  "Marc D.":{id:"frm_marc",nom:"Marc Dubois",email:"marc.dubois@gmail.com",tel:"07 41 02 66 30",villes:["Bordeaux","Toulouse"],offres:["Niveau 1"],
-   onboarding:[["Contrat de collaboration signé",1],["Attestation URSSAF à jour",0],["RIB déposé",1],["Assurance responsabilité civile",1],["Charte qualité France IA",1]],
-   docs:[["CV","à jour · 2 août"],["Contrat de collaboration","signé · 14 janvier"],["Attestation URSSAF","expirée depuis le 30 juin"],["RIB","déposé"]],
-   quali:[["Formation N2","demandée le 19 août"]],retrait:null,appro:"Nouveau numéro de téléphone, en attente de validation",
+   onbFaits:3, docsEtat:{cv:"déposé le 2 août",contrat:"signé le 14 janvier"},
+   quali:[["Niveau 2","demandée le 19 août"]],retrait:null,appro:"Nouveau numéro de téléphone, en attente de validation",
    histo:[["Bordeaux · 26-27 sept","Formation N1"],["Bordeaux · 20-21 juin","Formation N1"]],
    factures:[["Juillet 2026","1 400 €","payée le 5 août"]]},
  "Inès B.":{id:"frm_ines",nom:"Inès Bertrand",email:"ines.bertrand@gmail.com",tel:"06 88 74 21 09",villes:["Lyon"],offres:["Niveau 1","Coaching"],
-   onboarding:[["Contrat de collaboration signé",1],["Attestation URSSAF à jour",1],["RIB déposé",0],["Assurance responsabilité civile",1],["Charte qualité France IA",0]],
-   docs:[["CV","à jour · 30 juillet"],["Contrat de collaboration","signé · 2 juin"],["Attestation URSSAF","valide jusqu'au 31 décembre"],["RIB","manquant"]],
+   onbFaits:3, docsEtat:{cv:"déposé le 2 août",contrat:"signé le 14 janvier"},
    quali:[],retrait:null,appro:null,
    histo:[["Lyon · 3-4 oct","demande en attente"]],
    factures:[]},
@@ -3540,7 +3537,7 @@ const FAQ_ENTRIES=[
  ["Closeurs","Le client n'a pas reçu son lien de mandat, que faire ?","Ouvrez la carte inscription : la tâche « génère le lien de mandat » porte un bouton de renvoi. Si le lien n'existe pas, l'anomalie apparaît dans Pilotage."],
  ["Closeurs","Comment changer le moyen de paiement d'une vente ?","Sur la fiche client, bouton Modifier de la vente : la carte de facturation change de rail automatiquement."],
  ["Formateurs","Je ne peux plus animer une session","Depuis la carte de la session, « Demander à me retirer » : France IA republie la session au shotgun et valide un remplaçant."],
- ["Formateurs","Quand ma prestation est-elle payée ?","Validez votre imputation dans le coffre-fort, créez votre facture : elle est réglée après validation. Deux verrous, l'étude de cas et l'inscription des CPF à la certification."],
+ ["Formateurs","Quand ma prestation est-elle payée ?","Votre prestation part en facturation depuis Mes prestations, colonne Facturer : créez votre facture : elle est réglée après validation. Deux verrous, l'étude de cas et l'inscription des CPF à la certification."],
  ["Formateurs","Un apprenant n'a pas émargé, que faire ?","Relancez-le sur le groupe WhatsApp le jour même. S'il est absent, France IA récupère le justificatif et l'apprenant est replacé ou passé en Lost."],
  ["Formateurs","Comment obtenir une nouvelle qualification ?","Depuis Mon profil, demandez la qualification voulue : France IA l'accepte ou la refuse, et les sessions correspondantes apparaissent alors dans À prendre."],
  ["Admins","Un virement n'apparaît pas sur la carte","Il est dans Anomalies, vue Facturation, ligne « Virement reçu non rapproché » : le rapprochement se fait dans Qonto, DELIV'IA relit le statut."],
@@ -3613,18 +3610,6 @@ function pageRessources(){
   }).join("");
   return h+`</div></div>`;
 }
-function pageRessourcesVieille(){
-  let h=`<div class="pagehead"><h1>Ressources & FAQ</h1></div>`;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.file}Supports de formation <span class="n2">une version par session, éditable avant le J1</span></div>`;
-  h+=[["Support Niveau 1","Deck complet des deux journées"],["Support Niveau 2","Deck avancé, prérequis Niveau 1"],["Support Intra","Deck adapté au cas du client"],["Grille de préparation des apprenants","Ce que chaque apprenant doit avoir fait avant le J1"]]
-    .map(([n,d])=>`<div class="frow"><div><div class="tt">${n}</div><div class="sm">${d}</div></div><button class="btn btn-s" data-frmact="${encodeURIComponent("Support ouvert dans un nouvel onglet")}">Ouvrir</button></div>`).join("");
-  h+=`</div><div class="fsec"><div class="sect-h">${ICO.cap}Canvas et vidéos</div>`;
-  h+=[["Canvas d'atelier","Trames imprimables des exercices"],["Vidéos de préparation","Trois modules à voir avant la première animation"],["Checklist d'animation","Le déroulé heure par heure"]]
-    .map(([n,d])=>`<div class="frow"><div><div class="tt">${n}</div><div class="sm">${d}</div></div><button class="btn btn-s" data-frmact="${encodeURIComponent("Ressource ouverte")}">Ouvrir</button></div>`).join("");
-  h+=`</div>`;
-  /* la meme FAQ que partout ailleurs, filtree sur son metier, et le meme kanban de remontees */
-  return h+pageFaq({inline:1});
-}
 /* Les huit gestes d'arrivée réellement demandés au formateur dans DELIV'IA 1.0
    (src/lib/planning/onboarding-checklists.ts, ONBOARDING_FORMATEUR). */
 const ONB_FRM=[
@@ -3649,9 +3634,9 @@ const DOCS_FRM=[
 const DOC_ST={approuve:["Approuvé","ok"],en_attente:["En attente d'approbation","warn"],refuse:["Refusé","err"],manquant:["À déposer",""]};
 /* Les dix champs que le formateur peut proposer de modifier (PROFIL_CHAMPS_MODIFIABLES). */
 const PROFIL_CHAMPS=[
- ["Nom complet","Sarah Koné"],["Téléphone","06 24 55 10 87"],["LinkedIn","linkedin.com/in/sarahkone"],
- ["Adresse (facturation)","18 rue de la Roquette, 75011 Paris"],["NDA (déclaration d'activité)","11 75 71 213 75"],
- ["SIRET","902 445 178 00016"],["Forme juridique","Micro-entreprise"],
+ ["Nom","Sarah Koné"],["Téléphone","06 24 55 10 87"],["LinkedIn","linkedin.com/in/sarahkone"],
+ ["Adresse (facturation)","18 rue de la Roquette, 75011 Paris"],["SIRET","902 445 178 00016"],
+ ["NDA (déclaration d'activité)","11 75 71 213 75"],["Forme juridique","Micro-entreprise"],
  ["TJM session (€/jour)","700 €"],["Tarif coaching (€/heure)","100 €"],["Spécialité","IA générative et automatisation"],
 ];
 const NIVEAUX_QUALIF=[["Niveau 1","Formation inter deux jours, socle"],["Niveau 2","Formation inter avancée, prérequis Niveau 1"],["Intra","Formation en entreprise, cas client"],["Coaching","Séances individuelles après le présentiel"]];
@@ -3662,11 +3647,14 @@ function pageProfilFormateur(){
   h+=chips([["",[["profil","Mon profil"],["coffre","Mon coffre-fort"]]]], vue, "fProfil");
   if(vue==="coffre"){
     /* le coffre ne porte plus que les pièces administratives : les imputations vivent dans le kanban */
-    const ok=DOCS_FRM.filter(d=>d[2]==="approuve").length;
-    h+=`<div class="fsec"><div class="sect-h">${ICO.file}Mes documents administratifs <span class="n2">${ok} sur ${DOCS_FRM.length} approuvés · 10 Mo par fichier</span>
+    /* la production masque le certificat Qualiopi aux formateurs qui ne sont pas en société */
+    const societe=!/micro|indépendant/i.test(PROFIL_CHAMPS.find(c=>c[0]==="Forme juridique")[1]);
+    const docs=DOCS_FRM.filter(d=>d[0]!=="qualiopi"||societe);
+    const ok=docs.filter(d=>d[2]==="approuve").length;
+    h+=`<div class="fsec"><div class="sect-h">${ICO.file}Mes documents administratifs <span class="n2">${ok} sur ${docs.length} approuvés · 10 Mo par fichier</span>
       <span class="right"><button class="btn btn-s" data-frmact="${encodeURIComponent("Fichier déposé : France IA le validera")}">+ Déposer un document</button></span></div>
       <div class="tblwrap"><table class="tbl"><thead><tr><th>Document</th><th>État</th><th>Dernier dépôt</th><th></th></tr></thead><tbody>`
-      +DOCS_FRM.map(([k,lbl,st,quand])=>`<tr><td><b>${lbl}</b></td><td><span class="chip ${DOC_ST[st][1]}">${DOC_ST[st][0]}</span></td><td class="sm">${quand||"aucun"}</td>
+      +docs.map(([k,lbl,st,quand])=>`<tr><td><b>${lbl}</b></td><td><span class="chip ${DOC_ST[st][1]}">${DOC_ST[st][0]}</span></td><td class="sm">${quand||"aucun"}</td>
         <td class="acts">${st==="manquant"?`<a class="ilink" data-frmact="${encodeURIComponent("Fichier déposé : France IA le validera")}">Déposer</a>`:`<a class="ilink" data-frmact="${encodeURIComponent("Document ouvert")}">Voir</a><a class="ilink" data-frmact="${encodeURIComponent("Nouveau fichier déposé : il remplace le précédent après validation")}">Remplacer</a>`}</td></tr>`).join("")
       +`</tbody></table></div></div>`;
     return h;
@@ -3717,6 +3705,24 @@ function pageProfilFormateur(){
   h+=`</div></div></div>`;
   return h;
 }
+/* Le marché du formateur : ce qui est publié au shotgun, et l'état de mes propres demandes.
+   nb = nombre de demandes déjà déposées par d'autres formateurs sur la même prestation. */
+const MARCHE=[
+ {id:"mk1",type:"inter",offre:"n1",sess:"lille",   nb:2},
+ {id:"mk2",type:"inter",offre:"n2",sess:"parisn2", nb:1, note:"republiée après un retrait"},
+ {id:"mk3",type:"inter",offre:"n1",sess:"lyon",    nb:4},
+ {id:"mk4",type:"inter",offre:"n1",sess:"bordeaux",nb:3, statut:"en_cours",d:"2026-08-18"},
+ {id:"mk5",type:"intra",titre:"Cabinet Verne & Associés",lieu:"Station F, Paris 13e",ap:5,nb:1,note:"dates à caler avec le client"},
+ {id:"mk6",type:"intra",titre:"Groupe Aster",lieu:"Euratechnologies, Lille",ap:12,nb:0,note:"deux journées en novembre"},
+ {id:"mk7",type:"intra",titre:"Garage Moderne",lieu:"Chez le client, Toulouse",ap:8,nb:0,statut:"acceptee",d:"2026-08-12"},
+ {id:"mk8",type:"coaching",kind:"prio",titre:"Sami Rezgui",lieu:"Station F, Paris 13e",h:4,nb:0,note:"votre apprenant de Paris · 12-13 sept"},
+ {id:"mk9",type:"coaching",kind:"prio",titre:"Nadia Slimani",lieu:"Visio",h:2,nb:0,note:"votre apprenante de Paris · 12-13 sept"},
+ {id:"mk10",type:"coaching",kind:"libre",titre:"Marc Leroy · Nexa Digital",lieu:"Station F, Paris 13e",h:4,nb:2,statut:"en_cours",d:"2026-08-21"},
+ {id:"mk11",type:"coaching",kind:"libre",titre:"Julie Meunier · Atelier Sud",lieu:"Visio",h:2,nb:3,statut:"refusee",d:"2026-08-09",motif:"un formateur naturel s'est finalement positionné"},
+];
+const MK_TYPES=[["inter","Inter"],["intra","Intra"],["coaching","Coaching"]];
+const MK_TITRES={inter:"Sessions inter à prendre",intra:"Sessions intra à prendre",coaching:"Coachings à prendre"};
+const MK_STATUTS=[["en_cours","Demandes en cours"],["acceptee","Acceptées"],["refusee","Refusées"]];
 function villeDuLieu(lieu){
   const r=LIEUX_REF.find(l=>lieu&&l.n&&lieu.startsWith(l.n));
   return r?r.ville:(lieu==="Visio"?"Visio":(lieu||"").split(", ").pop());
@@ -3764,7 +3770,7 @@ function pageAPrendre(){
       <div class="scell"><div class="d2 fort">${i.titre}</div><div class="v">${i.sous}</div></div>
       <div class="scell"><div class="d2">${i.lieu||"lieu à caler"}</div>${i.ville&&!qualOk(m)?`<div class="v warn2b">hors de vos villes ou de vos qualifications</div>`:""}</div>
       <div class="scell"><div class="d2">${i.places}</div><div class="v">${m.nb?`${m.nb} demande${m.nb>1?"s":""} en cours`:"aucune demande pour l'instant"}</div></div>
-      <div class="scell right"><button class="btn btn-p" data-demande="${encodeURIComponent(i.titre)}">${prio?"Valider":"Faire une demande"}</button></div>
+      <div class="scell right"><button class="btn btn-p" ${prio?`data-frmact="${encodeURIComponent("Coaching validé : il passe dans Mes prestations, colonne Préparer")}"`:`data-demande="${encodeURIComponent(i.titre)}"`}>${prio?"Valider":"Faire une demande"}</button></div>
     </div>`;
   };
   const tableau=list=>`<div class="slist wide compact"><div class="srow shead"><span>Prestation</span><span>Lieu</span><span>Places et demandes</span><span></span></div>`
@@ -4047,11 +4053,11 @@ function ficheFormateurHtml(key){
     +`</div></details>`;
   /* 4 · onboarding et documents administratifs, repliés */
   const ko="frm-onb-"+key;
-  const reste=f.onboarding.filter(o=>!o[1]).length;
+  const faitsF=f.onbFaits||0, reste=ONB_FRM.length-faitsF;
   h+=`<details class="accbloc" data-acc="${ko}" ${accKey(ko)?"open":""}><summary><span class="chev">▶</span><span class="tt">Onboarding</span><span class="end">${reste?`<span class="chip warn">${reste} à faire</span>`:`<span class="chip ok">complet</span>`}</span></summary><div class="inner">`
-    +f.onboarding.map(([lbl,ok])=>`<div class="lrow">${lbl}<span class="chip ${ok?"ok":"warn"}">${ok?"fait":"à faire"}</span></div>`).join("")
+    +ONB_FRM.map(([lbl],i)=>`<div class="lrow">${lbl}<span class="chip ${i<faitsF?"ok":"warn"}">${i<faitsF?"fait":"à faire"}</span></div>`).join("")
     +`<div class="subh" style="margin-top:14px">Documents administratifs</div>`
-    +f.docs.map(([lbl,st])=>`<div class="lrow">${lbl}<span class="chip ${/manquant|expirée/.test(st)?"warn":"ok"}">${st}</span></div>`).join("")
+    +DOCS_FRM.map(([k,lbl])=>{const st=(f.docsEtat||{})[k]; return `<div class="lrow">${lbl}<span class="chip ${!st?"warn":/attente/.test(st)?"warn":"ok"}">${st||"non déposé"}</span></div>`}).join("")
     +`</div></details>`;
   /* 5 · sessions, tout en bas */
   const ks="frm-sess-"+key;
@@ -4383,7 +4389,7 @@ const ONBOARDING={
    "Ajouter sur la landing page",
    "Faire un post LinkedIn d'annonce",
    "Organiser le passage de la certification"]],
-  ["Documents à recevoir",["CV","NDA","Attestation URSSAF","Exonération de TVA","Attestation Qualiopi","Contrat signé"]]],
+  ["Documents à recevoir",["CV","Attestation NDA","Vigilance URSSAF","Exonération de TVA","Certificat Qualiopi (société)","Contrat de collaboration signé"]]],
  closeurs:[["Administratif",["Contrat signé","Compte GHL créé"]],
            ["Outils",["Accès DELIV'IA","Formation aux outils"]],
            ["Vente",["Script validé en écoute"]]],
@@ -4487,7 +4493,7 @@ function pageAnnuaire(){
       +`</tbody></table></div>`;
   } else if(f==="formateurs"){
     h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>Villes</th><th>Offres autorisées</th><th>Onboarding</th><th>À traiter</th><th>Fiche</th></tr></thead><tbody>`
-      +FORMATEURS.map(k=>{const f=FRM[k];const reste=f.onboarding.filter(o=>!o[1]).length;const att=(f.appro?1:0)+f.quali.length+(f.retrait?1:0);
+      +FORMATEURS.map(k=>{const f=FRM[k];const reste=ONB_FRM.length-(f.onbFaits||0);const att=(f.appro?1:0)+f.quali.length+(f.retrait?1:0);
         return `<tr><td><b>${f.nom}</b></td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td>${reste?`<span class="chip warn">${reste} à faire</span>`:`<span class="chip ok">complet</span>`}</td><td>${att?`<span class="chip warn">${att}</span>`:`<span class="muted">rien</span>`}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche formateur</a></td></tr>`}).join("")
       +`</tbody></table></div>`;
   } else if(f==="closeurs"||f==="setteurs"||f==="internes"){
@@ -4643,7 +4649,7 @@ const STUBS = {
  generer:["Générer","Génération à la demande : devis, convention, lien de mandat, facture depuis la fiche client."],
  aprendre:["À prendre","Les sessions et coachings publiés au Shotgun, disponibles à la demande. Le formateur du présentiel garde la priorité sur les coachings de ses apprenants."],
  profil:["Mon profil","Vos informations, qualifications, villes de notification et offres autorisées."],
- ressources:["Ressources & FAQ","Vidéos, canvas et supports de formation, plus la FAQ formateur et la remontée de feedback."],
+ ressources:["Ressources","Le catalogue tenu par France IA : vidéos, canvas, supports et documents administratifs."],
 };
 function pageStub(id){
   const s=STUBS[id]||["Page",""];
