@@ -4032,13 +4032,15 @@ function onboardingHtml(pop){
 function pageEquipe(){
   const pops=[["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["interne","Interne"]];
   const pop=pops.some(x=>x[0]===S.fEq)?S.fEq:"formateurs";
+  /* l'interne n'a que sa liste : ni parcours d'arrivée à suivre, ni espace de ressources dédié */
   const vues=pop==="formateurs"
     ? [["liste","Liste"],["onboarding","Onboarding"],["ressources","Ressources"],["faq","FAQ & retours"],["demandes","Demandes"]]
+    : pop==="interne" ? [["liste","Liste"]]
     : [["liste","Liste"],["onboarding","Onboarding"],["ressources","Ressources"],["faq","FAQ & retours"]];
   const v=vues.some(x=>x[0]===S.fEqV)?S.fEqV:"liste";
   let h=`<div class="pagehead"><h1>Équipe</h1></div>`;
   h+=chips([["",pops]], pop, "fEq");
-  h+=`<div class="fbar" style="margin-top:-2px">`+chips([["",vues]], v, "fEqV")+`</div>`;
+  if(vues.length>1) h+=`<div class="fbar" style="margin-top:-2px">`+chips([["",vues]], v, "fEqV")+`</div>`;
   if(v==="onboarding") return h+onboardingHtml(pop);
   if(v==="ressources") return h+tableauRessources(ressourcesDe(pop),pop);
   if(v==="faq") return h+pageFaq({pub:pop==="formateurs"?"Formateurs":pop==="setteurs"?"Setteurs":pop==="interne"?"Admins":"Closeurs"});
