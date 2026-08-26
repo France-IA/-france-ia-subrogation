@@ -3929,12 +3929,14 @@ function ficheSessionHtml(id){
   /* section 5 : publication ARD, visible dès que la session est publiée */
   if(c.col!=="brouillon"){
     const sc=sessCounts(c);
+    /* la publication sur l'ARD est un levier commercial : le closeur la pilote aussi */
+    const ard=adm||S.role==="closer";
     const vis=c.ardVisible!==false; const edp=S.editPlafond===c.id;
     h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Visibilité sur ARD</div><div class="ardduo">
       <div class="ardleft">
-        <div class="fld"><div class="k">Visible sur ARD</div><div class="v swrow">${adm?`<span class="sw ${vis?"on":""}" data-ardtoggle="${c.id}"><i></i></span>`:""}<span class="${vis?"":"muted"}">${vis?"Activée":"Désactivée"}</span></div></div>
+        <div class="fld"><div class="k">Visible sur ARD</div><div class="v swrow">${ard?`<span class="sw ${vis?"on":""}" data-ardtoggle="${c.id}"><i></i></span>`:""}<span class="${vis?"":"muted"}">${vis?"Activée":"Désactivée"}</span></div></div>
         <div class="fld"><div class="k">Places réelles restantes</div><div class="v">${Math.max(0,sc.cap-sc.ins-sc.enc)} sur ${sc.cap} <span class="muted">(${sc.ins} inscrits, ${sc.enc} en cours)</span></div></div>
-        <div class="fld"><div class="k">Places maximum affichées (plafond fictif)</div><div class="v swrow">${!adm?`<span>${c.plafond||sc.cap}</span>`:edp?`<input class="edin" id="plafondIn" type="number" value="${c.plafond||sc.cap}" style="width:90px;margin:0"><button class="btn btn-p" data-plafondsave="${c.id}">Enregistrer</button><button class="btn btn-s" data-plafondcancel="1">Annuler</button>`:`<span>${c.plafond||sc.cap}</span><a class="ilink" data-plafondedit="${c.id}">Modifier</a>`}</div></div>
+        <div class="fld"><div class="k">Places maximum affichées (plafond fictif)</div><div class="v swrow">${!ard?`<span>${c.plafond||sc.cap}</span>`:edp?`<input class="edin" id="plafondIn" type="number" value="${c.plafond||sc.cap}" style="width:90px;margin:0"><button class="btn btn-p" data-plafondsave="${c.id}">Enregistrer</button><button class="btn btn-s" data-plafondcancel="1">Annuler</button>`:`<span>${c.plafond||sc.cap}</span><a class="ilink" data-plafondedit="${c.id}">Modifier</a>`}</div></div>
       </div>
       <div class="ardright"><div class="k">Fermeture des inscriptions</div>
         <div class="closegrid">${ardClosings(c).map(x=>`<div class="closerow"><span class="fintxt">${x.lbl}</span><span class="cd">${x.date}</span><span class="cl ${x.left<0?"off":x.left<=3?"warn":""}">${x.txt}</span><span class="cr">${x.rule}</span></div>`).join("")}</div>
