@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DELIV'IA 2.0 · présentations possibles des ToDo</title>
+<title>DELIV'IA 2.0 · propositions de design</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -146,6 +146,79 @@ section.prop.today{background:#fbfcfd;border-style:dashed}
 
 .foot{margin-top:34px;padding-top:22px;border-top:1px solid var(--line-2);color:var(--ink-500);font-size:13.5px;max-width:840px}
 .foot b{color:var(--ink-800)}
+
+/* bandeau de partie */
+.part{margin:54px 0 26px}
+.part:first-of-type{margin-top:0}
+.part .pk{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-400);margin-bottom:7px}
+.part h2{font-size:23px;font-weight:700;color:var(--ink-900);letter-spacing:-.015em;margin-bottom:9px}
+.part p{color:var(--ink-500);max-width:800px}
+.sommaire{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.sommaire a{font-size:13px;font-weight:600;color:var(--ink-700);background:#fff;border:1px solid var(--line-2);border-radius:9px;padding:8px 13px;text-decoration:none}
+.sommaire a:hover{border-color:var(--primary);color:var(--primary)}
+
+/* ══ FAQ, socle commun aux trois propositions ══ */
+.q{border-bottom:1px solid var(--line);padding:11px 0;display:flex;gap:10px;align-items:flex-start}
+.q:last-child{border-bottom:none}
+.q .chev{color:var(--ink-300);font-size:10px;margin-top:4px}
+.q .txt{font-size:13.5px;font-weight:600;color:var(--ink-800)}
+.q .rep{font-size:12.5px;color:var(--ink-500);margin-top:4px;line-height:1.55;max-width:640px}
+.q .meta{margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mini{font-size:11.5px;font-weight:600;color:var(--ink-500);border:1px solid var(--line-2);border-radius:7px;padding:3px 9px;background:#fff}
+.mini.p{background:var(--primary);border-color:var(--primary);color:#fff}
+.search{display:flex;align-items:center;gap:9px;border:1px solid var(--line-2);border-radius:11px;background:#fff;padding:11px 14px}
+.search .ic{color:var(--ink-300)}
+.search input{border:none;outline:none;font:inherit;font-size:14px;color:var(--ink-800);flex:1;background:none}
+.search input::placeholder{color:var(--ink-300)}
+
+/* proposition A : deux colonnes */
+.duoA{display:grid;grid-template-columns:1.55fr 1fr;gap:20px;align-items:start}
+@media(max-width:900px){.duoA{grid-template-columns:1fr}}
+.pane{background:#fff;border:1px solid var(--line-2);border-radius:13px;padding:16px 18px}
+.pane.soft{background:#fbfcfd}
+.pane h3{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-500);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.pane h3 .cnt{font-weight:600;color:var(--ink-300);letter-spacing:0;text-transform:none;font-size:11.5px}
+.mine{border-left:3px solid var(--line-2);padding:9px 0 9px 12px;margin-bottom:10px}
+.mine:last-of-type{margin-bottom:0}
+.mine.enc{border-left-color:var(--warn)} .mine.ok{border-left-color:var(--ok)} .mine.att{border-left-color:var(--ink-300)}
+.mine .t2{font-size:13px;font-weight:600;color:var(--ink-800);line-height:1.4}
+.mine .s2{font-size:11.5px;color:var(--ink-400);margin-top:3px}
+.cta{margin-top:14px;border-top:1px dashed var(--line-2);padding-top:13px}
+.cta p{font-size:12.5px;color:var(--ink-500);margin-bottom:9px}
+
+/* proposition B : le centre d'aide */
+.helpc{background:linear-gradient(180deg,#f5f7ff,#fff 62%);border:1px solid var(--line-2);border-radius:15px;padding:26px 26px 22px}
+.helpc .hh{font-size:17px;font-weight:700;color:var(--ink-900);margin-bottom:4px}
+.helpc .hs{font-size:13px;color:var(--ink-500);margin-bottom:16px}
+.helpc .res{margin-top:18px;background:#fff;border:1px solid var(--line-2);border-radius:12px;padding:6px 16px}
+.nores{margin-top:14px;background:#fff;border:1px dashed var(--ink-300);border-radius:12px;padding:15px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.nores .nt{font-size:13.5px;font-weight:600;color:var(--ink-800)}
+.nores .ns{font-size:12.5px;color:var(--ink-500);margin-top:2px}
+.nores .act2{margin-left:auto}
+.trail{margin-top:16px;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.trail .lb{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-400)}
+.trail .pill{font-size:12px;font-weight:600;color:var(--ink-600,#475569);background:#fff;border:1px solid var(--line-2);border-radius:999px;padding:5px 12px}
+
+/* proposition C : le fil unique */
+.fil{background:#fff;border:1px solid var(--line-2);border-radius:13px;overflow:hidden}
+.filbar{display:flex;gap:8px;padding:13px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center}
+.filbar .lb{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-400);margin-right:2px}
+.filbar button{font-size:12.5px;font-weight:600;color:var(--ink-500);border-radius:8px;padding:5px 11px}
+.filbar button.on{background:var(--ink-900);color:#fff}
+.fl{display:flex;gap:14px;padding:14px 16px;border-bottom:1px solid var(--line);align-items:flex-start}
+.fl:last-child{border-bottom:none}
+.fl .etat{width:112px;flex-shrink:0}
+.fl .co{flex:1;min-width:0}
+.fl .t3{font-size:13.5px;font-weight:600;color:var(--ink-800)}
+.fl .r3{font-size:12.5px;color:var(--ink-500);margin-top:3px;line-height:1.55}
+.fl .m3{font-size:11.5px;color:var(--ink-400);margin-top:5px}
+.fl .vote{width:44px;flex-shrink:0;text-align:center;border:1px solid var(--line-2);border-radius:9px;padding:5px 0;background:#fbfcfd}
+.fl .vote b{display:block;font-size:13px;color:var(--ink-700)}
+.fl .vote span{font-size:9.5px;color:var(--ink-400)}
+.et{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:3px 9px}
+.et.rep{color:var(--ok);background:var(--ok-50)}
+.et.enc{color:#92400e;background:var(--warn-50)}
+.et.ouv{color:var(--ink-500);background:var(--line)}
 </style>
 </head>
 <body>
@@ -153,10 +226,19 @@ section.prop.today{background:#fbfcfd;border-style:dashed}
 
 <header class="top">
   <div class="kick">DELIV'IA 2.0 · maquette</div>
-  <h1>Trois façons de présenter les tâches d'une carte</h1>
-  <p>Les trois propositions montrent exactement la même chose : l'inscription CPF de Lucas Moreau, prise depuis le premier contact jusqu'à la déclaration de sortie, avec ses tâches faites, celle qui est en cours et celles qui restent. Seule la mise en forme change, pour comparer à données égales.</p>
-  <p>Le code couleur des acteurs est commun aux trois : France IA en indigo, le closeur en cyan, le client en ambre, le formateur en violet. Ce qui est barré ou pâli est fait, ce qui est encadré de bleu est l'action du moment.</p>
+  <h1>Propositions de design</h1>
+  <p>Cette page sert de banc d'essai : chaque partie prend un écran de DELIV'IA 2.0 et en propose plusieurs mises en forme, sur les mêmes données, pour que tu choisisses en comparant plutôt qu'en imaginant. Rien de ce qui est ici n'est branché dans la maquette.</p>
+  <div class="sommaire">
+    <a href="#partie-1">1 · Les tâches d'une carte</a>
+    <a href="#partie-2">2 · La FAQ vue par un externe</a>
+  </div>
 </header>
+
+<div class="part" id="partie-1">
+  <div class="pk">Partie 1</div>
+  <h2>Trois façons de présenter les tâches d'une carte</h2>
+  <p>Les trois propositions montrent exactement la même chose : l'inscription CPF de Lucas Moreau, prise depuis le premier contact jusqu'à la déclaration de sortie, avec ses tâches faites, celle qui est en cours et celles qui restent. Seule la mise en forme change, pour comparer à données égales. Le code couleur des acteurs est commun aux trois : France IA en indigo, le closeur en cyan, le client en ambre, le formateur en violet.</p>
+</div>
 
 <!-- ─────────── aujourd'hui ─────────── -->
 <section class="prop today">
@@ -319,6 +401,118 @@ section.prop.today{background:#fbfcfd;border-style:dashed}
 <div class="foot">
   <p><b>Mon avis.</b> La frise est celle que je retiendrais pour la fiche d'une carte, parce qu'elle garde le geste de cocher tout en montrant la chaîne, et qu'elle absorbe proprement les sous-tâches du formateur et de l'apprenant. Le tableau de séquence irait bien à un écran de suivi, quand on veut balayer trente dossiers. Les couloirs valent surtout pour la page de paramétrage des rails, là où l'on dessine le processus plutôt que l'on ne l'exécute.</p>
   <p style="margin-top:9px">Rien de tout cela n'est encore branché dans la maquette : dis-moi laquelle te parle et je la porte sur les vraies cartes.</p>
+</div>
+
+<!-- ══════════════ PARTIE 2 ══════════════ -->
+<div class="part" id="partie-2">
+  <div class="pk">Partie 2</div>
+  <h2>Trois façons de présenter la FAQ à un externe</h2>
+  <p>Depuis la dernière version, un closeur, un formateur ou un setteur ne rédige plus de réponse et ne choisit plus son public : il lit la FAQ de son métier, il peut dire qu'une réponse ne l'aide pas en expliquant pourquoi, et il pose ses questions depuis les remontées. Reste à décider à quoi cet écran ressemble. Les trois propositions utilisent les mêmes questions, celles du closeur.</p>
+</div>
+
+<!-- ─── proposition A ─── -->
+<section class="prop">
+  <div class="ph"><span class="num">Proposition A</span><h2>Chercher à gauche, suivre ses remontées à droite</h2></div>
+  <p class="lede">La page se coupe en deux : à gauche les réponses de France IA, à droite ce que la personne a elle-même remonté, avec l'état de chaque ticket. Le geste « je n'ai pas trouvé, je demande » est en bas de la colonne de droite, juste sous ses propres questions en cours, là où le regard finit naturellement sa course.</p>
+  <div class="demo duoA">
+    <div class="pane">
+      <h3>Questions et réponses <span class="cnt">pour les closeurs</span></h3>
+      <div class="search" style="margin-bottom:6px"><span class="ic">⌕</span><input placeholder="Chercher dans les réponses"></div>
+      <div class="q"><span class="chev">▶</span><div><div class="txt">Où trouver la convention signée d'un client ?</div></div></div>
+      <div class="q"><span class="chev">▾</span><div><div class="txt">Le client n'a pas reçu son lien de mandat, que faire ?</div>
+        <div class="rep">Ouvrez la carte inscription : la tâche « génère le lien de mandat » porte le bouton pour le renvoyer. Si le mail est en échec, l'anomalie « E-mail de facturation en échec » le signale.</div>
+        <div class="meta"><button class="mini">Cette réponse ne m'aide pas</button></div></div></div>
+      <div class="q"><span class="chev">▶</span><div><div class="txt">Comment changer le moyen de paiement d'une vente ?</div></div></div>
+    </div>
+    <div class="pane soft">
+      <h3>Mes remontées <span class="cnt">3</span></h3>
+      <div class="mine enc"><div class="t2">Qui relance le client quand l'OPCO ne répond pas ?</div><div class="s2">Question · en cours · 2 commentaires · 21 août</div></div>
+      <div class="mine ok"><div class="t2">Voir les places restantes depuis la liste des sessions</div><div class="s2">Idée · terminée, passée dans la FAQ · 14 août</div></div>
+      <div class="mine att"><div class="t2">La recherche globale ne trouve pas les intra</div><div class="s2">Bug · à traiter · 6 votes · 23 août</div></div>
+      <div class="cta"><p>Vous n'avez pas trouvé votre réponse ?</p><button class="mini p">Poser une question à France IA</button></div>
+    </div>
+  </div>
+  <div class="verdict">
+    <div><h4>Ce que ça apporte</h4><p>Chacun retrouve ses propres questions, ce qui est aujourd'hui impossible : la maquette montre bien deux tickets écrits par des formateurs, mais leurs auteurs ne les voient nulle part. Et la page tient sur un écran, sans défilement.</p></div>
+    <div><h4>Ce que ça coûte</h4><p>Les remontées des autres disparaissent de la vue principale, donc l'effet d'entraide se perd : on ne voit plus qu'un collègue a déjà posé la même question. Il faudrait un onglet « toutes les remontées » à côté.</p></div>
+  </div>
+</section>
+
+<!-- ─── proposition B ─── -->
+<section class="prop">
+  <div class="ph"><span class="num">Proposition B</span><h2>Le centre d'aide : une seule barre de recherche</h2></div>
+  <p class="lede">Un seul point d'entrée, comme dans les centres d'aide des logiciels grand public : on tape sa question en langage courant, la page cherche à la fois dans les réponses et dans les remontées déjà posées. Quand rien ne correspond, le bloc de secours propose de poser la question, et le texte déjà tapé part avec, sans avoir à le réécrire.</p>
+  <div class="demo">
+    <div class="helpc">
+      <div class="hh">Comment pouvons-nous vous aider ?</div>
+      <div class="hs">Cherchez dans les réponses de France IA et dans ce que vos collègues ont déjà remonté.</div>
+      <div class="search"><span class="ic">⌕</span><input value="relance opco" readonly></div>
+      <div class="res">
+        <div class="q"><span class="chev">▾</span><div><div class="txt">Qui relance le client quand l'OPCO ne répond pas ?</div>
+          <div class="rep">Question posée par Chloé M. le 21 août, en cours de traitement. Deux commentaires, pas encore de réponse officielle.</div>
+          <div class="meta"><button class="mini">Suivre cette question</button><button class="mini">Ajouter un commentaire</button></div></div></div>
+        <div class="q"><span class="chev">▶</span><div><div class="txt">Combien de temps attendre un accord de prise en charge ?</div><div class="rep">Réponse de France IA, mise à jour le 8 août.</div></div></div>
+      </div>
+      <div class="nores">
+        <div><div class="nt">Toujours pas la bonne réponse ?</div><div class="ns">Votre question part telle que vous l'avez écrite, France IA répond et la publie dans la FAQ.</div></div>
+        <div class="act2"><button class="mini p">Poser « relance opco »</button></div>
+      </div>
+      <div class="trail"><span class="lb">Recherché récemment</span><span class="pill">mandat non reçu</span><span class="pill">changer de session</span><span class="pill">facture Qonto</span></div>
+    </div>
+  </div>
+  <div class="verdict">
+    <div><h4>Ce que ça apporte</h4><p>Un seul geste au lieu de trois, et surtout la question part avec le texte déjà tapé : le taux de questions posées augmente toujours quand on supprime la page blanche. La recherche montre aussi qu'un collègue a déjà demandé la même chose, ce qui évite les doublons.</p></div>
+    <div><h4>Ce que ça coûte</h4><p>Une page vide tant qu'on n'a rien tapé : on ne découvre plus les réponses par hasard, alors qu'une liste ouverte donne envie de lire. Il faudrait afficher les réponses les plus consultées sous la barre.</p></div>
+  </div>
+</section>
+
+<!-- ─── proposition C ─── -->
+<section class="prop">
+  <div class="ph"><span class="num">Proposition C</span><h2>Le fil unique : la FAQ n'est qu'un état des remontées</h2></div>
+  <p class="lede">On supprime la frontière entre les deux blocs. Il n'y a plus qu'une liste de sujets, chacun avec son état : répondu, en cours, ou tout juste posé. La FAQ devient simplement le filtre « réponse officielle ». C'est la présentation la plus fidèle au cycle réel, puisqu'une remontée traitée finit déjà par devenir une entrée de FAQ.</p>
+  <div class="demo">
+    <div class="fil">
+      <div class="filbar"><span class="lb">Voir</span><button class="on">Tout</button><button>Réponses officielles</button><button>En cours</button><button>Mes sujets</button>
+        <span style="margin-left:auto"><button class="mini p">Poser une question</button></span></div>
+      <div class="fl">
+        <div class="etat"><span class="et rep">répondu</span></div>
+        <div class="co"><div class="t3">Le client n'a pas reçu son lien de mandat, que faire ?</div>
+          <div class="r3">Ouvrez la carte inscription : la tâche « génère le lien de mandat » porte le bouton pour le renvoyer.</div>
+          <div class="m3">réponse de France IA · mise à jour le 12 août</div></div>
+        <div class="vote"><b>▲</b><span>utile</span></div>
+      </div>
+      <div class="fl">
+        <div class="etat"><span class="et enc">en cours</span></div>
+        <div class="co"><div class="t3">Qui relance le client quand l'OPCO ne répond pas ?</div>
+          <div class="r3">Deux commentaires, France IA doit trancher entre le closeur et l'admin.</div>
+          <div class="m3">posée par Chloé M. · 21 août</div></div>
+        <div class="vote"><b>2</b><span>votes</span></div>
+      </div>
+      <div class="fl">
+        <div class="etat"><span class="et ouv">posé</span></div>
+        <div class="co"><div class="t3">La recherche globale ne trouve pas les intra</div>
+          <div class="r3">Signalé comme un bug, pas encore pris en charge.</div>
+          <div class="m3">posé par vous · 23 août</div></div>
+        <div class="vote"><b>6</b><span>votes</span></div>
+      </div>
+      <div class="fl">
+        <div class="etat"><span class="et rep">répondu</span></div>
+        <div class="co"><div class="t3">Voir les places restantes depuis la liste des sessions</div>
+          <div class="r3">Livré : la page Session affiche les places libres et la prochaine fermeture d'inscription.</div>
+          <div class="m3">idée de Marc D. · devenue une réponse le 14 août</div></div>
+        <div class="vote"><b>8</b><span>votes</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="verdict">
+    <div><h4>Ce que ça apporte</h4><p>Plus de question « où est-ce que je cherche ». Le cycle devient visible : une question posée monte, est traitée, puis se fige en réponse officielle. Le vote sert enfin à quelque chose, il fait remonter ce qui manque le plus à l'équipe.</p></div>
+    <div><h4>Ce que ça coûte</h4><p>La FAQ perd son statut de référence stable : une réponse validée par France IA se retrouve à côté d'un ticket ouvert par un collègue, et les deux n'ont pas la même autorité. Il faut que l'étiquette d'état soit très lisible, sinon on croit lire une consigne officielle alors qu'on lit une opinion.</p></div>
+  </div>
+</section>
+
+<div class="foot">
+  <p><b>Mon avis.</b> La proposition B est celle qui changera le plus les usages, parce que le vrai problème n'est pas de lire la FAQ, c'est d'oser poser sa question : partir du texte déjà tapé supprime le seul moment où l'on renonce. La proposition A est la plus rassurante et la moins risquée, elle rend surtout à chacun ses propres remontées, qui sont aujourd'hui invisibles pour leurs auteurs. La proposition C est la plus juste sur le fond, mais elle demande une discipline d'étiquetage : le jour où une opinion passe pour une consigne, c'est un problème de conformité, pas de confort.</p>
+  <p style="margin-top:9px">Si tu veux mon combiné : la barre de recherche de B en tête de page, la colonne « mes remontées » de A à droite, et on garde le kanban actuel en dessous.</p>
 </div>
 
 </div>
