@@ -1074,14 +1074,14 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .ardleft{display:flex;flex-direction:column;gap:12px}
 .ardright .k{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;margin-bottom:2px}
 .closegrid{display:flex;flex-direction:column;gap:2px}
-.closerow{display:flex;align-items:center;gap:12px;padding:8px 2px;border-top:1px solid var(--line);font-size:13px}
+.closerow{display:grid;grid-template-columns:96px 132px 1fr auto;align-items:baseline;gap:14px;padding:9px 2px;border-top:1px solid var(--line);font-size:13px}
 .closerow:first-child{border-top:none}
-.closerow .chip{min-width:96px;justify-content:center}
-.closerow .cd{color:var(--ink-900);font-weight:500;min-width:130px}
+.closerow .fintxt{font-weight:500}
+.closerow .cd{color:var(--ink-900);font-weight:500;font-variant-numeric:tabular-nums}
 .closerow .cl{color:var(--ok);font-weight:600}
 .closerow .cl.warn{color:var(--warn)}
 .closerow .cl.off{color:var(--ink-400);font-weight:500}
-.closerow .cr{margin-left:auto;font-size:11.5px;color:var(--ink-400)}
+.closerow .cr{justify-self:end;text-align:right;font-size:11.5px;color:var(--ink-400)}
 .sw i{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgb(0 0 0/.2);transition:left .15s}
 .sw.on{background:var(--primary)}
 .sw.on i{left:16px}
