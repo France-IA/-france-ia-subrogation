@@ -321,7 +321,15 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* liste sessions closer */
 .slist{display:flex;flex-direction:column;gap:10px;max-width:680px}
 .slist.wide{max-width:none}
-.slist.wide .srow{display:grid;grid-template-columns:1.5fr 1.3fr 1.2fr 1.2fr auto;gap:18px;align-items:center}
+.slist.wide .srow{display:grid;grid-template-columns:1.4fr 1.3fr 1.15fr 1.5fr 190px;gap:18px;align-items:center}
+.slist .fcell{display:flex;flex-direction:column;gap:2px}
+.slist .fline{display:grid;grid-template-columns:74px 78px 1fr;gap:6px;font-size:11.5px;color:var(--ink-500);align-items:baseline}
+.slist .fline .fq{font-weight:600;color:var(--ink-700)}
+.slist .fline .fd{font-variant-numeric:tabular-nums}
+.slist .fline .fr{color:var(--ink-400)}
+.slist .fline.warn .fq,.slist .fline.warn .fr{color:#b45309}
+.slist .fline.off{opacity:.5}
+.slist .fline.off .fr{text-decoration:line-through}
 .slist.wide .srow.shead{background:none;box-shadow:none;padding:2px 16px 0;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-400)}
 .slist .scell .d2{font-size:13px;color:var(--ink-700)}
 .slist .scell .d2.ko{color:var(--err)}
@@ -464,6 +472,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .col-open a{color:var(--ink-700);text-decoration:underline;text-underline-offset:2px}
 .apprev{background:#f8fafc;border:1px dashed var(--line-2);border-radius:12px;padding:16px;margin-top:4px}
 .espin{margin:12px 0}
+.typewrap{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:8px}
+.typecard{display:flex;flex-direction:column;gap:3px;text-align:left;border:1px solid var(--line-2);border-radius:11px;padding:11px 13px;background:#fff}
+.typecard:hover{border-color:var(--ink-300)}
+.typecard.on{border-color:var(--primary);background:var(--primary-50);box-shadow:0 0 0 1px var(--primary)}
+.typecard .tc-t{font-size:13.5px;font-weight:600;color:var(--ink-900)}
+.typecard .tc-s{font-size:11.5px;color:var(--ink-400);line-height:1.35}
+.typecard.on .tc-s{color:var(--primary-dark)}
 .espin label{display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-500);margin-bottom:5px}
 .espin .edin,.espin textarea{width:100%}
 .espin .pd{font-size:11px;color:var(--ink-400);margin-top:4px}
@@ -2495,29 +2510,37 @@ function pageSessions(){
     const moisLbl=m=>new Date(m+"-01T12:00:00").toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
     const moisDe=c=>(c.dt&&c.dt.j1)?c.dt.j1.slice(0,7):"";
     const mois=[...new Set(toutes.map(moisDe).filter(Boolean))].sort();
-    const lieux=[...new Set(toutes.map(c=>c.lieu).filter(Boolean))].sort();
+    /* le lieu se filtre par pays ou par salle : le pays d'abord, ses villes en dessous */
+    const paysList=[...new Set(LIEUX_REF.filter(l=>l.ville!=="—").map(l=>l.pays))].sort();
+    const refDe=c=>LIEUX_REF.find(l=>c.lieu&&l.n&&c.lieu.startsWith(l.n));
+    const lieuOk=c=>{const v=S.fSessLieuC;
+      if(!v||v==="all") return true;
+      if(v.startsWith("pays::")){const r=refDe(c);return !!r&&r.pays===v.slice(6);}
+      return c.lieu===v;};
     const libresDe=c=>{const sc=sessCounts(c);return Math.max(0,sc.cap-sc.ins-sc.enc)};
     const open=toutes.filter(c=>(!S.fSessMois||S.fSessMois==="all"||moisDe(c)===S.fSessMois)
-      &&(!S.fSessLieuC||S.fSessLieuC==="all"||c.lieu===S.fSessLieuC)
-      &&(!S.fSessDispo||libresDe(c)>0));
+      &&lieuOk(c)&&(!S.fSessDispo||libresDe(c)>0));
     let h=`<div class="pagehead"><h1>Session</h1></div>`;
     h+=chips([["",[["n1","Formation N1"],["n2","Formation N2"]]]], f, "fSession");
     h+=`<div class="fbar"><select class="fsel" data-fsel="fSessMois"><option value="all">Tous les mois</option>`
       +mois.map(m=>`<option value="${m}" ${S.fSessMois===m?"selected":""}>${moisLbl(m)}</option>`).join("")
       +`</select><select class="fsel" data-fsel="fSessLieuC"><option value="all">Tous les lieux</option>`
-      +lieux.map(l=>`<option value="${l}" ${S.fSessLieuC===l?"selected":""}>${l}</option>`).join("")
-      +`</select><label class="fchk" style="margin:0 0 0 auto"><input type="checkbox" data-sessdispo="1" ${S.fSessDispo?"checked":""}> Seulement les sessions qui ont encore des places</label></div>`;
-    h+=`<div class="slist wide"><div class="srow shead"><span>Session</span><span>Lieu et formateur</span><span>Places</span><span>Prochaine fermeture</span><span></span></div>`;
+      +paysList.map(p=>`<optgroup label="${p}"><option value="pays::${p}" ${S.fSessLieuC==="pays::"+p?"selected":""}>${p} · tous les lieux</option>`
+        +LIEUX_REF.filter(l=>l.pays===p&&l.ville!=="—").map(l=>{const v=LIEUX.find(x=>x.startsWith(l.n))||l.n;
+          return `<option value="${v}" ${S.fSessLieuC===v?"selected":""}>${l.ville} · ${l.n}</option>`}).join("")+`</optgroup>`).join("")
+      +`</select><label class="fchk" style="margin:0 0 0 auto"><input type="checkbox" data-sessdispo="1" ${S.fSessDispo?"checked":""}> Sessions non pleines</label></div>`;
+    h+=`<div class="slist wide"><div class="srow shead"><span>Session</span><span>Lieu et formateur</span><span>Places</span><span>Fermeture des inscriptions</span><span></span></div>`;
     h+=open.map(s=>{
       const sc=sessCounts(s), libres=Math.max(0,sc.cap-sc.ins-sc.enc);
-      const cl=ardClosings(s).filter(x=>x.left>=0).sort((a,b)=>a.left-b.left)[0];
       const resa=CARDS.filter(x=>x.kb==="insc"&&x.sess===s.sess&&x.reserved).length;
+      /* les trois portes se ferment à des dates différentes : le closeur doit voir les trois */
+      const fermetures=ardClosings(s).map(x=>`<div class="fline ${x.left<0?"off":x.left<=3?"warn":""}"><span class="fq">${x.lbl}</span><span class="fd">${x.date}</span><span class="fr">${x.txt}</span></div>`).join("");
       return `<div class="srow">
-        <div class="scell"><a class="ilink d" data-fiche="session::${s.id}">${s.title}</a><div class="v">${s.col==="demarree"?"En formation":"Prête à l'inscription"}${resa?` · ${resa} place${resa>1?"s":""} réservée${resa>1?"s":""}`:""}</div></div>
+        <div class="scell"><a class="ilink d" data-fiche="session::${s.id}">${s.title}</a>${resa?`<div class="v">${resa} place${resa>1?"s":""} réservée${resa>1?"s":""}</div>`:""}</div>
         <div class="scell"><div class="d2">${s.lieu||"lieu à confirmer"}</div><div class="v">${s.frm||"formateur à confirmer"}</div></div>
         <div class="scell"><div class="d2 ${libres?"":"ko"}">${libres?libres+" place"+(libres>1?"s":"")+" libre"+(libres>1?"s":""):"session complète"}</div><div class="v">${sc.ins} inscrit${sc.ins>1?"s":""} · ${sc.enc} en cours · ${sc.cap} places</div></div>
-        <div class="scell">${cl?`<div class="d2">${cl.lbl} · ${cl.date}</div><div class="v">${cl.txt}</div>`:`<div class="v">inscriptions fermées</div>`}</div>
-        <div class="scell right"><button class="btn btn-p" data-resa="${s.id}" ${libres?"":`disabled title="Plus aucune place libre sur cette session"`}>Réserver une place (48 h)</button></div>
+        <div class="scell fcell">${fermetures||`<div class="v">date à confirmer</div>`}</div>
+        <div class="scell right"><button class="btn btn-p" data-resa="${s.id}" ${libres?"":`disabled title="Plus aucune place libre sur cette session"`}>Réserver une place</button></div>
       </div>`;
     }).join("");
     h+=(open.length?"":`<div class="stub"><p>Aucune session ne correspond à ces filtres.</p></div>`)+`</div>`;
@@ -3522,7 +3545,7 @@ function pageFaq(opt){
     +`</div>${faqSectionHtml(pub)}</div>`;
   h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Tickets et remontées`
     +(adm?"":`<span class="n2">une question sans réponse, un bug, une idée : c'est ici que ça se pose</span>`)
-    +`<span class="right"><button class="btn btn-p" data-frmact="${encodeURIComponent(adm?"Nouvelle remontée créée":"Question posée à France IA")}">${adm?"+ Nouvelle remontée":"+ Poser une question"}</button></span></div>${remonteesSectionHtml()}</div>`;
+    +`<span class="right"><button class="btn btn-p" data-remnew="1">${adm?"+ Nouvelle remontée":"+ Écrire à France IA"}</button></span></div>${remonteesSectionHtml()}</div>`;
   return h;
 }
 
@@ -3922,13 +3945,26 @@ function ficheSessionHtml(id){
   }
   return h;
 }
+/* écrire à France IA : une question, un bug ou une idée, le type se choisit d'abord */
+function remModalHtml(){
+  const n=S.remNew||{}; const t=n.t||"question";
+  const TYPES=[["question","Une question","je ne sais pas comment faire"],["bug","Un bug","quelque chose ne marche pas"],["idee","Une idée","ce qui me ferait gagner du temps"]];
+  return `<div id="modal2"><div class="mbox" style="max-width:620px"><div class="mhead"><div class="row"><div class="t">Écrire à France IA</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">Votre message rejoint les remontées de l'équipe : chacun peut le voir, le commenter et le voter.</div></div>
+  <div class="mbody"><div class="mpanel">
+    <div class="espin"><label>De quoi s'agit-il ?</label><div class="typewrap">`
+    +TYPES.map(([k,lbl,sub])=>`<button class="typecard ${t===k?"on":""}" data-remtype="${k}"><span class="tc-t">${lbl}</span><span class="tc-s">${sub}</span></button>`).join("")
+    +`</div></div>
+    <div class="espin"><label>En une phrase</label><input class="edin" id="remTitre" placeholder="${t==="bug"?"Ce qui ne marche pas, et où":t==="idee"?"Ce que vous aimeriez pouvoir faire":"Votre question"}"></div>
+    <div class="espin"><label>Le détail</label><textarea class="notes-ta" id="remTxt" placeholder="${t==="bug"?"Ce que vous avez fait, ce qui devait arriver, ce qui est arrivé.":"Tout ce qui aide à comprendre : la session, le client, la page concernée."}"></textarea></div>
+  </div><div class="mactions"><button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p" data-remsend="${t}">Envoyer</button></div></div></div></div>`;
+}
 function reserveModalHtml(){
   const c=CARDS.find(x=>x.id===S.reserveFor); if(!c) return "";
   return `<div id="modal2"><div class="mbox"><div class="mhead"><div class="row"><div class="t">Réserver une place</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">${c.title} · la place est bloquée le temps que le client finalise son inscription ARD</div></div>
   <div class="mbody"><div class="mpanel"><div class="igrid">
     <div class="ifld"><div class="k">Prénom</div><input class="edin" id="resPrenom" placeholder="Prénom"></div><div class="ifld"><div class="k">Nom</div><input class="edin" id="resNom" placeholder="Nom"></div>
     <div class="ifld wide"><div class="k">Justification</div><textarea class="notes-ta" id="resNote" placeholder="Pourquoi bloquer cette place (obligatoire)"></textarea></div>
-    <div class="ifld wide"><div class="k">Durée</div><div class="seg"><button class="on">48 h</button><button>24 h</button><button>14 jours (RAC France Travail)</button><button>Autre</button></div></div>
+    <div class="ifld wide"><div class="k">Durée</div><div class="seg"><button>6 h</button><button>24 h</button><button class="on">48 h</button><button>14 jours (RAC France Travail)</button><button>Autre</button></div></div>
   </div></div><div class="mactions"><button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p" data-reserveconfirm="${c.id}">Bloquer la place</button></div></div></div></div>`;
 }
 function bibbyModalHtml(){
@@ -4530,6 +4566,7 @@ function render(){
   if(S.qard) document.body.insertAdjacentHTML("beforeend", qArdModalHtml());
   if(S.wa) document.body.insertAdjacentHTML("beforeend", waModalHtml());
   if(S.reserveFor) document.body.insertAdjacentHTML("beforeend", reserveModalHtml());
+  if(S.remNew) document.body.insertAdjacentHTML("beforeend", remModalHtml());
   if(S.lostFor) document.body.insertAdjacentHTML("beforeend", lostModalHtml());
   if(S.modal){
     const mc=CARDS.find(c=>c.id===S.modal);
@@ -4602,7 +4639,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -4847,6 +4884,12 @@ document.addEventListener("click",e=>{
   if(t.dataset.lostconfirm){const i=CARDS.find(x=>x.id===t.dataset.lostconfirm);i.col="lost";S.lostFor=null;toast(`<b>${i.title}</b> passée en Lost ; pensez à l'opportunité GHL.`);render();return}
   if(t.dataset.sort){if(S.sortSess===t.dataset.sort)S.sortSessDir=-(S.sortSessDir||1);else{S.sortSess=t.dataset.sort;S.sortSessDir=1;}render();return}
   if(t.dataset.reserve){S.reserveFor=t.dataset.reserve;render();return}
+  if(t.dataset.remnew!==undefined){S.remNew={t:"question"};render();return}
+  if(t.dataset.remtype){S.remNew={t:t.dataset.remtype};render();return}
+  if(t.dataset.remsend){
+    const ty=t.dataset.remsend, titre=($("#remTitre")&&$("#remTitre").value.trim())||({question:"Nouvelle question",bug:"Nouveau bug signalé",idee:"Nouvelle idée"})[ty];
+    REMONTEES.unshift({t:ty,titre,qui:abrege(USERS[S.role].n),role:ROLES[S.role],v:1,st:"a_traiter",c:0,d:"2026-08-26"});
+    S.remNew=null;render();toast(`Votre ${REM_T[ty][0].toLowerCase()} est partie à France IA : elle apparaît dans <b>À traiter</b>.`);return}
   if(t.dataset.reserveconfirm){const c=CARDS.find(x=>x.id===t.dataset.reserveconfirm);const p=(document.getElementById("resPrenom")||{}).value||"Nouveau";const n=(document.getElementById("resNom")||{}).value||"Client";const note=(document.getElementById("resNote")||{}).value||"";
     CARDS.push({id:"r"+Math.floor(performance.now()),kb:"insc",offre:c.offre,sess:c.sess,dt:c.dt,title:p+" "+n,closer:"Alex R.",setter:"Sam T.",ard:null,fin:null,col:"recue",reserved:1,expires:"2026-08-25T10:00",resNote:note});
     S.reserveFor=null;toast(`Place bloquée 48 h pour <b>${p} ${n}</b>.`);render();return}
@@ -4885,7 +4928,7 @@ document.addEventListener("click",e=>{
     const c=CARDS.find(x=>x.id===t.dataset.goto);
     S.fFact=factFilterFor(c); S.fFactOffre="all";
     S.highlight=c.id;render();return}
-  if(t.dataset.resa){toast(`Place réservée pour votre client : elle est bloquée <b>48 h</b>. L'inscription ARD doit être soumise avant expiration.`);return}
+  if(t.dataset.resa){S.reserveFor=t.dataset.resa;render();return}
   if(t.dataset.demande){toast(`Demande envoyée pour <b>${t.dataset.demande}</b> : France IA doit la valider. Vous serez notifié.`);return}
   if(t.classList.contains("task")&&t.dataset.c){clickTask(t.dataset.c,t.dataset.col,parseInt(t.dataset.i));return}
   if(t.dataset.open){S.modal=t.dataset.open;render();return}
