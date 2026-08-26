@@ -189,6 +189,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .frow:nth-of-type(1){border-top:none}
 .frow .tt{font-weight:500;color:var(--ink-900)}
 .frow .sm{font-size:11.5px;color:var(--ink-400)}
+.frow>.btn,.frow>button.btn-s,.frow>.right{margin-left:auto}
 .frow .go{margin-left:auto;color:var(--primary);font-weight:600;font-size:12px;cursor:pointer;white-space:nowrap}
 .frow .go:hover{text-decoration:underline;text-underline-offset:2px}
 .chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1.5px 9px;font-size:10.5px;font-weight:500;background:#f1f5f9;color:var(--ink-500)}
@@ -941,6 +942,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .faqbloc>.sect-h{margin-bottom:14px;align-items:center}
 .faqbloc>.sect-h .right{margin-left:auto}
 .faqbloc>.fbar{margin-top:0}
+.pasutile>summary{font-size:12.5px;font-weight:600;color:var(--ink-500);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line-2);border-radius:8px;padding:5px 11px;background:#fff}
+.pasutile>summary::-webkit-details-marker{display:none}
+.pasutile>summary::before{content:"▸";color:var(--ink-300);font-size:10px}
+.pasutile[open]>summary::before{content:"▾"}
+.pasutile>summary:hover{color:var(--ink-700);border-color:var(--ink-300)}
+.pu-in{margin-top:9px;max-width:520px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.pu-in .notes-ta{min-height:64px;width:100%}
 .fbar .chips{margin:0}
 .fsearch{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:6px 10px;color:var(--ink-400);min-width:260px}
 .fsearch input{border:none;outline:none;font:inherit;font-size:13px;color:var(--ink-900);flex:1;background:transparent}
@@ -3356,6 +3364,8 @@ const FAQ_ENTRIES=[
  ["Closeurs","Comment changer le moyen de paiement d'une vente ?","Sur la fiche client, bouton Modifier de la vente : la carte de facturation change de rail automatiquement."],
  ["Formateurs","Je ne peux plus animer une session","Depuis la carte de la session, « Demander à me retirer » : France IA republie la session au shotgun et valide un remplaçant."],
  ["Formateurs","Quand ma prestation est-elle payée ?","Validez votre imputation dans le coffre-fort, créez votre facture : elle est réglée après validation. Deux verrous, l'étude de cas et l'inscription des CPF à la certification."],
+ ["Formateurs","Un apprenant n'a pas émargé, que faire ?","Relancez-le sur le groupe WhatsApp le jour même. S'il est absent, France IA récupère le justificatif et l'apprenant est replacé ou passé en Lost."],
+ ["Formateurs","Comment obtenir une nouvelle qualification ?","Depuis Mon profil, demandez la qualification voulue : France IA l'accepte ou la refuse, et les sessions correspondantes apparaissent alors dans À prendre."],
  ["Admins","Un virement n'apparaît pas sur la carte","Il est dans Anomalies, vue Facturation, ligne « Virement reçu non rapproché » : le rapprochement se fait dans Qonto, DELIV'IA relit le statut."],
 ];
 const REMONTEES=[
@@ -3375,7 +3385,7 @@ function faqSectionHtml(pubImpose){
     const q=(S.fFaqQ||"").toLowerCase();
     if(!pubImpose) h+=`<div class="fbar">`+chips([["Public",pubs.map(x=>[x,x])]], pub, "fFaqPub")+`</div>`;
     const list=FAQ_ENTRIES.filter(([p2,qq,r])=>(p2===pub||p2==="Tous")&&(!q||(qq+" "+r).toLowerCase().includes(q)));
-    h+=`<div class="fsec">`+list.map(([p2,qq,r])=>`<details class="acc" data-acc="faq-${encodeURIComponent(qq).slice(0,14)}"><summary><span class="chev">▶</span><span class="tt">${qq}</span></summary><div class="inner"><p class="pd" style="line-height:1.6">${r}</p><div class="mactions">${S.role==="admin"?`<button class="btn btn-s" data-faqedit="${encodeURIComponent(qq)}">Modifier la question / réponse</button>`:`<button class="btn btn-s" data-frmact="${encodeURIComponent("Remontée créée : cette réponse ne suffit pas")}">Cette réponse ne m'aide pas</button>`}</div></div></details>`).join("")
+    h+=`<div class="fsec">`+list.map(([p2,qq,r])=>`<details class="acc" data-acc="faq-${encodeURIComponent(qq).slice(0,14)}"><summary><span class="chev">▶</span><span class="tt">${qq}</span></summary><div class="inner"><p class="pd" style="line-height:1.6">${r}</p><div class="mactions">${S.role==="admin"?`<button class="btn btn-s" data-faqedit="${encodeURIComponent(qq)}">Modifier la question / réponse</button>`:`<details class="pasutile"><summary>Cette réponse ne m'aide pas</summary><div class="pu-in"><textarea class="notes-ta" placeholder="Qu'est-ce qui manque ou ne fonctionne pas dans cette réponse ?"></textarea><button class="btn btn-p" data-frmact="${encodeURIComponent("Remontée créée : cette réponse ne suffit pas")}">Envoyer à France IA</button></div></details>`}</div></div></details>`).join("")
       +(list.length?"":`<div class="lrow"><span class="sm">Aucune réponse ne correspond.</span></div>`)+`</div>`;
   return h;
 }
@@ -3394,11 +3404,20 @@ function remonteesSectionHtml(){
   return h;
 }
 
+const PUB_DU_ROLE={closer:"Closeurs",setter:"Setteurs",formateur:"Formateurs"};
 function pageFaq(opt){
-  const pub=opt&&opt.pub;
-  let h=pub?"":`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
-  h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Questions et réponses<span class="right"><button class="btn btn-s" data-faqnew="1">+ Nouvelle question / réponse</button></span></div>${faqSectionHtml(pub)}</div>`;
-  h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Tickets et remontées<span class="right"><button class="btn btn-p" data-frmact="${encodeURIComponent("Nouvelle remontée créée")}">+ Nouvelle remontée</button></span></div>${remonteesSectionHtml()}</div>`;
+  const adm=S.role==="admin";
+  /* pour un externe le public n'est pas un filtre, c'est lui : il lit la FAQ de son métier
+     et il n'écrit pas de réponse, il pose sa question par une remontée */
+  const pub=(opt&&opt.pub)||(adm?null:PUB_DU_ROLE[S.role]);
+  let h=(opt&&(opt.pub||opt.inline))?"":`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
+  h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Questions et réponses`
+    +(adm?`<span class="right"><button class="btn btn-s" data-faqnew="1">+ Nouvelle question / réponse</button></span>`
+         :`<span class="n2">les réponses écrites par France IA</span>`)
+    +`</div>${faqSectionHtml(pub)}</div>`;
+  h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Tickets et remontées`
+    +(adm?"":`<span class="n2">une question sans réponse, un bug, une idée : c'est ici que ça se pose</span>`)
+    +`<span class="right"><button class="btn btn-p" data-frmact="${encodeURIComponent(adm?"Nouvelle remontée créée":"Question posée à France IA")}">${adm?"+ Nouvelle remontée":"+ Poser une question"}</button></span></div>${remonteesSectionHtml()}</div>`;
   return h;
 }
 
@@ -3410,13 +3429,9 @@ function pageRessources(){
   h+=`</div><div class="fsec"><div class="sect-h">${ICO.cap}Canvas et vidéos</div>`;
   h+=[["Canvas d'atelier","Trames imprimables des exercices"],["Vidéos de préparation","Trois modules à voir avant la première animation"],["Checklist d'animation","Le déroulé heure par heure"]]
     .map(([n,d])=>`<div class="frow"><div><div class="tt">${n}</div><div class="sm">${d}</div></div><button class="btn btn-s" data-frmact="${encodeURIComponent("Ressource ouverte")}">Ouvrir</button></div>`).join("");
-  h+=`</div><div class="fsec"><div class="sect-h">${ICO.file}FAQ formateur</div>`;
-  h+=[["Un apprenant n'a pas émargé, que faire ?","Relancez-le sur le groupe WhatsApp le jour même. S'il est absent, France IA récupère le justificatif et l'apprenant est replacé ou passé en Lost."],
-      ["Quand est payée ma prestation ?","Vous validez votre imputation dans le coffre-fort, créez votre facture, France IA la valide puis la règle. Deux verrous : l'étude de cas et l'inscription des apprenants CPF à la certification."],
-      ["Je ne peux plus animer une session","Demandez le retrait depuis la carte : la session repart au shotgun et France IA valide un remplaçant."],
-      ["Comment obtenir une nouvelle qualification ?","Depuis Mon profil, demandez la qualification : France IA l'accepte ou la refuse."]]
-    .map(([q,a])=>`<details class="acc" data-acc="faq-${encodeURIComponent(q).slice(0,12)}"><summary><span class="chev">▶</span><span class="tt">${q}</span></summary><div class="inner"><p class="pd" style="line-height:1.6">${a}</p></div></details>`).join("");
-  return h+`</div><div class="fsec"><div class="sect-h">${ICO.mail}Une question, une idée ?</div><textarea class="notes-ta" placeholder="Votre message part à l'équipe France IA."></textarea><div class="mactions"><button class="btn btn-p" data-frmact="${encodeURIComponent("Message envoyé à l'équipe France IA")}">Envoyer</button></div></div>`;
+  h+=`</div>`;
+  /* la meme FAQ que partout ailleurs, filtree sur son metier, et le meme kanban de remontees */
+  return h+pageFaq({inline:1});
 }
 function pageProfilFormateur(){
   const f=FRM["Sarah K."];
