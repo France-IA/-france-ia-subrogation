@@ -321,7 +321,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* liste sessions closer */
 .slist{display:flex;flex-direction:column;gap:10px;max-width:680px}
 .slist.wide{max-width:none}
-.slist.wide .srow{display:grid;grid-template-columns:1.4fr 1.3fr 1.15fr 1.5fr 190px;gap:18px;align-items:center}
+.slist.wide .srow{display:grid;grid-template-columns:1.5fr 1.4fr 1.25fr 190px;gap:18px;align-items:center}
 .slist .fcell{display:flex;flex-direction:column;gap:2px}
 .slist .fline{display:grid;grid-template-columns:74px 78px 1fr;gap:6px;font-size:11.5px;color:var(--ink-500);align-items:baseline}
 .slist .fline .fq{font-weight:600;color:var(--ink-700)}
@@ -2529,17 +2529,14 @@ function pageSessions(){
         +LIEUX_REF.filter(l=>l.pays===p&&l.ville!=="—").map(l=>{const v=LIEUX.find(x=>x.startsWith(l.n))||l.n;
           return `<option value="${v}" ${S.fSessLieuC===v?"selected":""}>${l.ville} · ${l.n}</option>`}).join("")+`</optgroup>`).join("")
       +`</select><label class="fchk" style="margin:0 0 0 auto"><input type="checkbox" data-sessdispo="1" ${S.fSessDispo?"checked":""}> Sessions non pleines</label></div>`;
-    h+=`<div class="slist wide"><div class="srow shead"><span>Session</span><span>Lieu et formateur</span><span>Places</span><span>Fermeture des inscriptions</span><span></span></div>`;
+    h+=`<div class="slist wide"><div class="srow shead"><span>Session</span><span>Lieu et formateur</span><span>Places</span><span></span></div>`;
     h+=open.map(s=>{
       const sc=sessCounts(s), libres=Math.max(0,sc.cap-sc.ins-sc.enc);
       const resa=CARDS.filter(x=>x.kb==="insc"&&x.sess===s.sess&&x.reserved).length;
-      /* les trois portes se ferment à des dates différentes : le closeur doit voir les trois */
-      const fermetures=ardClosings(s).map(x=>`<div class="fline ${x.left<0?"off":x.left<=3?"warn":""}"><span class="fq">${x.lbl}</span><span class="fd">${x.date}</span><span class="fr">${x.txt}</span></div>`).join("");
       return `<div class="srow">
         <div class="scell"><a class="ilink d" data-fiche="session::${s.id}">${s.title}</a>${resa?`<div class="v">${resa} place${resa>1?"s":""} réservée${resa>1?"s":""}</div>`:""}</div>
         <div class="scell"><div class="d2">${s.lieu||"lieu à confirmer"}</div><div class="v">${s.frm||"formateur à confirmer"}</div></div>
         <div class="scell"><div class="d2 ${libres?"":"ko"}">${libres?libres+" place"+(libres>1?"s":"")+" libre"+(libres>1?"s":""):"session complète"}</div><div class="v">${sc.ins} inscrit${sc.ins>1?"s":""} · ${sc.enc} en cours · ${sc.cap} places</div></div>
-        <div class="scell fcell">${fermetures||`<div class="v">date à confirmer</div>`}</div>
         <div class="scell right"><button class="btn btn-p" data-resa="${s.id}" ${libres?"":`disabled title="Plus aucune place libre sur cette session"`}>Réserver une place</button></div>
       </div>`;
     }).join("");
@@ -3545,7 +3542,7 @@ function pageFaq(opt){
     +`</div>${faqSectionHtml(pub)}</div>`;
   h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Tickets et remontées`
     +(adm?"":`<span class="n2">une question sans réponse, un bug, une idée : c'est ici que ça se pose</span>`)
-    +`<span class="right"><button class="btn btn-p" data-remnew="1">${adm?"+ Nouvelle remontée":"+ Écrire à France IA"}</button></span></div>${remonteesSectionHtml()}</div>`;
+    +`<span class="right"><button class="btn btn-p" data-remnew="1">${adm?"+ Nouvelle remontée":"+ Signaler ou proposer"}</button></span></div>${remonteesSectionHtml()}</div>`;
   return h;
 }
 
@@ -3930,14 +3927,14 @@ function ficheSessionHtml(id){
   if(!inscs.length) h+=`<tr><td colspan="4" class="muted">Aucun apprenant inscrit.</td></tr>`;
   h+=`</tbody></table></div></div>`;
   /* section 5 : publication ARD, visible dès que la session est publiée */
-  if(adm&&c.col!=="brouillon"){
+  if(c.col!=="brouillon"){
     const sc=sessCounts(c);
     const vis=c.ardVisible!==false; const edp=S.editPlafond===c.id;
     h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Visibilité sur ARD</div><div class="ardduo">
       <div class="ardleft">
-        <div class="fld"><div class="k">Visible sur ARD</div><div class="v swrow"><span class="sw ${vis?"on":""}" data-ardtoggle="${c.id}"><i></i></span><span class="${vis?"":"muted"}">${vis?"Activée":"Désactivée"}</span></div></div>
+        <div class="fld"><div class="k">Visible sur ARD</div><div class="v swrow">${adm?`<span class="sw ${vis?"on":""}" data-ardtoggle="${c.id}"><i></i></span>`:""}<span class="${vis?"":"muted"}">${vis?"Activée":"Désactivée"}</span></div></div>
         <div class="fld"><div class="k">Places réelles restantes</div><div class="v">${Math.max(0,sc.cap-sc.ins-sc.enc)} sur ${sc.cap} <span class="muted">(${sc.ins} inscrits, ${sc.enc} en cours)</span></div></div>
-        <div class="fld"><div class="k">Places maximum affichées (plafond fictif)</div><div class="v swrow">${edp?`<input class="edin" id="plafondIn" type="number" value="${c.plafond||sc.cap}" style="width:90px;margin:0"><button class="btn btn-p" data-plafondsave="${c.id}">Enregistrer</button><button class="btn btn-s" data-plafondcancel="1">Annuler</button>`:`<span>${c.plafond||sc.cap}</span><a class="ilink" data-plafondedit="${c.id}">Modifier</a>`}</div></div>
+        <div class="fld"><div class="k">Places maximum affichées (plafond fictif)</div><div class="v swrow">${!adm?`<span>${c.plafond||sc.cap}</span>`:edp?`<input class="edin" id="plafondIn" type="number" value="${c.plafond||sc.cap}" style="width:90px;margin:0"><button class="btn btn-p" data-plafondsave="${c.id}">Enregistrer</button><button class="btn btn-s" data-plafondcancel="1">Annuler</button>`:`<span>${c.plafond||sc.cap}</span><a class="ilink" data-plafondedit="${c.id}">Modifier</a>`}</div></div>
       </div>
       <div class="ardright"><div class="k">Fermeture des inscriptions</div>
         <div class="closegrid">${ardClosings(c).map(x=>`<div class="closerow"><span class="fintxt">${x.lbl}</span><span class="cd">${x.date}</span><span class="cl ${x.left<0?"off":x.left<=3?"warn":""}">${x.txt}</span><span class="cr">${x.rule}</span></div>`).join("")}</div>
@@ -3949,7 +3946,7 @@ function ficheSessionHtml(id){
 function remModalHtml(){
   const n=S.remNew||{}; const t=n.t||"question";
   const TYPES=[["question","Une question","je ne sais pas comment faire"],["bug","Un bug","quelque chose ne marche pas"],["idee","Une idée","ce qui me ferait gagner du temps"]];
-  return `<div id="modal2"><div class="mbox" style="max-width:620px"><div class="mhead"><div class="row"><div class="t">Écrire à France IA</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">Votre message rejoint les remontées de l'équipe : chacun peut le voir, le commenter et le voter.</div></div>
+  return `<div id="modal2"><div class="mbox" style="max-width:620px"><div class="mhead"><div class="row"><div class="t">Signaler ou proposer</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">Votre message rejoint les remontées de l'équipe : chacun peut le voir, le commenter et le voter.</div></div>
   <div class="mbody"><div class="mpanel">
     <div class="espin"><label>De quoi s'agit-il ?</label><div class="typewrap">`
     +TYPES.map(([k,lbl,sub])=>`<button class="typecard ${t===k?"on":""}" data-remtype="${k}"><span class="tc-t">${lbl}</span><span class="tc-s">${sub}</span></button>`).join("")
