@@ -72,7 +72,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .kb-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink-900);margin:18px 0 10px}
 .kb-title .who{font-size:11px;font-weight:500;color:var(--ink-400)}
 .board{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;padding-bottom:6px;align-items:stretch;min-height:320px}
-.col{width:272px;flex-shrink:0;background:rgba(248,250,252,.9);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;min-height:0}
+.col{flex:1 0 272px;min-width:272px;background:rgba(248,250,252,.9);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;min-height:0}
 .colbody{flex:1;overflow-y:auto;min-height:0;padding-right:2px;margin-right:-2px}
 .colbody::-webkit-scrollbar{width:6px}
 .colbody::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:3px}
@@ -316,6 +316,15 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .lines .tot{display:flex;justify-content:space-between;font-size:12px;font-weight:600;border-top:1px solid var(--line-2);margin-top:4px;padding-top:5px;color:var(--ink-900)}
 /* liste sessions closer */
 .slist{display:flex;flex-direction:column;gap:10px;max-width:680px}
+.slist.wide{max-width:none}
+.slist.wide .srow{display:grid;grid-template-columns:1.5fr 1.3fr 1.2fr 1.2fr auto;gap:18px;align-items:center}
+.slist.wide .srow.shead{background:none;box-shadow:none;padding:2px 16px 0;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-400)}
+.slist .scell .d2{font-size:13px;color:var(--ink-700)}
+.slist .scell .d2.ko{color:var(--err)}
+.slist .scell .v{font-size:11.5px;color:var(--ink-400);margin-top:2px}
+.slist .scell.right{justify-self:end}
+.slist.wide .ilink.d{font-size:13.5px;font-weight:600;color:var(--primary)}
+.btn[disabled]{opacity:.4;cursor:default;box-shadow:none}
 .srow{background:#fff;border-radius:10px;box-shadow:var(--sh-carte);padding:13px 16px;display:flex;align-items:center;gap:14px}
 .srow .d{font-size:13.5px;font-weight:600;color:var(--ink-900)}
 .srow .v{font-size:12px;color:var(--ink-500)}
@@ -548,7 +557,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .remfoot .btn-xs{margin-left:auto}
 .remfoot .chip{margin-left:auto}
 .board.rembd{overflow-x:visible;min-height:0}
-.board.rembd .col{background:rgba(248,250,252,.9);width:auto;flex:1 1 0;min-width:0}
+.board.rembd .col{background:rgba(248,250,252,.9)}
 .board.rembd .colbody{min-height:110px}
 .autolist{display:flex;flex-direction:column;gap:8px}
 .autocard{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line-2);border-radius:11px;padding:13px 15px;cursor:pointer}
@@ -2434,16 +2443,37 @@ function modesForOffre(offre){ return MODES_CLIENT.filter(m=>FIN[m].offres.inclu
 function pageSessions(){
   if(S.role==="closer"){
     const f=S.fSession==="n2"?"n2":"n1";
-    const open=CARDS.filter(c=>c.kb==="session_fia"&&c.offre===f&&["prete","demarree"].includes(c.col));
-    return `<div class="pagehead"><h1>Session</h1></div>`
-      + chips([["",[["n1","Formation N1"],["n2","Formation N2"]]]], f, "fSession")
-      + `<div class="slist">`
-      + open.map(s=>`
-        <div class="srow"><div><div class="d">${s.title}</div><div class="v">${s.lieu} · ${s.frm||"formateur à confirmer"}</div></div>
-        <span class="pl">${(()=>{const sc=sessCounts(s);return Math.max(0,sc.cap-sc.ins-sc.enc)+" place(s) restante(s)"})()}</span>
-        <button class="btn btn-p" data-resa="${s.id}">Réserver une place (48 h)</button></div>`).join("")
-      + (open.length?"":`<div class="stub"><p>Aucune session ouverte à l'inscription pour cette offre.</p></div>`)
-      + `</div>`;
+    const toutes=CARDS.filter(c=>c.kb==="session_fia"&&c.offre===f&&["prete","demarree"].includes(c.col));
+    const moisLbl=m=>new Date(m+"-01T12:00:00").toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+    const moisDe=c=>(c.dt&&c.dt.j1)?c.dt.j1.slice(0,7):"";
+    const mois=[...new Set(toutes.map(moisDe).filter(Boolean))].sort();
+    const lieux=[...new Set(toutes.map(c=>c.lieu).filter(Boolean))].sort();
+    const libresDe=c=>{const sc=sessCounts(c);return Math.max(0,sc.cap-sc.ins-sc.enc)};
+    const open=toutes.filter(c=>(!S.fSessMois||S.fSessMois==="all"||moisDe(c)===S.fSessMois)
+      &&(!S.fSessLieuC||S.fSessLieuC==="all"||c.lieu===S.fSessLieuC)
+      &&(!S.fSessDispo||libresDe(c)>0));
+    let h=`<div class="pagehead"><h1>Session</h1></div>`;
+    h+=chips([["",[["n1","Formation N1"],["n2","Formation N2"]]]], f, "fSession");
+    h+=`<div class="fbar"><select class="fsel" data-fsel="fSessMois"><option value="all">Tous les mois</option>`
+      +mois.map(m=>`<option value="${m}" ${S.fSessMois===m?"selected":""}>${moisLbl(m)}</option>`).join("")
+      +`</select><select class="fsel" data-fsel="fSessLieuC"><option value="all">Tous les lieux</option>`
+      +lieux.map(l=>`<option value="${l}" ${S.fSessLieuC===l?"selected":""}>${l}</option>`).join("")
+      +`</select><label class="fchk" style="margin:0 0 0 auto"><input type="checkbox" data-sessdispo="1" ${S.fSessDispo?"checked":""}> Seulement les sessions qui ont encore des places</label></div>`;
+    h+=`<div class="slist wide"><div class="srow shead"><span>Session</span><span>Lieu et formateur</span><span>Places</span><span>Prochaine fermeture</span><span></span></div>`;
+    h+=open.map(s=>{
+      const sc=sessCounts(s), libres=Math.max(0,sc.cap-sc.ins-sc.enc);
+      const cl=ardClosings(s).filter(x=>x.left>=0).sort((a,b)=>a.left-b.left)[0];
+      const resa=CARDS.filter(x=>x.kb==="insc"&&x.sess===s.sess&&x.reserved).length;
+      return `<div class="srow">
+        <div class="scell"><a class="ilink d" data-fiche="session::${s.id}">${s.title}</a><div class="v">${s.col==="demarree"?"En formation":"Prête à l'inscription"}${resa?` · ${resa} place${resa>1?"s":""} réservée${resa>1?"s":""}`:""}</div></div>
+        <div class="scell"><div class="d2">${s.lieu||"lieu à confirmer"}</div><div class="v">${s.frm||"formateur à confirmer"}</div></div>
+        <div class="scell"><div class="d2 ${libres?"":"ko"}">${libres?libres+" place"+(libres>1?"s":"")+" libre"+(libres>1?"s":""):"session complète"}</div><div class="v">${sc.ins} inscrit${sc.ins>1?"s":""} · ${sc.enc} en cours · ${sc.cap} places</div></div>
+        <div class="scell">${cl?`<div class="d2">${cl.lbl} · ${cl.date}</div><div class="v">${cl.txt}</div>`:`<div class="v">inscriptions fermées</div>`}</div>
+        <div class="scell right"><button class="btn btn-p" data-resa="${s.id}" ${libres?"":`disabled title="Plus aucune place libre sur cette session"`}>Réserver une place (48 h)</button></div>
+      </div>`;
+    }).join("");
+    h+=(open.length?"":`<div class="stub"><p>Aucune session ne correspond à ces filtres.</p></div>`)+`</div>`;
+    return h;
   }
   const f=["n1","n2","lieux"].includes(S.fSession)?S.fSession:"n1";
   let h=`<div class="pagehead row"><h1>Sessions</h1>${S.role==="admin"?`<button class="btn btn-s" data-railopen="sessions">Paramétrer le rail</button>`:""}<button class="btn btn-p" data-newsession="1">+ Nouvelle session</button></div>`;
@@ -3714,11 +3744,13 @@ function sessionStatusGroup(c){
 }
 function ficheSessionHtml(id){
   const c=CARDS.find(x=>x.id===id); if(!c) return "";
-  const ed=S.editing==="session::"+c.id;
+  /* le closeur ouvre la fiche pour vendre : il lit tout, il ne modifie rien */
+  const adm=S.role==="admin";
+  const ed=adm&&S.editing==="session::"+c.id;
   let h=`<button class="backbtn" data-ficheback="1">← Retour</button>`;
   /* section 1 : informations générales, sans titre */
   h+=`<div class="fichehead"><div class="fh-top"><div><h1>${c.title}</h1></div>
-    <div class="fh-right">${ed?`<button class="btn btn-p" data-editsave="session::${c.id}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`:`<button class="btn btn-s" data-editstart="session::${c.id}">Modifier</button><button class="btn btn-s danger" data-delsession="${c.id}">Supprimer</button>`}</div></div>
+    <div class="fh-right">${!adm?"":ed?`<button class="btn btn-p" data-editsave="session::${c.id}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`:`<button class="btn btn-s" data-editstart="session::${c.id}">Modifier</button><button class="btn btn-s danger" data-delsession="${c.id}">Supprimer</button>`}</div></div>
   <div class="idgrid">
     ${ed?`<div class="fld"><div class="k">Jour 1</div><input class="edin" type="date" data-f="j1" value="${c.dt.j1}"></div><div class="fld"><div class="k">Jour 2</div><input class="edin" type="date" data-f="j2" value="${c.dt.j2}"></div>`:fld("Période",fmtDates(c))}
     ${ed?`<div class="fld"><div class="k">Formateur</div><select class="edin" data-f="frm"><option value="">À confirmer</option>${FORMATEURS.map(f=>`<option ${c.frm===f?"selected":""}>${f}</option>`).join("")}</select></div>`:fld("Formateur",c.frm||"À confirmer")}
@@ -3730,9 +3762,9 @@ function ficheSessionHtml(id){
     ${linkFld("Lien Qualiobee","qlbLink",c,ed,"Ouvrir la session Qualiobee")}
     ${fld("Conversation WhatsApp",`<a class="ilink" data-wa="${c.id}">Ouvrir l'export</a>`)}
   </div>
-  <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>${(()=>{const sv=S.editing;S.editing=ed?sv:null;const out=idFld("qualiobee_session_id","qlbId",c)+idFld("edof_session_id","edofId",c)+idFld("drive_folder_id","driveId",c);S.editing=sv;return out})()}</div></div>`;
+  ${!adm?"":`<div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>${(()=>{const sv=S.editing;S.editing=ed?sv:null;const out=idFld("qualiobee_session_id","qlbId",c)+idFld("edof_session_id","edofId",c)+idFld("drive_folder_id","driveId",c);S.editing=sv;return out})()}</div>`}</div>`;
   /* sections 2 et 3 côte à côte : notes (large) et planification (la carte cliquable) */
-  h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Notes</div><textarea class="notes-ta" data-note="${c.id}">${c.note||""}</textarea></div>
+  h+=`<div class="duo"><div class="fsec"><div class="sect-h">${ICO.file}Notes</div><textarea class="notes-ta" data-note="${c.id}" ${adm?"":"readonly"}>${c.note||""}</textarea></div>
   <div class="fsec"><div class="sect-h">${ICO.cap}Planification <span class="n2">étape ${colLabel(c).toLowerCase()}</span></div><div style="margin-top:10px">${cardHtml(c,KB[c.kb].cols.find(x=>x.id===c.col),{noBadge:1})}</div></div></div>`;
   /* section 4 : apprenants */
   const inscs=CARDS.filter(i=>i.kb==="insc"&&(i.sess===c.sess||i.movedFrom===c.sess)).map(i=>({i,g:i.movedFrom===c.sess?3:sessionStatusGroup(i)})).sort((a,b)=>a.g-b.g);
@@ -3752,7 +3784,7 @@ function ficheSessionHtml(id){
   if(!inscs.length) h+=`<tr><td colspan="4" class="muted">Aucun apprenant inscrit.</td></tr>`;
   h+=`</tbody></table></div></div>`;
   /* section 5 : publication ARD, visible dès que la session est publiée */
-  if(c.col!=="brouillon"){
+  if(adm&&c.col!=="brouillon"){
     const sc=sessCounts(c);
     const vis=c.ardVisible!==false; const edp=S.editPlafond===c.id;
     h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Visibilité sur ARD</div><div class="ardduo">
@@ -4540,6 +4572,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.logtoday){const a=new Date().toISOString().slice(0,10);S.fLogD1=a;S.fLogD2="";render();return}
   if(t.dataset.logclear){S.fLogD1="";S.fLogD2="";render();return}
   if(t.dataset.prendrequal!==undefined){S.fPrendreQual=!S.fPrendreQual;render();return}
+  if(t.dataset.sessdispo!==undefined){S.fSessDispo=!S.fSessDispo;render();return}
   if(t.dataset.autotoggle){const el=t.closest(".sw");el.classList.toggle("on");toast(el.classList.contains("on")?"Automatisation réactivée.":"Automatisation coupée : plus rien ne partira tant qu'elle est éteinte.");return}
   if(t.dataset.autorun){S.autoFiche=decodeURIComponent(t.dataset.autorun);render();return}
   if(t.dataset.autoback){S.autoFiche=null;render();return}
