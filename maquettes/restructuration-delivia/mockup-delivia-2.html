@@ -129,6 +129,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .task.other.done .box{background:var(--ink-300);border-color:var(--ink-300)}
 .hrow .who,.ftask .who{font-size:11px;font-weight:600;color:var(--ink-500);background:var(--bg);border-radius:5px;padding:1px 6px;margin-right:7px;white-space:nowrap}
 .task .who{font-size:11px;font-weight:600;color:var(--ink-500);background:var(--bg);border-radius:5px;padding:1px 6px;margin-right:7px;white-space:nowrap}
+.who.duo2 b{font-weight:700;color:var(--ink-700)}
+.who.duo2 .sep{margin:0 4px;color:var(--ink-300)}
+.task.notmine .who.duo2 b,.hrow:not(.mine) .who.duo2 b,.ftask:not(.mine) .who.duo2 b{color:var(--ink-500)}
 .task:not(.notmine) .who{color:var(--ink-600)}
 .task.done .who{color:var(--ink-300)}
 .task.next{background:var(--primary-50);border-radius:7px;padding:5px 7px;margin:1px -5px}
@@ -817,7 +820,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal .mtasks{padding:8px 0 6px;display:flex;flex-direction:column;gap:11px}
 #modal .msec2{border-top:none;border:1px solid var(--line-2);border-radius:13px;background:#fff;padding:0 16px}
 #modal .msec2[data-k="cur"]{border-color:#d7dfe8;box-shadow:0 1px 3px 0 rgb(15 23 42/.05)}
-#modal .msec2[data-k="fut"]{border-style:dashed}
+#modal .msec2[data-k="fut"]{border-style:solid}
 #modal .msec2:first-of-type{border-top:1px solid var(--line-2)}
 #modal .msec2[data-k="cur"]:first-of-type{border-top-color:#d7dfe8}
 #modal .msec2>summary{padding:13px 0;font-size:14.5px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink-900);gap:11px}
@@ -1290,9 +1293,9 @@ tasks:{
   {t:"Closeur génère le lien de mandat de prélèvement (automatique)",p:"closer",auto:1,fin:["fp_ent_man"],note:"paiement direct (solution 1) ou à J+30 (solution 2)"},
   {t:"Closeur génère le devis (automatique)",p:"closer",auto:1,fin:["fp_ent_vir","opco"]}],
  engage:[
-  {t:"Client signe le lien de mandat de prélèvement, ce qui génère la facture (détecté automatiquement)",p:"client",auto:1,fin:["fp_ent_man"]},
+  {t:"Client signe le lien de mandat de prélèvement, ce qui génère la facture (détecté automatiquement)",p:"client",auto:1,resp:"closer",fin:["fp_ent_man"]},
   {t:"Closeur transmet la facture au client (automatique)",p:"closer",auto:1,tpl:1,fin:["fp_ent_man"],ev:"shotgun",note:"non acquittée ; en solution 2, échéance = dernier prélèvement programmé"},
-  {t:"Client signe le devis (détecté automatiquement)",p:"client",auto:1,fin:["fp_ent_vir","opco"],ev:"shotgun",note:"impossible de générer la facture : la date de formation n'est pas connue"},
+  {t:"Client signe le devis (détecté automatiquement)",p:"client",auto:1,resp:"closer",fin:["fp_ent_vir","opco"],ev:"shotgun",note:"impossible de générer la facture : la date de formation n'est pas connue"},
   {t:"Formateur demande la session",p:"formateur",btn:"Faire une demande"},
   {t:"Admin France IA valide la demande du formateur",p:"fia",fxfin:["fp_ent_man"],fx:"carte_client"}],
  convention:[
@@ -2111,7 +2114,7 @@ function taskHtml(card,colId,i,tk,ghost){
   const suivante = !ghost && colId===card.col && i===prochaineTache(card,colId);
   h+=`<div class="task ${done?"done":""} ${can?"":"other"} ${mine?"":"notmine"} ${suivante?"next":""}" ${can&&!ghost?`data-c="${card.id}" data-col="${colId}" data-i="${i}"`:'style="cursor:default"'}>
     <span class="box"></span>
-    <span>${parts.who?`<span class="who">${parts.who}</span>`:""}<span class="lbl">${parts.what}</span>${suivante?`<span class="nextpill">${mine?"à faire":"en attente"}</span>`:""}${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tbtn" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.lien?`<a class="ilink tlien" data-frmact="${encodeURIComponent(tk.lien+" ouvert")}">${tk.lien}</a>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
+    <span>${whoTag(card,tk,parts.who)}<span class="lbl">${parts.what}</span>${suivante?`<span class="nextpill">${mine?"à faire":"en attente"}</span>`:""}${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tbtn" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.lien?`<a class="ilink tlien" data-frmact="${encodeURIComponent(tk.lien+" ouvert")}">${tk.lien}</a>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
   </div>`;
   if(multi){
     h+=`<div class="sub">`+apsTk.map(a=>`<div class="task other notmine ${done?"done":""}" style="cursor:default"><span class="box"></span><span class="lbl" style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`;
@@ -2157,13 +2160,34 @@ function placesBadge(card){
   const c=sessCounts(card);
   return `<span class="badge ${c.over?"b-over":c.risk?"b-risk":"b-neutral"}" title="${c.ins} inscrit(s), ${c.enc} en cours d'inscription, ${c.cap} places">${c.txt}${c.over?" · surbooking":c.risk?" · risque":""}</span>`;
 }
-/* qui SUIT la tâche : le client fait, mais quelqu'un chez nous en répond (le closeur sur ses ventes,
-   l'admin sur le CPF, l'OPCO, les sessions, l'intra et les coachings) */
+/* Deux rôles par tâche, jamais confondus : celui qui AGIT (tk.p, lu dans le libellé)
+   et celui qui en RÉPOND. La règle maison : le closeur répond de son client tant qu'on est
+   dans la vente, France IA reprend la main sur l'administratif (CPF, OPCO, convention) et
+   répond de ce que le formateur doit faire sur un rail France IA. `tk.resp` force le cas
+   particulier. */
 function responsableOf(card,tk){
+  if(tk.resp) return tk.resp;
+  const kb=card.kb;
+  if(tk.p==="formateur" && !kb.endsWith("_frm")) return "fia";
   if(tk.p!=="client") return tk.p;
-  if(card.kb.startsWith("session")||card.kb.startsWith("intra")||card.kb.startsWith("coaching")) return "fia";
+  if(kb.startsWith("session")||kb.startsWith("intra")||kb.startsWith("coaching")) return "fia";
   if(["cpf","opco"].includes(card.fin)) return "fia";
   return "closer";
+}
+/* le même couple, hors carte : dans le paramétrage on ne connaît pas le financement */
+function respLabelKb(kb,tk){
+  if(tk.resp) return ACTEURS[tk.resp]||tk.resp;
+  if(tk.p==="formateur" && !kb.endsWith("_frm")) return ACTEURS.fia;
+  if(tk.p!=="client") return ACTEURS[tk.p]||tk.p;
+  if(kb.startsWith("session")||kb.startsWith("intra")||kb.startsWith("coaching")) return ACTEURS.fia;
+  return "Closeur, France IA si CPF ou OPCO";
+}
+/* l'étiquette d'une tâche : le responsable, puis celui qui agit quand ce n'est pas la même personne */
+function whoTag(card,tk,who){
+  if(!who) return "";
+  const respL=ACTEURS[responsableOf(card,tk)]||"";
+  if(!respL||respL===who) return `<span class="who">${who}</span>`;
+  return `<span class="who duo2" title="${respL} en répond, ${who} fait l'action"><b>${respL}</b><span class="sep">▸</span>${who}</span>`;
 }
 /* noir = j'en suis responsable ; gris = quelqu'un d'autre en répond, ou rien à faire */
 function cardState(card,colId){
@@ -2240,7 +2264,7 @@ function historyFor(card){
     tasksFor(card,col.id).forEach((tk,i)=>{
       const k=key(card,col.id,i);
       const d=S.when[k]?new Date(S.when[k]):(()=>{const x=new Date(base);x.setHours(9+((i*2)%8),(i*17)%60,0,0);return x})();
-      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:col.label,mine:isMine(card,tk)});
+      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:col.label,mine:isMine(card,tk),tag:whoTag(card,tk,splitActeur(tk).who)});
       const ev=evFor(card,tk); if(ev) rows.push({d:new Date(d.getTime()+60000),t:EV[ev],ev:1,e:col.label});
     });
   });
@@ -2248,7 +2272,7 @@ function historyFor(card){
     if(taskState(card,card.col,i,tk)){
       const k=key(card,card.col,i);
       const d=S.when[k]?new Date(S.when[k]):new Date();
-      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:cols[curIx].label,mine:isMine(card,tk)});
+      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:cols[curIx].label,mine:isMine(card,tk),tag:whoTag(card,tk,splitActeur(tk).who)});
       const ev=evFor(card,tk); if(ev) rows.push({d:new Date(d.getTime()+60000),t:EV[ev],ev:1,e:cols[curIx].label});
     }
   });
@@ -2389,7 +2413,7 @@ function modalHtml(){
   h+=`<details class="msec2" data-k="hist"${S.histOpen?" open":""}><summary><span class="chev">▸</span>Historique <span class="n2">${nHist}/${nHist}</span></summary><div class="minner">`;
   h+=hist.map(r=>r.ev
     ?`<div class="hrow ev"><span class="d">${fmtWhen(r.d)}</span><span class="dot"></span><span>${r.t}</span></div>`
-    :`<div class="hrow ${r.mine?"mine":""}"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.who?`<span class="who">${r.who}</span>`:""}${r.what||r.t}<span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("")||`<div class="hrow"><span class="w">Aucune tâche réalisée pour l'instant.</span></div>`;
+    :`<div class="hrow ${r.mine?"mine":""}"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.tag||(r.who?`<span class="who">${r.who}</span>`:"")}${r.what||r.t}<span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("")||`<div class="hrow"><span class="w">Aucune tâche réalisée pour l'instant.</span></div>`;
   h+=`</div></details>`;
   h+=`<details class="msec2" data-k="cur"${S.curOpen!==false?" open":""}><summary><span class="chev">▸</span>Étape en cours <span class="n2">${done}/${tks.length}</span></summary><div class="minner">`;
   h+=`<div class="futcol en"><span class="pill"></span>${col.label}${col.open?`<span class="n2">ouverture ${openDateStr(card,col)} · ${col.open}</span>`:""}</div>`;
@@ -2405,7 +2429,7 @@ function modalHtml(){
   h+=`<details class="msec2" data-k="fut"${S.futOpen?" open":""}><summary><span class="chev">▸</span>À venir <span class="n2">0/${nFut}</span></summary><div class="minner">`;
   const apsFut=peopleFor(card).aps, multiFut=apsFut&&apsFut.length>1;
   h+=fut.map(f=>`<div class="futcol"><span class="pill"></span>${f.col.label}${f.col.open?`<span class="n2">ouverture ${openDateStr(card,f.col)} · ${f.col.open}</span>`:""}</div>`
-    +(f.tasks.length?f.tasks.map((tk,ti)=>(tk.todoRef||tk.apTodo)?taskHtml(card,f.col.id,ti,tk,true):`<div class="frow2">${tk.grp&&(!f.tasks[ti-1]||f.tasks[ti-1].grp!==tk.grp)?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask ${isMine(card,tk)?"mine":""}"><span class="box"></span><span>${(()=>{const sp=splitActeur(tk,(tk.perAp&&multiFut&&tk.tPl)?tk.tPl:tk.t);return (sp.who?`<span class="who">${sp.who}</span>`:"")+sp.what})()}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${(tk.perAp&&multiFut)?`<div class="sub">`+apsFut.map(a=>`<div class="ftask"><span class="box"></span><span style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`:""}${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
+    +(f.tasks.length?f.tasks.map((tk,ti)=>(tk.todoRef||tk.apTodo)?taskHtml(card,f.col.id,ti,tk,true):`<div class="frow2">${tk.grp&&(!f.tasks[ti-1]||f.tasks[ti-1].grp!==tk.grp)?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask ${isMine(card,tk)?"mine":""}"><span class="box"></span><span>${(()=>{const sp=splitActeur(tk,(tk.perAp&&multiFut&&tk.tPl)?tk.tPl:tk.t);return whoTag(card,tk,sp.who)+sp.what})()}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${(tk.perAp&&multiFut)?`<div class="sub">`+apsFut.map(a=>`<div class="ftask"><span class="box"></span><span style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`:""}${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
       :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
   h+=`</div></details></div>`;
   if(card.kb==="session_fia"){
@@ -3296,14 +3320,14 @@ function pageRail(){
         <span class="right">${role==="admin"
           ? `<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button>${tks.length?"":`<button class="btn btn-s danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</button>`}`
           : `<button class="btn btn-s" data-railcol="${kb}::${role}::${c.id}">${masq?"Rendre visible":"Masquer pour "+roleLbl.toLowerCase()}</button>`}</span></div>
-      <div class="tblwrap"><table class="tbl matrice"><thead><tr><th>Tâche</th><th>Responsable</th>`
+      <div class="tblwrap"><table class="tbl matrice"><thead><tr><th>Tâche</th><th>En répond</th><th>Fait l'action</th>`
       +(role!=="admin"?`<th class="cash">${roleLbl} coche</th>`:"")
       +(parCas?CAS_FIN.map(([k,lbl])=>`<th class="cash">${lbl}</th>`).join(""):`<th class="cash">Tous les cas</th>`)
       +`<th>Template</th><th></th></tr></thead><tbody>`
       +(tks.map((tk,i)=>{
         const nat=natureTk(tk);
         return `<tr><td><b>${tk.t}</b>${tk.grp?`<div class="sm">${tk.grp}</div>`:""}${tk.todoRef?`<div class="sm">les to do du formateur, repliées sur la carte</div>`:""}${tk.apTodo?`<div class="sm">une sous-carte par apprenant</div>`:""}</td>
-          <td>${ACTEURS[tk.p]||tk.p}</td>`
+          <td>${respLabelKb(kb,tk)}</td><td>${ACTEURS[tk.p]||tk.p}</td>`
           +(role!=="admin"?`<td class="cas ${(mienne(tk)&&!tk.auto&&acces==="plein"&&!masq)?"on":""}">${(mienne(tk)&&!tk.auto&&acces==="plein"&&!masq)?"●":"·"}</td>`:"")
           +(parCas?CAS_FIN.map(([k])=>{const on=!tk.fin||tk.fin.includes(k);
               return `<td class="cas ${on?"on":""}" ${role==="admin"?`data-tkcas="${kb}::${c.id}::${i}::${k}"`:""}>${on?"●":"·"}</td>`}).join("")
@@ -3325,7 +3349,7 @@ function pageRail(){
           const nat=natureTk(tk);
           const sienne=role!=="admin"&&ROLE_OWNS[role]===tk.p;
           return g+`<div class="frow2"><div class="ftask ${sienne?"mine":""}"><span class="box"></span><span>${tk.t}</span>
-            <span class="right"><span class="chip">${ACTEURS[tk.p]||tk.p}</span>${nat[0]==="simple"?"":`<span class="chip warn">${nat[1]}</span>`}${tk.tpl?`<span class="chip">template</span>`:""}</span></div></div>`;
+            <span class="right"><span class="chip">${respLabelKb(kb,tk)}${(ACTEURS[tk.p]&&respLabelKb(kb,tk)!==ACTEURS[tk.p])?" ▸ "+ACTEURS[tk.p]:""}</span>${nat[0]==="simple"?"":`<span class="chip warn">${nat[1]}</span>`}${tk.tpl?`<span class="chip">template</span>`:""}</span></div></div>`;
         }).join("")||`<div class="lrow"><span class="sm">Aucune tâche dans ce cas.</span></div>`)
         +`</div>`;
     }).join("");
