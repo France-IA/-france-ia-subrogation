@@ -56,6 +56,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #subnav .appctx{padding:10px 20px 2px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px}
 #subnav .appctx .dot{width:7px;height:7px;border-radius:50%}
 .subgrp{padding:12px 20px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400)}
+.subgrp2{padding:9px 20px 3px 28px;font-size:10px;font-weight:600;color:var(--ink-300);letter-spacing:.04em}
 .subtab{display:flex;align-items:center;gap:8px;width:calc(100% - 28px);margin:1px 8px 1px 20px;padding:6px 11px;border-radius:7px;font-size:13px;color:var(--ink-500);text-align:left}
 .subtab:hover{background:var(--bg);color:var(--ink-700)}
 .subtab.active{background:var(--bg);color:var(--ink-900);font-weight:600}
@@ -94,6 +95,40 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .col-h h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-900)}
 .col-h .n{margin-left:auto;font-size:11px;color:var(--ink-400);font-variant-numeric:tabular-nums}
 .col-open{font-size:10.5px;color:var(--info);background:var(--info-50);border-radius:6px;padding:4px 8px;margin:0 2px 8px;display:block;line-height:1.45}
+/* paramétrage d'un rail : le même kanban, en plus large, avec trois colonnes par tâche */
+.railboard .col{flex:0 0 440px;min-width:440px}
+.railcol.masq{opacity:.55;border-style:dashed}
+.railcol.railnew{background:none;border-style:dashed;align-items:center;justify-content:center;min-height:120px}
+.rt-head{display:grid;grid-template-columns:96px 72px minmax(0,1fr);gap:10px;padding:0 4px 6px;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);border-bottom:1px solid var(--line-2);position:sticky;top:0;background:#fbfcfd;z-index:1}
+.rtask{display:grid;grid-template-columns:96px 72px minmax(0,1fr);gap:10px;padding:9px 4px;border-bottom:1px solid var(--line);font-size:12.5px;align-items:start}
+.rtask .rt-do{min-width:0}
+.rt-lbl{overflow-wrap:anywhere}
+.rtask:last-of-type{border-bottom:none}
+.rtask .rt-c{color:var(--ink-500);font-weight:500;line-height:1.35;font-size:11.5px}
+.rt-lbl{color:var(--ink-900);line-height:1.45}
+.rt-sm{font-size:11px;color:var(--ink-400);margin-top:2px}
+.rt-cas{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.rt-p{font-size:10px;border-radius:4px;padding:1px 6px;background:#f1f5f9;color:var(--ink-300);border:1px solid transparent;cursor:pointer;white-space:nowrap}
+.rt-p.on{background:var(--primary-50);color:var(--primary-dark);font-weight:600}
+.rt-p:hover{border-color:#c7d2fe}
+.rt-p.tpl{background:var(--warn-50);color:#92400e}
+.rt-nat{font-size:10px;border-radius:4px;padding:1px 6px;font-weight:600;white-space:nowrap}
+.rt-nat.auto{background:#f5f3ff;color:#6d28d9}
+.rt-nat.cablee{background:var(--ok-50);color:var(--ok)}
+.rt-acts{display:flex;gap:9px;margin-top:6px;font-size:11px;opacity:0;transition:opacity .12s}
+.rtask:hover .rt-acts{opacity:1}
+.rt-acts .ilink{font-size:11px}
+.rt-vide{font-size:12px;color:var(--ink-400);padding:12px 4px}
+.rt-add{padding:10px 2px 2px;display:flex;gap:8px;flex-wrap:wrap}
+.apercuboard .col{flex:0 0 320px;min-width:320px}
+.aptask{display:flex;gap:9px;align-items:flex-start;padding:9px 4px;border-bottom:1px solid var(--line);font-size:12.5px}
+.aptask:last-child{border-bottom:none}
+.aptask .box{width:15px;height:15px;border:1.5px solid var(--line-2);border-radius:4px;flex-shrink:0;margin-top:2px;background:#fff}
+.aptask.mine .box{border-color:var(--ink-300)}
+.aptask .ap-x{min-width:0;flex:1}
+.aptask .ap-t{color:var(--ink-500);line-height:1.45;overflow-wrap:anywhere}
+.aptask.mine .ap-t{color:var(--ink-900)}
+.aptask .ap-m{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
 .col-open a{color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:2px}
 .col.locked{background:repeating-linear-gradient(-45deg,#f8fafc 0 10px,#f4f6f9 10px 11px);border-style:dashed;border-color:var(--line-2)}
 .col.locked .col-h h3{color:var(--ink-400)}
@@ -127,7 +162,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .b-wait{background:var(--warn-50);color:var(--warn)}
 .b-neutral{background:#f1f5f9;color:var(--ink-500)}
 .card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.card .places{font-size:11px;color:var(--ink-400);margin-top:3px;line-height:1.4}
+.card .places{font-size:11px;color:var(--ink-400);margin-top:3px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .places+.badge{margin-top:5px}
 .card .places.warn{color:var(--warn)}
 .card .places.ko{color:var(--err)}
 .card.st-other .places{color:var(--ink-300)}
@@ -1272,11 +1308,13 @@ const EV = {
 const OFFRES = {n1:"Niveau 1", n2:"Niveau 2", intra:"Intra", coaching:"Coaching"};
 
 const DELIVIA_TABS = {
-  admin:[["Processus",[["sessions","Sessions"],["inscription","Inscription"],["facturation","Facturation"]]],
-         ["Pilotage",[["anomalies","Anomalies"],["actions","Actions"],["clients","Clients & apprenants"]]],
-         ["Backend",[["generer","Générer"],["automatisations","Automatisations"],["templates","Templates"],["equipe","Équipe"],["preuves","Preuves"],["reglages","Réglages"]],{fold:1}]],
+  admin:[["Processus",[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]],
+         ["Divers",[["actions","Action"],["anomalies","Anomalie"],["preuves","Preuves"]]],
+         ["Paramétrage",[["generer","Générer"],["automatisations","Automatisations"],["templates","Templates"],
+                         ["#sub","Personnes"],["clients","Clients & apprenants"],["equipe","Équipe"],
+                         ["#sub","Processus"],["rails","Paramétrage des rails"],["lieux","Lieux & salles"]],{fold:1}]],
   closer:[["Processus",[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]],
-          ["Divers",[["anomalies","Anomalies"],["generer","Générer"],["faq","FAQ & Feedback"]]]],
+          ["Divers",[["anomalies","Anomalie"],["generer","Générer"],["faq","FAQ & Feedback"]]]],
   formateur:[["Mon activité",[["services","Mes prestations"],["aprendre","À prendre"]]],
              ["Divers",[["profil","Mon profil"],["ressources","Ressources"],["faq","FAQ & Feedback"]]]],
   setter:[["Processus",[["facturation","Facturation"]]]],
@@ -2175,7 +2213,7 @@ function ntag(txt,couleur){ return txt?`<span class="ntag ${couleur||"gris"}">${
 function cardBadge(card){
   if(card.kb==="fact_com") return "";
   if(isFact(card)) return badgeOffre(card.offre);
-  if(card.kb.startsWith("session")) return placesBadge(card);
+  if(card.kb.startsWith("session")) return "";
   if(card.kb==="intra_frm"||card.kb==="coaching_frm") return card.places?`<span class="badge b-neutral">${card.places} places</span>`:"";
   return badge(card.fin);
 }
@@ -2312,15 +2350,19 @@ function sessCounts(card){
   const enc=list.length-ins;
   return {ins,enc,cap,over:ins>cap,risk:ins<=cap&&ins+enc>cap,txt:`${ins} sur ${cap}${enc?" · "+enc+" en cours":""}`};
 }
-function placesBadge(card){
+function placesBadge(card,alerteSeule){
   const c=sessCounts(card);
-  return `<span class="badge ${c.over?"b-over":c.risk?"b-risk":"b-neutral"}" title="${c.ins} inscription(s) validée(s), ${c.enc} en cours d'inscription, ${c.cap} places">${c.ins}/${c.cap}</span>`;
+  if(alerteSeule) return c.over?`<span class="badge b-over">Surbooking</span>`:c.risk?`<span class="badge b-risk">Risque de surbooking</span>`:"";
+  return `<span class="badge ${c.over?"b-over":c.risk?"b-risk":"b-neutral"}" title="${c.ins} inscription(s) validée(s), ${c.enc} en cours d'inscription, ${c.cap} places">${placesTxt(card)}</span>`;
 }
-/* le décompte des places, écrit en toutes lettres sous le titre de la carte */
+/* le décompte des places, sur une seule ligne : « 0 / 9 (+ 3 en cours d'inscription) » */
+function placesTxt(card){
+  const c=sessCounts(card);
+  return `${c.ins} / ${c.cap}${c.enc?` (+ ${c.enc} en cours d'inscription)`:""}`;
+}
 function placesLigne(card){
   const c=sessCounts(card);
-  const cls=c.over?"ko":c.risk?"warn":"";
-  return `<div class="places ${cls}">${c.ins} inscrit${c.ins>1?"s":""} sur ${c.cap} place${c.cap>1?"s":""}${c.enc?` · ${c.enc} inscription${c.enc>1?"s":""} en cours`:""}${c.over?" · surbooking":c.risk?" · risque de surbooking":""}</div>`;
+  return `<div class="places ${c.over?"ko":c.risk?"warn":""}" title="${c.ins} inscription(s) validée(s), ${c.enc} en cours d'inscription, ${c.cap} places">${placesTxt(card)}</div>`;
 }
 /* Deux rôles par tâche, jamais confondus : celui qui AGIT (tk.p, lu dans le libellé)
    et celui qui en RÉPOND. La règle maison : le closeur répond de son client tant qu'on est
@@ -2371,7 +2413,7 @@ function cardHtml(card, colDef, opts={}){
   const over=card.kb.startsWith("session")&&sessCounts(card).over;
   let h=`<div class="card st-${st} ${over?"over":""} ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${lockInfo?"haslock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
   h+=`<div class="ct"><span class="t">${card.title}</span>${opts.noBadge?"":cardBadge(card)}</div>`;
-  if(card.kb.startsWith("session")&&card.sess) h+=placesLigne(card);
+  if(card.kb.startsWith("session")&&card.sess) h+=placesLigne(card)+placesBadge(card,1);
   if(lockInfo){
     const lc=lockInfo.c;
     h+=`<div class="lockmid"><span class="lockico">${ICO.lock}</span><div class="lm-x"><div class="lm-t">${lc.label}</div><div class="lm-d">Ouverture ${openDateStr(card,lc)}</div><div class="lm-r">${lc.open}</div></div></div></div>`;
@@ -2748,10 +2790,12 @@ const DEMANDES_FRM_ADMIN=[
   ["Sarah K.","CV absent du coffre-fort","depuis 12 jours",["Demander le CV"]]]],
  ["Qualifications",[
   ["Julie T.","Demande de qualification Niveau 2","depuis 2 jours",["Accepter","Refuser"]]]],
- ["Sessions",[
-  ["Yanis L.","Retrait de la session de Lyon · 3-4 oct","hier",["Accepter","Refuser"]],
+ ["Profil",[
   ["Marc D.","Modification de profil : tarif journalier","depuis 3 jours",["Approuver","Refuser"]]]],
 ];
+/* Rien sur les sessions ici, volontairement : prendre une session se fait au shotgun depuis le
+   kanban, et demander à s'en retirer fait passer la carte en colonne Retrait. Ces deux gestes se
+   traitent là où ils se voient, sur le rail, pas dans une liste de demandes à part. */
 function demandesHtml(){
   return DEMANDES_FRM_ADMIN.map(([fam,items])=>`<div class="fsec"><div class="sect-h">${ICO.eye}${fam} <span class="n2">${items.length}</span></div>`
     +items.map(([qui,quoi,quand,actes])=>`<div class="demrow"><span class="avat">${initiales(qui)}</span>
@@ -2809,17 +2853,6 @@ function pageLieux(v){
     });
     return h;
   }
-  if(v==="demandes"){
-    h+=`<div class="fsec">`
-      +DEMANDES_FRM_ADMIN.map(([qui,quoi,quand,actes])=>`<div class="frow"><div class="tx"><div class="tt">${qui}</div><div class="sm">${quoi} · ${quand}</div></div>`
-        +actes.map(a=>`<button class="btn btn-s" data-frmact="${encodeURIComponent(a+" : "+qui)}">${a}</button>`).join("")+`</div>`).join("")
-      +`</div>`;
-    return h;
-  }
-  h+=RESSOURCES.map(([fam,items])=>`<div class="fsec"><div class="sect-h">${ICO.file}${fam} <span class="n2">${items.length}</span></div>`
-    +`<div class="tblwrap"><table class="tbl"><thead><tr><th>Ressource</th><th>Format</th><th>État</th><th></th></tr></thead><tbody>`
-    +items.map(([n,url,fmt,on])=>`<tr><td>${url&&url!=="#"?`<a class="ilink" href="${url}" target="_blank" rel="noopener"><b>${n}</b></a>`:`<b>${n}</b> <span class="sm">lien à renseigner</span>`}</td><td>${fmt}</td><td><span class="sw ${on?"on":""}" data-frmact="${encodeURIComponent("Ressource désactivée : elle disparaît de l'espace formateur")}"><i></i></span></td><td class="acts"><a class="ilink" data-resnew="1">Modifier</a></td></tr>`).join("")
-    +`</tbody></table></div></div>`).join("");
   return h;
 }
 /* nouvelle ressource : ce que le formateur retrouvera dans son espace */
@@ -3425,6 +3458,7 @@ function railAcces(page,offre,role){
 }
 function railColMasquee(kb,role,colId){ return !!S.railColAcc[kb+"::"+role+"::"+colId]; }
 const CAS_FIN=[["cpf","CPF"],["fp_ent_man","Ent. mandat"],["fp_ent_vir","Ent. virement"],["opco","OPCO"],["fp_part","Particulier"]];
+const CAS_COURT={cpf:"CPF",fp_ent_man:"Mandat",fp_ent_vir:"Virement",opco:"OPCO",fp_part:"Particulier"};
 const ACTEURS={fia:"France IA",closer:"Closeur",setter:"Setteur",formateur:"Formateur",client:"Client"};
 const ACTIONS_CABLEES=["Générer la facture","Générer le devis","Générer la convention","Générer le mandat de prélèvement","Déclarer l'entrée WEDOF","Déclarer la sortie WEDOF","Lancer la session Qualiobee","Créer le groupe WhatsApp","Ouvrir les émargements Qualiobee","Envoyer la demande de signature","Ouvrir EDOF","Déposer un fichier"];
 /* une étape terminale ne porte aucune tâche : c'est voulu, le contrôle ne doit pas le reprocher */
@@ -3448,18 +3482,19 @@ function railAnos(kb){
   });
   return out;
 }
-/* Réglages : ce qui se règle une fois pour toutes, hors des pages de travail quotidien */
-function pageReglages(){
-  const v=["lieux","rails"].includes(S.fReg)?S.fReg:"lieux";
-  let h=`<div class="pagehead"><h1>Réglages</h1><p>Ce qui se règle une fois et ne bouge presque jamais : les lieux et leurs salles, les étapes et les tâches des kanbans. Réservé aux administrateurs.</p></div>`;
-  h+=chips([["",[["lieux","Lieux & salles"],["rails","Étapes et tâches des kanbans"]]]], v, "fReg");
-  if(v==="lieux") return h+pageLieux("lieux");
-  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Rails de kanban <span class="n2">une matrice des cas de figure, puis l'aperçu tel que l'utilisateur le verra</span></div>`;
-  h+=[["sessions","Sessions","Le rail France IA et le rail formateur, par offre."],
+/* Paramétrage > Processus : les rails, puis les lieux, chacun sa page de menu */
+function pageRailsListe(){
+  let h=`<div class="pagehead"><h1>Paramétrage des rails</h1><p>Les étapes et les tâches de chaque kanban, cas de figure par cas de figure. On y touche rarement, et jamais sans savoir qui verra quoi.</p></div>`;
+  h+=`<div class="fsec">`;
+  h+=[["sessions","Session","Le rail France IA et le rail formateur, par offre."],
       ["inscription","Inscription","Inter, intra et coaching, par mode de paiement."],
       ["facturation","Facturation","CPF, OPCO, fonds propres, formateur et commerciaux."]]
     .map(([id,lbl,sub])=>`<div class="frow"><div class="tx"><div class="tt">${lbl}</div><div class="sm">${sub}</div></div><button class="btn btn-s" data-railopen="${id}">Paramétrer</button></div>`).join("");
   return h+`</div>`;
+}
+function pageLieuxSalles(){
+  let h=`<div class="pagehead"><h1>Lieux & salles</h1><p>Le référentiel des lieux, de leurs salles et de leurs accès. Une session se nomme par sa salle : c'est ici qu'elles sont déclarées.</p></div>`;
+  return h+pageLieux("lieux");
 }
 function pageRail(){
   const page=S.rail.page, m=RAIL_MAP[page]||RAIL_MAP.sessions;
@@ -3470,7 +3505,7 @@ function pageRail(){
   const offreLbl=(railOffres(page).find(o=>o[0]===offre)||[])[1];
   const roleLbl=(RAIL_ROLES.find(r=>r[0]===role)||[])[1];
   const vue=S.railVue==="apercu"?"apercu":"matrice";
-  let h=`<button class="backbtn" data-railback="1">← Retour aux réglages</button>`;
+  let h=`<button class="backbtn" data-railback="1">← Retour au paramétrage des rails</button>`;
   h+=`<div class="pagehead row"><h1>Paramétrer les étapes et les tâches</h1></div>`;
   /* les mêmes filtres que la page réelle, puis le rôle qui regarde */
   h+=`<div class="fbar">`+chips(m.axes, offre, "railOffre")+`</div>`;
@@ -3503,47 +3538,71 @@ function pageRail(){
     : "";
 
   if(vue==="matrice"){
+    /* le rail se lit comme son kanban : une colonne par étape, dans l'ordre de progression,
+       et dans chaque colonne les tâches en trois colonnes claires. */
+    h+=`<div class="board railboard">`;
     h+=d.cols.map(c=>{
       const tks=d.tasks[c.id]||[];
       const masq=role!=="admin"&&railColMasquee(kb,role,c.id);
       const mienne=tk=>ROLE_OWNS[role]===tk.p;
-      return `<div class="fsec railsec ${masq?"masq":""}"><div class="sect-h">${c.label}${c.open?`<span class="n2">ouverture ${c.open}</span>`:""}${c.vide?`<span class="n2">étape terminale, aucune tâche attendue</span>`:""}${c.cas?`<span class="n2">seulement ${c.cas.map(k=>(CAS_FIN.find(x=>x[0]===k)||[])[1]).join(", ")}</span>`:""}${masq?`<span class="n2 warn2">masquée pour ${roleLbl.toLowerCase()}</span>`:""}
-        <span class="right">${role==="admin"
-          ? `<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button>${tks.length?"":`<button class="btn btn-s danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</button>`}`
-          : `<button class="btn btn-s" data-railcol="${kb}::${role}::${c.id}">${masq?"Rendre visible":"Masquer pour "+roleLbl.toLowerCase()}</button>`}</span></div>
-      <div class="tblwrap"><table class="tbl matrice"><thead><tr><th>Tâche</th><th>En répond</th><th>Fait l'action</th>`
-      +(role!=="admin"?`<th class="cash">${roleLbl} coche</th>`:"")
-      +(parCas?CAS_FIN.map(([k,lbl])=>`<th class="cash">${lbl}</th>`).join(""):`<th class="cash">Tous les cas</th>`)
-      +`<th>Template</th><th></th></tr></thead><tbody>`
-      +(tks.map((tk,i)=>{
+      let head=`<div class="col railcol ${masq?"masq":""}"><div class="col-h"><span class="pill"></span><h3>${c.label}</h3><span class="n">${tks.length}</span></div>`;
+      const notes=[];
+      if(c.open) notes.push(`Ouverture : ${c.open}`);
+      if(c.cas) notes.push(`Seulement ${c.cas.map(k=>(CAS_FIN.find(x=>x[0]===k)||[])[1]).join(", ")}`);
+      if(c.vide) notes.push(`Étape terminale, aucune tâche attendue`);
+      if(masq) notes.push(`Masquée pour ${roleLbl.toLowerCase()}`);
+      if(notes.length) head+=`<div class="col-open">${notes.join(" · ")}</div>`;
+      head+=`<div class="colbody">`;
+      head+=`<div class="rt-head"><span>Responsable</span><span>Acteur</span><span>Action</span></div>`;
+      head+=(tks.map((tk,i)=>{
         const nat=natureTk(tk);
-        return `<tr><td><b>${tk.t}</b>${tk.grp?`<div class="sm">${tk.grp}</div>`:""}${tk.todoRef?`<div class="sm">les to do du formateur, repliées sur la carte</div>`:""}${tk.apTodo?`<div class="sm">une sous-carte par apprenant</div>`:""}</td>
-          <td>${respLabelKb(kb,tk)}</td><td>${ACTEURS[tk.p]||tk.p}</td>`
-          +(role!=="admin"?`<td class="cas ${(mienne(tk)&&!tk.auto&&acces==="plein"&&!masq)?"on":""}">${(mienne(tk)&&!tk.auto&&acces==="plein"&&!masq)?"●":"·"}</td>`:"")
-          +(parCas?CAS_FIN.map(([k])=>{const on=!tk.fin||tk.fin.includes(k);
-              return `<td class="cas ${on?"on":""}" ${role==="admin"?`data-tkcas="${kb}::${c.id}::${i}::${k}"`:""}>${on?"●":"·"}</td>`}).join("")
-            :`<td class="cas on">●</td>`)
-          +`<td>${tk.tpl?`<a class="ilink" data-tpl="${encodeURIComponent(tk.t)}">lié</a>`:(role==="admin"?`<a class="ilink" data-tkedit="${kb}::${c.id}::${i}">lier</a>`:`<span class="sm">aucun</span>`)}</td>
-          <td class="acts">${role==="admin"?`<a class="ilink" data-tkmove="${kb}::${c.id}::${i}::-1">↑</a><a class="ilink" data-tkmove="${kb}::${c.id}::${i}::1">↓</a><a class="ilink" data-tkedit="${kb}::${c.id}::${i}">Modifier</a><a class="ilink danger" data-tkdel="${kb}::${c.id}::${i}">Supprimer</a>`:""}</td></tr>`;
-      }).join("")||`<tr><td colspan="9" class="paynone">Aucune tâche à cette étape.</td></tr>`)
-      +`</tbody></table></div></div>`;
+        const coche = role!=="admin" && mienne(tk) && !tk.auto && acces==="plein" && !masq;
+        return `<div class="rtask">
+          <span class="rt-c">${respLabelKb(kb,tk)}</span>
+          <span class="rt-c">${ACTEURS[tk.p]||tk.p}</span>
+          <div class="rt-do">
+            <div class="rt-lbl">${tk.t}</div>
+            ${tk.grp?`<div class="rt-sm">${tk.grp}</div>`:""}
+            ${tk.todoRef?`<div class="rt-sm">les to do du formateur, repliées sur la carte</div>`:""}
+            ${tk.apTodo?`<div class="rt-sm">une sous-carte par apprenant</div>`:""}
+            <div class="rt-cas">`
+              +(parCas?CAS_FIN.map(([k,lbl])=>{const on=!tk.fin||tk.fin.includes(k);
+                  return `<span class="rt-p ${on?"on":""}" ${role==="admin"?`data-tkcas="${kb}::${c.id}::${i}::${k}"`:""} title="${lbl}">${CAS_COURT[k]||lbl}</span>`}).join("")
+                :`<span class="rt-p on">tous les cas</span>`)
+              +(nat[0]==="simple"?"":`<span class="rt-nat ${nat[0]}">${nat[1]}</span>`)
+              +(tk.tpl?`<span class="rt-p tpl" data-tpl="${encodeURIComponent(tk.t)}">template</span>`:"")
+              +(coche?`<span class="rt-p on">${roleLbl} coche</span>`:"")
+            +`</div>
+            ${role==="admin"?`<div class="rt-acts"><a class="ilink" data-tkmove="${kb}::${c.id}::${i}::-1">↑</a><a class="ilink" data-tkmove="${kb}::${c.id}::${i}::1">↓</a><a class="ilink" data-tkedit="${kb}::${c.id}::${i}">Modifier</a><a class="ilink danger" data-tkdel="${kb}::${c.id}::${i}">Supprimer</a></div>`:""}
+          </div></div>`;
+      }).join("")||`<div class="rt-vide">Aucune tâche à cette étape.</div>`);
+      head+=`<div class="rt-add">${role==="admin"
+        ? `<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button>${tks.length?"":`<button class="btn btn-s danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</button>`}`
+        : `<button class="btn btn-s" data-railcol="${kb}::${role}::${c.id}">${masq?"Rendre visible":"Masquer pour "+roleLbl.toLowerCase()}</button>`}</div>`;
+      return head+`</div></div>`;
     }).join("");
-    if(role==="admin") h+=`<div class="railadd"><button class="btn btn-s" data-colnew="${kb}">+ Ajouter une étape</button></div>`;
+    if(role==="admin") h+=`<div class="col railcol railnew"><button class="btn btn-s" data-colnew="${kb}">+ Ajouter une étape</button></div>`;
+    h+=`</div>`;
   } else {
     h+=`<div class="fbar">`+(parCas?chips([["Cas",CAS_FIN]], cas, "railCas"):`<span class="sm">Ce rail ne dépend pas du mode de paiement : toutes les cartes voient les mêmes tâches.</span>`)+`</div>`;
     h+=`<div class="railhint">Le rail tel que ${role==="admin"?"l'admin":roleLbl.toLowerCase()} le verra${parCas?` pour une carte ${(CAS_FIN.find(x=>x[0]===cas)||[])[1]}`:""}${acces==="lecture"?", en lecture seule":""}.</div>`;
+    h+=`<div class="board apercuboard">`;
     h+=d.cols.filter(c=>!(role!=="admin"&&railColMasquee(kb,role,c.id))).map(c=>{
       const tks=(d.tasks[c.id]||[]).filter(tk=>!tk.fin||tk.fin.includes(cas));
       let last="";
-      return `<div class="fsec railsec"><div class="sect-h">${c.label}<span class="n2">${tks.length} tâche${tks.length>1?"s":""}</span></div>`
+      return `<div class="col"><div class="col-h"><span class="pill"></span><h3>${c.label}</h3><span class="n">${tks.length}</span></div>`
+        +(c.open?`<div class="col-open">Ouverture : ${c.open}</div>`:"")
+        +`<div class="colbody">`
         +(tks.map(tk=>{ const g=tk.grp&&tk.grp!==last?`<div class="tgrp">${tk.grp}</div>`:""; last=tk.grp||last;
           const nat=natureTk(tk);
           const sienne=role!=="admin"&&ROLE_OWNS[role]===tk.p;
-          return g+`<div class="frow2"><div class="ftask ${sienne?"mine":""}"><span class="box"></span><span>${tk.t}</span>
-            <span class="right"><span class="chip">${respLabelKb(kb,tk)}${(ACTEURS[tk.p]&&respLabelKb(kb,tk)!==ACTEURS[tk.p])?" ▸ "+ACTEURS[tk.p]:""}</span>${nat[0]==="simple"?"":`<span class="chip warn">${nat[1]}</span>`}${tk.tpl?`<span class="chip">template</span>`:""}</span></div></div>`;
-        }).join("")||`<div class="lrow"><span class="sm">Aucune tâche dans ce cas.</span></div>`)
-        +`</div>`;
+          return g+`<div class="aptask ${sienne?"mine":""}"><span class="box"></span>
+            <div class="ap-x"><div class="ap-t">${tk.t}</div>
+            <div class="ap-m"><span class="rt-p on">${respLabelKb(kb,tk)}${(ACTEURS[tk.p]&&respLabelKb(kb,tk)!==ACTEURS[tk.p])?" ▸ "+ACTEURS[tk.p]:""}</span>${nat[0]==="simple"?"":`<span class="rt-nat ${nat[0]}">${nat[1]}</span>`}${tk.tpl?`<span class="rt-p tpl">template</span>`:""}</div></div></div>`;
+        }).join("")||`<div class="rt-vide">Aucune tâche dans ce cas.</div>`)
+        +`</div></div>`;
     }).join("");
+    h+=`</div>`;
   }
   return h;
 }
@@ -4168,7 +4227,10 @@ function ficheFormateurHtml(key){
   let dem="";
   if(f.appro) dem+=`<div class="frow"><div class="tx"><div class="tt">Modification de profil en attente</div><div class="sm">${f.appro}</div></div><button class="btn btn-p" data-frmact="Approuver la modification">Approuver</button><button class="btn btn-s" data-frmact="Refuser la modification">Refuser</button></div>`;
   f.quali.forEach(q=>{dem+=`<div class="frow"><div class="tx"><div class="tt">Demande de qualification · ${q[0]}</div><div class="sm">${q[1]}</div></div><button class="btn btn-p" data-frmact="Qualification acceptée">Accepter</button><button class="btn btn-s" data-frmact="Qualification refusée">Refuser</button></div>`});
-  if(f.retrait) dem+=`<div class="frow"><div class="tx"><div class="tt">Demande de retrait de session</div><div class="sm">${f.retrait}</div></div><button class="btn btn-p" data-frmact="Retrait accepté, la session repart au shotgun">Accepter</button><button class="btn btn-s" data-frmact="Retrait refusé">Refuser</button></div>`;
+  if(f.retrait){
+    const sr=CARDS.find(c=>c.kb==="session_fia"&&c.frm===key&&c.col==="retrait")||CARDS.find(c=>c.kb==="session_fia"&&c.frm===key);
+    dem+=`<div class="frow"><div class="tx"><div class="tt">Retrait de session demandé</div><div class="sm">${f.retrait} · la carte est passée en colonne Retrait, c'est là qu'on tranche</div></div>${sr?`<a class="dlink" data-fiche="session::${sr.id}">Ouvrir la session</a>`:""}</div>`;
+  }
   h+=(dem||`<div class="lrow"><span class="sm">Aucune demande en attente.</span></div>`)+`</div>`;
   /* 3 · factures : les cartes du rail Facturation formateur, repliées */
   const kf="frm-fact-"+key;
@@ -5013,7 +5075,9 @@ function render(){
   const groups = S.app==="delivia" ? DELIVIA_TABS[S.role] : (APP_TABS[S.app]||[]);
   document.documentElement.style.setProperty("--accent", APPS[S.app].accent);
   $("#subnav").innerHTML = groups.map(([g,items,opt])=>{
-        const btns=items.map(([id,lbl])=>`<button class="subtab ${S.tab===id?"active":""}" data-tab="${id}" style="--accent:${APPS[S.app].accent}">${lbl}</button>`).join("");
+        const btns=items.map(([id,lbl])=>id==="#sub"
+          ? `<div class="subgrp2">${lbl}</div>`
+          : `<button class="subtab ${S.tab===id?"active":""}" data-tab="${id}" style="--accent:${APPS[S.app].accent}">${lbl}</button>`).join("");
         if(opt&&opt.fold){
           const ouvert = S.navFold[g] || items.some(it=>it[0]===S.tab);
           return `<details class="navfold" data-navfold="${g}" ${ouvert?"open":""}><summary><span class="chev">▸</span>${g}</summary>${btns}</details>`;
@@ -5023,7 +5087,7 @@ function render(){
   /* crumb + role */
   const crumbEnd = S.fiche
     ? (S.fiche.t==="apprenant" ? "Fiche apprenant · "+(APPRENANTS.find(a=>a.id===S.fiche.id)||{}).nom : "Fiche client · "+(CLIENTS.find(c=>c.id===S.fiche.id)||{}).nom)
-    : ((groups.flatMap(g=>g[1]).find(t=>t[0]===S.tab)||["",""])[1]||"");
+    : ((groups.flatMap(g=>g[1]).find(t=>t[0]===S.tab&&t[0]!=="#sub")||["",""])[1]||"");
   const crumbEnd2 = S.fiche&&S.fiche.t==="session" ? "Fiche session · "+(CARDS.find(c=>c.id===S.fiche.id)||{}).title : S.fiche&&S.fiche.t==="compte" ? "Annuaire · "+(COMPTES.find(c=>c.id===S.fiche.id)||{}).nom : S.fiche&&S.fiche.t==="formateur" ? "Fiche formateur · "+((FRM[S.fiche.id]||{}).nom||"") : crumbEnd;
   $("#crumb").innerHTML=`${APPS[S.app].name}<span class="sep">/</span><span style="color:var(--ink-500);font-weight:500">${crumbEnd2}</span>`;
   $("#roleSel").innerHTML=Object.entries(ROLES).map(([id,lbl])=>`<button class="${S.role===id?"active":""}" data-role="${id}">${lbl}</button>`).join("");
@@ -5067,7 +5131,8 @@ function render(){
     else if(S.tab==="ressources") h=pageRessources();
     else if(S.tab==="generer") h=pageGenerer();
     else if(S.tab==="preuves") h=pagePreuves();
-    else if(S.tab==="reglages") h=pageReglages();
+    else if(S.tab==="rails") h=pageRailsListe();
+    else if(S.tab==="lieux") h=pageLieuxSalles();
     else h=pageStub(S.tab);
   }
   $("#content").innerHTML=h;
