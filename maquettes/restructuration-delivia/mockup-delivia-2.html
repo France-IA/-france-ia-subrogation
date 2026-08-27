@@ -327,6 +327,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .sect-h{display:flex;align-items:flex-start;gap:8px;font-size:13px;font-weight:600;color:var(--ink-900)}
 .sect-h svg{color:var(--ink-400);flex-shrink:0;margin-top:1px}
 .sect-h .n2{font-weight:400;color:var(--ink-400);font-size:11.5px}
+.sect-h [contenteditable]{border-radius:5px;padding:1px 6px;margin-left:-6px}
+.sect-h [contenteditable]:hover{background:#f1f5f9}
+.sect-h [contenteditable]:focus{outline:none;background:var(--primary-50);color:var(--primary-dark)}
 .sect-h .right{margin-left:auto;font-size:11.5px;font-weight:400;color:var(--ink-400);text-align:right;line-height:1.5}
 .fsec>h2{font-size:13px;font-weight:600;color:var(--ink-900);display:flex;align-items:center;gap:7px}
 .fsec>h2 .n2{font-weight:400;color:var(--ink-400);font-size:11px}
@@ -4807,6 +4810,7 @@ const ONBOARDING={
           ["Outils",["Accès DELIV'IA","Accès Drive et coffre-fort"]],
           ["Process",["Tour des process avec l'équipe"]]],
 };
+const ONB_POPS={formateurs:"Formateurs",closeurs:"Closeurs",setteurs:"Setteurs",interne:"Interne"};
 function onboardingHtml(pop){
   const secs=ONBOARDING[pop]||[];
   const etapes=secs.flatMap(([,its])=>its);
@@ -4818,11 +4822,12 @@ function onboardingHtml(pop){
   let h="";
   const akp="onbparam-"+pop;
   let param=`<details class="accbloc onbparam" data-acc="${akp}" ${accKey(akp)?"open":""}><summary><span class="chev">▶</span><span class="tt">Paramétrage du parcours</span><span class="end"><span class="sm">${secs.length} section${secs.length>1?"s":""} · ${etapes.length} to do</span></span></summary><div class="inner">`;
-  param+=`<div class="fbar" style="justify-content:flex-end"><button class="btn btn-s" data-onbnew="${pop}">+ Nouvelle to do</button><button class="btn btn-s" data-onbsec="${pop}">+ Nouvelle section</button></div>`;
-  param+=secs.map(([fam,items],fi)=>`<div class="fsec"><div class="sect-h">${ICO.cap}${fam} <span class="n2">${items.length}</span>
-      <span class="right"><a class="ilink" data-onbmovesec="${pop}::${fi}::-1">↑</a><a class="ilink" data-onbmovesec="${pop}::${fi}::1">↓</a><a class="ilink" data-onbnew="${pop}::${fi}">+ To do</a><a class="ilink danger" data-onbdelsec="${pop}::${fi}">Supprimer la section</a></span></div>`
-    +`<div class="tlist">`+(items.map((lbl,ii)=>`<div class="tl todo"><span class="tl-node"></span><div class="tl-l"><span class="lbl">${lbl}</span></div><span class="rl-a" style="opacity:1"><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::-1">↑</a><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::1">↓</a><a class="ilink danger" data-onbdel="${pop}::${fi}::${ii}">Supprimer</a></span></div>`).join("")
-      ||`<div class="rl-vide">Aucune to do dans cette section.</div>`)+`</div>`
+  param+=`<div class="fbar" style="justify-content:flex-end"><button class="btn btn-s" data-onbedit="${pop}::0::new">+ Nouvelle to do</button><button class="btn btn-s" data-onbsec="${pop}">+ Nouvelle section</button></div>`;
+  param+=secs.map(([fam,items],fi)=>`<div class="fsec"><div class="sect-h">${ICO.cap}<span contenteditable="true" data-onbsecren="${pop}::${fi}">${fam}</span><span class="n2">${items.length}</span>
+      <span class="right railacts"><button class="btn btn-s" data-onbedit="${pop}::${fi}::new">+ To do</button><a class="ilink" data-onbmovesec="${pop}::${fi}::-1" title="Monter la section">↑</a><a class="ilink" data-onbmovesec="${pop}::${fi}::1" title="Descendre la section">↓</a><a class="ilink danger" data-onbdelsec="${pop}::${fi}">Supprimer la section</a></span></div>`
+    +(items.map((lbl,ii)=>`<div class="rl"><span class="rl-b"></span><span class="rl-t">${lbl}</span>
+      <span class="rl-a"><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::-1">↑</a><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::1">↓</a><a class="ilink" data-onbedit="${pop}::${fi}::${ii}">Modifier</a><a class="ilink danger" data-onbdel="${pop}::${fi}::${ii}">Supprimer</a></span></div>`).join("")
+      ||`<div class="rl-vide">Aucune to do dans cette section.</div>`)
     +`</div>`).join("")+`</div></details>`;
   /* où en est chacun : une ligne par personne, le détail se déplie */
   h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Où en est chacun</div>`;
@@ -4847,6 +4852,18 @@ function onboardingHtml(pop){
       +`</div></details>`;
   }).join("");
   return h+`</div>`+param;
+}
+/* création ou modification d'une to do du parcours d'arrivée : même popup que pour une tâche de rail */
+function onbTodoModalHtml(){
+  const m=S.onbEdit; if(!m) return "";
+  const secs=ONBOARDING[m.pop]||[];
+  const lbl=m.i!=null?(secs[m.fi]||["",[]])[1][m.i]||"":"";
+  return `<div id="modal2"><div class="mbox" style="max-width:640px"><div class="mhead"><div class="row"><div class="t">${m.i!=null?"Modifier la to do":"Nouvelle to do"}</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">Parcours d'arrivée · ${ONB_POPS[m.pop]||m.pop}</div></div>
+  <div class="mbody">
+    <div class="espin"><label>Libellé</label><input class="edin" data-of="t" value="${lbl.replace(/"/g,"&quot;")}" placeholder="Ce que la personne doit faire"></div>
+    <div class="espin"><label>Section</label><select class="edin" data-of="sec">${secs.map(([f],i)=>`<option value="${i}" ${i===m.fi?"selected":""}>${f}</option>`).join("")}</select></div>
+    <div class="mactions">${m.i!=null?`<button class="btn btn-s danger" data-onbdel="${m.pop}::${m.fi}::${m.i}">Supprimer</button>`:""}<button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p" data-onbsave="1">Enregistrer</button></div>
+  </div></div></div>`;
 }
 /* Les demandes en attente d'un formateur : profil, qualification, retrait, documents.
    Une seule source, lue par la colonne de la liste et par sa fiche. */
@@ -5229,6 +5246,7 @@ function render(){
   if(S.lieuModal) document.body.insertAdjacentHTML("beforeend", lieuModalHtml());
   if(S.faqModal) document.body.insertAdjacentHTML("beforeend", faqModalHtml());
   if(S.tkEdit) document.body.insertAdjacentHTML("beforeend", tacheModalHtml());
+  if(S.onbEdit) document.body.insertAdjacentHTML("beforeend", onbTodoModalHtml());
   if(S.tplNew) document.body.insertAdjacentHTML("beforeend", tplNewModalHtml());
   if(S.resNew) document.body.insertAdjacentHTML("beforeend", resModalHtml());
   document.getElementById("modal3")?.remove();
@@ -5316,12 +5334,12 @@ document.addEventListener("click",e=>{
     if(tk.kind2==="bibby"){S.bibbyFor=c;S.bibbyTask=[c,col,parseInt(i)];render();return}
     if(tk.kind2==="aptodo"){S.apTodoFor=c;render();return}
     if(!taskState(cd,col,parseInt(i),tk)){toast(`<b>${tk.btn}</b> : ${cd.title}`);clickTask(c,col,parseInt(i));}return}
-  const gr=e.target.closest("[data-grpren]");
+  const gr=e.target.closest("[data-grpren],[data-onbsecren]");
   if(gr&&!e.target.closest("[data-grpdel]")){e.stopPropagation();return}
   const nf=e.target.closest(".navfold>summary");
   if(nf){const d=nf.parentElement;S.navFold[d.dataset.navfold]=!d.open}
   if(e.target.id==="modal3"||e.target.closest("[data-close3]")){S.swFull=null;S.photos=null;render();return}
-  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.apTodoFor=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.lieuModal=null;S.faqModal=null;S.espEdit=null;S.photos=null;S.photosEdit=null;S.tkEdit=null;S.tplNew=null;S.resNew=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
+  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.apTodoFor=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.lieuModal=null;S.faqModal=null;S.espEdit=null;S.photos=null;S.photosEdit=null;S.tkEdit=null;S.onbEdit=null;S.tplNew=null;S.resNew=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
   const anoS=e.target.closest(".ano>summary");
   if(anoS){const d=anoS.parentElement;S.anoOpen=S.anoOpen||{};S.anoOpen[d.dataset.ano]=!d.open}
   const rapS=e.target.closest(".payrap>summary");
@@ -5334,7 +5352,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-resmenu],[data-resblocmove],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-colmove],[data-tkvis],[data-grpnew],[data-grpdel],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy2],[data-syncdrive],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-resmenu],[data-resblocmove],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-colmove],[data-tkvis],[data-grpnew],[data-grpdel],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbedit],[data-onbsave],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy2],[data-syncdrive],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -5550,9 +5568,18 @@ document.addEventListener("click",e=>{
     const nom=arr[+ii][0];arr.splice(+ii,1);render();toast(`<b>${nom}</b> retirée.`);return}
   if(t.dataset.restoggle){const [cle,fi,ii]=t.dataset.restoggle.split("::");const r=ressourcesDe(cle)[+fi][1][+ii];
     r[3]=r[3]?0:1;render();toast(r[3]?"Ressource réactivée.":"Ressource désactivée : elle disparaît de l'espace.");return}
-  if(t.dataset.onbnew){const [pop,fi]=t.dataset.onbnew.split("::");const secs=ONBOARDING[pop];
-    (secs[fi!==undefined?+fi:0]||secs[0])[1].push("Nouvelle to do");render();toast("To do ajoutée au parcours.");return}
-  if(t.dataset.onbsec){ONBOARDING[t.dataset.onbsec].push(["Nouvelle section",[]]);render();toast("Section ajoutée au parcours.");return}
+  if(t.dataset.onbedit){const [pop,fi,ii]=t.dataset.onbedit.split("::");
+    if(!(ONBOARDING[pop]||[]).length){toast("Crée d'abord une section : une to do vit toujours dans une section.");return}
+    S.onbEdit={pop,fi:Math.min(+fi,ONBOARDING[pop].length-1),i:ii==="new"?null:+ii};render();return}
+  if(t.dataset.onbsave){const m=S.onbEdit;if(!m)return;
+    const g=f=>document.querySelector(`#modal2 [data-of="${f}"]`);
+    const secs=ONBOARDING[m.pop];
+    const txt=(g("t").value||"").trim()||(m.i!=null?secs[m.fi][1][m.i]:"Nouvelle to do");
+    const dest=Math.min(+g("sec").value,secs.length-1);
+    if(m.i!=null) secs[m.fi][1].splice(m.i,1);
+    secs[dest][1].push(txt);
+    S.onbEdit=null;render();toast(`To do <b>${txt}</b> enregistrée dans « ${secs[dest][0]} ».`);return}
+  if(t.dataset.onbsec){ONBOARDING[t.dataset.onbsec].push(["Nouvelle section",[]]);render();toast("Section ajoutée : renomme-la, puis ajoute ses to do.");return}
   if(t.dataset.onbdelsec){const [pop,fi]=t.dataset.onbdelsec.split("::");const nom=ONBOARDING[pop][+fi][0];
     ONBOARDING[pop].splice(+fi,1);render();toast(`Section <b>${nom}</b> supprimée.`);return}
   if(t.dataset.onbmovesec){const [pop,fi,d]=t.dataset.onbmovesec.split("::");const secs=ONBOARDING[pop];const j=+fi + +d;
@@ -5560,7 +5587,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.onbmove){const [pop,fi,ii,d]=t.dataset.onbmove.split("::");const arr=ONBOARDING[pop][+fi][1];const j=+ii + +d;
     if(j<0||j>=arr.length)return;[arr[+ii],arr[j]]=[arr[j],arr[+ii]];render();return}
   if(t.dataset.onbdel){const [pop,fi,ii]=t.dataset.onbdel.split("::");const arr=ONBOARDING[pop][+fi][1];
-    const nom=arr[+ii];arr.splice(+ii,1);render();toast(`<b>${nom}</b> retirée du parcours.`);return}
+    const nom=arr[+ii];arr.splice(+ii,1);S.onbEdit=null;render();toast(`<b>${nom}</b> retirée du parcours.`);return}
   if(t.dataset.tplnew!==undefined){S.tplNew=1;S.tkEdit=null;render();return}
   if(t.dataset.tplsave){S.tplNew=null;render();toast("Template créé : il est liable à une tâche et à une automatisation.");return}
   if(t.dataset.photos){S.photos=t.dataset.photos;S.photosEdit=null;render();return}
@@ -5668,6 +5695,11 @@ document.addEventListener("click",e=>{
     S.stepIx=null; S.modal=t.dataset.open;render();return}
 });
 document.addEventListener("blur",e=>{
+  const sr=e.target.closest&&e.target.closest("[data-onbsecren]");
+  if(sr){const [pop,fi]=sr.dataset.onbsecren.split("::");const sec=(ONBOARDING[pop]||[])[+fi];
+    const apres=(sr.textContent||"").trim();
+    if(sec&&apres&&apres!==sec[0]){sec[0]=apres;render();toast(`Section renommée en <b>${apres}</b>.`);}
+    return}
   const g=e.target.closest&&e.target.closest("[data-grpren]");
   if(!g) return;
   const [kb,col,anc]=g.dataset.grpren.split("::"); const avant=decodeURIComponent(anc);
