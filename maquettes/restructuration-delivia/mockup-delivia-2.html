@@ -1007,6 +1007,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tl-l .who.duo2 b,.tl-card .who.duo2 b{color:var(--ink-500)}
 .tl.todo.mine .tl-l .who.duo2 b{color:var(--ink-700)}
 .tl-n{font-size:11.5px;color:var(--ink-400);margin-top:2px;line-height:1.5}
+.actrow2{cursor:pointer;display:flex;align-items:flex-start;gap:12px;padding:8px 0}
+.actrow2:hover .tl-node{border-color:var(--primary)}
+.act-x{flex:1;min-width:0}
+.act-ctx{font-size:11.5px;color:var(--ink-400);margin-top:2px;line-height:1.45}
+.act-d{flex-shrink:0;font-size:11.5px;font-weight:600;color:var(--ink-400);white-space:nowrap;padding-top:2px}
+.act-d.ov{color:var(--err)} .act-d.td{color:var(--primary)} .act-d.sn{color:var(--warn)}
+.actlist{margin-bottom:18px}
 .tl-tpl{font-size:10.5px;color:var(--ink-400);background:#f8fafc;border:1px solid var(--line);border-radius:4px;padding:0 6px}
 .tl>.todobloc{margin-top:-1px}
 .tl>.todobloc>summary{margin:0;padding:3px 0;gap:9px}
@@ -3355,9 +3362,17 @@ function mesTaches(){
 }
 function actionRow(r){
   const {cl,aps}=peopleFor(r.c);
-  const ctx=[KB[r.c.kb]&&colLabel(r.c), r.c.sess?SESS[r.c.sess].lbl:(r.c.lieu||""), aps.length===1?aps[0].nom:(cl?cl.nom:"")].filter(Boolean).join(" · ");
+  /* le contexte ne se répète pas : le titre de la carte est souvent déjà la session ou la personne */
+  const ctx=[...new Set([r.c.title, KB[r.c.kb]&&colLabel(r.c), r.c.sess?SESS[r.c.sess].lbl:(r.c.lieu||""), aps.length===1?aps[0].nom:(cl?cl.nom:"")].filter(Boolean))].join(" · ");
   const dl=r.d?new Date(r.d+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"}):"sans date";
-  return `<a class="actrow ${URG[r.u][1]}" data-open="${r.c.id}"><span class="ic">${ICO.file}</span><div class="tx"><div class="t">${r.tk.t}</div><div class="ctx">${r.c.title} · ${ctx}</div></div><span class="u">${dl}</span><span class="ar">→</span></a>`;
+  const sp=splitActeur(r.tk);
+  return `<div class="tl todo mine actrow2" data-open="${r.c.id}">
+    <span class="tl-node"></span>
+    <div class="act-x">
+      <div class="tl-l">${whoTag(r.c,r.tk,sp.who)}<span class="lbl">${cap(sp.what)}</span></div>
+      <div class="act-ctx">${ctx}</div>
+    </div>
+    <span class="act-d ${URG[r.u][1]}">${dl}</span></div>`;
 }
 function pageActions(){
   const v=["taches","signatures","logs"].includes(S.fAct)?S.fAct:"taches";
@@ -3369,7 +3384,7 @@ function pageActions(){
     URG.forEach(([lbl,cls],u)=>{
       const list=rows.filter(r=>r.u===u);
       if(!list.length) return;
-      h+=`<div class="acthead ${cls}">${lbl} <span class="n2">${list.length}</span></div><div class="actlist">${list.map(actionRow).join("")}</div>`;
+      h+=`<div class="acthead ${cls}">${lbl} <span class="n2">${list.length}</span></div><div class="tlist actlist">${list.map(actionRow).join("")}</div>`;
     });
     return h;
   }
