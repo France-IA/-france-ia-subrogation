@@ -1017,6 +1017,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .actlist{margin-bottom:18px}
 .tl-auto{font-size:10px;font-weight:600;color:#6d28d9;background:#f5f3ff;border-radius:4px;padding:1px 7px;white-space:nowrap}
 .tl-tpl{font-size:10.5px;color:var(--ink-400);background:#f8fafc;border:1px solid var(--line);border-radius:4px;padding:0 6px}
+/* les badges d'une to do se rangent au bord droit, « automatique » toujours le dernier :
+   d'une ligne à l'autre, il tombe exactement au même endroit */
+.tl-l>.tl-auto,.tl-l>.tl-tpl{margin-left:auto}
+.tl-l>.tl-tpl{order:1}
+.tl-l>.tl-auto{order:2}
+.tl-l>.tl-auto:has(~.tl-tpl){margin-left:0}
 .tl>.todobloc{margin-top:-1px}
 .tl>.todobloc>summary{margin:0;padding:3px 0;gap:9px}
 .tl>.todobloc>summary .box{display:none}
