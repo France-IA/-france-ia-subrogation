@@ -1466,6 +1466,7 @@ session_fia:{cols:[
  {id:"demarree",   label:"Démarrée"},
  {id:"enformation",label:"En formation", open:"J2 formation", rule:"j2"},
  {id:"preuves",    label:"Récolter les preuves"},
+ {id:"facturer",   label:"Facturer le formateur"},
  {id:"terminee",   label:"Terminée"},
  {id:"retrait",    label:"Retrait formateur", skip:1, sep:1}],
 tasks:{
@@ -1492,46 +1493,20 @@ tasks:{
   {t:"Admin France IA confirme que tous les émargements sont faits et tous les CPF inscrits à la certification",p:"fia",btn:"Ouvrir les émargements Qualiobee"},
   {t:"Admin France IA génère tous les certificats de réalisation (automatique)",p:"fia",auto:1},
   {t:"Admin France IA déclare l'entrée WEDOF (J1, par émargement)",p:"fia",btn:"Déclarer"},
-  {t:"Admin France IA déclare la sortie et le service fait WEDOF (J2)",p:"fia",btn:"Déclarer"},
+  {t:"Admin France IA déclare la sortie et le service fait WEDOF (J2)",p:"fia",btn:"Déclarer"}],
+ facturer:[
   {t:"Formateur crée sa facture",p:"formateur",btn:"Générer ma facture"},
-  {t:"Formateur dépose sa facture",p:"formateur",btn:"Déposer ma facture",fx:"carte_formateur"}],
+  {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",btn:"Déposer ma facture",fx:"carte_formateur"},
+  {t:"Admin France IA valide la facture",p:"fia",btn:"Valider la facture"},
+  {t:"Admin France IA paie la facture",p:"fia",btn:"Marquer comme payée"}],
   retrait:[
+  {t:"Formateur a demandé son retrait (en attente de France IA)",p:"formateur",auto:1,note:"la session repart au shotgun ; elle disparaît d'ici dès qu'un autre formateur est validé"},
   {t:"Admin France IA republie la session au shotgun (automatique)",p:"fia",auto:1,note:"le formateur retiré est détaché, la session repart sur la page À prendre"},
   {t:"Admin France IA valide le nouveau formateur",p:"fia",btn:"Voir les demandes",kind2:"demandes"}],
  preuves:[
   {t:"Admin France IA exporte la discussion WhatsApp",p:"fia",btn:"Déposer l'export"},
   {t:"Admin France IA téléverse toutes les preuves dans le Drive (automatique)",p:"fia",auto:1}],
  terminee:[]}},
-/* ── Session inter · rail Formateur ── */
-session_frm:{cols:[
- {id:"shotgun", label:"À prendre"},
- {id:"preparer",label:"Préparer", open:"J-14 formation", rule:"j-14"},
- {id:"animer",  label:"Animer", open:"J2 formation", rule:"j2"},
- {id:"facturer",label:"Facturer"},
- {id:"termine", label:"Terminé"},
- {id:"retrait", label:"Retrait", skip:1, sep:1}],
-tasks:{
- retrait:[{t:"Formateur a demandé son retrait (en attente de France IA)",p:"formateur",auto:1,note:"la session repart au shotgun ; elle disparaît d'ici dès qu'un autre formateur est validé"}],
- shotgun:[
-  {t:"Formateur fait une demande",p:"formateur",btn:"Faire une demande"},
-  {t:"Admin France IA valide la demande",p:"fia",btn:"Voir les demandes"}],
- preparer:[
-  {t:"Admin France IA crée le groupe WhatsApp",p:"fia",btn:"Créer le groupe"},
-  {t:"Formateur envoie un message sur le groupe WhatsApp",p:"formateur",btn:"Envoyer",tpl:1},
-  {t:"Formateur lit les besoins des apprenants (Qualiobee)",p:"formateur"},
-  {t:"Formateur adapte le contenu de la formation",p:"formateur"},
-  {t:"Admin France IA invite les apprenants sur HAL (2 jours)",p:"fia",btn:"Inviter sur HAL"},
-  {t:"Admin France IA envoie le message WhatsApp de la veille du J1",p:"fia",btn:"Envoyer",tpl:1}],
- animer:[
-  {t:"Formateur envoie le message de fin sur WhatsApp",p:"formateur",btn:"Envoyer",tpl:1},
-  {t:"Formateur renseigne le compte rendu de sa session sur Qualiobee",p:"formateur",btn:"Ouvrir Qualiobee",tpl:1,note:"remarques et questions par défaut"},
-  {t:"Admin France IA confirme que tous les émargements sont faits et tous les CPF inscrits à la certification",p:"fia"}],
- facturer:[
-  {t:"Formateur crée sa facture",p:"formateur",btn:"Générer ma facture"},
-  {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",btn:"Déposer ma facture",fx:"carte_formateur"},
-  {t:"Admin France IA valide la facture",p:"fia",btn:"Valider"},
-  {t:"Admin France IA paie la facture",p:"fia",btn:"Régler"}],
- termine:[]}},
 /* ── Inscription inter (N1 & N2) ── */
 insc:{cols:[
  {id:"recue",  label:"Inscription reçue"},
@@ -1596,6 +1571,7 @@ intra:{cols:[
  {id:"convention",label:"Signer convention"},
  {id:"preparer",  label:"Préparer formation"},
  {id:"enformation",label:"En formation", open:"J2 formation", rule:"j2"},
+ {id:"facturer",  label:"Facturer le formateur"},
  {id:"termine",   label:"Terminé"},
  {id:"lost",      label:"Lost", skip:1, sep:1}],
 tasks:{
@@ -1629,36 +1605,12 @@ tasks:{
   {t:"Admin France IA crée un nouveau dossier Google Drive de preuves pour l'apprenant (automatique)",p:"fia",auto:1},
   {t:"Admin France IA téléverse les preuves de l'apprenant sur Google Drive (automatique)",p:"fia",auto:1},
   {t:"Formateur envoie le message de fin par mail au client",p:"formateur",btn:"Envoyer",tpl:1},
-  {t:"Admin France IA envoie la facture au client, échéance J+30 du J2",p:"fia",tpl:1,fin:["fp_ent_vir","opco"],btn:"Envoyer la facture"},
-  {t:"Formateur crée sa facture",p:"formateur",btn:"Générer ma facture"},
-  {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",btn:"Déposer ma facture",fx:"carte_formateur"}],
- lost:[], termine:[]}},
-/* ── Intra · rail formateur ── */
-intra_frm:{cols:[
- {id:"shotgun",   label:"À prendre"},
- {id:"convention",label:"Signer convention"},
- {id:"preparer",  label:"Préparer"},
- {id:"animer",    label:"Animer", open:"J2 formation", rule:"j2"},
- {id:"facturer",  label:"Facturer"},
- {id:"termine",   label:"Terminé"},
- {id:"lost",      label:"Lost", skip:1, sep:1}],
-tasks:{
- shotgun:[
-  {t:"Formateur fait une demande",p:"formateur",btn:"Faire une demande"},
-  {t:"Admin France IA valide la demande",p:"fia",btn:"Voir les demandes"}],
- convention:[{t:"Client signe la convention",p:"client"}],
- preparer:[
-  {t:"Formateur envoie un mail au client pour prendre rendez-vous en visio (olivier@franceia.com en copie)",p:"formateur",btn:"Envoyer",tpl:1},
-  {t:"Formateur lit les besoins des apprenants (Qualiobee)",p:"formateur"},
-  {t:"Formateur adapte le contenu de la formation",p:"formateur"}],
- animer:[
-  {t:"Formateur vérifie que tous les émargements sont faits",p:"formateur",btn:"Ouvrir les émargements Qualiobee"},
-  {t:"Formateur envoie le message de fin par mail au client",p:"formateur",btn:"Envoyer",tpl:1}],
+  {t:"Admin France IA envoie la facture au client, échéance J+30 du J2",p:"fia",tpl:1,fin:["fp_ent_vir","opco"],btn:"Envoyer la facture"}],
  facturer:[
   {t:"Formateur crée sa facture",p:"formateur",btn:"Générer ma facture"},
   {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",btn:"Déposer ma facture",fx:"carte_formateur"},
-  {t:"Admin France IA valide la facture",p:"fia",btn:"Valider"},
-  {t:"Admin France IA paie la facture",p:"fia",btn:"Régler"}],
+  {t:"Admin France IA valide la facture",p:"fia",btn:"Valider la facture"},
+  {t:"Admin France IA paie la facture",p:"fia",btn:"Marquer comme payée"}],
  lost:[], termine:[]}},
 /* ── Inscription coaching ── */
 coaching:{cols:[
@@ -1667,6 +1619,7 @@ coaching:{cols:[
  {id:"whatsapp",label:"Créer groupe WhatsApp"},
  {id:"preparer",label:"Préparer"},
  {id:"jourj",   label:"Jour J", open:"date prévue de la séance", rule:"prevue"},
+ {id:"facturer",label:"Facturer le formateur"},
  {id:"termine", label:"Terminé"},
  {id:"lost",    label:"Lost", skip:1, sep:1}],
 tasks:{
@@ -1697,40 +1650,12 @@ tasks:{
   {t:"Formateur réalise la séance (visio ou présentiel)",p:"formateur"},
   {t:"Formateur dépose le compte rendu de séance",p:"formateur",btn:"Déposer le compte rendu"},
   {t:"Formateur recueille et soumet le témoignage de clôture",p:"formateur",btn:"Remplir le témoignage"},
-  {t:"Admin France IA vérifie le compte rendu et le témoignage soumis par le formateur",p:"fia",btn:"Valider"},
-  {t:"Formateur crée sa facture (bouton Générer)",p:"formateur",btn:"Générer ma facture",grp:"Facturation formateur"},
-  {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",btn:"Déposer ma facture",fx:"carte_formateur"}],
- lost:[], termine:[]}},
-/* ── Coaching · rail formateur ── */
-coaching_frm:{cols:[
- {id:"valider", label:"Valider / prendre"},
- {id:"preparer",label:"Préparer"},
- {id:"animer",  label:"Animer", open:"date prévue de la séance", rule:"prevue"},
- {id:"facturer",label:"Facturer"},
- {id:"termine", label:"Terminé"},
- {id:"lost",    label:"Lost", skip:1, sep:1}],
-tasks:{
- valider:[
-  {t:"Formateur valide son coaching",p:"formateur",btn:"Valider",kind:["prio"],note:"votre apprenant du présentiel : vous avez la main en premier ; en cas de refus, le coaching part sur la page À prendre"},
-  {t:"Formateur fait une demande",p:"formateur",btn:"Faire une demande",kind:["libre"]},
-  {t:"Admin France IA valide la demande",p:"fia",btn:"Voir les demandes",kind:["libre"]}],
- preparer:[
-  {t:"Admin France IA crée le groupe WhatsApp",p:"fia",btn:"Créer le groupe"},
-  {t:"Formateur envoie le message de bienvenue Formateur",p:"formateur",btn:"Envoyer",tpl:1},
-  {t:"Formateur cale la ou les séances avec l'apprenant via le groupe WhatsApp",p:"formateur",btn:"Proposer des créneaux",tpl:1},
-  {t:"Formateur retranscrit le créneau choisi dans son agenda DELIV'IA",p:"formateur",btn:"Ajouter une séance"},
-  {t:"Formateur demande ou lit les attentes de l'apprenant (champ attentes ARD)",p:"formateur",tpl:1},
-  {t:"Formateur prépare le contenu de la séance",p:"formateur"}],
- animer:[
-  {t:"Formateur réalise la séance (visio ou présentiel)",p:"formateur"},
-  {t:"Formateur dépose le compte rendu de séance",p:"formateur",btn:"Déposer le compte rendu"},
-  {t:"Formateur recueille et soumet le témoignage de clôture",p:"formateur",btn:"Remplir le témoignage"},
-  {t:"Admin France IA valide le compte rendu et le témoignage",p:"fia",btn:"Valider"}],
+  {t:"Admin France IA vérifie le compte rendu et le témoignage soumis par le formateur",p:"fia",btn:"Valider"}],
  facturer:[
-  {t:"Formateur crée sa facture (bouton Générer)",p:"formateur",btn:"Générer ma facture"},
+  {t:"Formateur crée sa facture",p:"formateur",btn:"Générer ma facture"},
   {t:"Formateur dépose sa facture (pièce jointe)",p:"formateur",btn:"Déposer ma facture",fx:"carte_formateur"},
-  {t:"Admin France IA valide la facture",p:"fia",btn:"Valider"},
-  {t:"Admin France IA paie la facture",p:"fia",btn:"Régler"}],
+  {t:"Admin France IA valide la facture",p:"fia",btn:"Valider la facture"},
+  {t:"Admin France IA paie la facture",p:"fia",btn:"Marquer comme payée"}],
  lost:[], termine:[]}},
 /* ── Facturation CPF ── */
 fact_cpf:{cols:[
@@ -2020,9 +1945,6 @@ let CARDS = [
  /* sessions passées : masquées par défaut dans la vue Liste */
  {id:"s5", kb:"session_fia", offre:"n1", sess:"bxjuin", dt:{j1:"2026-06-20",j2:"2026-06-21"}, title:SESS.bxjuin.lbl, lieu:"Quai des Chartrons, Bordeaux", salle:SESS.bxjuin.salle, ville:"Bordeaux", niveau:"Plutôt débutant", frm:"Marc D.", places:"11/12", col:"terminee"},
  {id:"s6", kb:"session_fia", offre:"n2", sess:"pn2juil", dt:{j1:"2026-07-04",j2:"2026-07-05"}, title:SESS.pn2juil.lbl, lieu:"Station F, Paris 13e", salle:SESS.pn2juil.salle, ville:"Paris", niveau:"Plutôt avancé", frm:"Sarah K.", places:"9/12", col:"terminee"},
- {id:"fs1",kb:"session_frm", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"13/12", over:1, col:"preparer", mine:1},
- {id:"fs4",kb:"session_frm", offre:"n2", sess:"parisn2",  dt:SESS.parisn2.dt,  title:SESS.parisn2.lbl,  lieu:SESS.parisn2.lieu,  frm:"Sarah K.", places:"2/12", col:"retrait", mine:1},
- {id:"fs2",kb:"session_frm", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:SESS.bordeaux.lbl, lieu:SESS.bordeaux.lieu, frm:"Sarah K.", places:"4/12", col:"shotgun", mine:1},
  /* inscriptions N1 / N2 */
  {id:"i1", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Marie Dupont",              closer:"Alex R.",  setter:"Sam T.", ard:"2026-08-11T10:42", fin:"cpf",        col:"attente"},
  {id:"i2", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Karim Benali",              closer:"Chloé M.", setter:"Sam T.", ard:"2026-08-12T16:05", fin:"fp_part",    col:"action"},
@@ -2034,16 +1956,14 @@ let CARDS = [
  {id:"i7", kb:"insc", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Nadia Slimani",             closer:"Alex R.",  setter:"Sam T.", ard:"2026-07-30T17:12", fin:"cpf",        col:"absent"},
  {id:"i8", kb:"insc", offre:"n2", sess:"parisn2",  dt:SESS.parisn2.dt,  title:"Studio Nova",               closer:"Yanis B.", setter:"Sam T.", ard:"2026-08-19T12:40", fin:"fp_ent_vir", col:"action"},
  /* intra (une carte = la formation) */
- {id:"t1", kb:"intra", offre:"intra", title:"Garage Moderne",            closer:"Alex R.",  setter:null, ard:"2026-08-03T15:22", fin:"opco",       col:"convention", lieu:"Chez le client, Toulouse", nb:"8 apprenants"},
+ {id:"t1", kb:"intra", offre:"intra", title:"Garage Moderne",            closer:"Alex R.",  setter:null, ard:"2026-08-03T15:22", fin:"opco",       col:"convention", lieu:"Chez le client, Toulouse", nb:"8 apprenants", frm:"Sarah K."},
  {id:"t2", kb:"intra", offre:"intra", title:"Cabinet Verne & Associés",  closer:"Chloé M.", setter:null, ard:"2026-08-20T10:08", fin:"fp_ent_vir", col:"demande",    lieu:"Station F, Paris 13e",     nb:"5 apprenants"},
- {id:"ti1",kb:"intra_frm", offre:"intra", title:"Garage Moderne",        lieu:"Chez le client, Toulouse", nb:"8 apprenants", col:"convention", mine:1},
  /* coaching */
- {id:"cf1",kb:"coaching_frm", offre:"coaching", dt:{prevue:"2026-09-05"}, title:"Awa Diallo",     lieu:"Visio",      col:"preparer", mine:1, kind:"prio"},
- {id:"cf2",kb:"coaching_frm", offre:"coaching", title:"Sami Rezgui",    lieu:"Station F, Paris 13e", col:"valider", mine:1, kind:"prio"},
- {id:"cf3",kb:"coaching_frm", offre:"coaching", title:"Marc Leroy",     lieu:"Station F, Paris 13e", col:"valider", mine:1, kind:"libre"},
+ {id:"c3", kb:"coaching", offre:"coaching", title:"Sami Rezgui", lieu:"Station F, Paris 13e", col:"valider", frm:"Sarah K.", kind:"prio", closer:"Alex R."},
+ {id:"c4", kb:"coaching", offre:"coaching", title:"Marc Leroy",  lieu:"Station F, Paris 13e", col:"valider", frm:"Sarah K.", kind:"libre", closer:"Chloé M."},
  {id:"c1", kb:"coaching", offre:"coaching", dt:{prevue:"2026-09-05"},
    seances:[{d:"2026-09-05",h:"14 h à 16 h",lieu:"Visio",cr:"Cadrage du besoin : rédaction de propositions commerciales. Prompts de base et première trame construite ensemble."},{d:"2026-09-19",h:"14 h à 16 h",lieu:"Visio",cr:null}],
-   temoignage:null, title:"Awa Diallo",  closer:"Alex R.",  setter:"Sam T.", ard:"2026-08-08T19:14", fin:"fp_part",    col:"preparer", lieu:"Visio"},
+   temoignage:null, title:"Awa Diallo",  closer:"Alex R.",  setter:"Sam T.", ard:"2026-08-08T19:14", fin:"fp_part",    col:"preparer", lieu:"Visio", frm:"Sarah K.", kind:"prio"},
  {id:"c2", kb:"coaching", offre:"coaching", title:"Nexa Digital",                          closer:"Yanis B.", setter:null,     ard:"2026-08-18T08:56", fin:"fp_ent_vir", col:"demande",  lieu:"Station F, Paris 13e"},
  /* facturation clients (stock existant) */
  {id:"f1", kb:"fact_cpf",  offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:"Hugo Martin",   fin:"cpf",        m:"1 650 €", src:"i6", col:"validee", fac:{num:"F-2026-0731",envoi:null,paye:0}},
@@ -2096,7 +2016,7 @@ function linkFld(label,key,obj,ed,txt){
 /* démo : cartes dont l'étape est terminée et qui attendent une date d'ouverture */
 (()=>{const s1=CARDS.find(c=>c.id==="s1"); s1.waiting="enformation";
   const f3=CARDS.find(c=>c.id==="f3"); f3.waiting="transmettre";
-  const cf1=CARDS.find(c=>c.id==="cf1"); cf1.waiting="animer";})();
+  const c1=CARDS.find(c=>c.id==="c1"); c1.waiting="jourj";})();
 /* inscriptions supplémentaires pour la fiche session (Lost et changé de session) */
 CARDS.push(
  {id:"r1", kb:"insc", offre:"n1", sess:"paris", dt:SESS.paris.dt, title:"Thomas Petit", closer:"Alex R.", setter:"Sam T.", ard:null, fin:null, col:"recue", reserved:1, expires:"2026-08-24T16:30", resNote:"Attend le retour de son OPCO, paiement FT possible"},
@@ -2334,7 +2254,7 @@ function cardBadge(card){
   if(card.kb==="fact_com") return "";
   if(isFact(card)) return badgeOffre(card.offre);
   if(card.kb.startsWith("session")) return "";
-  if(card.kb==="intra_frm"||card.kb==="coaching_frm") return card.places?`<span class="badge b-neutral">${card.places} places</span>`:"";
+  if(S.role==="formateur"&&(card.kb==="intra"||card.kb==="coaching")) return card.places?`<span class="badge b-neutral">${card.places} places</span>`:"";
   return badge(card.fin);
 }
 function evRow(ev,state){ /* state : done | now | later */
@@ -2364,10 +2284,12 @@ function premiereTache(card,colId){
   for(let i=0;i<tks.length;i++) if(!taskState(card,colId,i,tks[i])) return i;
   return -1;
 }
+/* Ce qu'un rôle voit d'une étape : tout, sauf les tâches masquées pour lui. */
+function tacheVue(card,colId,i){ return S.role==="admin"||!railTkMasquee(card.kb,S.role,colId,i); }
 /* La prochaine chose qu'un humain doit faire : l'automatique se règle sans personne. */
 function premiereAction(card,colId){
   const tks=tasksFor(card,colId);
-  for(let i=0;i<tks.length;i++) if(!taskState(card,colId,i,tks[i])&&!tks[i].auto) return i;
+  for(let i=0;i<tks.length;i++) if(!taskState(card,colId,i,tks[i])&&!tks[i].auto&&tacheVue(card,colId,i)) return i;
   return -1;
 }
 function apTodoItems(){ return TODO_APPRENANT.flatMap(([ph,its])=>its.map(l=>({ph,lbl:l}))); }
@@ -2565,7 +2487,8 @@ function evFor(card,tk){ return tk.ev || ((tk.fx && (!tk.fxfin || tk.fxfin.inclu
 /* Le chemin normal d'une carte : les étapes de dérivation (Lost, Absent, Retard) n'y entrent
    que si la carte s'y trouve. C'est ce chemin que les flèches parcourent. */
 function stepsFor(card){
-  const cols=colsFor(card);
+  /* un rôle ne traverse que sa tranche : les étapes dont aucune tâche ne lui est visible sautent */
+  const cols=colsFor(card).filter(c=>c.id===card.col||S.role==="admin"||!railColMasquee(card.kb,S.role,c.id));
   const cur=cols.findIndex(c=>c.id===card.col);
   return cols.filter((c,i)=>!c.skip||i===cur);
 }
@@ -2634,7 +2557,7 @@ function infoFor(card){
     rows.push(["Formateur",card.frm?ntag(card.frm,"vert"):"À confirmer"],["Inscrits",(()=>{const c=sessCounts(card);return `<b>${c.ins}</b> inscrit${c.ins>1?"s":""} · <b>${c.enc}</b> en cours · ${c.cap} places ${c.over?'<span class="badge b-over">Surbooking</span>':c.risk?'<span class="badge b-risk">Risque de surbooking</span>':""}`})()]);
     return rows;
   }
-  if(card.kb==="intra_frm"||card.kb==="coaching_frm"){
+  if(S.role==="formateur"&&(card.kb==="intra"||card.kb==="coaching")){
     rows.push(["Client",clName||card.title],["Offre",OFFRES[card.offre]+(card.nb?" · "+card.nb:"")],["Date",fmtDates(card)||"À caler"],["Lieu",card.lieu]);
     return rows;
   }
@@ -2712,9 +2635,11 @@ function modalHtml(){
   const ix=Math.max(0,Math.min(steps.length-1, S.stepIx==null?curIx:S.stepIx));
   const stCol=steps[ix], passe=ix<curIx, futur=ix>curIx;
   const stTks=tasksFor(card,stCol.id);
-  const stDone=passe?stTks.length:futur?0:stTks.filter((tk,i)=>taskState(card,stCol.id,i,tk)).length;
-  const totTks=steps.reduce((a,c)=>a+tasksFor(card,c.id).length,0);
-  const totDone=steps.reduce((a,c,i)=>a+(i<curIx?tasksFor(card,c.id).length:i>curIx?0:tasksFor(card,c.id).filter((tk,j)=>taskState(card,c.id,j,tk)).length),0);
+  const nbVues=c=>tasksFor(card,c.id).filter((tk,i)=>tacheVue(card,c.id,i)).length;
+  const stVues=nbVues(stCol);
+  const stDone=passe?stVues:futur?0:stTks.filter((tk,i)=>tacheVue(card,stCol.id,i)&&taskState(card,stCol.id,i,tk)).length;
+  const totTks=steps.reduce((a,c)=>a+nbVues(c),0);
+  const totDone=steps.reduce((a,c,i)=>a+(i<curIx?nbVues(c):i>curIx?0:tasksFor(card,c.id).filter((tk,j)=>tacheVue(card,c.id,j)&&taskState(card,c.id,j,tk)).length),0);
   h+=`<div class="steps">
     <div class="stepper">`
       +steps.map((c,i)=>`${i?'<i class="stl '+(i<=curIx?"ok":"")+'"></i>':""}<button class="st ${i<curIx?"ok":i===ix?"vu":i===curIx?"cur":""}" data-step="${i}" title="${colLbl(card.kb,c.id)}">${i<curIx?"✓":i+1}</button>`).join("")
@@ -2723,10 +2648,10 @@ function modalHtml(){
       <button class="stnav" data-step="${ix-1}" ${ix===0?"disabled":""} aria-label="Étape précédente">‹</button>
       <div class="stx"><div class="stt">${colLbl(card.kb,stCol.id)}</div>
         ${stCol.open?`<div class="sts">Ouverture ${openDateStr(card,stCol)}</div>`:""}</div>
-      <span class="stc">${stDone}/${stTks.length}</span>
+      <span class="stc">${stDone}/${stVues}</span>
       <button class="stnav" data-step="${ix+1}" ${ix===steps.length-1?"disabled":""} aria-label="Étape suivante">›</button>
     </div>`;
-  if(stTks.length) h+=`<div class="tlist ${futur?"fut":""}">`+stTks.map((tk,i)=>taskHtml(card,stCol.id,i,tk,futur,passe)).join("")+`</div>`;
+  if(stVues) h+=`<div class="tlist ${futur?"fut":""}">`+stTks.map((tk,i)=>tacheVue(card,stCol.id,i)?taskHtml(card,stCol.id,i,tk,futur,passe):"").join("")+`</div>`;
   else h+=`<p class="empty">Aucune tâche à cette étape : elle est terminale.</p>`;
   if(!passe&&!futur&&card.waiting&&stDone===stTks.length){
     const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
@@ -2735,7 +2660,7 @@ function modalHtml(){
   h+=`</div></div>`;
   const edofBtn = card.fin==="cpf"&&(card.kb==="insc"||card.kb==="fact_cpf") ? `<button class="btn btn-s" data-syncedof="${card.id}">Sync EDOF</button>` : "";
   h+=coachingBlocHtml(card);
-  if(card.kb==="session_frm"||card.kb==="intra_frm"){
+  if(S.role==="formateur"&&(card.kb==="session_fia"||card.kb==="intra")){
     h+=`<div class="mact2"><button class="btn btn-s" data-frmact="${encodeURIComponent("Support de formation de cette session ouvert dans un nouvel onglet")}">Support de formation</button><button class="btn btn-s danger" data-frmact="${encodeURIComponent("Demande de retrait envoyée : France IA republie la session au shotgun")}">Demander à me retirer</button></div>`;
   }
   if(card.kb==="insc"&&!card.reserved){
@@ -2754,6 +2679,7 @@ function boardHtml(kbId, cards, opts={}){
   let h=`<div class="board">`;
   for(const col of kb.cols){
     if(col.fin && opts.fin && !col.fin.includes(opts.fin)) continue;
+    if(S.role!=="admin" && railColMasquee(kbId,S.role,col.id)) continue;
     const inCol=cards.filter(c=>c.col===col.id);
     h+=`<div class="col ${col.sep?"sepcol":""}"><div class="col-h"><span class="pill"></span><h3>${colLbl(kbId,col.id)}</h3><span class="n">${inCol.length}</span></div>`;
     if(col.note) h+=`<div class="col-open">${col.note}</div>`;
@@ -3276,7 +3202,7 @@ function mesTaches(){
   const rows=[];
   CARDS.forEach(c=>{
     if(c.reserved||c.waiting) return;
-    if(c.kb.endsWith("_frm")!==(S.role==="formateur")) return;
+    if(S.role==="formateur"&&c.frm&&c.frm!==FRM_MOI) return;
     const tks=tasksFor(c,c.col);
     const i=tks.findIndex((tk,ix)=>!taskState(c,c.col,ix,tk));
     if(i<0) return;
@@ -3505,14 +3431,14 @@ const TODO_AVANT=["Avant la session"], TODO_PENDANT=["Matin J1","Soir J1","Matin
     const col = phase==="Avant la session" ? "preparer" : "animer";
     items.forEach(([lbl,src])=>parCol[col].push({t:lbl,p:"formateur",grp:phase,lien:src||null}));
   });
-  KB.session_frm.tasks.preparer.push(...parCol.preparer);
-  KB.session_frm.tasks.animer.unshift(...parCol.animer);
+  KB.session_fia.tasks.demarree.push(...parCol.preparer);
+  KB.session_fia.tasks.enformation.unshift(...parCol.animer);
 })();
 /* avancement d'exemple : le formateur a déjà coché une partie de sa préparation */
-(()=>{ [["fs1","preparer",2],["fs1","animer",7],["fs2","preparer",3]].forEach(([cid,col,n])=>{
+(()=>{ [["s1","demarree",2],["s1","enformation",7]].forEach(([cid,col,n])=>{
   const c=CARDS.find(x=>x.id===cid); if(!c) return;
   let done=0;
-  KB.session_frm.tasks[col].forEach((t,i)=>{ if(t.grp && done<n){ S.checks[key(c,col,i)]=true; done++; } });
+  KB.session_fia.tasks[col].forEach((t,i)=>{ if(t.grp && done<n){ S.checks[key(c,col,i)]=true; done++; } });
 });})();
 /* ════════════════════ PARAMÉTRAGE D'UN RAIL (admin) ════════════════════
    Deux lectures du même process : la matrice montre tous les cas d'un coup et
@@ -3526,14 +3452,14 @@ const RAIL_MAP = {
     vues:{
       admin:    {n1:{kb:"session_fia"}, n2:{kb:"session_fia"}},
       closer:   {n1:{kb:"session_fia",acces:"lecture",pasKanban:1}, n2:{kb:"session_fia",acces:"lecture",pasKanban:1}},
-      formateur:{n1:{kb:"session_frm"}, n2:{kb:"session_frm"}},
+      formateur:{n1:{kb:"session_fia"}, n2:{kb:"session_fia"}},
       setter:   {n1:null, n2:null}}},
   inscription:{
     axes:[["Offre",[["n1","Formation N1"],["n2","Formation N2"],["intra","Formation Intra"],["coaching","Coaching"]]]],
     vues:{
       admin:    {n1:{kb:"insc"}, n2:{kb:"insc"}, intra:{kb:"intra"}, coaching:{kb:"coaching"}},
       closer:   {n1:{kb:"insc",acces:"lecture"}, n2:{kb:"insc",acces:"lecture"}, intra:{kb:"intra",acces:"lecture"}, coaching:{kb:"coaching",acces:"lecture"}},
-      formateur:{n1:null, n2:null, intra:{kb:"intra_frm"}, coaching:{kb:"coaching_frm"}},
+      formateur:{n1:null, n2:null, intra:{kb:"intra"}, coaching:{kb:"coaching"}},
       setter:   {n1:null, n2:null, intra:null, coaching:null}}},
   facturation:{
     axes:[["Mode de paiement",[["cpf","CPF"],["mandat","Mandat"],["virement","Virement"],["opco","OPCO"]]],
@@ -3567,19 +3493,39 @@ const CAS_FIN=[["cpf","CPF"],["fp_ent_man","Ent. mandat"],["fp_ent_vir","Ent. vi
 const CAS_COURT={cpf:"CPF",fp_ent_man:"Mandat",fp_ent_vir:"Virement",opco:"OPCO",fp_part:"Particulier"};
 const ACTEURS={fia:"Admin",closer:"Closeur",setter:"Setteur",formateur:"Formateur",client:"Client"};
 const ACTIONS_CABLEES=["Générer la facture","Générer le devis","Générer la convention","Générer le mandat de prélèvement","Déclarer l'entrée WEDOF","Déclarer la sortie WEDOF","Lancer la session Qualiobee","Créer le groupe WhatsApp","Ouvrir les émargements Qualiobee","Envoyer la demande de signature","Ouvrir EDOF","Déposer un fichier"];
-/* L'admin voit TOUTES les tâches, le détail du formateur compris : ce qui vit sur le rail du
-   formateur et manque au rail France IA y est recopié, à l'étape qui lui correspond, avec sa
-   sous-section. Le responsable reste le formateur : sur une carte, l'admin les lit en gris sans
-   pouvoir les cocher ; dans le paramétrage, tout reste noir, c'est son écran de réglage. */
-[["session_fia","session_frm",[["demarree","preparer"],["enformation","animer"]]],
- ["intra","intra_frm",[["preparer","preparer"],["enformation","animer"]]],
- ["coaching","coaching_frm",[["preparer","preparer"],["encours","animer"]]]]
-.forEach(([kbA,kbB,paires])=>{
-  const A=KB[kbA], B=KB[kbB]; if(!A||!B) return;
-  paires.forEach(([colA,colB])=>{
-    const src=B.tasks[colB]||[], dst=A.tasks[colA];
-    if(!dst) return;
-    src.forEach(tk=>{ if(!dst.some(x=>x.t===tk.t)) dst.push(Object.assign({},tk)); });
+/* ── UNE SEULE LISTE DE TO DO PAR PROCESSUS ──────────────────────────────────
+   Il n'y a plus un rail France IA et un rail formateur qui se recopient : une seule séquence,
+   du brouillon à la facture. Ce qui change d'un rôle à l'autre, c'est ce qu'il en voit
+   (visibilité par tâche) et le nom qu'il donne à chaque étape. */
+/* Les gestes de France IA que le formateur suit quand même, parce qu'ils jalonnent son travail. */
+const FRM_VOIT_AUSSI=new Set([
+ "Admin France IA valide la demande du formateur",
+ "Admin France IA valide la demande",
+ "Admin France IA invite les apprenants sur HAL (2 jours)",
+ "Admin France IA envoie le message WhatsApp de la veille du J1",
+ "Admin France IA confirme que tous les émargements sont faits et tous les CPF inscrits à la certification",
+ "Admin France IA vérifie le compte rendu et le témoignage soumis par le formateur",
+ "Admin France IA valide la facture",
+ "Admin France IA paie la facture",
+ "Client signe la convention",
+]);
+/* Le nom de chaque étape, tel que le formateur le lit. Ce que l'admin appelle « Récolter les
+   preuves », le formateur l'appelle « Facturer » : c'est la même étape, pas la même journée. */
+const ETAPES_FRM={
+ session_fia:{brouillon:"À prendre", demarree:"Préparer", enformation:"Animer",
+              preuves:"Récolter les preuves", facturer:"Facturer", terminee:"Terminé", retrait:"Retrait"},
+ intra:{engage:"À prendre", convention:"Signer convention", preparer:"Préparer",
+        enformation:"Animer", facturer:"Facturer", termine:"Terminé"},
+ coaching:{valider:"Valider / prendre", preparer:"Préparer", jourj:"Animer",
+           facturer:"Facturer", termine:"Terminé"},
+};
+["session_fia","intra","coaching"].forEach(kb=>{
+  KB[kb].cols.forEach(c=>{
+    const lbl=(ETAPES_FRM[kb]||{})[c.id];
+    if(lbl) S.colLbl[kb+"::formateur::"+c.id]=lbl;
+    (KB[kb].tasks[c.id]||[]).forEach((tk,i)=>{
+      if(tk.p!=="formateur" && !FRM_VOIT_AUSSI.has(tk.t)) S.railTkAcc[kb+"::formateur::"+c.id+"::"+i]=1;
+    });
   });
 });
 /* une étape terminale ne porte aucune tâche : c'est voulu, le contrôle ne doit pas le reprocher */
@@ -3778,9 +3724,8 @@ function pageServices(){
   const f=["n1","n2","intra","coaching"].includes(S.fSession)?S.fSession:"n1";
   let h=`<div class="pagehead"><h1>Mes prestations</h1></div>`;
   h+=chips([["",[["n1","Sessions N1"],["n2","Sessions N2"],["intra","Intra"],["coaching","Coaching"]]]], f, "fSession");
-  if(f==="coaching") h+=boardHtml("coaching_frm", CARDS.filter(c=>c.kb==="coaching_frm"&&c.mine), {aPrendre:1});
-  else if(f==="intra") h+=boardHtml("intra_frm", CARDS.filter(c=>c.kb==="intra_frm"&&c.mine), {aPrendre:1});
-  else h+=boardHtml("session_frm", CARDS.filter(c=>c.kb==="session_frm"&&c.offre===f&&c.mine), {aPrendre:1});
+  const kbF=f==="coaching"?"coaching":f==="intra"?"intra":"session_fia";
+  h+=boardHtml(kbF, CARDS.filter(c=>c.kb===kbF&&c.frm===FRM_MOI&&(kbF!=="session_fia"||c.offre===f)), {aPrendre:1});
   return h;
 }
 /* FAQ : les réponses, par public ; Remontées : un seul flux pour les bugs, les idées et les questions */
@@ -4201,7 +4146,7 @@ function ficheApprenantHtml(id){
   /* ── Offres ── */
   h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Offres</div>`;
   h+=cards.map(c=>{
-    const offre=c.kb==="coaching"||c.kb==="coaching_frm"?"Coaching":"Formation "+(c.offre||"").toUpperCase();
+    const offre=c.kb==="coaching"?"Coaching":"Formation "+(c.offre||"").toUpperCase();
     const k="ap-"+c.id;
     const sCard=c.sess?CARDS.find(x=>x.kb==="session_fia"&&x.sess===c.sess):null;
     const fCard=findFactCard(c);
@@ -4969,7 +4914,7 @@ function listeEquipeHtml(pop){
   if(pop==="formateurs"){
     h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>E-mail</th><th>Téléphone</th><th>Villes</th><th>Offres autorisées</th><th>Identifiant Qualiobee</th><th>Sessions à venir</th><th>Demandes</th><th>Créé le</th><th>Fiche</th></tr></thead><tbody>`
       +FORMATEURS.map(k=>{const f=FRM[k];
-        const futures=CARDS.filter(c=>c.kb==="session_frm"&&c.frm===k&&c.col!=="termine").length;
+        const futures=CARDS.filter(c=>c.kb==="session_fia"&&c.frm===k&&c.col!=="terminee").length;
         const dem=demandesDe(k).length;
         return `<tr><td><b>${f.nom}</b></td><td>${f.email}</td><td>${f.tel}</td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td><span class="mono">${f.qlbId}</span></td><td>${futures}</td><td>${dem?`<a class="chip warn" data-fiche="formateur::${k}" style="cursor:pointer">${dem} à traiter</a>`:'<span class="muted">aucune</span>'}</td><td>${fmtJour(f.cree)}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche</a></td></tr>`}).join("")
       +`</tbody></table></div>`;
@@ -5471,7 +5416,7 @@ document.addEventListener("click",e=>{
       }
     }
     if(kind==="lieu"){obj.hal=obj.hal==="1"||obj.hal===1;}
-    if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.cap=parseInt(obj.cap)||12;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===obj.sess);if(fs){fs.frm=obj.frm;fs.dt=obj.dt;fs.cap=obj.cap;}}
+    if(kind==="session"){obj.dt={j1:obj.j1||obj.dt.j1,j2:obj.j2||obj.dt.j2};obj.cap=parseInt(obj.cap)||12;}
     S.editing=null;render();
     toast("Modifications enregistrées : <b>"+(obj.nom||obj.title||obj.n)+"</b>");
     return}
@@ -5503,7 +5448,7 @@ document.addEventListener("click",e=>{
     if(isIntra){CARDS.push({id:nid,kb:"intra",offre:"intra",title:"Cabinet Verne & Associés",closer:"Chloé M.",setter:null,ard:"2026-08-23T10:00",fin:"fp_ent_vir",col:"demande",lieu:"Station F, Paris 13e",nb:"5 apprenants",fresh:1});toast("Session intra créée dans le kanban Intra (Nouvelle demande).");}
     else{CARDS.push({id:nid,kb:"session_fia",offre:S.fSession==="n2"?"n2":"n1",sess:null,dt:{j1:"2026-11-07",j2:"2026-11-08"},title:"Boardroom Turing · 7-8 nov",lieu:"Station F, Paris 13e",salle:"Boardroom Turing",ville:"Paris",niveau:"Plutôt débutant",frm:null,places:"0/12",cap:12,col:"brouillon",fresh:1,cpfLink:"#",qlbLink:"#",note:""});toast("Session créée en Brouillon : ses tâches sont générées.");}
     S.fSessView="kanban";render();return}
-  if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===cd.sess);if(fs)fs.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
+  if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
   if(t.dataset.qard){e.stopPropagation();S.qard=t.dataset.qard;render();return}
   if(t.dataset.wa){e.stopPropagation();S.wa=t.dataset.wa;render();return}
