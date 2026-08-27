@@ -117,6 +117,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .rl-oeil.off{color:var(--ink-300)}
 .rl.off .rl-t,.rl.off .rl-ac{color:var(--ink-300);text-decoration:line-through;text-decoration-color:var(--ink-300)}
 .rl.off .rl-r,.rl.off .rt-nat,.rl.off .rl-tpl{opacity:.45}
+.railnote{font-size:11.5px;color:var(--ink-500);padding-left:11px;align-self:center}
 .raillg{display:flex;align-items:center;gap:14px;margin-left:auto;font-size:11.5px;color:var(--ink-500)}
 .raillg span{display:inline-flex;align-items:center;gap:6px}
 .raillg .lg{width:9px;height:9px;border-radius:3px;display:inline-block}
@@ -137,7 +138,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .rl-tpl{font-size:10.5px;color:#92400e;background:var(--warn-50);border:1px solid transparent;border-radius:4px;padding:1px 7px}
 .rl-tpl:hover{border-color:#fcd34d}
 .rl-c{font-size:10.5px;color:var(--primary-dark);background:var(--primary-50);border-radius:4px;padding:1px 7px}
-.rl-a{display:flex;gap:9px;font-size:11px;margin-left:auto;opacity:0;transition:opacity .12s;white-space:nowrap}
+.rl-a{display:flex;gap:9px;font-size:11px;margin-left:auto;opacity:0;transition:opacity .12s;white-space:nowrap;order:1}
+.rl .rl-c{order:2}.rl .rl-tpl{order:3}.rl .rt-nat{order:4;min-width:78px;text-align:center}
 .rl:hover .rl-a{opacity:1}
 .rl-a .ilink{font-size:11px}
 .rl-g{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);margin:14px 0 2px;display:flex;align-items:center;gap:10px}
@@ -3659,7 +3661,13 @@ function railAcces(page,offre,role){
   const c=railCible(page,offre,role);
   return !c?"aucun":(c.acces==="lecture"?"lecture":"plein");
 }
-function railColMasquee(kb,role,colId){ return !!S.railColAcc[kb+"::"+role+"::"+colId]; }
+/* Une étape n'a pas de réglage propre : elle disparaît de la vue d'un rôle quand aucune de ses
+   tâches ne lui est visible. On ne masque donc jamais une étape, on masque des tâches. */
+function railColMasquee(kb,role,colId){
+  if(role==="admin") return false;
+  const tks=KB[kb].tasks[colId]||[];
+  return tks.length>0 && tks.every((tk,i)=>railTkMasquee(kb,role,colId,i));
+}
 /* Toutes les tâches existent partout : ce qui change d'un rôle à l'autre, c'est ce qu'il en voit. */
 function railTkMasquee(kb,role,colId,ix){ return !!S.railTkAcc[kb+"::"+role+"::"+colId+"::"+ix]; }
 const CAS_FIN=[["cpf","CPF"],["fp_ent_man","Ent. mandat"],["fp_ent_vir","Ent. virement"],["opco","OPCO"],["fp_part","Particulier"]];
@@ -3743,15 +3751,15 @@ function pageRail(){
 
   /* Le rail se lit de haut en bas, étape après étape : le moyen de paiement se choisit
      dans le filtre, jamais case par case dans un tableau. */
-  h+=`<div class="fbar">`+(parCas?chips([["Moyen de paiement",CAS_FIN]], cas, "railCas"):`<span class="sm">Ce rail ne dépend pas du moyen de paiement.</span>`)
+  h+=`<div class="fbar">`+(parCas?chips([["Moyen de paiement",CAS_FIN]], cas, "railCas"):`<span class="railnote">Ce rail ne dépend pas du moyen de paiement.</span>`)
     +`<div class="raillg"><span><i class="lg cablee"></i>Action</span><span><i class="lg tpl"></i>Template</span><span><i class="lg auto"></i>Automatique</span></div></div>`;
-  h+=d.cols.filter(c=>!(role!=="admin"&&railColMasquee(kb,role,c.id))).map(c=>{
+  h+=d.cols.map(c=>{
     const toutes=d.tasks[c.id]||[];
     const tks=toutes.filter(tk=>!parCas||!tk.fin||tk.fin.includes(cas));
     const masq=role!=="admin"&&railColMasquee(kb,role,c.id);
     let last="";
     let out=`<div class="fsec railsec ${masq?"masq":""}"><div class="sect-h">${c.label}<span class="n2">${tks.length}</span>${c.open?`<span class="n2">ouverture ${c.open}</span>`:""}${c.vide?`<span class="n2">étape terminale</span>`:""}
-      <span class="right railacts">${role!=="admin"?`<button class="btn btn-s" data-railcol="${kb}::${role}::${c.id}">${masq?"Rendre l'étape visible":"Masquer l'étape"}</button>`:""}<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button><button class="btn btn-s" data-grpnew="${kb}::${c.id}">+ Sous-section</button><a class="ilink" data-colmove="${kb}::${c.id}::-1" title="Monter l'étape">↑</a><a class="ilink" data-colmove="${kb}::${c.id}::1" title="Descendre l'étape">↓</a><a class="ilink danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</a></span></div>`;
+      <span class="right railacts">${masq?`<span class="chip warn">${roleLbl} ne voit pas cette étape</span>`:""}<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button><button class="btn btn-s" data-grpnew="${kb}::${c.id}">+ Sous-section</button><a class="ilink" data-colmove="${kb}::${c.id}::-1" title="Monter l'étape">↑</a><a class="ilink" data-colmove="${kb}::${c.id}::1" title="Descendre l'étape">↓</a><a class="ilink danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</a></span></div>`;
     out+=tks.map(tk=>{
       const ix=toutes.indexOf(tk);
       const nat=natureTk(tk);
@@ -3768,10 +3776,10 @@ function pageRail(){
         ${role==="admin"?`<span class="rl-b"></span>`:`<button class="rl-oeil ${cache?"off":""}" data-tkvis="${kb}::${role}::${c.id}::${ix}" title="${cache?roleLbl+" ne voit pas cette tâche":roleLbl+" voit cette tâche"}">${cache?ICO.eyeoff:ICO.eye}</button>`}
         <span class="rl-r ${resp||"multi"}">${respL}</span>
         <span class="rl-t">${respL!==acteur?`<b class="rl-ac">${acteur}</b> ${sp.what}`:cap(sp.what)}</span>
-        ${nat[0]==="simple"?"":`<span class="rt-nat ${nat[0]}">${nat[1]}</span>`}
-        ${tk.tpl?`<button class="rl-tpl" data-tpl="${encodeURIComponent(tk.t)}">template</button>`:""}
-        ${coche&&!cache?`<span class="rl-c">${roleLbl} coche</span>`:""}
         <span class="rl-a"><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::-1">↑</a><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::1">↓</a><a class="ilink" data-tkedit="${kb}::${c.id}::${ix}">Modifier</a><a class="ilink danger" data-tkdel="${kb}::${c.id}::${ix}">Supprimer</a></span>
+        ${coche&&!cache?`<span class="rl-c">${roleLbl} coche</span>`:""}
+        ${tk.tpl?`<button class="rl-tpl" data-tpl="${encodeURIComponent(tk.t)}">template</button>`:""}
+        ${nat[0]==="simple"?"":`<span class="rt-nat ${nat[0]}">${nat[1]}</span>`}
       </div>`;
     }).join("")||`<div class="rl-vide">${c.vide?"Aucune tâche attendue à cette étape.":"Aucune tâche dans ce cas."}</div>`;
     return out+`</div>`;
