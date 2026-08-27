@@ -39,6 +39,19 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .apptab .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .apptab.active{background:#fff;color:var(--ink-900);font-weight:600;box-shadow:var(--sh-carte)}
 .apptab .lock{margin-left:auto;font-size:10px;color:var(--ink-400)}
+.appsw{display:flex;align-items:center;gap:10px;width:100%;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--ink-900);background:#fff;box-shadow:var(--sh-carte);text-align:left}
+.appsw .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.appsw .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.appsw .chev{margin-left:auto;color:var(--ink-400);font-size:10px;transition:transform .15s}
+.appsw.open .chev{transform:rotate(180deg)}
+.appmenu{margin-top:3px;padding-top:3px;border-top:1px solid rgba(255,255,255,.7)}
+.appmenu .apptab{font-size:13px}
+.navfold{margin-top:6px}
+.navfold>summary{list-style:none;cursor:pointer;padding:12px 20px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-400);display:flex;align-items:center;gap:6px}
+.navfold>summary::-webkit-details-marker{display:none}
+.navfold>summary:hover{color:var(--ink-700)}
+.navfold>summary .chev{font-size:9px;color:var(--ink-300);transition:transform .15s}
+.navfold[open]>summary .chev{transform:rotate(90deg)}
 #subnav{padding-bottom:8px;padding-top:6px}
 #subnav .appctx{padding:10px 20px 2px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px}
 #subnav .appctx .dot{width:7px;height:7px;border-radius:50%}
@@ -114,13 +127,23 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .b-wait{background:var(--warn-50);color:var(--warn)}
 .b-neutral{background:#f1f5f9;color:var(--ink-500)}
 .card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.card .places{font-size:11px;color:var(--ink-400);margin-top:3px;line-height:1.4}
+.card .places.warn{color:var(--warn)}
+.card .places.ko{color:var(--err)}
+.card.st-other .places{color:var(--ink-300)}
 .tasks{margin-top:6px;padding-top:2px;display:flex;flex-direction:column;gap:2px}
 .tgrp{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);margin:5px 0 2px}
 .tor{display:flex;align-items:center;gap:8px;color:var(--ink-300);font-size:10px;font-weight:600;margin:4px 0}
 .tor::before,.tor::after{content:"";flex:1;height:1px;background:var(--line-2)}
-.task{display:flex;align-items:flex-start;gap:8px;padding:4px 2px;border-radius:6px;font-size:13px;line-height:1.45;color:var(--ink-700);cursor:pointer}
+.task{display:flex;align-items:flex-start;gap:9px;padding:6px 8px;margin:0 -8px;border-radius:7px;font-size:13px;line-height:1.5;color:var(--ink-700);cursor:pointer}
 .task:hover{background:var(--bg)}
-.task .box{width:14px;height:14px;border:1.5px solid var(--ink-300);border-radius:4px;flex-shrink:0;margin-top:1.5px;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.task>.tx{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px}
+.task>.tx>.lbl{flex:1 1 250px;min-width:0}
+.ftask>span{display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 8px;flex:1;min-width:0}
+.task .box{width:15px;height:15px;border:1.5px solid var(--ink-300);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.task.pending{cursor:default}
+.task.pending .box{border-style:dashed;border-color:var(--ink-300);background:transparent}
+.task.pending .box::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--ink-300)}
 .task.done .box{background:var(--primary);border-color:var(--primary)}
 .task.done .box::after{content:"";width:8px;height:4.5px;border-left:1.8px solid #fff;border-bottom:1.8px solid #fff;transform:rotate(-45deg) translate(0.5px,-1px)}
 .task.done .lbl{color:var(--ink-400);text-decoration:line-through}
@@ -128,17 +151,17 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .task.other .box{border-color:var(--line-2);background:var(--bg)}
 .task.other.done .box{background:var(--ink-300);border-color:var(--ink-300)}
 .hrow .who,.ftask .who{font-size:11px;font-weight:600;color:var(--ink-500);background:var(--bg);border-radius:5px;padding:1px 6px;margin-right:7px;white-space:nowrap}
-.task .who{font-size:11px;font-weight:600;color:var(--ink-500);background:var(--bg);border-radius:5px;padding:1px 6px;margin-right:7px;white-space:nowrap}
+.task .who,.ftask .who{flex:0 0 128px;font-size:11.5px;font-weight:600;color:var(--ink-500);background:none;border-radius:0;padding:0;white-space:normal;line-height:1.35}
+.ftask .who{background:none;padding:0;margin:0}
+@media (max-width:640px){.task .who,.ftask .who{flex:0 0 auto}}
 .who.duo2 b{font-weight:700;color:var(--ink-700)}
 .who.duo2 .sep{margin:0 4px;color:var(--ink-300)}
 .task.notmine .who.duo2 b,.hrow:not(.mine) .who.duo2 b,.ftask:not(.mine) .who.duo2 b{color:var(--ink-500)}
 .task:not(.notmine) .who{color:var(--ink-600)}
 .task.done .who{color:var(--ink-300)}
-.task.next{background:var(--primary-50);border-radius:7px;padding:5px 7px;margin:1px -5px}
+.task.next{background:var(--primary-50)}
 .task.next.notmine{background:#f1f5f9}
-.task.next.notmine .nextpill{color:var(--ink-500);border-color:var(--line-2)}
-.task .nextpill{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary-dark);background:#fff;border:1px solid #c7d2fe;border-radius:999px;padding:1px 7px;margin-left:7px;white-space:nowrap}
-.task .tag{font-size:10px;color:#92400e;background:var(--warn-50);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap;cursor:pointer;border:1px solid transparent}
+.task .tag{font-size:11.5px;color:#92400e;background:var(--warn-50);border-radius:5px;padding:1px 7px;white-space:nowrap;cursor:pointer;border:1px solid transparent}
 .task .tag:hover{border-color:#fcd34d;text-decoration:underline;text-underline-offset:2px}
 /* popup template */
 #tplmodal{position:fixed;inset:0;background:rgba(15,23,42,.3);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -150,6 +173,37 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tpl-edit:focus{outline:none;border-color:var(--primary)}
 .tpl-note{font-size:11px;color:var(--ink-400);margin-top:10px;line-height:1.5}
 /* fiches apprenant & client */
+/* page de ressource : un document, écrit et relu dans DELIV'IA */
+.docpage{max-width:780px;margin:0 auto}
+.dp-head{display:flex;align-items:flex-start;gap:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.dp-head h1{font-size:27px;font-weight:700;letter-spacing:-.02em;color:var(--ink-900);line-height:1.2}
+.dp-title-in{font-size:27px;font-weight:700;letter-spacing:-.02em;color:var(--ink-900);border:none;border-bottom:2px solid var(--primary);background:none;width:100%;font-family:inherit;padding:0 0 2px}
+.dp-title-in:focus{outline:none}
+.dp-meta{font-size:12px;color:var(--ink-400);margin-top:7px}
+.dp-act{margin-left:auto;display:flex;gap:8px;flex-shrink:0}
+.dp-body{padding:18px 0 4px}
+.dp-bloc{position:relative;padding:3px 34px 3px 0}
+.dp-h2{font-size:17px;font-weight:600;color:var(--ink-900);margin:18px 0 4px;letter-spacing:-.01em}
+.dp-p{font-size:15px;line-height:1.75;color:var(--ink-700);margin:6px 0}
+.dp-li{display:flex;gap:10px;font-size:15px;line-height:1.7;color:var(--ink-700);margin:3px 0}
+.dp-pt{color:var(--ink-300);flex-shrink:0}
+.dp-box{width:15px;height:15px;border:1.5px solid var(--ink-300);border-radius:4px;flex-shrink:0;margin-top:4px}
+.dp-tx{flex:1;min-width:0}
+.dp-callout{display:flex;gap:11px;background:var(--warn-50);border-radius:9px;padding:13px 15px;margin:12px 0;font-size:14.5px;line-height:1.65;color:#92400e}
+.dp-callout .dp-ico{color:#d97706;flex-shrink:0;margin-top:2px}
+.dp-video{aspect-ratio:16/9;border-radius:10px;background:linear-gradient(145deg,#1e293b,#0f172a);display:flex;align-items:center;justify-content:center;margin-top:10px}
+.dp-play{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;padding-left:4px}
+.dp-embed{aspect-ratio:16/9;border:1px dashed var(--line-2);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--ink-400);font-size:13px;margin-top:10px;background:#fff}
+.dp-cap{font-size:12px;color:var(--ink-400);margin:6px 0 12px}
+.dp-body.editing [contenteditable]{border-radius:6px;padding:2px 6px;margin-left:-6px;transition:background .12s}
+.dp-body.editing [contenteditable]:hover{background:#f8fafc}
+.dp-body.editing [contenteditable]:focus{outline:none;background:var(--primary-50)}
+.dp-del{position:absolute;right:0;top:6px;width:22px;height:22px;border-radius:6px;color:var(--ink-300);font-size:12px;display:none;align-items:center;justify-content:center}
+.dp-body.editing .dp-bloc:hover .dp-del{display:flex}
+.dp-del:hover{background:var(--err-50);color:var(--err)}
+.dp-add{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.dp-add .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;margin-right:4px}
+.dp-foot{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-400);line-height:1.6}
 .backbtn{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--ink-500);margin-bottom:12px;cursor:pointer;border-radius:6px;padding:4px 8px}
 .backbtn:hover{background:#f1f5f9;color:var(--ink-700)}
 .fichehead{background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:20px 22px;margin-bottom:14px}
@@ -195,6 +249,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .frow>.btn,.frow>button.btn-s,.frow>.right{margin-left:auto}
 .frow .go{margin-left:auto;color:var(--primary);font-weight:600;font-size:12px;cursor:pointer;white-space:nowrap}
 .frow .go:hover{text-decoration:underline;text-underline-offset:2px}
+.ntag{display:inline-flex;align-items:center;border-radius:5px;padding:1.5px 8px;font-size:12px;font-weight:500;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.ntag.bleu{background:#eff6ff;color:#1d4ed8}
+.ntag.vert{background:#ecfdf5;color:#047857}
+.ntag.violet{background:#f5f3ff;color:#6d28d9}
+.ntag.orange{background:#fff7ed;color:#c2410c}
+.ntag.gris{background:#f1f5f9;color:var(--ink-500)}
+.ntags{display:flex;flex-wrap:wrap;gap:5px}
 .chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1.5px 9px;font-size:10.5px;font-weight:500;background:#f1f5f9;color:var(--ink-500)}
 .chip.ok{background:var(--ok-50);color:var(--ok)}
 .chip.warn{background:var(--warn-50);color:var(--warn)}
@@ -216,6 +277,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .acc summary::-webkit-details-marker{display:none}
 .acc summary:hover{background:var(--bg)}
 .acc summary .chev{color:var(--ink-400);font-size:11px;transition:transform .15s;flex-shrink:0}
+.acc summary .vsub{font-size:12px;font-weight:400;color:var(--ink-400)}
 .acc[open] summary .chev{transform:rotate(90deg)}
 .acc summary .tt{font-size:13.5px;font-weight:600;color:var(--ink-900)}
 .acc summary .sm{font-size:11.5px;color:var(--ink-400)}
@@ -270,7 +332,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .hrow .e{color:var(--ink-300);margin:0 2px}
 .hrow .w{color:var(--ink-400)}
 .task .fx{font-size:10px;color:var(--ok);background:var(--ok-50);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap}
-.task .note{display:block;font-size:10.5px;color:var(--ink-400);margin-top:1px}
+.task .note{flex:1 0 100%;font-size:11.5px;color:var(--ink-400);margin-top:-1px}
 .sub{margin:2px 0 2px 21px;display:flex;flex-direction:column;gap:1px}
 .waiting{margin-top:8px;font-size:11px;color:var(--warn);background:var(--warn-50);border-radius:6px;padding:5px 8px;line-height:1.4}
 /* carte compacte */
@@ -393,7 +455,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 /* ── v20 : cartes épurées, popup process, sections de colonne ── */
 .ct{display:flex;align-items:flex-start;gap:8px}
 .ct .t{flex:1;min-width:0;line-height:1.3}
-.ct .badge{flex-shrink:0;margin-top:1px}
+.ct .badge{flex-shrink:0;margin-top:1px;white-space:nowrap}
 .b-offre{background:var(--primary-50);color:var(--primary-dark)}
 .cnt{align-items:flex-start;margin-top:6px}
 .cnt .nx{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--ink-600,#475569);line-height:1.35}
@@ -515,7 +577,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .todolist .tgrp{margin-top:8px}
 .caswrap{display:flex;flex-wrap:wrap;gap:10px 16px}
 .casck{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-700)}
-.tlien{margin-left:8px;font-size:11px}
+.tlien{font-size:11.5px}
 .fldgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 18px;margin-top:14px;border-top:1px solid var(--line);padding-top:14px;align-items:start}
 .fldgrid.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .fldgrid .full{grid-column:1 / -1}
@@ -772,6 +834,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .ifld .v .muted{color:var(--ink-300)}
 .ilink{color:var(--primary);font-weight:600;cursor:pointer}
 .ilink:hover{text-decoration:underline;text-underline-offset:2px}
+/* lien vers un document ou une ressource : discret, une flèche le signale */
+.dlink{display:inline-flex;align-items:baseline;gap:7px;color:var(--ink-800);font-weight:500;cursor:pointer;text-decoration:none}
+.dlink::before{content:"→";color:var(--ink-300);font-weight:400}
+.dlink:hover{color:var(--ink-900)}
+.dlink:hover::before{color:var(--primary)}
+.dlink.muted2{color:var(--ink-400)}
 .stepline{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-500);margin:0 0 8px}
 .stepline .pill{width:8px;height:8px;border-radius:50%;background:#818cf8}
 .stepline b{color:var(--ink-900);font-weight:600}
@@ -834,8 +902,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .pmat .plk{font-size:11px;margin-left:6px}
 .pav{width:30px;height:30px;font-size:11px;border-radius:9px;margin:0 auto;cursor:pointer}
 .pname{font-size:11px;color:var(--ink-700);margin:4px 0 3px}
-.tbtn{display:inline-flex;align-items:center;border-radius:6px;padding:2px 9px;font-size:11px;font-weight:600;background:var(--primary);color:#fff;margin-left:6px;vertical-align:middle}
-.tbtn:hover{background:var(--primary-dark)}
+.tbtn{display:inline-flex;align-items:center;border-radius:6px;padding:3px 11px;font-size:11.5px;font-weight:600;background:#fff;color:var(--primary-dark);border:1px solid #c7d2fe;margin-left:auto;flex-shrink:0}
+.tbtn:hover{background:var(--primary-50);border-color:var(--primary)}
 .task.done .tbtn{display:none}
 
 /* popup v22 : trois sections alignées, sans bloc coloré */
@@ -898,6 +966,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal .task{padding:6px 2px;font-size:13.5px}
 #modal .task .box{border-radius:5px;width:15px;height:15px}
 #modal .task.other .box{background:#f8fafc}
+#modal .task.other.done .box{background:var(--ink-300);border-color:var(--ink-300)}
+#modal .task.pending .box{background:transparent}
 #modal .futcol{text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--ink-600);margin:16px 0 8px}
 #modal .futcol.en{color:var(--ink-900);font-weight:700}
 #modal .hrow{font-size:13.5px;padding:4px 0;border-bottom:none}
@@ -994,6 +1064,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 @media (max-width:1180px){.faqduo{grid-template-columns:minmax(0,1fr)}}
 .fsec .sect-h .right{display:flex;align-items:center;gap:12px}
 .lrow .acts{display:flex;align-items:center;gap:12px}
+.onbparam{margin-top:22px;border-top:2px solid var(--line-2);padding-top:6px}
 .grosec{display:flex;align-items:center;gap:14px;margin:26px 0 14px;padding-top:18px;border-top:2px solid var(--line-2)}
 .grosec-t{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-500)}
 .grosec-a{margin-left:auto;display:flex;gap:8px}
@@ -1038,7 +1109,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .fbar .chips{margin:0}
 .fsearch{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:6px 10px;color:var(--ink-400);min-width:260px}
 .fsearch input{border:none;outline:none;font:inherit;font-size:13px;color:var(--ink-900);flex:1;background:transparent}
-.fsel{font:inherit;font-size:13px;color:var(--ink-700);background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:6px 10px}
+.fsel{font:inherit;font-size:13px;color:var(--ink-700);background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:6px 26px 6px 10px;
+  -webkit-appearance:none;appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%2394a3b8' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center}
+.fsel:hover{border-color:var(--ink-300)}
 .duo{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:12px;align-items:stretch;margin-bottom:12px}
 .duo .fsec{margin-bottom:0;display:flex;flex-direction:column}
 .duo .notes-ta{flex:1;min-height:96px;resize:none}
@@ -1153,7 +1228,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
       <div class="plt">Plateforme France IA</div>
     </div>
     <div id="appzone">
-      <div class="nav-label">Applications</div>
+      <div class="nav-label">Application</div>
       <nav id="appTabs"></nav>
     </div>
     <nav id="subnav"></nav>
@@ -1198,8 +1273,8 @@ const OFFRES = {n1:"Niveau 1", n2:"Niveau 2", intra:"Intra", coaching:"Coaching"
 
 const DELIVIA_TABS = {
   admin:[["Processus",[["sessions","Sessions"],["inscription","Inscription"],["facturation","Facturation"]]],
-         ["Pilotage",[["anomalies","Anomalies"],["actions","Actions"],["generer","Générer"],["automatisations","Automatisations"],["templates","Templates"]]],
-         ["Divers",[["clients","Clients & apprenants"],["equipe","Équipe"],["preuves","Preuves"]]]],
+         ["Pilotage",[["anomalies","Anomalies"],["actions","Actions"],["clients","Clients & apprenants"]]],
+         ["Backend",[["generer","Générer"],["automatisations","Automatisations"],["templates","Templates"],["equipe","Équipe"],["preuves","Preuves"],["reglages","Réglages"]],{fold:1}]],
   closer:[["Processus",[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]],
           ["Divers",[["anomalies","Anomalies"],["generer","Générer"],["faq","FAQ & Feedback"]]]],
   formateur:[["Mon activité",[["services","Mes prestations"],["aprendre","À prendre"]]],
@@ -1705,15 +1780,19 @@ const QONTO_ENC = [
 ];
 /* vues du kanban Facturation : quatre vues client */
 const FACT_VIEWS = {cpf:{lbl:"CPF",fins:["cpf"]}, mandat:{lbl:"Mandat",fins:["fp_ent_man","fp_part"]}, virement:{lbl:"Virement",fins:["fp_ent_vir"]}, opco:{lbl:"OPCO",fins:["opco"]}};
+/* Le nom d'une session, c'est SA SALLE et ses dates : quatre sessions peuvent tomber
+   le même jour dans la même ville, jamais dans la même salle. */
 const SESS = {
- paris:   {lbl:"Paris · 12-13 sept",    lieu:"Station F, Paris 13e",            ville:"Paris",    dt:{j1:"2026-09-12",j2:"2026-09-13"}, frm:"Sarah K.", niveau:"Plutôt débutant"},
- bordeaux:{lbl:"Bordeaux · 26-27 sept", lieu:"Quai des Chartrons, Bordeaux",    ville:"Bordeaux", dt:{j1:"2026-09-26",j2:"2026-09-27"}, frm:"Marc D.",  niveau:"Plutôt avancé"},
- lyon:    {lbl:"Lyon · 3-4 oct",        lieu:"Part-Dieu, Lyon",                 ville:"Lyon",     dt:{j1:"2026-10-03",j2:"2026-10-04"}, frm:null,       niveau:"Aucun badge"},
- parisn2: {lbl:"Paris N2 · 10-11 oct",  lieu:"Station F, Paris 13e",            ville:"Paris",    dt:{j1:"2026-10-10",j2:"2026-10-11"}, frm:null,       niveau:"Plutôt avancé"},
- bxjuin:  {lbl:"Bordeaux · 20-21 juin", lieu:"Quai des Chartrons, Bordeaux",    ville:"Bordeaux", dt:{j1:"2026-06-20",j2:"2026-06-21"}, frm:"Marc D.",  niveau:"Plutôt débutant"},
- lille:   {lbl:"Lille · 17-18 octobre", lieu:"Euratechnologies, Lille",          ville:"Lille",    dt:{j1:"2026-10-17",j2:"2026-10-18"}, frm:null,       niveau:"Plutôt débutant"},
- pn2juil: {lbl:"Paris N2 · 4-5 juillet",lieu:"Station F, Paris 13e",            ville:"Paris",    dt:{j1:"2026-07-04",j2:"2026-07-05"}, frm:"Sarah K.", niveau:"Plutôt avancé"},
+ paris:   {lbl:"Boardroom Ada · 12-13 sept",   salle:"Boardroom Ada",    lieu:"Station F, Paris 13e",         ville:"Paris",    dt:{j1:"2026-09-12",j2:"2026-09-13"}, frm:"Sarah K.", niveau:"Plutôt débutant"},
+ bordeaux:{lbl:"Salle Garonne · 26-27 sept",   salle:"Salle Garonne",    lieu:"Quai des Chartrons, Bordeaux", ville:"Bordeaux", dt:{j1:"2026-09-26",j2:"2026-09-27"}, frm:"Marc D.",  niveau:"Plutôt avancé"},
+ lyon:    {lbl:"Salle Rhône · 3-4 oct",        salle:"Salle Rhône",      lieu:"Part-Dieu, Lyon",              ville:"Lyon",     dt:{j1:"2026-10-03",j2:"2026-10-04"}, frm:null,       niveau:"Aucun badge"},
+ parisn2: {lbl:"Boardroom Turing · 10-11 oct", salle:"Boardroom Turing", lieu:"Station F, Paris 13e",         ville:"Paris",    dt:{j1:"2026-10-10",j2:"2026-10-11"}, frm:null,       niveau:"Plutôt avancé"},
+ bxjuin:  {lbl:"Salle Dordogne · 20-21 juin",  salle:"Salle Dordogne",   lieu:"Quai des Chartrons, Bordeaux", ville:"Bordeaux", dt:{j1:"2026-06-20",j2:"2026-06-21"}, frm:"Marc D.",  niveau:"Plutôt débutant"},
+ lille:   {lbl:"Salle Deûle · 17-18 octobre",  salle:"Salle Deûle",      lieu:"Euratechnologies, Lille",      ville:"Lille",    dt:{j1:"2026-10-17",j2:"2026-10-18"}, frm:null,       niveau:"Plutôt débutant"},
+ pn2juil: {lbl:"Boardroom Ada · 4-5 juillet",  salle:"Boardroom Ada",    lieu:"Station F, Paris 13e",         ville:"Paris",    dt:{j1:"2026-07-04",j2:"2026-07-05"}, frm:"Sarah K.", niveau:"Plutôt avancé"},
 };
+/* les salles ouvertes d'un lieu, pour les listes déroulantes */
+function sallesDe(lieu){ const r=LIEUX_REF.find(l=>lieu&&l.n&&lieu.startsWith(l.n)); return r?r.salles.map(s=>s[0]):[]; }
 const FORMATEURS = ["Sarah K.","Marc D.","Inès B."];
 /* fiches formateurs : ce que Staff porte aujourd'hui, rapatrié dans l'Annuaire */
 const FRM = {
@@ -1763,13 +1842,13 @@ function fldIn(label,val,name,ed){
 const DEMANDES_FRM = {s4:[{f:"Inès B.",d:"2026-08-23",m:"Je peux reprendre le N2 de Paris."}], s3:[{f:"Inès B.",d:"2026-08-19",m:"Disponible les deux jours, je connais bien Lyon."},{f:"Marc D.",d:"2026-08-21",m:""}], s4:[{f:"Sarah K.",d:"2026-08-20",m:"Je peux prendre le N2 Paris."}]};
 let CARDS = [
  /* sessions N1/N2 : rail France IA + rail formateur (même session, deux cartes) */
- {id:"s1", kb:"session_fia", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"13/12", over:1, col:"demarree"},
- {id:"s2", kb:"session_fia", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:SESS.bordeaux.lbl, lieu:SESS.bordeaux.lieu, frm:"Marc D.",  places:"4/12", col:"prete"},
- {id:"s3", kb:"session_fia", offre:"n1", sess:"lyon",     dt:SESS.lyon.dt,     title:SESS.lyon.lbl,     lieu:SESS.lyon.lieu,     frm:null,       places:"0/12", col:"brouillon"},
- {id:"s4", kb:"session_fia", offre:"n2", sess:"parisn2",  dt:SESS.parisn2.dt,  title:SESS.parisn2.lbl,  lieu:SESS.parisn2.lieu,  frm:"Sarah K.", places:"2/12", col:"retrait"},
+ {id:"s1", kb:"session_fia", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    salle:SESS.paris.salle,    frm:"Sarah K.", places:"13/12", over:1, col:"demarree"},
+ {id:"s2", kb:"session_fia", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:SESS.bordeaux.lbl, lieu:SESS.bordeaux.lieu, salle:SESS.bordeaux.salle, frm:"Marc D.",  places:"4/12", col:"prete"},
+ {id:"s3", kb:"session_fia", offre:"n1", sess:"lyon",     dt:SESS.lyon.dt,     title:SESS.lyon.lbl,     lieu:SESS.lyon.lieu,     salle:SESS.lyon.salle,     frm:null,       places:"0/12", col:"brouillon"},
+ {id:"s4", kb:"session_fia", offre:"n2", sess:"parisn2",  dt:SESS.parisn2.dt,  title:SESS.parisn2.lbl,  lieu:SESS.parisn2.lieu,  salle:SESS.parisn2.salle,  frm:"Sarah K.", places:"2/12", col:"retrait"},
  /* sessions passées : masquées par défaut dans la vue Liste */
- {id:"s5", kb:"session_fia", offre:"n1", sess:"bxjuin", dt:{j1:"2026-06-20",j2:"2026-06-21"}, title:"Bordeaux · 20-21 juin", lieu:"Quai des Chartrons, Bordeaux", ville:"Bordeaux", niveau:"Plutôt débutant", frm:"Marc D.", places:"11/12", col:"terminee"},
- {id:"s6", kb:"session_fia", offre:"n2", sess:"pn2juil", dt:{j1:"2026-07-04",j2:"2026-07-05"}, title:"Paris N2 · 4-5 juillet", lieu:"Station F, Paris 13e", ville:"Paris", niveau:"Plutôt avancé", frm:"Sarah K.", places:"9/12", col:"terminee"},
+ {id:"s5", kb:"session_fia", offre:"n1", sess:"bxjuin", dt:{j1:"2026-06-20",j2:"2026-06-21"}, title:SESS.bxjuin.lbl, lieu:"Quai des Chartrons, Bordeaux", salle:SESS.bxjuin.salle, ville:"Bordeaux", niveau:"Plutôt débutant", frm:"Marc D.", places:"11/12", col:"terminee"},
+ {id:"s6", kb:"session_fia", offre:"n2", sess:"pn2juil", dt:{j1:"2026-07-04",j2:"2026-07-05"}, title:SESS.pn2juil.lbl, lieu:"Station F, Paris 13e", salle:SESS.pn2juil.salle, ville:"Paris", niveau:"Plutôt avancé", frm:"Sarah K.", places:"9/12", col:"terminee"},
  {id:"fs1",kb:"session_frm", offre:"n1", sess:"paris",    dt:SESS.paris.dt,    title:SESS.paris.lbl,    lieu:SESS.paris.lieu,    frm:"Sarah K.", places:"13/12", over:1, col:"preparer", mine:1},
  {id:"fs4",kb:"session_frm", offre:"n2", sess:"parisn2",  dt:SESS.parisn2.dt,  title:SESS.parisn2.lbl,  lieu:SESS.parisn2.lieu,  frm:"Sarah K.", places:"2/12", col:"retrait", mine:1},
  {id:"fs2",kb:"session_frm", offre:"n1", sess:"bordeaux", dt:SESS.bordeaux.dt, title:SESS.bordeaux.lbl, lieu:SESS.bordeaux.lieu, frm:"Sarah K.", places:"4/12", col:"shotgun", mine:1},
@@ -1841,7 +1920,7 @@ function ardClosings(card){
 function linkFld(label,key,obj,ed,txt){
   const url=obj[key]||"";
   if(ed) return `<div class="fld"><div class="k">${label}</div><input class="edin" data-f="${key}" value="${url.replace(/"/g,"&quot;")}" placeholder="https://…"></div>`;
-  return `<div class="fld"><div class="k">${label}</div><div class="v">${url?`<a class="ilink" href="${url}" target="_blank" rel="noopener">${txt||"Ouvrir"}</a>`:'<span class="muted">non renseigné</span>'}</div></div>`;
+  return `<div class="fld"><div class="k">${label}</div><div class="v">${url?`<a class="dlink" href="${url}" target="_blank" rel="noopener">${txt||"Ouvrir"}</a>`:'<span class="muted">non renseigné</span>'}</div></div>`;
 }
 /* démo : cartes dont l'étape est terminée et qui attendent une date d'ouverture */
 (()=>{const s1=CARDS.find(c=>c.id==="s1"); s1.waiting="enformation";
@@ -1936,7 +2015,8 @@ CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12
 const S = {
   railAcc:{}, railColAcc:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
   fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", sortSess:"dt", sortSessDir:1, fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
-  checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false};
+  checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false,
+  appOpen:false, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null};
 
 const $ = s=>document.querySelector(s);
 (()=>{CARDS.filter(c=>c.waiting).forEach(c=>{(KB[c.kb].tasks[c.col]||[]).forEach((tk,i)=>{if(!tk.fin||tk.fin.includes(c.fin)){if(!tk.kind||tk.kind.includes(c.kind)){}}});
@@ -2089,6 +2169,9 @@ function rapBlock(card){
       ||`<tr><td class="paynone" colspan="4">Aucun virement ne correspond à cette recherche.</td></tr>`)
     +`</table><div class="paynone" style="padding-top:6px">Le rapprochement part dans Qonto : c'est lui qui tamponne la facture acquittée, DELIV'IA relit ensuite son statut.</div></details>`;
 }
+/* une information courte et fermée (une ville, une salle, un formateur, un niveau) se lit
+   mieux en étiquette qu'en texte : fond pâle, texte de la même teinte en plus soutenu. */
+function ntag(txt,couleur){ return txt?`<span class="ntag ${couleur||"gris"}">${txt}</span>`:""; }
 function cardBadge(card){
   if(card.kb==="fact_com") return "";
   if(isFact(card)) return badgeOffre(card.offre);
@@ -2130,21 +2213,21 @@ function todoRefItems(card,tk){
 }
 function todoRefHtml(card,colId,i,tk){
   const items=todoRefItems(card,tk), k=key(card,colId,i);
-  if(!items.length) return `<div class="task other notmine" style="cursor:default"><span class="box"></span><span><span class="lbl">${tk.t}</span></span></div>`;
+  if(!items.length) return `<div class="task other notmine" style="cursor:default"><span class="box"></span><span class="tx"><span class="lbl">${tk.t}</span></span></div>`;
   const fait=items.filter(x=>x.done).length, tous=fait===items.length, ak="tref-"+k;
   let last="";
   return `<details class="todobloc ${tous?"done":""}" data-acc="${ak}" ${accKey(ak)?"open":""}>
     <summary><span class="box ${tous?"on":""}"></span><span class="lbl">${tk.t}</span><span class="cnt3">${fait}/${items.length}</span><span class="chev">▸</span></summary>
     <div class="todolist">`
     +items.map(it=>{ const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:""; last=it.ph;
-      return g+`<div class="task other notmine ${it.done?"done":""}" style="cursor:default"><span class="box"></span><span><span class="lbl">${it.lbl}</span></span></div>`;
+      return g+`<div class="task other notmine ${it.done?"done":""}" style="cursor:default"><span class="box"></span><span class="tx"><span class="lbl">${it.lbl}</span></span></div>`;
     }).join("")
     +`</div></details>`;
 }
 function apTodoHtml(card,colId,i,tk,ghost){
   const aps=peopleFor(card).aps, items=apTodoItems(), k=key(card,colId,i), can=canCheck(tk);
   const docsOk=DOCS_APPRENANT.filter(d=>d[1]).length;
-  if(!aps.length) return `<div class="task other notmine" style="cursor:default"><span class="box"></span><span><span class="lbl">${tk.t}</span></span></div>`;
+  if(!aps.length) return `<div class="task other notmine" style="cursor:default"><span class="box"></span><span class="tx"><span class="lbl">${tk.t}</span></span></div>`;
   return aps.map((a,ai)=>{
     const kk=j=>k+"::"+ai+"::"+j;
     const fait=items.filter((_,j)=>S.checks[kk(j)]).length, tous=fait===items.length;
@@ -2158,7 +2241,7 @@ function apTodoHtml(card,colId,i,tk,ghost){
         const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:""; last=it.ph;
         const d=!!S.checks[kk(j)];
         return g+`<div class="task notmine ${d?"done":""} ${can?"":"other"}" ${can&&!ghost?`data-todoi="${card.id}::${colId}::${i}::${ai}-${j}"`:'style="cursor:default"'}>
-          <span class="box"></span><span><span class="lbl">${it.lbl}</span></span></div>`;
+          <span class="box"></span><span class="tx"><span class="lbl">${it.lbl}</span></span></div>`;
       }).join("")
       +`<div class="tgrp">Documents de son espace <span class="cnt3">${docsOk}/${DOCS_APPRENANT.length}</span></div>`
       +DOCS_APPRENANT.map(([n,ok])=>`<div class="docrow ${ok?"":"off"}"><span class="dot"></span>${n}<span class="right sm">${ok?"disponible":"pas encore disponible"}</span></div>`).join("")
@@ -2169,7 +2252,7 @@ function taskHtml(card,colId,i,tk,ghost){
   const k=key(card,colId,i);
   if(tk.apTodo) return apTodoHtml(card,colId,i,tk,ghost);
   if(tk.todoRef) return todoRefHtml(card,colId,i,tk);
-  const done=tk.sub&&card.ech ? card.ech.every(e=>e.st==="ok") : !!S.checks[k];
+  const done=taskState(card,colId,i,tk);
   const can=canCheck(tk), mine=isMine(card,tk);
   const apsTk = tk.perAp ? peopleFor(card).aps : null;
   const multi = apsTk && apsTk.length>1;
@@ -2178,12 +2261,13 @@ function taskHtml(card,colId,i,tk,ghost){
   if(tk.grp){ const prev=tasksFor(card,colId)[i-1]; if(!prev||prev.grp!==tk.grp) h+=`<div class="tgrp">${tk.grp}</div>`; }
   const parts=splitActeur(tk,lbl);
   const suivante = !ghost && colId===card.col && i===prochaineTache(card,colId);
-  h+=`<div class="task ${done?"done":""} ${can?"":"other"} ${mine?"":"notmine"} ${suivante?"next":""}" ${can&&!ghost?`data-c="${card.id}" data-col="${colId}" data-i="${i}"`:'style="cursor:default"'}>
+  const attente = autoAttente(tk) && !done;
+  h+=`<div class="task ${done?"done":""} ${can?"":"other"} ${mine?"":"notmine"} ${attente?"pending":""} ${suivante&&!attente?"next":""}" ${can&&!ghost?`data-c="${card.id}" data-col="${colId}" data-i="${i}"`:'style="cursor:default"'}>
     <span class="box"></span>
-    <span>${whoTag(card,tk,parts.who)}<span class="lbl">${parts.what}</span>${suivante?`<span class="nextpill">${mine?"à faire":"en attente"}</span>`:""}${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tbtn" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.lien?`<a class="ilink tlien" data-frmact="${encodeURIComponent(tk.lien+" ouvert")}">${tk.lien}</a>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}</span>
+    <span class="tx">${whoTag(card,tk,parts.who)}<span class="lbl">${parts.what}</span>${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.lien?`<a class="ilink tlien" data-frmact="${encodeURIComponent(tk.lien+" ouvert")}">${tk.lien}</a>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tbtn" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}</span>
   </div>`;
   if(multi){
-    h+=`<div class="sub">`+apsTk.map(a=>`<div class="task other notmine ${done?"done":""}" style="cursor:default"><span class="box"></span><span class="lbl" style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`;
+    h+=`<div class="sub">`+apsTk.map(a=>`<div class="task other notmine ${done?"done":""}" style="cursor:default"><span class="box"></span><span class="tx"><span class="lbl">${a.nom}</span></span></div>`).join("")+`</div>`;
   }
   if(payKind(card,tk)){
     const all=tasksFor(card,colId);
@@ -2206,7 +2290,13 @@ function openDateStr(card,col){
   const dt=new Date(base+"T12:00:00"); dt.setDate(dt.getDate()+off);
   return "le "+dt.toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
 }
+/* Deux natures d'automatisme, que le libellé distingue déjà :
+   « (automatique) » = DELIV'IA le fait en entrant dans l'étape, donc c'est fait ;
+   « (détecté automatiquement) » = DELIV'IA attend un signal du dehors, donc ça reste en attente. */
+function autoFaite(tk){ return !!tk.auto && !/détect|constate/i.test(tk.t); }
+function autoAttente(tk){ return !!tk.auto && !autoFaite(tk); }
 function taskState(card,colId,i,tk){
+  if(autoFaite(tk)) return true;
   if(tk.sub&&card.ech) return card.ech.every(e=>e.st==="ok");
   if(tk.todoRef){const its=todoRefItems(card,tk); return its.length>0 && its.every(x=>x.done);}
   if(tk.apTodo){const k=key(card,colId,i), aps=peopleFor(card).aps;
@@ -2216,15 +2306,21 @@ function taskState(card,colId,i,tk){
 /* inscrits réels / en cours (dont réservations) / capacité d'une session */
 function sessCounts(card){
   const sess=card.sess; const cap=card.cap||12;
-  if(!sess) return {ins:0,enc:0,cap,over:false,risk:false,txt:"0 + 0 / "+cap};
+  if(!sess) return {ins:0,enc:0,cap,over:false,risk:false,txt:"0 sur "+cap};
   const list=CARDS.filter(i=>i.kb==="insc"&&i.sess===sess&&i.col!=="lost"&&!i.movedFrom);
   const ins=list.filter(i=>["validee","absent","termine"].includes(i.col)).length;
   const enc=list.length-ins;
-  return {ins,enc,cap,over:ins>cap,risk:ins<=cap&&ins+enc>cap,txt:`${ins} + ${enc} / ${cap}`};
+  return {ins,enc,cap,over:ins>cap,risk:ins<=cap&&ins+enc>cap,txt:`${ins} sur ${cap}${enc?" · "+enc+" en cours":""}`};
 }
 function placesBadge(card){
   const c=sessCounts(card);
-  return `<span class="badge ${c.over?"b-over":c.risk?"b-risk":"b-neutral"}" title="${c.ins} inscrit(s), ${c.enc} en cours d'inscription, ${c.cap} places">${c.txt}${c.over?" · surbooking":c.risk?" · risque":""}</span>`;
+  return `<span class="badge ${c.over?"b-over":c.risk?"b-risk":"b-neutral"}" title="${c.ins} inscription(s) validée(s), ${c.enc} en cours d'inscription, ${c.cap} places">${c.ins}/${c.cap}</span>`;
+}
+/* le décompte des places, écrit en toutes lettres sous le titre de la carte */
+function placesLigne(card){
+  const c=sessCounts(card);
+  const cls=c.over?"ko":c.risk?"warn":"";
+  return `<div class="places ${cls}">${c.ins} inscrit${c.ins>1?"s":""} sur ${c.cap} place${c.cap>1?"s":""}${c.enc?` · ${c.enc} inscription${c.enc>1?"s":""} en cours`:""}${c.over?" · surbooking":c.risk?" · risque de surbooking":""}</div>`;
 }
 /* Deux rôles par tâche, jamais confondus : celui qui AGIT (tk.p, lu dans le libellé)
    et celui qui en RÉPOND. La règle maison : le closeur répond de son client tant qu'on est
@@ -2275,6 +2371,7 @@ function cardHtml(card, colDef, opts={}){
   const over=card.kb.startsWith("session")&&sessCounts(card).over;
   let h=`<div class="card st-${st} ${over?"over":""} ${card.fresh?"pop":""} ${card.waiting?"waitlock":""} ${lockInfo?"haslock":""} ${isGhost?"ghost":"clickable"}" id="card-${card.id}" ${isGhost?"":`data-open="${card.id}"`}>`;
   h+=`<div class="ct"><span class="t">${card.title}</span>${opts.noBadge?"":cardBadge(card)}</div>`;
+  if(card.kb.startsWith("session")&&card.sess) h+=placesLigne(card);
   if(lockInfo){
     const lc=lockInfo.c;
     h+=`<div class="lockmid"><span class="lockico">${ICO.lock}</span><div class="lm-x"><div class="lm-t">${lc.label}</div><div class="lm-d">Ouverture ${openDateStr(card,lc)}</div><div class="lm-r">${lc.open}</div></div></div></div>`;
@@ -2290,7 +2387,7 @@ function cardHtml(card, colDef, opts={}){
       ${factLink?`<a data-goto="${factLink.id}">Voir la carte facturation →</a>`:""}</div>`;
   } else if(tks.length){
     h+=`<div class="prog"><i class="${done===tks.length?"full":""}" style="width:${Math.round(done/tks.length*100)}%"></i></div>`;
-    h+=`<div class="cnt"><b>${done}/${tks.length}</b>${nextTk?`<span class="nx"><span class="k">Next</span>${nextTk.t}</span>`:`<span class="nx ok">Étape complète</span>`}</div>`;
+    h+=`<div class="cnt"><b>${done}/${tks.length}</b>${nextTk?`<span class="nx">${nextTk.t}</span>`:`<span class="nx ok">Étape complète</span>`}</div>`;
   }
   h+=`</div>`;
   return h;
@@ -2303,6 +2400,17 @@ function fmtWhen(d){
   return (sameDay?"aujourd'hui":dd)+" · "+hh;
 }
 function fmtDT(iso){ const d=new Date(iso); return d.toLocaleDateString("fr-FR",{day:"numeric",month:"long"})+" à "+d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}); }
+/* « 26-27 septembre » plutôt que « 26 septembre et 27 septembre » quand la place manque */
+function fmtDatesCourt(card){
+  const d=card.dt||{};
+  if(d.j1&&d.j2){
+    const a=new Date(d.j1+"T12:00:00"), b=new Date(d.j2+"T12:00:00");
+    const mois=b.toLocaleDateString("fr-FR",{month:"long"});
+    return a.getMonth()===b.getMonth() ? `${a.getDate()}-${b.getDate()} ${mois}`
+      : `${a.getDate()} ${a.toLocaleDateString("fr-FR",{month:"long"})} - ${b.getDate()} ${mois}`;
+  }
+  return fmtDates(card);
+}
 function fmtDates(card){
   const d=card.dt||{};
   const f=x=>new Date(x+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
@@ -2410,8 +2518,9 @@ function infoFor(card){
   }
   if(card.kb.startsWith("session")){
     rows.push(["Session",card.kb==="session_fia"?`<a class="ilink" data-fiche="session::${card.id}">${card.title}</a>`:card.title],["Offre",OFFRES[card.offre]],["Dates",fmtDates(card)]);
-    if(card.lieuJ2&&card.lieuJ2!==card.lieu) rows.push(["Lieu J1",card.lieu],["Lieu J2",card.lieuJ2]); else rows.push(["Lieu J1 et J2",card.lieu]);
-    rows.push(["Formateur",card.frm||"À confirmer"],["Inscrits",(()=>{const c=sessCounts(card);return `<b>${c.ins}</b> inscrit${c.ins>1?"s":""} · <b>${c.enc}</b> en cours · ${c.cap} places ${c.over?'<span class="badge b-over">Surbooking</span>':c.risk?'<span class="badge b-risk">Risque de surbooking</span>':""}`})()]);
+    if(card.lieuJ2&&card.lieuJ2!==card.lieu) rows.push(["Lieu J1",ntag(card.lieu,"bleu")],["Lieu J2",ntag(card.lieuJ2,"bleu")]); else rows.push(["Lieu J1 et J2",ntag(card.lieu,"bleu")]);
+    if(card.salle) rows.push(["Salle",ntag(card.salle,"violet")]);
+    rows.push(["Formateur",card.frm?ntag(card.frm,"vert"):"À confirmer"],["Inscrits",(()=>{const c=sessCounts(card);return `<b>${c.ins}</b> inscrit${c.ins>1?"s":""} · <b>${c.enc}</b> en cours · ${c.cap} places ${c.over?'<span class="badge b-over">Surbooking</span>':c.risk?'<span class="badge b-risk">Risque de surbooking</span>':""}`})()]);
     return rows;
   }
   if(card.kb==="intra_frm"||card.kb==="coaching_frm"){
@@ -2472,6 +2581,13 @@ function modalHtml(){
       +card.lines.map((l,ix)=>`<div class="ln ${card.newLine&&ix===card.lines.length-1?"new":""}"><span class="k">${l[0]}</span><span>${l[1]}</span></div>`).join("")
       +`<div class="tot"><span>Total</span><span>${tot.toLocaleString("fr-FR")} €</span></div></div></div>`;
   }
+  /* La note d'abord : elle ne doit jamais se lire après la liste des tâches */
+  if(card.kb==="session_fia"){
+    h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note</div><textarea class="notes-ta" data-note="${card.id}">${card.note||""}</textarea></div>`;
+  } else if(!card.kb.startsWith("session")&&card.kb!=="fact_com"&&card.kb!=="fact_frm"){
+    const {cl:clNote}=peopleFor(card);
+    if(clNote) h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note</div><textarea class="notes-ta" data-note="${clNote.id}">${clNote.note||""}</textarea></div>`;
+  }
   /* Tâches : trois sections dépliables, seule l'étape en cours est ouverte par défaut */
   h+=`<div class="mpanel mtasks">`;
   const hist=historyFor(card);
@@ -2498,12 +2614,6 @@ function modalHtml(){
     +(f.tasks.length?f.tasks.map((tk,ti)=>(tk.todoRef||tk.apTodo)?taskHtml(card,f.col.id,ti,tk,true):`<div class="frow2">${tk.grp&&(!f.tasks[ti-1]||f.tasks[ti-1].grp!==tk.grp)?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask ${isMine(card,tk)?"mine":""}"><span class="box"></span><span>${(()=>{const sp=splitActeur(tk,(tk.perAp&&multiFut&&tk.tPl)?tk.tPl:tk.t);return whoTag(card,tk,sp.who)+sp.what})()}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${(tk.perAp&&multiFut)?`<div class="sub">`+apsFut.map(a=>`<div class="ftask"><span class="box"></span><span style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`:""}${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
       :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
   h+=`</div></details></div>`;
-  if(card.kb==="session_fia"){
-    h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note</div><textarea class="notes-ta" data-note="${card.id}">${card.note||""}</textarea></div>`;
-  } else if(!card.kb.startsWith("session")&&card.kb!=="fact_com"&&card.kb!=="fact_frm"){
-    const {cl}=peopleFor(card);
-    if(cl) h+=`<div class="mpanel mnote"><div class="k">${ICO.file}Note</div><textarea class="notes-ta" data-note="${cl.id}">${cl.note||""}</textarea></div>`;
-  }
   const edofBtn = card.fin==="cpf"&&(card.kb==="insc"||card.kb==="fact_cpf") ? `<button class="btn btn-s" data-syncedof="${card.id}">Sync EDOF</button>` : "";
   h+=coachingBlocHtml(card);
   if(card.kb==="session_frm"||card.kb==="intra_frm"){
@@ -2589,10 +2699,9 @@ function pageSessions(){
     h+=(open.length?"":`<div class="stub"><p>Aucune session ne correspond à ces filtres.</p></div>`)+`</div>`;
     return h;
   }
-  const f=["n1","n2","lieux"].includes(S.fSession)?S.fSession:"n1";
-  let h=`<div class="pagehead row"><h1>Sessions</h1>${S.role==="admin"?`<button class="btn btn-s" data-railopen="sessions">Paramétrer le rail</button>`:""}<button class="btn btn-p" data-newsession="1">+ Nouvelle session</button></div>`;
-  h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]],["Paramétrage",[["lieux","Lieux & Salles"]]]], f, "fSession");
-  if(f==="lieux") return h+pageLieux(f);
+  const f=["n1","n2"].includes(S.fSession)?S.fSession:"n1";
+  let h=`<div class="pagehead row"><h1>Sessions</h1><button class="btn btn-p" data-newsession="1">+ Nouvelle session</button></div>`;
+  h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"]]]], f, "fSession");
   h+=`<div class="fbar">`+chips([["Vue",[["kanban","Kanban"],["cal","Calendrier"],["list","Liste"]]]], S.fSessView, "fSessView")
     +`<div class="fsearch">${ICO.search}<input type="text" data-fq="fSessQ" value="${(S.fSessQ||"").replace(/"/g,"&quot;")}" placeholder="Date, formateur, ville, apprenant…"></div>
      <select class="fsel" data-fsel="fSessLieu"><option value="all">Tous les lieux</option>${LIEUX.filter(l=>l!=="Chez le client").map(l=>`<option value="${l}" ${S.fSessLieu===l?"selected":""}>${l}</option>`).join("")}</select>
@@ -2656,16 +2765,16 @@ const RESSOURCES=[
   ["Vos KPIs, verbatims et pistes d'amélioration IA","https://retours.franceia-dev.com","Lien",1]]],
  ["Tutos",[
   ["Nouveau : ajoute tes apprenants sur tes sessions intra","https://delivia.franceia-dev.com/formateur/mes-sessions","Lien",1],
-  ["Tuto Qualiobee formateurs","https://cleanshot.com/share/zmB2Yb3Q","Vidéo",1],
-  ["Tuto Canva x Notion","https://cleanshot.com/share/18Mz61nJ","Vidéo",1],
-  ["Tuto BookMySessions","https://cleanshot.com/share/zkxN0Zr5","Lien",1]]],
+  ["Tuto Qualiobee formateurs","p:tuto-qualiobee","Page",1],
+  ["Tuto Canva x DELIV'IA","p:tuto-canva","Page",1],
+  ["Tuto BookMySessions","p:tuto-bms","Page",1]]],
  ["Canvas",[
   ["Canva Niveau 1","https://canva.link/a2n6h4ujtnd7gj8","Canva",1],
   ["Canva Niveau 2 (à compléter par Morgan)","#","Canva",1],
   ["Slides Canva à personnaliser","https://www.canva.com/design/DAHIDZpSGjE/uNxMcQaYtQKT2ZsNPOU84A/edit","Canva",0]]],
  ["Préparation",[
-  ["Préparez votre formation IA","https://pentagonal-latency-af7.notion.site/Pr-parez-votre-formation-IA-34a8d6d227c28022a4f6d7978f155bcc","Lien",1],
-  ["Formation Inter Niveau 1 (15h) sur Notion","https://app.notion.com/p/Formation-Inter-niveau-1-15h-2a78d6d227c2802fb438e0f3bfee3ac8","Lien",1]]],
+  ["Préparez votre formation IA","p:preparer-sa-formation","Page",1],
+  ["Déroulé de la Formation Inter Niveau 1 (15 h)","p:deroule-n1","Page",1]]],
  ["Plateforme de certification",[
   ["Plateforme de certification (à tester en fictif)","https://certification.franceia-dev.com/","Lien",1]]],
  ["Administratif",[
@@ -2849,12 +2958,12 @@ function photosModalHtml(){
 }
 function sessionListHtml(list){
   if(!list.length) return `<div class="stub"><p>Aucune session ne correspond aux filtres.</p></div>`;
-  const COLS=[["dt","Dates",c=>c.dt.j1],["offre","Offre",c=>OFFRES[c.offre]],["frm","Formateur",c=>c.frm||"zz"],["ville","Ville",c=>c.ville||""],["lieu","Lieu",c=>c.lieu],["ins","Inscrits",c=>sessCounts(c).ins+sessCounts(c).enc],["col","Statut",c=>KB[c.kb].cols.findIndex(x=>x.id===c.col)]];
+  const COLS=[["dt","Dates",c=>c.dt.j1],["offre","Offre",c=>OFFRES[c.offre]],["frm","Formateur",c=>c.frm||"zz"],["ville","Ville",c=>c.ville||""],["lieu","Lieu",c=>c.lieu],["salle","Salle",c=>c.salle||"zz"],["ins","Inscrits",c=>sessCounts(c).ins+sessCounts(c).enc],["col","Statut",c=>KB[c.kb].cols.findIndex(x=>x.id===c.col)]];
   const sk=S.sortSess||"dt", sd=S.sortSessDir||1;
   const get=(COLS.find(c=>c[0]===sk)||COLS[0])[2];
   const sorted=[...list].sort((a,b)=>{const x=get(a),y=get(b);return (x>y?1:x<y?-1:0)*sd});
   return `<div class="tblwrap"><table class="tbl"><thead><tr>`+COLS.map(([k,l])=>`<th class="sortable ${sk===k?"on":""}" data-sort="${k}">${l}<span class="arr">${sk===k?(sd>0?"▲":"▼"):"⇅"}</span></th>`).join("")+`</tr></thead><tbody>`
-    +sorted.map(c=>`<tr class="rowlink" data-fiche="session::${c.id}"><td><b>${fmtDates(c)}</b></td><td>${badgeOffre(c.offre)}</td><td>${c.frm||'<span class="muted">À confirmer</span>'}</td><td>${c.ville||""}</td><td>${c.lieu}</td><td>${placesBadge(c)}</td><td><span class="chip">${colLabel(c)}</span></td></tr>`).join("")
+    +sorted.map(c=>`<tr class="rowlink" data-fiche="session::${c.id}"><td><b>${fmtDates(c)}</b></td><td>${badgeOffre(c.offre)}</td><td>${c.frm?ntag(c.frm,"vert"):'<span class="muted">À confirmer</span>'}</td><td>${ntag(c.ville,"bleu")}</td><td>${ntag(c.lieu,"bleu")}</td><td>${c.salle?ntag(c.salle,"violet"):'<span class="muted">À définir</span>'}</td><td>${placesBadge(c)}</td><td><span class="chip">${colLabel(c)}</span></td></tr>`).join("")
     +`</tbody></table></div>`;
 }
 function calendarHtml(list){
@@ -2927,7 +3036,7 @@ function selGens(role,cle,lbl){
 }
 function pageInscription(){
   const f=S.fInsc;
-  let h=`<div class="pagehead row"><h1>Inscription</h1>${S.role==="admin"?`<button class="btn btn-s" data-railopen="inscription">Paramétrer le rail</button>`:""}</div>`;
+  let h=`<div class="pagehead row"><h1>Inscription</h1></div>`;
   h+=chips([["Offre",[["n1","Formation N1"],["n2","Formation N2"],["intra","Formation Intra"],["coaching","Coaching"]]]], f, "fInsc");
   h+=`<div class="fbar">`+selGens("closer","fInscCloser","Tous les closeurs")+selGens("setter","fInscSetter","Tous les setteurs")+`</div>`;
   const ghost = S.role==="closer";
@@ -2944,7 +3053,7 @@ function pageFacturation(){
   if(isSetter) f="setteur";
   if(!FACT_VIEWS[f] && !["formateur","closeur","setteur"].includes(f)) f="cpf";
   if(isCloser && (f==="cpf"||f==="formateur"||f==="setteur")) f="virement";
-  let h=`<div class="pagehead row"><h1>Facturation</h1>${S.role==="admin"?`<button class="btn btn-s" data-railopen="facturation">Paramétrer le rail</button>`:""}</div>`;
+  let h=`<div class="pagehead row"><h1>Facturation</h1></div>`;
   if(!isSetter){
     const views = isCloser?["mandat","virement","opco"]:Object.keys(FACT_VIEWS);
     const clientChips=[["Mode de paiement", views.map(v=>[v,FACT_VIEWS[v].lbl])],
@@ -3234,7 +3343,7 @@ const TODO_SESSION=[
   ["Dupliquer la page template de la section Sessions et ajouter les dates au titre (ex. « Formation France IA 15-16 septembre — Prénom »)","Notion"],
   ["Adapter la recherche approfondie au profil de chaque participant (assistant préparé : nom + métier en entrée)","Notion"],
   ["Regarder le tuto plateforme Qualiobee","Vidéo"],
-  ["Regarder le tuto formation Notion x Canva","Vidéo"]]],
+  ["Regarder le tuto Canva x DELIV'IA (onglet Ressources)","Vidéo"]]],
  ["Matin J1",[
   ["Discuter avec TOUS les participants dès l'arrivée, mettre le bon mood, s'intéresser",null],
   ["Acheter pains au chocolat, croissants et bouteilles d'eau",null],
@@ -3339,6 +3448,19 @@ function railAnos(kb){
   });
   return out;
 }
+/* Réglages : ce qui se règle une fois pour toutes, hors des pages de travail quotidien */
+function pageReglages(){
+  const v=["lieux","rails"].includes(S.fReg)?S.fReg:"lieux";
+  let h=`<div class="pagehead"><h1>Réglages</h1><p>Ce qui se règle une fois et ne bouge presque jamais : les lieux et leurs salles, les étapes et les tâches des kanbans. Réservé aux administrateurs.</p></div>`;
+  h+=chips([["",[["lieux","Lieux & salles"],["rails","Étapes et tâches des kanbans"]]]], v, "fReg");
+  if(v==="lieux") return h+pageLieux("lieux");
+  h+=`<div class="fsec"><div class="sect-h">${ICO.cap}Rails de kanban <span class="n2">une matrice des cas de figure, puis l'aperçu tel que l'utilisateur le verra</span></div>`;
+  h+=[["sessions","Sessions","Le rail France IA et le rail formateur, par offre."],
+      ["inscription","Inscription","Inter, intra et coaching, par mode de paiement."],
+      ["facturation","Facturation","CPF, OPCO, fonds propres, formateur et commerciaux."]]
+    .map(([id,lbl,sub])=>`<div class="frow"><div class="tx"><div class="tt">${lbl}</div><div class="sm">${sub}</div></div><button class="btn btn-s" data-railopen="${id}">Paramétrer</button></div>`).join("");
+  return h+`</div>`;
+}
 function pageRail(){
   const page=S.rail.page, m=RAIL_MAP[page]||RAIL_MAP.sessions;
   const offres=railOffres(page).map(o=>o[0]);
@@ -3348,7 +3470,7 @@ function pageRail(){
   const offreLbl=(railOffres(page).find(o=>o[0]===offre)||[])[1];
   const roleLbl=(RAIL_ROLES.find(r=>r[0]===role)||[])[1];
   const vue=S.railVue==="apercu"?"apercu":"matrice";
-  let h=`<button class="backbtn" data-railback="1">← Retour au kanban</button>`;
+  let h=`<button class="backbtn" data-railback="1">← Retour aux réglages</button>`;
   h+=`<div class="pagehead row"><h1>Paramétrer les étapes et les tâches</h1></div>`;
   /* les mêmes filtres que la page réelle, puis le rôle qui regarde */
   h+=`<div class="fbar">`+chips(m.axes, offre, "railOffre")+`</div>`;
@@ -3604,8 +3726,8 @@ function pageRessources(){
     if(!actifs.length) return "";
     const k="frmres-"+fi;
     return `<details class="pvmonth" data-acc="${k}" ${accKey(k)?"open":""}><summary><div><div class="mt">${fam}</div><div class="ms">${actifs.map(x=>x[2]).filter((v,i,a)=>a.indexOf(v)===i).join(" · ")}</div></div><span class="cnt3">${actifs.length}</span><span class="chev end">▸</span></summary><div class="pvbody">`
-      +actifs.map(([n,url,fmt])=>`<div class="resrow"><div class="rl"><div class="tt">${n}</div><div class="sm">${fmt}</div></div>`
-        +(url&&url!=="#"?`<a class="btn btn-s" href="${url}" target="_blank" rel="noopener">Ouvrir</a>`:`<span class="chip">lien à venir</span>`)+`</div>`).join("")
+      +actifs.map(([n,url,fmt])=>`<div class="resrow"><div class="rl">${resLien(n,url)}<div class="sm">${resFmtLbl(fmt)}</div></div>`
+        +(url&&url!=="#"?(url.startsWith("p:")?`<button class="btn btn-s" data-respage="${url.slice(2)}">Ouvrir</button>`:`<a class="btn btn-s" href="${url}" target="_blank" rel="noopener">Ouvrir</a>`):`<span class="chip">lien à venir</span>`)+`</div>`).join("")
       +`</div></details>`;
   }).join("");
   return h+`</div></div>`;
@@ -3614,7 +3736,7 @@ function pageRessources(){
    (src/lib/planning/onboarding-checklists.ts, ONBOARDING_FORMATEUR). */
 const ONB_FRM=[
  ["Suivre le tuto Qualiobee formateurs (onglet Ressources)",1],
- ["Suivre le tuto Canva x Notion (onglet Ressources)",1],
+ ["Suivre le tuto Canva x DELIV'IA (onglet Ressources)",1],
  ["Suivre le tuto BookMySessions (onglet Ressources)",1],
  ["Prendre connaissance des modalités de la certification RS6891",1],
  ["Personnaliser les slides Canva avec sa présentation",1],
@@ -3860,7 +3982,7 @@ function idFld(label,key,obj){
   const m=ID_META[key]||{w:"Ouvrir",u:id=>"#"};
   const id=obj[key]??""; const url=obj[key+"Url"]||m.u(id);
   if(S.editing) return `<div class="fld"><div class="k">${label}</div><input class="edin" data-f="${key}" value="${id.toString().replace(/"/g,"&quot;")}" placeholder="identifiant"><input class="edin" data-f="${key}Url" value="${url.replace(/"/g,"&quot;")}" placeholder="lien de redirection" style="margin-top:6px;font-size:11.5px;color:var(--ink-500)"></div>`;
-  return `<div class="fld"><div class="k">${label}</div><div class="v">${id?`<a class="ilink" href="${url}" target="_blank" rel="noopener">${m.w}</a>`:'<span class="muted">non renseigné</span>'}</div></div>`;
+  return `<div class="fld"><div class="k">${label}</div><div class="v">${id?`<a class="dlink" href="${url}" target="_blank" rel="noopener">${m.w}</a>`:'<span class="muted">non renseigné</span>'}</div></div>`;
 }
 function editBtns(kind,id){
   if(S.editing) return `<button class="btn btn-p" data-editsave="${kind}::${id}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`;
@@ -3895,10 +4017,13 @@ function ficheApprenantHtml(id){
     ${fld("Situation",ap.type,"type",ap)}
     ${S.editing===("apprenant::"+ap.id)
       ? `<div class="fld"><div class="k">Client lié</div><select class="edin" data-apcl="1"><option value="">Aucun client</option>${CLIENTS.map(c=>`<option value="${c.id}" ${ap.client===c.id?"selected":""}>${c.nom}</option>`).join("")}</select><div class="pd2">Le client porte la vente et la facturation ; l'apprenant, la formation et ses preuves.</div></div>`
-      : fld("Client lié",cl?`<a class="ilink" data-fiche="client::${cl.id}">${cl.nom}</a>`:null)}
+      : ""}
   </div>
   <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>
     ${idFld("wedof_dossier_id","wdi",ap)}${idFld("qualiobee_learner_id","qli",ap)}${idFld("apolearn_id","apo",ap)}${idFld("wedof_certification_id","wci",ap)}</div>
+  <div class="idchips flexrow" style="border-top:none;padding-top:4px"><span class="lbl">Client</span>
+    ${cl?`<span class="perschip" data-fiche="client::${cl.id}"><span class="avat">${cl.type&&cl.type.startsWith("Particulier")?initiales(cl.nom):ICO.building}</span>${cl.nom}</span>`:'<span class="idchip">Aucun client lié</span>'}
+    ${cl&&(cl.apprenants||[]).length>1?`<span class="sm" style="color:var(--ink-400)">${cl.apprenants.length} apprenants sur ce client</span>`:""}</div>
   </div>`;
   /* ── Notes ── */
   h+=notesCard(ap);
@@ -3949,9 +4074,9 @@ function applyVenteInputs(obj){
 function venteDocs(cl,v,ix,ed){
   return DOCTYPES.map(([k,lbl,src])=>{
     const url=v.docs?v.docs[k]:null;
-    if(k==="qard") return `<div class="docrow"><span class="dl">${lbl}</span><a class="ilink" data-qard="${cl.id}">Ouvrir le questionnaire</a><span class="ds">${src}</span></div>`;
+    if(k==="qard") return `<div class="docrow"><span class="dl">${lbl}</span><a class="dlink" data-qard="${cl.id}">Ouvrir le questionnaire</a><span class="ds">${src}</span></div>`;
     if(ed) return `<div class="docrow"><span class="dl">${lbl}</span><input class="edin" data-vdoc="${ix}::${k}" value="${(url||"").replace(/"/g,"&quot;")}" placeholder="Coller le lien ${src}"><button class="btn-xs" data-vdocclear="${ix}::${k}">Retirer</button></div>`;
-    return `<div class="docrow"><span class="dl">${lbl}</span>${url?`<a class="ilink" href="${url}" target="_blank" rel="noopener">Ouvrir sur ${src}</a>`:`<span class="muted">aucun lien</span>`}<span class="ds">${src}</span></div>`;
+    return `<div class="docrow"><span class="dl">${lbl}</span>${url?`<a class="dlink" href="${url}" target="_blank" rel="noopener">Ouvrir sur ${src}</a>`:`<span class="muted">aucun lien</span>`}<span class="ds">${src}</span></div>`;
   }).join("");
 }
 function ficheClientHtml(id){
@@ -3994,8 +4119,9 @@ function ficheClientHtml(id){
     const k="cl-"+cl.id+"-"+ix;
     const appr=(v.apprenants||cl.apprenants||[]).map(aid=>APPRENANTS.find(x=>x.id===aid)).filter(Boolean);
     const ved = S.editVente===(cl.id+"::"+ix) || S.editing===("client::"+cl.id);
+    const dv=fmtDatesCourt(ic||fc||{});
     return `<details class="acc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span>
-      <span class="tt">${v.lbl}</span></summary>
+      <span class="tt">${v.lbl}</span><span class="vsub">${dv?"· "+dv:"· date à caler"} · ${v.m}</span></summary>
       <div class="inner">
         <div class="vbar">${ved
           ? `<button class="btn btn-p" data-vsave="${cl.id}::${ix}">Enregistrer</button><button class="btn btn-s" data-vcancel="1">Annuler</button>`
@@ -4102,9 +4228,10 @@ function ficheSessionHtml(id){
     <div class="fh-right">${!adm?"":ed?`<button class="btn btn-p" data-editsave="session::${c.id}">Enregistrer</button><button class="btn btn-s" data-editcancel="1">Annuler</button>`:`<button class="btn btn-s" data-editstart="session::${c.id}">Modifier</button><button class="btn btn-s danger" data-delsession="${c.id}">Supprimer</button>`}</div></div>
   <div class="idgrid">
     ${ed?`<div class="fld"><div class="k">Jour 1</div><input class="edin" type="date" data-f="j1" value="${c.dt.j1}"></div><div class="fld"><div class="k">Jour 2</div><input class="edin" type="date" data-f="j2" value="${c.dt.j2}"></div>`:fld("Période",fmtDates(c))}
-    ${ed?`<div class="fld"><div class="k">Formateur</div><select class="edin" data-f="frm"><option value="">À confirmer</option>${FORMATEURS.map(f=>`<option ${c.frm===f?"selected":""}>${f}</option>`).join("")}</select></div>`:fld("Formateur",c.frm||"À confirmer")}
-    ${ed?`<div class="fld"><div class="k">Lieu J1</div><select class="edin" data-f="lieu">${LIEUX.map(l=>`<option ${c.lieu===l?"selected":""}>${l}</option>`).join("")}</select></div><div class="fld"><div class="k">Lieu J2</div><select class="edin" data-f="lieuJ2">${LIEUX.map(l=>`<option ${c.lieuJ2===l?"selected":""}>${l}</option>`).join("")}</select></div>`:(c.lieuJ2&&c.lieuJ2!==c.lieu?fld("Lieu J1",c.lieu)+fld("Lieu J2",c.lieuJ2):fld("Lieu J1 et J2",c.lieu))}
-    ${ed?`<div class="fld"><div class="k">Niveau ARD</div><select class="edin" data-f="niveau">${["Plutôt débutant","Plutôt avancé","Aucun badge"].map(n=>`<option ${c.niveau===n?"selected":""}>${n}</option>`).join("")}</select></div>`:fld("Niveau ARD",c.niveau)}
+    ${ed?`<div class="fld"><div class="k">Formateur</div><select class="edin" data-f="frm"><option value="">À confirmer</option>${FORMATEURS.map(f=>`<option ${c.frm===f?"selected":""}>${f}</option>`).join("")}</select></div>`:fld("Formateur",c.frm?ntag(c.frm,"vert"):'<span class="muted">À confirmer</span>')}
+    ${ed?`<div class="fld"><div class="k">Lieu J1</div><select class="edin" data-f="lieu">${LIEUX.map(l=>`<option ${c.lieu===l?"selected":""}>${l}</option>`).join("")}</select></div><div class="fld"><div class="k">Lieu J2</div><select class="edin" data-f="lieuJ2">${LIEUX.map(l=>`<option ${c.lieuJ2===l?"selected":""}>${l}</option>`).join("")}</select></div>`:(c.lieuJ2&&c.lieuJ2!==c.lieu?fld("Lieu J1",ntag(c.lieu,"bleu"))+fld("Lieu J2",ntag(c.lieuJ2,"bleu")):fld("Lieu J1 et J2",ntag(c.lieu,"bleu")))}
+    ${ed?`<div class="fld"><div class="k">Salle</div><select class="edin" data-f="salle"><option value="">À définir</option>${sallesDe(c.lieu).map(s=>`<option ${c.salle===s?"selected":""}>${s}</option>`).join("")}</select><div class="pd2">Elle donne son nom à la session : c'est elle qui distingue deux sessions du même jour dans la même ville.</div></div>`:fld("Salle",c.salle?ntag(c.salle,"violet"):'<span class="muted">À définir</span>')}
+    ${ed?`<div class="fld"><div class="k">Niveau ARD</div><select class="edin" data-f="niveau">${["Plutôt débutant","Plutôt avancé","Aucun badge"].map(n=>`<option ${c.niveau===n?"selected":""}>${n}</option>`).join("")}</select></div>`:fld("Niveau ARD",ntag(c.niveau,"orange"))}
     ${ed?`<div class="fld"><div class="k">Offre</div><select class="edin" data-f="offre">${Object.entries(OFFRES).map(([k2,l2])=>`<option value="${k2}" ${c.offre===k2?"selected":""}>${l2}</option>`).join("")}</select></div>`:fld("Offre",OFFRES[c.offre])}
     ${ed?`<div class="fld"><div class="k">Capacité (places)</div><input class="edin" type="number" data-f="cap" value="${c.cap}"></div>`:(()=>{const sc=sessCounts(c);return fld("Inscrits",`<b>${sc.ins}</b> inscrit${sc.ins>1?"s":""} · <b>${sc.enc}</b> en cours · ${sc.cap} places${sc.over?' <span class="badge b-over">Surbooking</span>':sc.risk?' <span class="badge b-risk">Risque de surbooking</span>':""}`)})()}
     ${linkFld("Lien Mon CPF","cpfLink",c,ed,"Ouvrir Mon CPF")}
@@ -4328,44 +4455,185 @@ function pageClients(){
 /* ce qui remplace le Notion d'onboarding des commerciaux, et le peu que l'interne partage */
 const RESSOURCES_COM=[
  ["Onboarding",[
-  ["Parcours d'arrivée closeur (semaine 1)","#","Lien",1],
-  ["Parcours d'arrivée setteur (semaine 1)","#","Lien",1],
-  ["Nos offres, nos prix, nos financements","#","Notion",1]]],
+  ["Parcours d'arrivée closeur (semaine 1)","p:arrivee-closeur","Page",1],
+  ["Parcours d'arrivée setteur (semaine 1)","p:arrivee-setteur","Page",1],
+  ["Nos offres, nos prix, nos financements","p:offres-prix","Page",1]]],
  ["Vendre",[
-  ["Script de closing","#","Notion",1],
-  ["Traitement des objections","#","Notion",1],
-  ["Script de setting et prise de rendez-vous","#","Notion",1],
-  ["Ce qu'on a le droit de dire sur le CPF","#","Notion",1]]],
+  ["Script de closing","p:script-closing","Page",1],
+  ["Traitement des objections","p:objections","Page",1],
+  ["Script de setting et prise de rendez-vous","p:script-setting","Page",1],
+  ["Ce qu'on a le droit de dire sur le CPF","p:dire-cpf","Page",1]]],
  ["Outils",[
-  ["Tuto GHL : pipeline, tâches, rappels","#","Vidéo",1],
-  ["Tuto DELIV'IA : suivre ses inscriptions et ses factures","#","Vidéo",1],
-  ["Générer un devis, une convention, un lien de mandat","#","Vidéo",1]]],
+  ["Tuto GHL : pipeline, tâches, rappels","p:tuto-ghl","Page",1],
+  ["Tuto DELIV'IA : suivre ses inscriptions et ses factures","p:tuto-delivia-closeur","Page",1],
+  ["Générer un devis, une convention, un lien de mandat","p:tuto-generer","Page",1]]],
  ["Vos retours & KPIs",[
   ["Vos chiffres : rendez-vous, closing, encaissement","#","Lien",1]]],
 ];
 const RESSOURCES_INT=[
  ["Process internes",[
-  ["Qui fait quoi chez France IA","#","Notion",1],
-  ["Conformité Qualiopi : ce qu'un audit regarde","#","Notion",1],
-  ["Procédures de fin de mois","#","Notion",1]]],
+  ["Qui fait quoi chez France IA","p:qui-fait-quoi","Page",1],
+  ["Conformité Qualiopi : ce qu'un audit regarde","p:qualiopi-audit","Page",1],
+  ["Procédures de fin de mois","p:fin-de-mois","Page",1]]],
 ];
+/* ─────────── Pages de ressources : le contenu vit DANS DELIV'IA ───────────
+   Un éditeur par blocs (type Notion, sur la brique open source BlockNote déjà utilisée
+   pour les ateliers de l'espace apprenant) : on écrit, on colle une vidéo, on réordonne.
+   Plus aucune ressource n'est hébergée sur un Notion externe. */
+const RES_PAGES={
+ "tuto-qualiobee":{t:"Tuto Qualiobee formateurs",maj:"12 juin 2026 · Morgan",blocs:[
+   {t:"p",x:"Qualiobee est l'outil de conformité : c'est lui qui porte vos sessions, vos émargements et vos comptes rendus. Cette page vous montre les trois gestes à connaître."},
+   {t:"video",x:"Prise en main de Qualiobee (8 min)",url:"cleanshot://qualiobee-formateurs"},
+   {t:"h2",x:"Les trois gestes"},
+   {t:"li",x:"Faire signer l'émargement, matin et après-midi, sur la tablette ou depuis votre téléphone."},
+   {t:"li",x:"Renseigner le compte rendu de session le soir du J2."},
+   {t:"li",x:"Justifier toute absence non émargée, sinon la facturation reste bloquée."},
+   {t:"callout",x:"Une feuille d'émargement non signée bloque la facture de la session, la vôtre comme celle du client."}]},
+ "tuto-canva":{t:"Tuto Canva x DELIV'IA",maj:"3 août 2026 · Morgan",blocs:[
+   {t:"p",x:"Vos slides vivent sur Canva, le déroulé pédagogique vit ici. Cette page explique comment personnaliser le support d'une session sans casser le gabarit commun."},
+   {t:"video",x:"Personnaliser ses slides (6 min)",url:"cleanshot://canva-slides"},
+   {t:"h2",x:"Ce qu'on ne modifie jamais"},
+   {t:"li",x:"La page de garde et les mentions Qualiopi."},
+   {t:"li",x:"L'ordre des cinq ateliers : il est aligné sur le référentiel de la certification."}]},
+ "tuto-bms":{t:"Tuto BookMySessions",maj:"20 août 2026 · Côme",blocs:[
+   {t:"p",x:"BookMySessions sert à déclarer vos disponibilités et à prendre une session au shotgun."},
+   {t:"video",x:"Déclarer ses disponibilités (4 min)",url:"cleanshot://bms"},
+   {t:"callout",x:"Une session prise vous engage : le retrait passe par une demande, il n'est jamais automatique."}]},
+ "preparer-sa-formation":{t:"Préparez votre formation IA",maj:"18 août 2026 · Morgan",blocs:[
+   {t:"p",x:"À faire dans les jours qui précèdent le J1, une fois la liste des participants connue."},
+   {t:"h2",x:"Avant le J1"},
+   {t:"li",x:"Lire les questionnaires ARD des participants : métier, outils, attentes."},
+   {t:"li",x:"Adapter la recherche approfondie de l'atelier 3 au profil du groupe."},
+   {t:"li",x:"Préparer les assistants personnalisés de l'atelier 5."},
+   {t:"h2",x:"Le matin du J1"},
+   {t:"li",x:"Arriver 30 minutes avant, vérifier l'écran et le partage."},
+   {t:"li",x:"Faire signer l'émargement dès l'ouverture."}]},
+ "deroule-n1":{t:"Déroulé de la Formation Inter Niveau 1 (15 h)",maj:"22 août 2026 · Morgan",blocs:[
+   {t:"p",x:"Le déroulé complet, atelier par atelier, avec les durées et les livrables attendus de chaque participant."},
+   {t:"h2",x:"Jour 1"},
+   {t:"li",x:"Atelier 1 · Cadrer un cas d'usage (2 h)"},
+   {t:"li",x:"Atelier 2 · Rédiger des instructions qui tiennent (2 h 30)"},
+   {t:"li",x:"Atelier 3 · Recherche approfondie sur son marché (2 h)"},
+   {t:"h2",x:"Jour 2"},
+   {t:"li",x:"Atelier 4 · Automatiser une tâche répétitive (3 h)"},
+   {t:"li",x:"Atelier 5 · Construire son assistant (3 h)"},
+   {t:"li",x:"Clôture · plan d'action à 30 jours et préparation de la certification (2 h 30)"}]},
+ "arrivee-closeur":{t:"Parcours d'arrivée closeur (semaine 1)",maj:"25 août 2026 · Tanguy",blocs:[
+   {t:"p",x:"Ce que vous faites pendant vos cinq premiers jours, dans l'ordre."},
+   {t:"h2",x:"Jour 1 et 2"},
+   {t:"todo",x:"Signer le contrat et recevoir ses accès GHL et DELIV'IA."},
+   {t:"todo",x:"Écouter cinq appels de closing enregistrés."},
+   {t:"h2",x:"Jour 3 à 5"},
+   {t:"todo",x:"Restituer le script en jeu de rôle, validé en écoute."},
+   {t:"todo",x:"Prendre ses premiers rendez-vous en doublon."}]},
+ "arrivee-setteur":{t:"Parcours d'arrivée setteur (semaine 1)",maj:"25 août 2026 · Tanguy",blocs:[
+   {t:"p",x:"Le setting ouvre la conversation, il ne vend pas. Voici la semaine type d'arrivée."},
+   {t:"todo",x:"Prendre ses accès GHL et lire les dix derniers rendez-vous pris."},
+   {t:"todo",x:"Apprendre le script de prise de rendez-vous."},
+   {t:"todo",x:"Faire valider son premier créneau posé par un closeur."}]},
+ "offres-prix":{t:"Nos offres, nos prix, nos financements",maj:"26 août 2026 · Tanguy",blocs:[
+   {t:"p",x:"La référence unique sur ce qu'on vend et à quel prix. Toute autre version qui circule est périmée."},
+   {t:"h2",x:"Les offres"},
+   {t:"li",x:"Formation Inter Niveau 1 · 15 h sur deux jours · 1 650 €"},
+   {t:"li",x:"Formation Inter Niveau 2 · 15 h sur deux jours · 1 650 € (hors CPF)"},
+   {t:"li",x:"Formation Intra · sur mesure dans les locaux du client"},
+   {t:"li",x:"Coaching individuel · à l'heure"},
+   {t:"h2",x:"Les financements"},
+   {t:"li",x:"CPF, pour un particulier éligible."},
+   {t:"li",x:"OPCO, pour une entreprise, avec accord de prise en charge avant la formation."},
+   {t:"li",x:"Fonds propres : virement à réception, ou mandat de prélèvement en 1, 3 ou 6 fois."},
+   {t:"callout",x:"Un prix ne se négocie jamais en séance : toute remise passe par Tanguy."}]},
+ "script-closing":{t:"Script de closing",maj:"24 août 2026 · Tanguy",blocs:[
+   {t:"p",x:"La trame d'un rendez-vous de closing en cinq temps. Elle se suit dans l'ordre."},
+   {t:"h2",x:"1 · Cadrer"},
+   {t:"p",x:"Rappeler pourquoi le rendez-vous a été pris, et ce qu'on va faire ensemble dans les trente minutes."},
+   {t:"h2",x:"2 · Diagnostiquer"},
+   {t:"p",x:"Faire décrire une journée type, repérer la tâche qui coûte le plus de temps."},
+   {t:"h2",x:"3 · Projeter"},
+   {t:"p",x:"Montrer ce que la formation change sur CETTE tâche, avec un exemple de son métier."},
+   {t:"h2",x:"4 · Proposer"},
+   {t:"p",x:"Annoncer l'offre, le prix et le financement le plus adapté, sans détour."},
+   {t:"h2",x:"5 · Engager"},
+   {t:"p",x:"Envoyer le lien ARD pendant l'appel et accompagner la première étape."}]},
+ "objections":{t:"Traitement des objections",maj:"24 août 2026 · Tanguy",blocs:[
+   {t:"p",x:"Une objection est une question déguisée. On répond à la question, puis on revient à la décision."},
+   {t:"li",x:"« C'est cher » → ramener au coût de la tâche qu'ils font à la main chaque semaine."},
+   {t:"li",x:"« Je n'ai pas le temps » → deux jours, dates au choix, et le travail se fait sur leurs vrais dossiers."},
+   {t:"li",x:"« Je vais réfléchir » → nommer ce qui manque pour décider, et le traiter tout de suite."},
+   {t:"li",x:"« L'IA va changer d'ici là » → la méthode reste, les outils changent, on forme à la méthode."}]},
+ "script-setting":{t:"Script de setting et prise de rendez-vous",maj:"24 août 2026 · Tanguy",blocs:[
+   {t:"p",x:"L'objectif d'un setting est un créneau tenu, pas une vente."},
+   {t:"li",x:"Vérifier qu'on parle bien au décideur."},
+   {t:"li",x:"Poser la question de qualification : la tâche qui prend du temps au quotidien."},
+   {t:"li",x:"Proposer deux créneaux, jamais une disponibilité ouverte."},
+   {t:"li",x:"Confirmer par message dans la foulée."}]},
+ "dire-cpf":{t:"Ce qu'on a le droit de dire sur le CPF",maj:"26 août 2026 · Côme",blocs:[
+   {t:"callout",x:"Cette page engage France IA juridiquement. Elle prime sur toute formulation entendue ailleurs."},
+   {t:"h2",x:"Ce qui est vrai et se dit"},
+   {t:"li",x:"La formation est éligible au CPF si l'apprenant a des droits suffisants."},
+   {t:"li",x:"L'inscription se fait sur Mon Compte Formation, par l'apprenant lui-même."},
+   {t:"h2",x:"Ce qui ne se dit jamais"},
+   {t:"li",x:"Promettre que le dossier sera accepté."},
+   {t:"li",x:"Proposer une contrepartie, un cadeau ou un remboursement lié au CPF."},
+   {t:"li",x:"Saisir le dossier à la place de l'apprenant."}]},
+ "tuto-ghl":{t:"Tuto GHL : pipeline, tâches, rappels",maj:"19 août 2026 · Côme",blocs:[
+   {t:"p",x:"Le CRM commercial. Un contact mal placé dans le pipeline, c'est une vente qui disparaît des chiffres."},
+   {t:"video",x:"Le pipeline en 7 minutes",url:"cleanshot://ghl-pipeline"}]},
+ "tuto-delivia-closeur":{t:"Tuto DELIV'IA : suivre ses inscriptions et ses factures",maj:"26 août 2026 · Côme",blocs:[
+   {t:"p",x:"Ce que vous voyez dans DELIV'IA, et ce dont vous répondez."},
+   {t:"video",x:"Vos kanbans, vos cartes, vos tâches",url:"cleanshot://delivia-closeur"},
+   {t:"callout",x:"Une carte noire attend une action de vous. Une carte grise attend quelqu'un d'autre."}]},
+ "tuto-generer":{t:"Générer un devis, une convention, un lien de mandat",maj:"26 août 2026 · Côme",blocs:[
+   {t:"p",x:"Tout part de la page Générer : on choisit le client, la session, et la pièce à produire."},
+   {t:"video",x:"Générer une pièce de bout en bout",url:"cleanshot://generer"}]},
+ "qui-fait-quoi":{t:"Qui fait quoi chez France IA",maj:"26 août 2026 · Côme",blocs:[
+   {t:"p",x:"À qui s'adresser, pour quoi, sans faire trois détours."},
+   {t:"li",x:"Vente et prix : Tanguy."},
+   {t:"li",x:"Pédagogie, formateurs, qualité : Morgan."},
+   {t:"li",x:"Outils, automatisations, DELIV'IA : Côme."},
+   {t:"li",x:"Facturation et conformité : l'administration."}]},
+ "qualiopi-audit":{t:"Conformité Qualiopi : ce qu'un audit regarde",maj:"21 août 2026 · Morgan",blocs:[
+   {t:"p",x:"Un audit ne juge pas la qualité de la formation : il vérifie qu'on peut la prouver."},
+   {t:"li",x:"Convocations envoyées avant la session."},
+   {t:"li",x:"Émargements signés, demi-journée par demi-journée."},
+   {t:"li",x:"Comptes rendus de session et évaluations."},
+   {t:"li",x:"Certificats de réalisation remis."},
+   {t:"callout",x:"Une preuve manquante vaut une formation non conforme, même si elle s'est très bien passée."}]},
+ "fin-de-mois":{t:"Procédures de fin de mois",maj:"26 août 2026 · Côme",blocs:[
+   {t:"p",x:"Dans l'ordre, sur les trois derniers jours ouvrés."},
+   {t:"todo",x:"Valider les factures des formateurs et les mettre en paiement."},
+   {t:"todo",x:"Valider les factures mensuelles des closeurs et des setteurs."},
+   {t:"todo",x:"Rapprocher les virements reçus restés sans facture."},
+   {t:"todo",x:"Relancer les impayés arrivés à échéance."}]},
+};
+function resPage(slug){
+  if(!RES_PAGES[slug]) RES_PAGES[slug]={t:"Nouvelle page",maj:"aujourd'hui · vous",blocs:[{t:"p",x:"Cette page est vide : cliquez sur Modifier pour écrire, coller une vidéo ou ajouter une image."}]};
+  return RES_PAGES[slug];
+}
 function tableauRessources(src,cle){
   let h=`<div class="fbar"><button class="btn btn-s" style="margin-left:auto" data-resnew="${cle}">+ Nouvelle ressource</button><button class="btn btn-s" data-ressec="${cle}">+ Nouvelle section</button></div>`;
   h+=src.map(([fam,items],fi)=>{const ak="res-"+cle+"-"+fi; return `<details class="accbloc" data-acc="${ak}" ${accKey(ak)?"open":""}><summary><span class="chev">▶</span><span class="tt">${fam}</span><span class="end"><span class="sm">${items.length}</span></span></summary><div class="inner">
       <div class="fbar" style="justify-content:flex-end"><a class="ilink" data-resmovesec="${cle}::${fi}::-1">↑</a><a class="ilink" data-resmovesec="${cle}::${fi}::1">↓</a><a class="ilink danger" data-resdelsec="${cle}::${fi}">Supprimer la section</a></div>`
     +`<div class="tblwrap"><table class="tbl"><thead><tr><th>Ressource</th><th>Format</th><th>État</th><th></th></tr></thead><tbody>`
-    +(items.map(([n,url,fmt,on],ii)=>`<tr><td>${url&&url!=="#"?`<a class="ilink" href="${url}" target="_blank" rel="noopener"><b>${n}</b></a>`:`<b>${n}</b> <span class="sm">lien à renseigner</span>`}</td><td>${fmt}</td><td><span class="sw ${on?"on":""}" data-restoggle="${cle}::${fi}::${ii}"><i></i></span></td><td class="acts"><a class="ilink" data-resmove="${cle}::${fi}::${ii}::-1">↑</a><a class="ilink" data-resmove="${cle}::${fi}::${ii}::1">↓</a><a class="ilink" data-resnew="${cle}::${fi}::${ii}">Modifier</a><a class="ilink danger" data-resdel="${cle}::${fi}::${ii}">Supprimer</a></td></tr>`).join("")
+    +(items.map(([n,url,fmt,on],ii)=>`<tr><td>${resLien(n,url)}</td><td>${resFmtLbl(fmt)}</td><td><span class="sw ${on?"on":""}" data-restoggle="${cle}::${fi}::${ii}"><i></i></span></td><td class="acts"><a class="ilink" data-resmove="${cle}::${fi}::${ii}::-1">↑</a><a class="ilink" data-resmove="${cle}::${fi}::${ii}::1">↓</a><a class="ilink" data-resnew="${cle}::${fi}::${ii}">Modifier</a><a class="ilink danger" data-resdel="${cle}::${fi}::${ii}">Supprimer</a></td></tr>`).join("")
       ||`<tr><td colspan="4" class="paynone">Aucune ressource dans cette section.</td></tr>`)
     +`</tbody></table></div></div></details>`}).join("");
   return h;
 }
+/* une ressource ouvre soit une page DELIV'IA, soit un outil extérieur : jamais un Notion */
+function resLien(n,url){
+  if(url&&url.startsWith("p:")) return `<a class="dlink" data-respage="${url.slice(2)}">${n}</a>`;
+  if(url&&url!=="#") return `<a class="dlink" href="${url}" target="_blank" rel="noopener">${n}</a>`;
+  return `<span class="dlink muted2">${n}</span>`;
+}
+function resFmtLbl(fmt){ return fmt==="Page"?"Page DELIV'IA":fmt; }
 function ressourcesDe(cle){ return cle==="formateurs"?RESSOURCES:cle==="interne"?RESSOURCES_INT:RESSOURCES_COM; }
 /* parcours d'arrivée : des to do groupées en sections, ajoutables et réordonnables */
 const ONBOARDING={
  formateurs:[
   ["Côté formateur",[
    "Suivre le tuto Qualiobee formateurs (onglet Ressources)",
-   "Suivre le tuto Canva x Notion (onglet Ressources)",
+   "Suivre le tuto Canva x DELIV'IA (onglet Ressources)",
    "Suivre le tuto BookMySessions (onglet Ressources)",
    "Prendre connaissance des modalités de la certification RS6891",
    "Personnaliser les slides Canva avec sa présentation",
@@ -4382,7 +4650,7 @@ const ONBOARDING={
    "Ajouter au groupe WhatsApp des formateurs",
    "Inviter à assister à une session de formation",
    "Donner accès aux slides",
-   "Donner accès au Notion formateur partagé aux apprenants",
+   "Donner accès au support de formation dans l'espace apprenant",
    "Si CPF : ajouter à la liste des formateurs",
    "Ajouter dans la page TEAM",
    "Ajouter dans le trombinoscope",
@@ -4409,12 +4677,14 @@ function onboardingHtml(pop){
         .map((u,i)=>({nom:u.nom, faits:etapes.map((_,j)=>j<=((i+3)%(etapes.length+1))-1), fiche:"compte::"+u.id}));
   /* d'abord où en est chacun, ensuite le paramétrage du parcours */
   let h="";
-  let param=`<div class="grosec"><div class="grosec-t">Paramétrage du parcours</div><span class="grosec-a"><button class="btn btn-s" data-onbnew="${pop}">+ Nouvelle to do</button><button class="btn btn-s" data-onbsec="${pop}">+ Nouvelle section</button></span></div>`;
+  const akp="onbparam-"+pop;
+  let param=`<details class="accbloc onbparam" data-acc="${akp}" ${accKey(akp)?"open":""}><summary><span class="chev">▶</span><span class="tt">Paramétrage du parcours</span><span class="end"><span class="sm">${secs.length} section${secs.length>1?"s":""} · ${etapes.length} to do</span></span></summary><div class="inner">`;
+  param+=`<div class="fbar" style="justify-content:flex-end"><button class="btn btn-s" data-onbnew="${pop}">+ Nouvelle to do</button><button class="btn btn-s" data-onbsec="${pop}">+ Nouvelle section</button></div>`;
   param+=secs.map(([fam,items],fi)=>`<div class="fsec"><div class="sect-h">${ICO.cap}${fam} <span class="n2">${items.length}</span>
       <span class="right"><a class="ilink" data-onbmovesec="${pop}::${fi}::-1">↑</a><a class="ilink" data-onbmovesec="${pop}::${fi}::1">↓</a><a class="ilink" data-onbnew="${pop}::${fi}">+ To do</a><a class="ilink danger" data-onbdelsec="${pop}::${fi}">Supprimer la section</a></span></div>`
     +(items.map((lbl,ii)=>`<div class="lrow">${lbl}<span class="acts" style="margin-left:auto"><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::-1">↑</a><a class="ilink" data-onbmove="${pop}::${fi}::${ii}::1">↓</a><a class="ilink danger" data-onbdel="${pop}::${fi}::${ii}">Supprimer</a></span></div>`).join("")
       ||`<div class="lrow"><span class="sm">Aucune to do dans cette section.</span></div>`)
-    +`</div>`).join("");
+    +`</div>`).join("")+`</div></details>`;
   /* où en est chacun : une ligne par personne, le détail se déplie */
   h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Où en est chacun</div>`;
   h+=gens.map((g,gi)=>{
@@ -4432,7 +4702,7 @@ function onboardingHtml(pop){
         const base=etapes.indexOf(items[0]);
         return `<div class="tgrp">${fam}</div>`+items.map((lbl,ii)=>{
           const ok=g.faits[base+ii];
-          return `<div class="task ${ok?"done":""} other" style="cursor:default"><span class="box"></span><span><span class="lbl">${lbl}</span></span></div>`;
+          return `<div class="task ${ok?"done":""} other" style="cursor:default"><span class="box"></span><span class="tx"><span class="lbl">${lbl}</span></span></div>`;
         }).join("");
       }).join("")
       +`</div></details>`;
@@ -4656,6 +4926,38 @@ function pageStub(id){
   return `<div class="pagehead"><h1>${s[0]}</h1></div><div class="stub"><p>${s[1]}</p><p style="margin-top:8px;color:var(--ink-400);font-size:12px">Écran non détaillé dans cette maquette : seuls les trois process (Sessions, Inscription, Facturation) sont interactifs.</p></div>`;
 }
 
+/* ── page de ressource : un document DELIV'IA, éditable par blocs ── */
+function resPageHtml(slug){
+  const p=resPage(slug), ed=S.resPageEdit===slug;
+  const adm=S.role==="admin";
+  let h=`<button class="backbtn" data-respageback="1">← Retour aux ressources</button>`;
+  h+=`<div class="docpage">
+    <div class="dp-head">
+      <div>${ed?`<input class="dp-title-in" id="dpTitle" value="${p.t.replace(/"/g,"&quot;")}">`:`<h1>${p.t}</h1>`}
+      <div class="dp-meta">Page DELIV'IA · mise à jour le ${p.maj}</div></div>
+      <div class="dp-act">${!adm?"":ed
+        ? `<button class="btn btn-p" data-respagesave="${slug}">Enregistrer</button><button class="btn btn-s" data-respagecancel="1">Annuler</button>`
+        : `<button class="btn btn-s" data-respageedit="${slug}">Modifier</button>`}</div>
+    </div>`;
+  h+=`<div class="dp-body ${ed?"editing":""}">`;
+  h+=p.blocs.map((b,i)=>{
+    const del=ed?`<button class="dp-del" data-resblocdel="${slug}::${i}" title="Supprimer ce bloc">✕</button>`:"";
+    const at=ed?` contenteditable="true" data-bl="${i}"`:"";
+    if(b.t==="h2")     return `<div class="dp-bloc"><h2 class="dp-h2"${at}>${b.x}</h2>${del}</div>`;
+    if(b.t==="li")     return `<div class="dp-bloc"><div class="dp-li"><span class="dp-pt">•</span><span class="dp-tx"${at}>${b.x}</span></div>${del}</div>`;
+    if(b.t==="todo")   return `<div class="dp-bloc"><div class="dp-li"><span class="dp-box"></span><span class="dp-tx"${at}>${b.x}</span></div>${del}</div>`;
+    if(b.t==="callout")return `<div class="dp-bloc"><div class="dp-callout"><span class="dp-ico">${ICO.file}</span><span class="dp-tx"${at}>${b.x}</span></div>${del}</div>`;
+    if(b.t==="video")  return `<div class="dp-bloc"><div class="dp-video"><span class="dp-play">▶</span></div><div class="dp-cap"${at}>${b.x}</div>${del}</div>`;
+    if(b.t==="embed")  return `<div class="dp-bloc"><div class="dp-embed">Contenu intégré</div><div class="dp-cap"${at}>${b.x}</div>${del}</div>`;
+    return `<div class="dp-bloc"><p class="dp-p"${at}>${b.x}</p>${del}</div>`;
+  }).join("");
+  h+=`</div>`;
+  if(ed) h+=`<div class="dp-add"><span class="k">Ajouter un bloc</span>`
+    +[["p","Texte"],["h2","Titre"],["li","Puce"],["todo","Case à cocher"],["video","Vidéo"],["callout","Rappel"],["embed","Intégration"]]
+      .map(([t,l])=>`<button class="btn btn-s" data-resblocadd="${slug}::${t}">+ ${l}</button>`).join("")+`</div>`;
+  h+=`<div class="dp-foot">Éditeur par blocs embarqué dans DELIV'IA (brique open source BlockNote, celle des ateliers de l'espace apprenant) : on écrit, on colle une vidéo, on réordonne. Le contenu vit dans DELIV'IA, plus sur un Notion externe.</div>`;
+  return h+`</div>`;
+}
 /* ── pages autres applications ── */
 function pageApprenant(){
   return `<div class="simnote">Simulation de l'espace client / apprenant : aperçu dans son style réel (Inter, indigo, fond slate).</div>
@@ -4699,14 +5001,25 @@ function pageDash(){
 /* ── rendu global ── */
 /* ── rendu global ── */
 function render(){
-  /* app tabs */
+  /* sélecteur d'application : un seul bouton, qui porte le nom de l'application ouverte */
   const apps=ROLE_APPS[S.role];
-  $("#appTabs").innerHTML=apps.map(a=>`<button class="apptab ${S.app===a?"active":""}" data-app="${a}"><span class="dot" style="background:${APPS[a].color}"></span>${APPS[a].name}${S.app===a?"":'<span class="lock">SSO</span>'}</button>`).join("");
+  const appCur=APPS[S.app];
+  const autres=apps.filter(a=>a!==S.app);
+  $("#appTabs").innerHTML=(autres.length
+    ? `<button class="appsw ${S.appOpen?"open":""}" data-appsw="1"><span class="dot" style="background:${appCur.color}"></span><span class="nm">${appCur.name}</span><span class="chev">▾</span></button>`
+      +(S.appOpen?`<div class="appmenu">`+autres.map(a=>`<button class="apptab" data-app="${a}"><span class="dot" style="background:${APPS[a].color}"></span>${APPS[a].name}<span class="lock">SSO</span></button>`).join("")+`</div>`:"")
+    : `<button class="appsw" style="cursor:default"><span class="dot" style="background:${appCur.color}"></span><span class="nm">${appCur.name}</span></button>`);
   /* subnav */
   const groups = S.app==="delivia" ? DELIVIA_TABS[S.role] : (APP_TABS[S.app]||[]);
   document.documentElement.style.setProperty("--accent", APPS[S.app].accent);
-  $("#subnav").innerHTML = `<div class="appctx" style="color:${APPS[S.app].accent}"><span class="dot" style="background:${APPS[S.app].accent}"></span>${APPS[S.app].name}</div>`
-    + groups.map(([g,items])=>`<div class="subgrp">${g}</div>`+items.map(([id,lbl])=>`<button class="subtab ${S.tab===id?"active":""}" data-tab="${id}" style="--accent:${APPS[S.app].accent}">${lbl}</button>`).join("")).join("");
+  $("#subnav").innerHTML = groups.map(([g,items,opt])=>{
+        const btns=items.map(([id,lbl])=>`<button class="subtab ${S.tab===id?"active":""}" data-tab="${id}" style="--accent:${APPS[S.app].accent}">${lbl}</button>`).join("");
+        if(opt&&opt.fold){
+          const ouvert = S.navFold[g] || items.some(it=>it[0]===S.tab);
+          return `<details class="navfold" data-navfold="${g}" ${ouvert?"open":""}><summary><span class="chev">▸</span>${g}</summary>${btns}</details>`;
+        }
+        return `<div class="subgrp">${g}</div>`+btns;
+      }).join("");
   /* crumb + role */
   const crumbEnd = S.fiche
     ? (S.fiche.t==="apprenant" ? "Fiche apprenant · "+(APPRENANTS.find(a=>a.id===S.fiche.id)||{}).nom : "Fiche client · "+(CLIENTS.find(c=>c.id===S.fiche.id)||{}).nom)
@@ -4734,6 +5047,7 @@ function render(){
   else if(S.fiche){
     h = S.fiche.t==="apprenant" ? ficheApprenantHtml(S.fiche.id) : S.fiche.t==="session" ? ficheSessionHtml(S.fiche.id) : S.fiche.t==="compte" ? ficheCompteHtml(S.fiche.id) : S.fiche.t==="formateur" ? ficheFormateurHtml(S.fiche.id) : ficheClientHtml(S.fiche.id);
   }
+  else if(S.resPage) h=resPageHtml(S.resPage);
   else if(S.rail) h=pageRail();
   else {
     if(S.tab==="sessions") h=pageSessions();
@@ -4753,6 +5067,7 @@ function render(){
     else if(S.tab==="ressources") h=pageRessources();
     else if(S.tab==="generer") h=pageGenerer();
     else if(S.tab==="preuves") h=pagePreuves();
+    else if(S.tab==="reglages") h=pageReglages();
     else h=pageStub(S.tab);
   }
   $("#content").innerHTML=h;
@@ -4783,6 +5098,7 @@ function render(){
   }
   if(S.tpl) document.body.insertAdjacentHTML("beforeend", tplModalHtml());
   fitBoard();
+  fitSelects();
   CARDS.forEach(c=>{c.fresh=0;c.newLine=0});
   if(S.highlight){
     const elc=document.getElementById("card-"+S.highlight);
@@ -4801,6 +5117,19 @@ function fitBoard(){
   });
 }
 window.addEventListener("resize",fitBoard);
+/* un menu déroulant natif se dimensionne sur son option la plus longue : le chevron se retrouve
+   loin du texte. On le ramène à la largeur de l'option réellement choisie. */
+function fitSelects(){
+  let mes=document.getElementById("selmes");
+  if(!mes){mes=document.createElement("span");mes.id="selmes";mes.style.cssText="position:absolute;top:-999px;left:-999px;visibility:hidden;white-space:pre";document.body.appendChild(mes);}
+  document.querySelectorAll("select.fsel").forEach(s=>{
+    const o=s.options[s.selectedIndex]; if(!o) return;
+    const cs=getComputedStyle(s);
+    mes.style.font=cs.fontStyle+" "+cs.fontWeight+" "+cs.fontSize+"/"+cs.lineHeight+" "+cs.fontFamily;
+    mes.textContent=o.text;
+    s.style.width=Math.ceil(mes.getBoundingClientRect().width)+46+"px";
+  });
+}
 function factFilterFor(c){ return c.kb==="fact_cpf"?"cpf":c.kb==="fact_opco"?"opco":c.kb==="fact_frm"?"formateur":c.kb==="fact_com"?(c.fin==="closer"?"closeur":"setteur"):(c.fin==="fp_ent_vir"?"virement":"mandat"); }
 /* ── interactions ── */
 document.addEventListener("click",e=>{
@@ -4831,6 +5160,8 @@ document.addEventListener("click",e=>{
     if(tk.kind2==="demandes"){S.demandesFor=c;S.demandesTask=[c,col,parseInt(i)];render();return}
     if(tk.kind2==="bibby"){S.bibbyFor=c;S.bibbyTask=[c,col,parseInt(i)];render();return}
     if(!taskState(cd,col,parseInt(i),tk)){toast(`<b>${tk.btn}</b> : ${cd.title}`);clickTask(c,col,parseInt(i));}return}
+  const nf=e.target.closest(".navfold>summary");
+  if(nf){const d=nf.parentElement;S.navFold[d.dataset.navfold]=!d.open}
   const ms=e.target.closest(".msec2>summary");
   if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
   if(e.target.id==="modal3"||e.target.closest("[data-close3]")){S.swFull=null;S.photos=null;render();return}
@@ -4847,7 +5178,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -4885,7 +5216,9 @@ document.addEventListener("click",e=>{
     return}
   if(t.dataset.ficheback){S.fiche=null;render();return}
   if(t.dataset.gotoinsc){const c=CARDS.find(x=>x.id===t.dataset.gotoinsc);S.fiche=null;S.modal=null;S.app="delivia";S.tab="inscription";S.fInsc=inscFilterFor(c);S.fInscMode="all";S.highlight=c.id;render();return}
+  if(t.dataset.appsw!==undefined){S.appOpen=!S.appOpen;render();return}
   if(t.dataset.app){
+    S.appOpen=false;
     if(t.dataset.app===S.app) return;
     const a=t.dataset.app;
     document.documentElement.style.setProperty("--accent2", APPS[a].accent);
@@ -4898,7 +5231,7 @@ document.addEventListener("click",e=>{
     },750);
     return;
   }
-  if(t.dataset.tab){S.tab=t.dataset.tab;S.fiche=null;S.autoFiche=null;render();return}
+  if(t.dataset.tab){S.tab=t.dataset.tab;S.fiche=null;S.autoFiche=null;S.resPage=null;S.resPageEdit=null;S.rail=null;S.lieuFiche=null;render();return}
   if(t.dataset.vcopen!==undefined){const m=document.getElementById("vcmenu"); if(m&&!e.target.closest("[data-voircomme]")) m.classList.toggle("on");}
   if(t.dataset.voircomme){const [r,qui]=t.dataset.voircomme.split("::");
     S.voirComme=r; S.voirQui=qui||null; S.role=r; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; if(S.role==="setter") S.tab="facturation"; S.fFact=S.role==="closer"?"virement":S.role==="setter"?"setteur":"cpf"; render(); return}
@@ -4907,7 +5240,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.nssubmit){const isIntra=S.newSess&&S.newSess.type==="intra";S.newSess=null;
     const nid="ns"+Math.floor(performance.now());
     if(isIntra){CARDS.push({id:nid,kb:"intra",offre:"intra",title:"Cabinet Verne & Associés",closer:"Chloé M.",setter:null,ard:"2026-08-23T10:00",fin:"fp_ent_vir",col:"demande",lieu:"Station F, Paris 13e",nb:"5 apprenants",fresh:1});toast("Session intra créée dans le kanban Intra (Nouvelle demande).");}
-    else{CARDS.push({id:nid,kb:"session_fia",offre:S.fSession==="n2"?"n2":"n1",sess:null,dt:{j1:"2026-11-07",j2:"2026-11-08"},title:"Paris · 7-8 nov",lieu:"Station F, Paris 13e",ville:"Paris",niveau:"Plutôt débutant",frm:null,places:"0/12",cap:12,col:"brouillon",fresh:1,cpfLink:"#",qlbLink:"#",note:""});toast("Session créée en Brouillon : ses tâches sont générées.");}
+    else{CARDS.push({id:nid,kb:"session_fia",offre:S.fSession==="n2"?"n2":"n1",sess:null,dt:{j1:"2026-11-07",j2:"2026-11-08"},title:"Boardroom Turing · 7-8 nov",lieu:"Station F, Paris 13e",salle:"Boardroom Turing",ville:"Paris",niveau:"Plutôt débutant",frm:null,places:"0/12",cap:12,col:"brouillon",fresh:1,cpfLink:"#",qlbLink:"#",note:""});toast("Session créée en Brouillon : ses tâches sont générées.");}
     S.fSessView="kanban";render();return}
   if(t.dataset.dvalid){const [cid,ix]=t.dataset.dvalid.split("::");const cd=CARDS.find(x=>x.id===cid);const d=(DEMANDES_FRM[cid]||[])[parseInt(ix)];cd.frm=d.f;const fs=CARDS.find(x=>x.kb==="session_frm"&&x.sess===cd.sess);if(fs)fs.frm=d.f;DEMANDES_FRM[cid]=[];S.demandesFor=null;toast(`<b>${d.f}</b> assigné(e) à ${cd.title} ; les autres demandes sont refusées automatiquement.`);if(S.demandesTask){const [c,col,i]=S.demandesTask;if(!S.checks[key(cd,col,i)])clickTask(c,col,i);}render();return}
   if(t.dataset.drefus){const [cid,ix]=t.dataset.drefus.split("::");DEMANDES_FRM[cid].splice(parseInt(ix),1);toast("Demande refusée : le formateur est notifié.");render();return}
@@ -4971,6 +5304,23 @@ document.addEventListener("click",e=>{
   if(t.dataset.railcol){const [kb,r,col]=t.dataset.railcol.split("::");const k=kb+"::"+r+"::"+col;S.railColAcc[k]=!S.railColAcc[k];render();
     toast(S.railColAcc[k]?"Étape masquée pour ce rôle.":"Étape rendue visible.");return}
   if(t.dataset.railback){S.rail=null;render();return}
+  if(t.dataset.respage){S.resPage=t.dataset.respage;S.resPageEdit=null;S.fiche=null;S.modal=null;render();return}
+  if(t.dataset.respageback){S.resPage=null;S.resPageEdit=null;render();return}
+  if(t.dataset.respageedit){S.resPageEdit=t.dataset.respageedit;render();return}
+  if(t.dataset.respagecancel){S.resPageEdit=null;render();return}
+  if(t.dataset.respagesave){
+    const slug=t.dataset.respagesave, p=resPage(slug);
+    const ti=document.getElementById("dpTitle"); if(ti&&ti.value.trim()) p.t=ti.value.trim();
+    document.querySelectorAll("#content [data-bl]").forEach(el=>{const b=p.blocs[parseInt(el.dataset.bl)];if(b)b.x=el.innerText.trim();});
+    p.maj=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"})+" · "+USERS[S.realRole].n;
+    S.resPageEdit=null;render();toast(`Page <b>${p.t}</b> enregistrée : tout le monde la voit à jour.`);return}
+  if(t.dataset.resblocadd){
+    const [slug,ty]=t.dataset.resblocadd.split("::"); const p=resPage(slug);
+    const def={p:"Écrivez ici.",h2:"Titre de section",li:"Point de la liste",todo:"À faire",video:"Légende de la vidéo",callout:"Le point à retenir.",embed:"Légende du contenu intégré"};
+    p.blocs.push({t:ty,x:def[ty]||"Écrivez ici."});render();return}
+  if(t.dataset.resblocdel){
+    const [slug,ix]=t.dataset.resblocdel.split("::"); const p=resPage(slug);
+    p.blocs.splice(parseInt(ix),1);render();return}
   if(t.dataset.tkcas){const [kb,col,i,cas]=t.dataset.tkcas.split("::");const tk=KB[kb].tasks[col][+i];
     const tous=CAS_FIN.map(x=>x[0]);
     let cur=tk.fin?[...tk.fin]:[...tous];
@@ -5139,7 +5489,8 @@ document.addEventListener("click",e=>{
   if(t.dataset.resa){S.reserveFor=t.dataset.resa;render();return}
   if(t.dataset.demande){toast(`Demande envoyée pour <b>${t.dataset.demande}</b> : France IA doit la valider. Vous serez notifié.`);return}
   if(t.classList.contains("task")&&t.dataset.c){clickTask(t.dataset.c,t.dataset.col,parseInt(t.dataset.i));return}
-  if(t.dataset.open){S.modal=t.dataset.open;render();return}
+  if(t.dataset.open){
+    S.futOpen=false; S.histOpen=false; S.curOpen=true;S.modal=t.dataset.open;render();return}
 });
 document.addEventListener("input",e=>{const ta=e.target.closest("[data-note]");if(!ta)return;const o=CLIENTS.find(c=>c.id===ta.dataset.note)||APPRENANTS.find(a=>a.id===ta.dataset.note)||CARDS.find(c=>c.id===ta.dataset.note);if(o)o.note=ta.value;});
 /* recherche globale */
