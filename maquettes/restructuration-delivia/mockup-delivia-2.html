@@ -175,7 +175,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .task:hover{background:var(--bg)}
 .task>.tx{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px}
 .task>.tx>.lbl{flex:1 1 250px;min-width:0}
-.ftask>span{display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 8px;flex:1;min-width:0}
+.ftask>span:not(.box){display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 8px;flex:1;min-width:0}
 .task .box{width:15px;height:15px;border:1.5px solid var(--ink-300);border-radius:4px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .12s}
 .task.pending{cursor:default}
 .task.pending .box{border-style:dashed;border-color:var(--ink-300);background:transparent}
@@ -594,7 +594,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tbl.matrice td.cas.on{color:var(--primary)}
 .tbl.matrice td.cas:hover{background:var(--primary-50)}
 .tbl.matrice .acts{white-space:nowrap}
-.todobloc>summary{display:flex;align-items:center;gap:7px;padding:3px 2px;cursor:pointer;list-style:none;font-size:13px;line-height:1.45;color:var(--ink-700)}
+.todobloc>summary{display:flex;align-items:center;gap:9px;padding:6px 8px;margin:0 -8px;border-radius:7px;cursor:pointer;list-style:none;font-size:13px;line-height:1.5;color:var(--ink-700)}
+.todobloc>summary:hover{background:var(--bg)}
+.todobloc>summary .who{flex:0 0 128px;font-size:11.5px;font-weight:600;color:var(--ink-500);background:none;padding:0;white-space:normal;line-height:1.35}
+.todolist{padding-left:0}
 .todobloc>summary::-webkit-details-marker{display:none}
 .todobloc>summary .box{width:14px;height:14px;border:1.5px solid var(--ink-300);border-radius:4px;flex-shrink:0;position:relative}
 .todobloc>summary .box.on{background:var(--primary);border-color:var(--primary)}
@@ -900,6 +903,25 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .fut summary::before{content:"▸";font-size:10px;color:var(--ink-400);transition:transform .15s}
 .fut[open] summary::before{transform:rotate(90deg)}
 .fut summary .n2{font-weight:400;color:var(--ink-400);font-size:11px}
+.steps{margin-top:2px}
+.stepper{display:flex;align-items:center;gap:0;padding:2px 0 14px}
+.stepper .st{width:24px;height:24px;border-radius:50%;background:#f1f5f9;color:var(--ink-400);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .14s}
+.stepper .st:hover{transform:scale(1.12)}
+.stepper .st.ok{background:var(--ok);color:#fff}
+.stepper .st.cur{background:var(--warn-50);color:var(--warn)}
+.stepper .st.vu{box-shadow:0 0 0 3px var(--primary-50);background:var(--primary);color:#fff}
+.stepper .stl{flex:1;height:2px;background:var(--line-2);min-width:6px}
+.stepper .stl.ok{background:#a7f3d0}
+.stepper .stn{margin-left:12px;font-size:11.5px;color:var(--ink-400);font-variant-numeric:tabular-nums;flex-shrink:0}
+.stephead{display:flex;align-items:center;gap:10px;padding:0 0 10px;border-bottom:1px solid var(--line)}
+.stnav{width:30px;height:30px;border-radius:9px;background:#f8fafc;color:var(--ink-500);font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s}
+.stnav:hover:not([disabled]){background:var(--primary-50);color:var(--primary-dark)}
+.stnav[disabled]{opacity:.3;cursor:default}
+.stx{flex:1;min-width:0}
+.stt{font-size:14.5px;font-weight:600;color:var(--ink-900);line-height:1.3}
+.sts{font-size:11.5px;color:var(--ink-400);margin-top:2px}
+.stc{font-size:12px;font-weight:600;color:var(--ink-500);background:#f1f5f9;border-radius:999px;padding:2px 10px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.tasks.fut{opacity:.62}
 .futcol{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-500);margin:16px 0 8px;padding-top:14px;border-top:1px dashed var(--line-2);text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:5px}
 .futcol:first-child,.futcol.en{margin-top:2px;padding-top:0;border-top:none}
 .futcol .pill{display:none}
@@ -973,7 +995,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .apslist .perschip{margin:0 6px 6px 0}
 /* ── popup v32 : style épuré ── */
 #modal{background:rgba(15,23,42,.28);backdrop-filter:blur(2px);padding:5vh 16px}
-#modal .mbox{max-width:580px;border-radius:18px;box-shadow:0 24px 64px rgb(15 23 42/.18),0 0 0 1px rgb(15 23 42/.04);animation:mpop .18s ease-out}
+#modal .mbox{max-width:760px;border-radius:18px;box-shadow:0 24px 64px rgb(15 23 42/.18),0 0 0 1px rgb(15 23 42/.04);animation:mpop .18s ease-out}
 @keyframes mpop{0%{transform:translateY(6px) scale(.985);opacity:0}100%{transform:none;opacity:1}}
 #modal .mhead{border-bottom:none;padding:22px 26px 6px;border-radius:18px 18px 0 0}
 #modal .mhead .t{font-size:18px;font-weight:600;letter-spacing:-.015em}
@@ -984,7 +1006,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal .mpanel{background:transparent;border:none;border-radius:0;padding:18px 0 16px;margin:0;border-top:1.5px solid #cbd5e1}
 #modal .mpanel:first-child{border-top:none;padding-top:10px}
 #modal .mpanel.mtasks{border-top:none;padding-top:6px}
-#modal .igrid{gap:13px 22px}
+#modal .igrid{gap:13px 22px;grid-template-columns:repeat(3,1fr)}
+#modal .igrid .wide{grid-column:span 2}
 #modal .ifld .k{font-size:11px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink-400)}
 #modal .ifld .v{font-size:13.5px;color:var(--ink-900);margin-top:2px}
 #modal .ilink{font-weight:600}
@@ -1311,8 +1334,8 @@ const DELIVIA_TABS = {
   admin:[["Processus",[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]],
          ["Divers",[["actions","Action"],["anomalies","Anomalie"],["preuves","Preuves"]]],
          ["Paramétrage",[["generer","Générer"],["automatisations","Automatisations"],["templates","Templates"],
-                         ["#sub","Personnes"],["clients","Clients & apprenants"],["equipe","Équipe"],
-                         ["#sub","Processus"],["rails","Paramétrage des rails"],["lieux","Lieux & salles"]],{fold:1}]],
+                         ["clients","Clients & apprenants"],["equipe","Équipe"],
+                         ["rails","Paramétrage des rails"],["lieux","Lieux & salles"]],{fold:1}]],
   closer:[["Processus",[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]],
           ["Divers",[["anomalies","Anomalie"],["generer","Générer"],["faq","FAQ & Feedback"]]]],
   formateur:[["Mon activité",[["services","Mes prestations"],["aprendre","À prendre"]]],
@@ -2054,7 +2077,7 @@ const S = {
   railAcc:{}, railColAcc:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
   fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", sortSess:"dt", sortSessDir:1, fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false,
-  appOpen:false, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null};
+  appOpen:false, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null, stepIx:null};
 
 const $ = s=>document.querySelector(s);
 (()=>{CARDS.filter(c=>c.waiting).forEach(c=>{(KB[c.kb].tasks[c.col]||[]).forEach((tk,i)=>{if(!tk.fin||tk.fin.includes(c.fin)){if(!tk.kind||tk.kind.includes(c.kind)){}}});
@@ -2131,7 +2154,7 @@ function clickTask(cardId,colId,i){
   S.checks[k]=!S.checks[k];
   if(S.checks[k]) S.when[k]=new Date(); else delete S.when[k];
   if(S.checks[k]) runFx(card,tk,k);
-  if(colId===card.col) tryAdvance(card);
+  if(colId===card.col){ tryAdvance(card); S.stepIx=null; }
   render();
 }
 function clickEch(cardId,j){ /* réservé : les échéances se pilotent depuis le bloc paiements */
@@ -2255,7 +2278,7 @@ function todoRefHtml(card,colId,i,tk){
   const fait=items.filter(x=>x.done).length, tous=fait===items.length, ak="tref-"+k;
   let last="";
   return `<details class="todobloc ${tous?"done":""}" data-acc="${ak}" ${accKey(ak)?"open":""}>
-    <summary><span class="box ${tous?"on":""}"></span><span class="lbl">${tk.t}</span><span class="cnt3">${fait}/${items.length}</span><span class="chev">▸</span></summary>
+    <summary><span class="box ${tous?"on":""}"></span>${whoTag(card,tk,ACTEURS[tk.p]||"")}<span class="lbl">${tk.t}</span><span class="cnt3">${fait}/${items.length}</span><span class="chev">▸</span></summary>
     <div class="todolist">`
     +items.map(it=>{ const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:""; last=it.ph;
       return g+`<div class="task other notmine ${it.done?"done":""}" style="cursor:default"><span class="box"></span><span class="tx"><span class="lbl">${it.lbl}</span></span></div>`;
@@ -2286,12 +2309,12 @@ function apTodoHtml(card,colId,i,tk,ghost){
       +`</div></details>`;
   }).join("");
 }
-function taskHtml(card,colId,i,tk,ghost){
+function taskHtml(card,colId,i,tk,ghost,forceDone){
   const k=key(card,colId,i);
   if(tk.apTodo) return apTodoHtml(card,colId,i,tk,ghost);
   if(tk.todoRef) return todoRefHtml(card,colId,i,tk);
-  const done=taskState(card,colId,i,tk);
-  const can=canCheck(tk), mine=isMine(card,tk);
+  const done=forceDone||(!ghost&&taskState(card,colId,i,tk));
+  const can=canCheck(tk)&&!ghost&&!forceDone, mine=isMine(card,tk);
   const apsTk = tk.perAp ? peopleFor(card).aps : null;
   const multi = apsTk && apsTk.length>1;
   const lbl = multi && tk.tPl ? tk.tPl : tk.t;
@@ -2299,7 +2322,7 @@ function taskHtml(card,colId,i,tk,ghost){
   if(tk.grp){ const prev=tasksFor(card,colId)[i-1]; if(!prev||prev.grp!==tk.grp) h+=`<div class="tgrp">${tk.grp}</div>`; }
   const parts=splitActeur(tk,lbl);
   const suivante = !ghost && colId===card.col && i===prochaineTache(card,colId);
-  const attente = autoAttente(tk) && !done;
+  const attente = !ghost && autoAttente(tk) && !done;
   h+=`<div class="task ${done?"done":""} ${can?"":"other"} ${mine?"":"notmine"} ${attente?"pending":""} ${suivante&&!attente?"next":""}" ${can&&!ghost?`data-c="${card.id}" data-col="${colId}" data-i="${i}"`:'style="cursor:default"'}>
     <span class="box"></span>
     <span class="tx">${whoTag(card,tk,parts.who)}<span class="lbl">${parts.what}</span>${tk.tpl?`<span class="tag" data-tpl="${encodeURIComponent(tk.t)}" title="Voir le template">→ template</span>`:""}${tk.lien?`<a class="ilink tlien" data-frmact="${encodeURIComponent(tk.lien+" ouvert")}">${tk.lien}</a>`:""}${tk.note?`<span class="note">${tk.note}</span>`:""}${tk.btn&&!done&&!ghost&&can?`<button class="tbtn" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tbtn" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}</span>
@@ -2495,6 +2518,13 @@ function historyFor(card){
   rows.sort((a,b)=>a.d-b.d);
   return rows;
 }
+/* Le chemin normal d'une carte : les étapes de dérivation (Lost, Absent, Retard) n'y entrent
+   que si la carte s'y trouve. C'est ce chemin que les flèches parcourent. */
+function stepsFor(card){
+  const cols=colsFor(card);
+  const cur=cols.findIndex(c=>c.id===card.col);
+  return cols.filter((c,i)=>!c.skip||i===cur);
+}
 function futureFor(card){
   const cols=colsFor(card);
   const curIx=cols.findIndex(c=>c.id===card.col);
@@ -2597,7 +2627,7 @@ function editPtr(card){
 function coachingBlocHtml(card){
   if(!card.kb.startsWith("coaching")) return "";
   const se=card.seances||[];
-  let h=`<div class="mpanel"><div class="msec">Séances <span class="n2">retranscrites par le formateur depuis ses tâches</span></div>`;
+  let h=`<div class="mpanel"><div class="msec">Séances </div>`;
   h+= se.length ? se.map((x,i)=>`<div class="seance"><div class="sh"><b>Séance ${i+1}</b><span>${fmtJour(x.d)} · ${x.h} · ${x.lieu}</span></div><div class="sb">${x.cr||'<span class="muted">compte rendu à déposer après la séance</span>'}</div></div>`).join("")
     : `<p class="empty">Aucune séance calée pour l'instant : elle se retranscrit depuis la tâche « Formateur retranscrit le créneau choisi ».</p>`;
   h+=`<div class="msec" style="margin-top:14px">Témoignage de clôture</div>`;
@@ -2619,7 +2649,7 @@ function modalHtml(){
   h+=`<div class="mpanel"><div class="igrid">`+infoFor(card).map(([k,v,w])=>`<div class="ifld ${w||""}"><div class="k">${k}</div><div class="v">${v??'<span class="muted">non renseigné</span>'}</div></div>`).join("")+`</div>${editPtr(card)}</div>`;
   if(card.lines){
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
-    h+=`<div class="mpanel"><div class="msec" style="margin-top:0">Lignes de la facture <span class="n2">une ligne par fixe, set ou close</span></div><div class="lines" style="border-top:none;padding-top:0">`
+    h+=`<div class="mpanel"><div class="msec" style="margin-top:0">Lignes de la facture </div><div class="lines" style="border-top:none;padding-top:0">`
       +card.lines.map((l,ix)=>`<div class="ln ${card.newLine&&ix===card.lines.length-1?"new":""}"><span class="k">${l[0]}</span><span>${l[1]}</span></div>`).join("")
       +`<div class="tot"><span>Total</span><span>${tot.toLocaleString("fr-FR")} €</span></div></div></div>`;
   }
@@ -2639,23 +2669,33 @@ function modalHtml(){
     ?`<div class="hrow ev"><span class="d">${fmtWhen(r.d)}</span><span class="dot"></span><span>${r.t}</span></div>`
     :`<div class="hrow ${r.mine?"mine":""}"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.tag||(r.who?`<span class="who">${r.who}</span>`:"")}${r.what||r.t}<span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("")||`<div class="hrow"><span class="w">Aucune tâche réalisée pour l'instant.</span></div>`;
   h+=`</div></details>`;
-  h+=`<details class="msec2" data-k="cur"${S.curOpen!==false?" open":""}><summary><span class="chev">▸</span>Étape en cours <span class="n2">${done}/${tks.length}</span></summary><div class="minner">`;
-  h+=`<div class="futcol en"><span class="pill"></span>${col.label}${col.open?`<span class="n2">ouverture ${openDateStr(card,col)} · ${col.open}</span>`:""}</div>`;
-  if(tks.length) h+=`<div class="tasks">`+tks.map((tk,i)=>taskHtml(card,card.col,i,tk,false)).join("")+`</div>`;
-  else h+=`<p class="empty">Aucune tâche à cette étape.</p>`;
-  if(card.waiting){
+  /* Le parcours des étapes : une seule à l'écran, les flèches font le reste. */
+  const steps=stepsFor(card);
+  const curIx=Math.max(0,steps.findIndex(c=>c.id===card.col));
+  const ix=Math.max(0,Math.min(steps.length-1, S.stepIx==null?curIx:S.stepIx));
+  const stCol=steps[ix], passe=ix<curIx, futur=ix>curIx;
+  const stTks=tasksFor(card,stCol.id);
+  const stDone=passe?stTks.length:futur?0:stTks.filter((tk,i)=>taskState(card,stCol.id,i,tk)).length;
+  const totTks=steps.reduce((a,c)=>a+tasksFor(card,c.id).length,0);
+  const totDone=steps.reduce((a,c,i)=>a+(i<curIx?tasksFor(card,c.id).length:i>curIx?0:tasksFor(card,c.id).filter((tk,j)=>taskState(card,c.id,j,tk)).length),0);
+  h+=`<div class="steps">
+    <div class="stepper">`
+      +steps.map((c,i)=>`${i?'<i class="stl '+(i<=curIx?"ok":"")+'"></i>':""}<button class="st ${i<curIx?"ok":""} ${i===curIx?"cur":""} ${i===ix?"vu":""}" data-step="${i}" title="${c.label}">${i<curIx?"✓":""}</button>`).join("")
+      +`<span class="stn">${totDone}/${totTks}</span></div>
+    <div class="stephead">
+      <button class="stnav" data-step="${ix-1}" ${ix===0?"disabled":""} aria-label="Étape précédente">‹</button>
+      <div class="stx"><div class="stt">${stCol.label}</div>
+        <div class="sts">Étape ${ix+1} sur ${steps.length}${passe?" · déjà franchie":futur?" · à venir":" · en cours"}${stCol.open?` · ouverture ${openDateStr(card,stCol)}`:""}</div></div>
+      <span class="stc">${stDone}/${stTks.length}</span>
+      <button class="stnav" data-step="${ix+1}" ${ix===steps.length-1?"disabled":""} aria-label="Étape suivante">›</button>
+    </div>`;
+  if(stTks.length) h+=`<div class="tasks ${futur?"fut":""}">`+stTks.map((tk,i)=>taskHtml(card,stCol.id,i,tk,futur,passe)).join("")+`</div>`;
+  else h+=`<p class="empty">Aucune tâche à cette étape : elle est terminale.</p>`;
+  if(!passe&&!futur&&card.waiting){
     const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
     h+=`<div class="openline">🔒 <span>Étape complète. <b>${nc.label}</b> ouvre ${openDateStr(card,nc)} (${nc.open}).</span></div>`;
   }
-  h+=`</div></details>`;
-  const fut=futureFor(card);
-  const nFut=fut.reduce((a,f)=>a+f.tasks.length,0);
-  h+=`<details class="msec2" data-k="fut"${S.futOpen?" open":""}><summary><span class="chev">▸</span>À venir <span class="n2">0/${nFut}</span></summary><div class="minner">`;
-  const apsFut=peopleFor(card).aps, multiFut=apsFut&&apsFut.length>1;
-  h+=fut.map(f=>`<div class="futcol"><span class="pill"></span>${f.col.label}${f.col.open?`<span class="n2">ouverture ${openDateStr(card,f.col)} · ${f.col.open}</span>`:""}</div>`
-    +(f.tasks.length?f.tasks.map((tk,ti)=>(tk.todoRef||tk.apTodo)?taskHtml(card,f.col.id,ti,tk,true):`<div class="frow2">${tk.grp&&(!f.tasks[ti-1]||f.tasks[ti-1].grp!==tk.grp)?`<div class="tgrp">${tk.grp}</div>`:""}<div class="ftask ${isMine(card,tk)?"mine":""}"><span class="box"></span><span>${(()=>{const sp=splitActeur(tk,(tk.perAp&&multiFut&&tk.tPl)?tk.tPl:tk.t);return whoTag(card,tk,sp.who)+sp.what})()}${tk.tpl?'<span class="tag">→ template</span>':""}</span></div>${(tk.perAp&&multiFut)?`<div class="sub">`+apsFut.map(a=>`<div class="ftask"><span class="box"></span><span style="font-size:11px">${a.nom}</span></div>`).join("")+`</div>`:""}${evFor(card,tk)?evRow(evFor(card,tk),"later"):""}</div>`).join("")
-      :`<div class="ftask none">Aucune tâche : étape terminale</div>`)).join("")||`<div class="ftask none">Dernière étape du process.</div>`;
-  h+=`</div></details></div>`;
+  h+=`</div></div>`;
   const edofBtn = card.fin==="cpf"&&(card.kb==="insc"||card.kb==="fact_cpf") ? `<button class="btn btn-s" data-syncedof="${card.id}">Sync EDOF</button>` : "";
   h+=coachingBlocHtml(card);
   if(card.kb==="session_frm"||card.kb==="intra_frm"){
@@ -2934,7 +2974,7 @@ function ficheLieuHtml(id){
   h+=`</div>`;
   /* 3 · ce que l'apprenant voit, tel qu'il le voit */
   const ee=S.espEdit===l.id;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Information espace apprenant <span class="n2">l'aperçu exact de ce que l'apprenant lit dans son espace</span>
+  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Information espace apprenant 
     <span class="right">${ee?`<button class="btn btn-p" data-espsave="${l.id}">Enregistrer</button><button class="btn btn-s" data-espcancel="1">Annuler</button>`
       :`<button class="btn btn-s" data-espedit="${l.id}">Modifier</button>`}</span></div>
     <div class="apprev"><div class="apcard">
@@ -3116,7 +3156,7 @@ function pageAnomalies(){
     +chips([["Vue",vues.map(k=>[k,`${ANO_VUES[k]} <span class="cnt2">${anoCount(k)}</span>`]).concat([["resolues","Résolues"]])]], v, "fAno")
     +`<div class="ctl"><div class="ctltx"><span>Dernier contrôle il y a 42 minutes · prochain à 18 h 00</span><span class="ctlapps">Contrôle complet : WEDOF · GHL · Qonto · HAL · DELIV'IA · Qualiobee</span></div><button class="btn btn-s" data-anorun="1">${ICO.refresh} Relancer le contrôle</button></div></div>`;
   if(v==="resolues"){
-    return h+`<div class="fsec"><h2>Anomalies résolues <span class="n2">conservées six mois</span></h2>`
+    return h+`<div class="fsec"><h2>Anomalies résolues </h2>`
       +ANO_RES.map(r=>`<div class="frow"><div><div class="tt">${r.tt}</div><div class="sm">${r.t} · ${r.sm}</div></div><span class="chip ok">Résolue le ${fmtJour(r.d)} · ${r.qui}</span></div>`).join("")
       +`</div>`;
   }
@@ -3484,16 +3524,14 @@ function railAnos(kb){
 }
 /* Paramétrage > Processus : les rails, puis les lieux, chacun sa page de menu */
 function pageRailsListe(){
-  let h=`<div class="pagehead"><h1>Paramétrage des rails</h1><p>Les étapes et les tâches de chaque kanban, cas de figure par cas de figure. On y touche rarement, et jamais sans savoir qui verra quoi.</p></div>`;
+  let h=`<div class="pagehead"><h1>Paramétrage des rails</h1></div>`;
   h+=`<div class="fsec">`;
-  h+=[["sessions","Session","Le rail France IA et le rail formateur, par offre."],
-      ["inscription","Inscription","Inter, intra et coaching, par mode de paiement."],
-      ["facturation","Facturation","CPF, OPCO, fonds propres, formateur et commerciaux."]]
-    .map(([id,lbl,sub])=>`<div class="frow"><div class="tx"><div class="tt">${lbl}</div><div class="sm">${sub}</div></div><button class="btn btn-s" data-railopen="${id}">Paramétrer</button></div>`).join("");
+  h+=[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]
+    .map(([id,lbl])=>`<div class="frow"><div class="tx"><div class="tt">${lbl}</div></div><button class="btn btn-s" data-railopen="${id}">Paramétrer</button></div>`).join("");
   return h+`</div>`;
 }
 function pageLieuxSalles(){
-  let h=`<div class="pagehead"><h1>Lieux & salles</h1><p>Le référentiel des lieux, de leurs salles et de leurs accès. Une session se nomme par sa salle : c'est ici qu'elles sont déclarées.</p></div>`;
+  let h=`<div class="pagehead"><h1>Lieux & salles</h1></div>`;
   return h+pageLieux("lieux");
 }
 function pageRail(){
@@ -3585,7 +3623,6 @@ function pageRail(){
     h+=`</div>`;
   } else {
     h+=`<div class="fbar">`+(parCas?chips([["Cas",CAS_FIN]], cas, "railCas"):`<span class="sm">Ce rail ne dépend pas du mode de paiement : toutes les cartes voient les mêmes tâches.</span>`)+`</div>`;
-    h+=`<div class="railhint">Le rail tel que ${role==="admin"?"l'admin":roleLbl.toLowerCase()} le verra${parCas?` pour une carte ${(CAS_FIN.find(x=>x[0]===cas)||[])[1]}`:""}${acces==="lecture"?", en lecture seule":""}.</div>`;
     h+=`<div class="board apercuboard">`;
     h+=d.cols.filter(c=>!(role!=="admin"&&railColMasquee(kb,role,c.id))).map(c=>{
       const tks=(d.tasks[c.id]||[]).filter(tk=>!tk.fin||tk.fin.includes(cas));
@@ -3664,7 +3701,7 @@ function pageTemplates(){
 function pageGenerer(){
   const t=["facture","devis","sdd","convention"].includes(S.genType)?S.genType:"facture";
   const isQonto=t==="facture"||t==="devis";
-  let h=`<div class="genwrap"><div class="pagehead"><h1>Générer</h1><p>Choisis ce que tu veux produire — un maximum est pré-rempli, les champs à compléter sont légèrement grisés.</p></div>`;
+  let h=`<div class="genwrap"><div class="pagehead"><h1>Générer</h1></div>`;
   h+=`<div class="gengrid">`+genCards().map(([k,lbl,d,ico])=>`<button class="gencard ${t===k?"on":""}" data-chip="genType::${k}"><span class="ic">${ico}</span><span class="t">${lbl}</span><span class="d">${d}</span></button>`).join("")+`</div>`;
   h+=`<div class="genform">`;
   if(t==="devis") h+=`<label class="genchk"><input type="checkbox"> Le client n'a pas de fiche ARD (devis sans fiche client)</label>`;
@@ -3768,10 +3805,10 @@ function pageFaq(opt){
   let h=(opt&&(opt.pub||opt.inline))?"":`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
   h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Questions et réponses`
     +(adm?`<span class="right"><button class="btn btn-s" data-faqnew="1">+ Nouvelle question / réponse</button></span>`
-         :`<span class="n2">les réponses écrites par France IA</span>`)
+         :``)
     +`</div>${faqSectionHtml(pub)}</div>`;
   h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Tickets et remontées`
-    +(adm?"":`<span class="n2">une question sans réponse, un bug, une idée : c'est ici que ça se pose</span>`)
+    +(adm?"":``)
     +`<span class="right"><button class="btn btn-p" data-remnew="1">${adm?"+ Nouvelle remontée":"+ Signaler ou proposer"}</button></span></div>${remonteesSectionHtml()}</div>`;
   return h;
 }
@@ -3779,7 +3816,7 @@ function pageFaq(opt){
 function pageRessources(){
   /* exactement le catalogue que l'admin édite dans Équipe > Formateurs > Ressources */
   let h=`<div class="pagehead"><h1>Ressources</h1></div>`;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.file}Vos ressources <span class="n2">mises à jour par France IA</span></div><div class="blocs">`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.file}Vos ressources </div><div class="blocs">`;
   h+=RESSOURCES.map(([fam,items],fi)=>{
     const actifs=items.filter(x=>x[3]);
     if(!actifs.length) return "";
@@ -3847,13 +3884,13 @@ function pageProfilFormateur(){
     +ONB_FRM.map(([lbl,done],i)=>`<div class="task ${done?"done":""}" data-frmact="${encodeURIComponent(done?"Étape décochée":"Étape cochée : France IA le voit de son côté")}"><span class="box"></span><span><span class="lbl">${lbl}</span></span></div>`).join("")
     +`</div></details></div></div>`;
   /* 2 · coordonnées */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Mes coordonnées <span class="n2">toute modification part en approbation chez France IA</span>
+  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Mes coordonnées 
     <span class="right"><button class="btn btn-s" data-frmact="${encodeURIComponent("Modification envoyée : France IA valide puis elle s'applique")}">Modifier</button></span></div>
     <div class="idgrid">`+fld("E-mail (non modifiable)",f.email)
     +PROFIL_CHAMPS.map(([k,v])=>fld(k,v)).join("")+`</div>`
     +(f.appro?`<div class="railhint">En attente de validation : ${f.appro}</div>`:"")+`</div>`;
   /* 3 · villes et offres, pleine largeur, deux moitiés nettement séparées */
-  h+=`<div class="fsec vofsec"><div class="sect-h">${ICO.cap}Mes villes et mes offres <span class="n2">ce que je vois dans « À prendre » en dépend</span></div>
+  h+=`<div class="fsec vofsec"><div class="sect-h">${ICO.cap}Mes villes et mes offres </div>
     <div class="vof">`;
   /* villes : une cascade par pays, tout replié */
   const paysList=[...new Set(LIEUX_REF.filter(l=>l.ville!=="—").map(l=>l.pays))].sort();
@@ -5017,7 +5054,6 @@ function resPageHtml(slug){
   if(ed) h+=`<div class="dp-add"><span class="k">Ajouter un bloc</span>`
     +[["p","Texte"],["h2","Titre"],["li","Puce"],["todo","Case à cocher"],["video","Vidéo"],["callout","Rappel"],["embed","Intégration"]]
       .map(([t,l])=>`<button class="btn btn-s" data-resblocadd="${slug}::${t}">+ ${l}</button>`).join("")+`</div>`;
-  h+=`<div class="dp-foot">Éditeur par blocs embarqué dans DELIV'IA (brique open source BlockNote, celle des ateliers de l'espace apprenant) : on écrit, on colle une vidéo, on réordonne. Le contenu vit dans DELIV'IA, plus sur un Notion externe.</div>`;
   return h+`</div>`;
 }
 /* ── pages autres applications ── */
@@ -5243,7 +5279,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -5554,8 +5590,9 @@ document.addEventListener("click",e=>{
   if(t.dataset.resa){S.reserveFor=t.dataset.resa;render();return}
   if(t.dataset.demande){toast(`Demande envoyée pour <b>${t.dataset.demande}</b> : France IA doit la valider. Vous serez notifié.`);return}
   if(t.classList.contains("task")&&t.dataset.c){clickTask(t.dataset.c,t.dataset.col,parseInt(t.dataset.i));return}
+  if(t.dataset.step!==undefined){const n=parseInt(t.dataset.step);if(!isNaN(n)&&n>=0){S.stepIx=n;render();}return}
   if(t.dataset.open){
-    S.futOpen=false; S.histOpen=false; S.curOpen=true;S.modal=t.dataset.open;render();return}
+    S.histOpen=false; S.stepIx=null; S.modal=t.dataset.open;render();return}
 });
 document.addEventListener("input",e=>{const ta=e.target.closest("[data-note]");if(!ta)return;const o=CLIENTS.find(c=>c.id===ta.dataset.note)||APPRENANTS.find(a=>a.id===ta.dataset.note)||CARDS.find(c=>c.id===ta.dataset.note);if(o)o.note=ta.value;});
 /* recherche globale */
