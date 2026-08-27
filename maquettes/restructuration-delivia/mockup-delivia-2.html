@@ -2176,7 +2176,7 @@ const APPRENANTS=[
 APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } if(!a.ghl) a.ghl="7Kd"+(210+i*4); });
 CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
 const S = {
-  railAcc:{}, railTkAcc:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
+  railAcc:{}, railTkAcc:{}, colLbl:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
   fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", sortSess:"dt", sortSessDir:1, fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null,
   appOpen:false, apTodoFor:null, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null, resAdd:null, stepIx:null, fPers:"clients", fRes:"formateurs", fResV:"ressources"};
@@ -2213,7 +2213,7 @@ function tryAdvance(card){
   if(!nc) return;
   if(!colUnlocked(card.kb,nc)){ card.waiting=nc.id; render(); return; }
   card.waiting=null; card.col=nc.id; card.justMoved=true;
-  toast(`Carte avancée : <b>${card.title}</b> → ${nc.label}`);
+  toast(`Carte avancée : <b>${card.title}</b> → ${colLbl(card.kb,nc.id)}`);
   render();
 }
 function runFx(card, tk, k){
@@ -2513,7 +2513,7 @@ function cardHtml(card, colDef, opts={}){
   if(card.kb.startsWith("session")&&card.sess) h+=placesLigne(card)+placesBadge(card,1);
   if(lockInfo){
     const lc=lockInfo.c;
-    h+=`<div class="lockmid"><span class="lockico">${ICO.lock}</span><div class="lm-x"><div class="lm-t">${lc.label}</div><div class="lm-d">Ouverture ${openDateStr(card,lc)}</div><div class="lm-r">${lc.open}</div></div></div></div>`;
+    h+=`<div class="lockmid"><span class="lockico">${ICO.lock}</span><div class="lm-x"><div class="lm-t">${colLbl(card.kb,lc.id)}</div><div class="lm-d">Ouverture ${openDateStr(card,lc)}</div><div class="lm-r">${lc.open}</div></div></div></div>`;
     return h;
   }
   if(card.lines){
@@ -2706,11 +2706,11 @@ function modalHtml(){
   const totDone=steps.reduce((a,c,i)=>a+(i<curIx?tasksFor(card,c.id).length:i>curIx?0:tasksFor(card,c.id).filter((tk,j)=>taskState(card,c.id,j,tk)).length),0);
   h+=`<div class="steps">
     <div class="stepper">`
-      +steps.map((c,i)=>`${i?'<i class="stl '+(i<=curIx?"ok":"")+'"></i>':""}<button class="st ${i<curIx?"ok":i===ix?"vu":i===curIx?"cur":""}" data-step="${i}" title="${c.label}">${i<curIx?"✓":i+1}</button>`).join("")
+      +steps.map((c,i)=>`${i?'<i class="stl '+(i<=curIx?"ok":"")+'"></i>':""}<button class="st ${i<curIx?"ok":i===ix?"vu":i===curIx?"cur":""}" data-step="${i}" title="${colLbl(card.kb,c.id)}">${i<curIx?"✓":i+1}</button>`).join("")
       +`<span class="stn">${totDone}/${totTks}</span></div>
     <div class="stephead">
       <button class="stnav" data-step="${ix-1}" ${ix===0?"disabled":""} aria-label="Étape précédente">‹</button>
-      <div class="stx"><div class="stt">${stCol.label}</div>
+      <div class="stx"><div class="stt">${colLbl(card.kb,stCol.id)}</div>
         ${stCol.open?`<div class="sts">Ouverture ${openDateStr(card,stCol)}</div>`:""}</div>
       <span class="stc">${stDone}/${stTks.length}</span>
       <button class="stnav" data-step="${ix+1}" ${ix===steps.length-1?"disabled":""} aria-label="Étape suivante">›</button>
@@ -2719,7 +2719,7 @@ function modalHtml(){
   else h+=`<p class="empty">Aucune tâche à cette étape : elle est terminale.</p>`;
   if(!passe&&!futur&&card.waiting&&stDone===stTks.length){
     const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
-    h+=`<div class="openline">🔒 <span>Étape complète. <b>${nc.label}</b> ouvre ${openDateStr(card,nc)} (${nc.open}).</span></div>`;
+    h+=`<div class="openline">🔒 <span>Étape complète. <b>${colLbl(card.kb,nc.id)}</b> ouvre ${openDateStr(card,nc)} (${nc.open}).</span></div>`;
   }
   h+=`</div></div>`;
   const edofBtn = card.fin==="cpf"&&(card.kb==="insc"||card.kb==="fact_cpf") ? `<button class="btn btn-s" data-syncedof="${card.id}">Sync EDOF</button>` : "";
@@ -2744,7 +2744,7 @@ function boardHtml(kbId, cards, opts={}){
   for(const col of kb.cols){
     if(col.fin && opts.fin && !col.fin.includes(opts.fin)) continue;
     const inCol=cards.filter(c=>c.col===col.id);
-    h+=`<div class="col ${col.sep?"sepcol":""}"><div class="col-h"><span class="pill"></span><h3>${col.label}</h3><span class="n">${inCol.length}</span></div>`;
+    h+=`<div class="col ${col.sep?"sepcol":""}"><div class="col-h"><span class="pill"></span><h3>${colLbl(kbId,col.id)}</h3><span class="n">${inCol.length}</span></div>`;
     if(col.note) h+=`<div class="col-open">${col.note}</div>`;
     if(col.bulk&&inCol.length) h+=`<div class="colbulk">`+col.bulk.map(([lbl,kind])=>`<button class="bulkbtn" data-bulk="${kind}::${inCol.length}">${lbl}<span class="n">${inCol.length}</span></button>`).join("")+`</div>`;
     h+=`<div class="colbody">`;
@@ -3585,9 +3585,9 @@ function railAnos(kb){
     const tks=d.tasks[c.id]||[];
     tks.forEach(tk=>{ if(tk.fin && !tk.fin.length) out.push(`« ${tk.t} » n'est active dans aucun cas : elle ne s'affichera jamais.`); });
     if(c.vide) return;
-    if(!tks.length && !c.skip) out.push(`L'étape « ${c.label} » ne porte aucune tâche.`);
+    if(!tks.length && !c.skip) out.push(`L'étape « ${colLbl(kb,c.id,"admin")} » ne porte aucune tâche.`);
     else if(parCas) CAS_FIN.filter(([k])=>!c.cas||c.cas.includes(k)).forEach(([k,lbl])=>{
-      if(!tks.some(t=>!t.fin||t.fin.includes(k))) out.push(`À l'étape « ${c.label} », le cas ${lbl} n'a aucune tâche.`);
+      if(!tks.some(t=>!t.fin||t.fin.includes(k))) out.push(`À l'étape « ${colLbl(kb,c.id,"admin")} », le cas ${lbl} n'a aucune tâche.`);
     });
   });
   return out;
@@ -3641,7 +3641,7 @@ function pageRail(){
     const tks=toutes.filter(tk=>!parCas||!tk.fin||tk.fin.includes(cas));
     const masq=role!=="admin"&&railColMasquee(kb,role,c.id);
     let last="";
-    let out=`<div class="fsec railsec ${masq?"masq":""}"><div class="sect-h">${c.label}<span class="n2">${tks.length}</span>${c.open?`<span class="n2">ouverture ${c.open}</span>`:""}${c.vide?`<span class="n2">étape terminale</span>`:""}
+    let out=`<div class="fsec railsec ${masq?"masq":""}"><div class="sect-h"><span contenteditable="true" data-colren="${kb}::${role}::${c.id}" title="Renommer l'étape pour ${roleLbl.toLowerCase()}">${colLbl(kb,c.id,role)}</span><span class="n2">${tks.length}</span>${c.open?`<span class="n2">ouverture ${c.open}</span>`:""}${c.vide?`<span class="n2">étape terminale</span>`:""}
       <span class="right railacts">${masq?`<span class="chip warn">${roleLbl} ne voit pas cette étape</span>`:""}<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button><button class="btn btn-s" data-grpnew="${kb}::${c.id}">+ Sous-section</button><a class="ilink" data-colmove="${kb}::${c.id}::-1" title="Monter l'étape">↑</a><a class="ilink" data-colmove="${kb}::${c.id}::1" title="Descendre l'étape">↓</a><a class="ilink danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</a></span></div>`;
     out+=tks.map(tk=>{
       const ix=toutes.indexOf(tk);
@@ -4076,7 +4076,12 @@ const ICO={
  scroll:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12"/><path d="M3 17h14a2 2 0 0 1 2 2 2 2 0 0 0 2-2V7"/><path d="M7 7h8M7 11h8"/></svg>',
  file:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
 };
-function colLabel(card){ return (KB[card.kb].cols.find(c=>c.id===card.col)||{}).label||card.col; }
+/* Le nom d'une étape se renomme par rôle : chacun lit le sien, la structure ne bouge pas. */
+function colLbl(kb,col,role){
+  const base=((KB[kb]||{cols:[]}).cols.find(x=>x.id===col)||{}).label||col;
+  return S.colLbl[kb+"::"+(role||S.role)+"::"+col]||base;
+}
+function colLabel(card){ return colLbl(card.kb,card.col); }
 function inscFilterFor(card){ return card.kb==="intra"?"intra":card.kb==="coaching"?"coaching":(card.offre||"n1"); }
 function initiales(nom){ return nom.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase(); }
 function fld(label,val,editKey,obj){
@@ -5369,7 +5374,7 @@ document.addEventListener("click",e=>{
     if(tk.kind2==="bibby"){S.bibbyFor=c;S.bibbyTask=[c,col,parseInt(i)];render();return}
     if(tk.kind2==="aptodo"){S.apTodoFor=c;render();return}
     if(!taskState(cd,col,parseInt(i),tk)){toast(`<b>${tk.btn}</b> : ${cd.title}`);clickTask(c,col,parseInt(i));}return}
-  const gr=e.target.closest("[data-grpren],[data-onbsecren]");
+  const gr=e.target.closest("[data-grpren],[data-onbsecren],[data-colren]");
   if(gr&&!e.target.closest("[data-grpdel]")){e.stopPropagation();return}
   const nf=e.target.closest(".navfold>summary");
   if(nf){const d=nf.parentElement;S.navFold[d.dataset.navfold]=!d.open}
@@ -5741,6 +5746,17 @@ document.addEventListener("click",e=>{
     S.stepIx=null; S.modal=t.dataset.open;render();return}
 });
 document.addEventListener("blur",e=>{
+  const cr=e.target.closest&&e.target.closest("[data-colren]");
+  if(cr){const [kb,role,col]=cr.dataset.colren.split("::");
+    const apres=(cr.textContent||"").trim();
+    if(apres&&apres!==colLbl(kb,col,role)){
+      const base=((KB[kb].cols.find(x=>x.id===col))||{}).label||col;
+      const k=kb+"::"+role+"::"+col;
+      if(apres===base) delete S.colLbl[k]; else S.colLbl[k]=apres;
+      const r=(RAIL_ROLES.find(x=>x[0]===role)||[])[1]||role;
+      render();toast(`Étape renommée en <b>${apres}</b> pour ${r.toLowerCase()}. Les autres rôles gardent leur nom.`);
+    }
+    return}
   const sr=e.target.closest&&e.target.closest("[data-onbsecren]");
   if(sr){const [pop,fi]=sr.dataset.onbsecren.split("::");const sec=(ONBOARDING[pop]||[])[+fi];
     const apres=(sr.textContent||"").trim();
