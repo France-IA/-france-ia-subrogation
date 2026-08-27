@@ -63,6 +63,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .subgrp2{padding:9px 20px 3px 28px;font-size:10px;font-weight:600;color:var(--ink-300);letter-spacing:.04em}
 .subtab{display:flex;align-items:center;gap:8px;width:calc(100% - 28px);margin:1px 8px 1px 20px;padding:6px 11px;border-radius:7px;font-size:13px;color:var(--ink-500);text-align:left}
 .subtab:hover{background:var(--bg);color:var(--ink-700)}
+.tabn{margin-left:auto;font-size:10.5px;font-weight:700;border-radius:999px;padding:1px 7px;background:var(--warn-50);color:var(--warn);font-variant-numeric:tabular-nums}
 .subtab.active{background:var(--bg);color:var(--ink-900);font-weight:600}
 .subtab.active::before{content:"";width:3px;height:14px;border-radius:2px;background:var(--accent,#4f46e5);margin-left:-8px;margin-right:5px}
 .side-note{margin-top:auto;padding:14px 20px;font-size:11px;color:var(--ink-400);border-top:1px solid var(--line);line-height:1.5}
@@ -1328,6 +1329,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .drow .tt{font-weight:600;color:var(--ink-900);font-size:13.5px}
 .drow .sm{font-size:12px;color:var(--ink-400);margin-top:2px}
 .dbtns{display:flex;gap:6px}
+.frow .dbtns{margin-left:auto;align-items:center}
 .k2{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600}
 .ul{margin:6px 0 0 18px;font-size:13px;color:var(--ink-700);line-height:1.7}
 #modal[data-kind="newsession"] .igrid{grid-template-columns:repeat(2,1fr)}
@@ -3804,8 +3806,21 @@ function faqSectionHtml(pubImpose){
   return h;
 }
 function remonteesSectionHtml(){
-  const ft=["tout","bug","idee","question"].includes(S.fRemT)?S.fRemT:"tout";
-  let h=`<div class="fbar">`+chips([["Type",[["bug","Bugs"],["idee","Idées"],["question","Questions"]]]], ft, "fRemT")+`</div>`;
+  const adm=S.role==="admin";
+  const dems=adm?toutesDemandesFrm():[];
+  const ft=["tout","bug","idee","question"].concat(adm?["demandes"]:[]).includes(S.fRemT)?S.fRemT:"tout";
+  const types=[["bug","Bugs"],["idee","Idées"],["question","Questions"]]
+    .concat(adm?[["demandes",`Demandes${dems.length?` <span class="cnt2">${dems.length}</span>`:""}`]]:[]);
+  let h=`<div class="fbar">`+chips([["Type",types]], ft, "fRemT")+`</div>`;
+  if(ft==="demandes"){
+    return h+(dems.map(x=>{
+      const acts=x.sess
+        ? (()=>{const sr=CARDS.find(c=>c.kb==="session_fia"&&c.frm===x.frm&&c.col==="retrait")||CARDS.find(c=>c.kb==="session_fia"&&c.frm===x.frm);
+                return sr?`<a class="dlink" data-fiche="session::${sr.id}">Ouvrir la session</a>`:""})()
+        : x.a.map((a,i)=>`<button class="btn btn-s ${i===0?"p":""}" data-frmact="${encodeURIComponent(a+" : "+x.nom)}">${a}</button>`).join("");
+      return `<div class="frow"><div class="tx"><div class="tt">${x.t}</div><div class="sm"><a class="ilink" data-fiche="formateur::${x.frm}">${x.nom}</a> · ${x.d}</div></div><span class="dbtns">${acts}</span></div>`;
+    }).join("")||`<div class="lrow"><span class="sm">Aucune demande en attente.</span></div>`);
+  }
   const list=REMONTEES.filter(r=>ft==="tout"||r.t===ft);
   h+=`<div class="board rembd">`+REM_COLS.map(([id,lbl])=>{
     const inCol=list.filter(r=>r.st===id);
@@ -3818,6 +3833,17 @@ function remonteesSectionHtml(){
   return h;
 }
 
+/* Les demandes de tous les formateurs, rassemblées pour être traitées au même endroit. */
+function toutesDemandesFrm(){
+  return FORMATEURS.flatMap(k=>demandesDe(k).map(x=>Object.assign({},x,{frm:k,nom:FRM[k].nom})));
+}
+/* Ce qui attend sur un onglet : ce qui se traite, jamais ce qui existe. */
+function tabCount(id){
+  if(id==="faq") return REMONTEES.filter(r=>r.st==="a_traiter").length+(S.role==="admin"?toutesDemandesFrm().length:0);
+  if(id==="anomalies") return Object.keys(ANO_VUES).reduce((t,v)=>t+anoCount(v),0);
+  if(id==="actions") return mesTaches().filter(r=>r.u<=1).length;
+  return 0;
+}
 const PUB_DU_ROLE={closer:"Closeurs",setter:"Setteurs",formateur:"Formateurs"};
 function pageFaq(opt){
   const adm=S.role==="admin";
@@ -5213,7 +5239,8 @@ function render(){
   $("#subnav").innerHTML = groups.map(([g,items,opt])=>{
         const btns=items.map(([id,lbl])=>id==="#sub"
           ? `<div class="subgrp2">${lbl}</div>`
-          : `<button class="subtab ${S.tab===id?"active":""}" data-tab="${id}" style="--accent:${APPS[S.app].accent}">${lbl}</button>`).join("");
+          : (()=>{const nb=S.app==="delivia"?tabCount(id):0;
+              return `<button class="subtab ${S.tab===id?"active":""}" data-tab="${id}" style="--accent:${APPS[S.app].accent}">${lbl}${nb?`<span class="tabn">${nb}</span>`:""}</button>`})()).join("");
         if(opt&&opt.fold){
           const ouvert = S.navFold[g] || items.some(it=>it[0]===S.tab);
           return `<details class="navfold" data-navfold="${g}" ${ouvert?"open":""}><summary><span class="chev">▸</span>${g}</summary>${btns}</details>`;
