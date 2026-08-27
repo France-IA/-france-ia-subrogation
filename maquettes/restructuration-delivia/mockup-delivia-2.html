@@ -334,6 +334,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .acc summary:hover{background:var(--bg)}
 .acc summary .chev{color:var(--ink-400);font-size:11px;transition:transform .15s;flex-shrink:0}
 .acc summary .vsub{font-size:12px;font-weight:400;color:var(--ink-400)}
+.acc summary .vsub2{font-size:11px;color:var(--ink-300)}
 .acc[open] summary .chev{transform:rotate(90deg)}
 .acc summary .tt{font-size:13.5px;font-weight:600;color:var(--ink-900)}
 .acc summary .sm{font-size:11.5px;color:var(--ink-400)}
@@ -4187,8 +4188,15 @@ function ficheApprenantHtml(id){
     const k="ap-"+c.id;
     const sCard=c.sess?CARDS.find(x=>x.kb==="session_fia"&&x.sess===c.sess):null;
     const fCard=findFactCard(c);
+    /* même repère que sur la fiche client : une offre se reconnaît à sa date et à son prix */
+    const dv=fmtDatesCourt(c);
+    const vente=cl?(cl.ventes||[]).find(v=>v.inscId===c.id||(fCard&&v.factId===fCard.id)):null;
+    const prix=(vente&&vente.m)||(fCard&&fCard.m)||null;
+    /* le montant est celui de la vente : sur une vente groupée, il ne faut pas le lire
+       comme le prix de cet apprenant-là */
+    const nbAp=vente?((vente.apprenants||(cl&&cl.apprenants)||[]).length):0;
     return `<details class="acc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span>
-      <span class="tt">${offre}</span></summary>
+      <span class="tt">${offre}</span><span class="vsub">${dv?"· "+dv:"· date à caler"}${prix?" · "+prix+(nbAp>1?` <span class="vsub2">vente de ${nbAp} apprenants</span>`:""):""}</span></summary>
       <div class="inner">
         <div class="vgrid">
           ${fld("Session",sCard?`<a class="ilink" data-fiche="session::${sCard.id}">${SESS[c.sess].lbl}</a>`:(c.sess?SESS[c.sess].lbl:(c.lieu||"À caler")))}
