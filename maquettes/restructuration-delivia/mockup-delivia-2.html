@@ -2627,7 +2627,7 @@ function editPtr(card){
 function coachingBlocHtml(card){
   if(!card.kb.startsWith("coaching")) return "";
   const se=card.seances||[];
-  let h=`<div class="mpanel"><div class="msec">Séances <span class="n2">retranscrites par le formateur depuis ses tâches</span></div>`;
+  let h=`<div class="mpanel"><div class="msec">Séances </div>`;
   h+= se.length ? se.map((x,i)=>`<div class="seance"><div class="sh"><b>Séance ${i+1}</b><span>${fmtJour(x.d)} · ${x.h} · ${x.lieu}</span></div><div class="sb">${x.cr||'<span class="muted">compte rendu à déposer après la séance</span>'}</div></div>`).join("")
     : `<p class="empty">Aucune séance calée pour l'instant : elle se retranscrit depuis la tâche « Formateur retranscrit le créneau choisi ».</p>`;
   h+=`<div class="msec" style="margin-top:14px">Témoignage de clôture</div>`;
@@ -2649,7 +2649,7 @@ function modalHtml(){
   h+=`<div class="mpanel"><div class="igrid">`+infoFor(card).map(([k,v,w])=>`<div class="ifld ${w||""}"><div class="k">${k}</div><div class="v">${v??'<span class="muted">non renseigné</span>'}</div></div>`).join("")+`</div>${editPtr(card)}</div>`;
   if(card.lines){
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
-    h+=`<div class="mpanel"><div class="msec" style="margin-top:0">Lignes de la facture <span class="n2">une ligne par fixe, set ou close</span></div><div class="lines" style="border-top:none;padding-top:0">`
+    h+=`<div class="mpanel"><div class="msec" style="margin-top:0">Lignes de la facture </div><div class="lines" style="border-top:none;padding-top:0">`
       +card.lines.map((l,ix)=>`<div class="ln ${card.newLine&&ix===card.lines.length-1?"new":""}"><span class="k">${l[0]}</span><span>${l[1]}</span></div>`).join("")
       +`<div class="tot"><span>Total</span><span>${tot.toLocaleString("fr-FR")} €</span></div></div></div>`;
   }
@@ -2974,7 +2974,7 @@ function ficheLieuHtml(id){
   h+=`</div>`;
   /* 3 · ce que l'apprenant voit, tel qu'il le voit */
   const ee=S.espEdit===l.id;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Information espace apprenant <span class="n2">l'aperçu exact de ce que l'apprenant lit dans son espace</span>
+  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Information espace apprenant 
     <span class="right">${ee?`<button class="btn btn-p" data-espsave="${l.id}">Enregistrer</button><button class="btn btn-s" data-espcancel="1">Annuler</button>`
       :`<button class="btn btn-s" data-espedit="${l.id}">Modifier</button>`}</span></div>
     <div class="apprev"><div class="apcard">
@@ -3156,7 +3156,7 @@ function pageAnomalies(){
     +chips([["Vue",vues.map(k=>[k,`${ANO_VUES[k]} <span class="cnt2">${anoCount(k)}</span>`]).concat([["resolues","Résolues"]])]], v, "fAno")
     +`<div class="ctl"><div class="ctltx"><span>Dernier contrôle il y a 42 minutes · prochain à 18 h 00</span><span class="ctlapps">Contrôle complet : WEDOF · GHL · Qonto · HAL · DELIV'IA · Qualiobee</span></div><button class="btn btn-s" data-anorun="1">${ICO.refresh} Relancer le contrôle</button></div></div>`;
   if(v==="resolues"){
-    return h+`<div class="fsec"><h2>Anomalies résolues <span class="n2">conservées six mois</span></h2>`
+    return h+`<div class="fsec"><h2>Anomalies résolues </h2>`
       +ANO_RES.map(r=>`<div class="frow"><div><div class="tt">${r.tt}</div><div class="sm">${r.t} · ${r.sm}</div></div><span class="chip ok">Résolue le ${fmtJour(r.d)} · ${r.qui}</span></div>`).join("")
       +`</div>`;
   }
@@ -3524,16 +3524,14 @@ function railAnos(kb){
 }
 /* Paramétrage > Processus : les rails, puis les lieux, chacun sa page de menu */
 function pageRailsListe(){
-  let h=`<div class="pagehead"><h1>Paramétrage des rails</h1><p>Les étapes et les tâches de chaque kanban, cas de figure par cas de figure. On y touche rarement, et jamais sans savoir qui verra quoi.</p></div>`;
+  let h=`<div class="pagehead"><h1>Paramétrage des rails</h1></div>`;
   h+=`<div class="fsec">`;
-  h+=[["sessions","Session","Le rail France IA et le rail formateur, par offre."],
-      ["inscription","Inscription","Inter, intra et coaching, par mode de paiement."],
-      ["facturation","Facturation","CPF, OPCO, fonds propres, formateur et commerciaux."]]
-    .map(([id,lbl,sub])=>`<div class="frow"><div class="tx"><div class="tt">${lbl}</div><div class="sm">${sub}</div></div><button class="btn btn-s" data-railopen="${id}">Paramétrer</button></div>`).join("");
+  h+=[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]
+    .map(([id,lbl])=>`<div class="frow"><div class="tx"><div class="tt">${lbl}</div></div><button class="btn btn-s" data-railopen="${id}">Paramétrer</button></div>`).join("");
   return h+`</div>`;
 }
 function pageLieuxSalles(){
-  let h=`<div class="pagehead"><h1>Lieux & salles</h1><p>Le référentiel des lieux, de leurs salles et de leurs accès. Une session se nomme par sa salle : c'est ici qu'elles sont déclarées.</p></div>`;
+  let h=`<div class="pagehead"><h1>Lieux & salles</h1></div>`;
   return h+pageLieux("lieux");
 }
 function pageRail(){
@@ -3625,7 +3623,6 @@ function pageRail(){
     h+=`</div>`;
   } else {
     h+=`<div class="fbar">`+(parCas?chips([["Cas",CAS_FIN]], cas, "railCas"):`<span class="sm">Ce rail ne dépend pas du mode de paiement : toutes les cartes voient les mêmes tâches.</span>`)+`</div>`;
-    h+=`<div class="railhint">Le rail tel que ${role==="admin"?"l'admin":roleLbl.toLowerCase()} le verra${parCas?` pour une carte ${(CAS_FIN.find(x=>x[0]===cas)||[])[1]}`:""}${acces==="lecture"?", en lecture seule":""}.</div>`;
     h+=`<div class="board apercuboard">`;
     h+=d.cols.filter(c=>!(role!=="admin"&&railColMasquee(kb,role,c.id))).map(c=>{
       const tks=(d.tasks[c.id]||[]).filter(tk=>!tk.fin||tk.fin.includes(cas));
@@ -3704,7 +3701,7 @@ function pageTemplates(){
 function pageGenerer(){
   const t=["facture","devis","sdd","convention"].includes(S.genType)?S.genType:"facture";
   const isQonto=t==="facture"||t==="devis";
-  let h=`<div class="genwrap"><div class="pagehead"><h1>Générer</h1><p>Choisis ce que tu veux produire — un maximum est pré-rempli, les champs à compléter sont légèrement grisés.</p></div>`;
+  let h=`<div class="genwrap"><div class="pagehead"><h1>Générer</h1></div>`;
   h+=`<div class="gengrid">`+genCards().map(([k,lbl,d,ico])=>`<button class="gencard ${t===k?"on":""}" data-chip="genType::${k}"><span class="ic">${ico}</span><span class="t">${lbl}</span><span class="d">${d}</span></button>`).join("")+`</div>`;
   h+=`<div class="genform">`;
   if(t==="devis") h+=`<label class="genchk"><input type="checkbox"> Le client n'a pas de fiche ARD (devis sans fiche client)</label>`;
@@ -3808,10 +3805,10 @@ function pageFaq(opt){
   let h=(opt&&(opt.pub||opt.inline))?"":`<div class="pagehead"><h1>FAQ & Feedback</h1></div>`;
   h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Questions et réponses`
     +(adm?`<span class="right"><button class="btn btn-s" data-faqnew="1">+ Nouvelle question / réponse</button></span>`
-         :`<span class="n2">les réponses écrites par France IA</span>`)
+         :``)
     +`</div>${faqSectionHtml(pub)}</div>`;
   h+=`<div class="faqbloc"><div class="sect-h">${ICO.file}Tickets et remontées`
-    +(adm?"":`<span class="n2">une question sans réponse, un bug, une idée : c'est ici que ça se pose</span>`)
+    +(adm?"":``)
     +`<span class="right"><button class="btn btn-p" data-remnew="1">${adm?"+ Nouvelle remontée":"+ Signaler ou proposer"}</button></span></div>${remonteesSectionHtml()}</div>`;
   return h;
 }
@@ -3819,7 +3816,7 @@ function pageFaq(opt){
 function pageRessources(){
   /* exactement le catalogue que l'admin édite dans Équipe > Formateurs > Ressources */
   let h=`<div class="pagehead"><h1>Ressources</h1></div>`;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.file}Vos ressources <span class="n2">mises à jour par France IA</span></div><div class="blocs">`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.file}Vos ressources </div><div class="blocs">`;
   h+=RESSOURCES.map(([fam,items],fi)=>{
     const actifs=items.filter(x=>x[3]);
     if(!actifs.length) return "";
@@ -3887,13 +3884,13 @@ function pageProfilFormateur(){
     +ONB_FRM.map(([lbl,done],i)=>`<div class="task ${done?"done":""}" data-frmact="${encodeURIComponent(done?"Étape décochée":"Étape cochée : France IA le voit de son côté")}"><span class="box"></span><span><span class="lbl">${lbl}</span></span></div>`).join("")
     +`</div></details></div></div>`;
   /* 2 · coordonnées */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Mes coordonnées <span class="n2">toute modification part en approbation chez France IA</span>
+  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Mes coordonnées 
     <span class="right"><button class="btn btn-s" data-frmact="${encodeURIComponent("Modification envoyée : France IA valide puis elle s'applique")}">Modifier</button></span></div>
     <div class="idgrid">`+fld("E-mail (non modifiable)",f.email)
     +PROFIL_CHAMPS.map(([k,v])=>fld(k,v)).join("")+`</div>`
     +(f.appro?`<div class="railhint">En attente de validation : ${f.appro}</div>`:"")+`</div>`;
   /* 3 · villes et offres, pleine largeur, deux moitiés nettement séparées */
-  h+=`<div class="fsec vofsec"><div class="sect-h">${ICO.cap}Mes villes et mes offres <span class="n2">ce que je vois dans « À prendre » en dépend</span></div>
+  h+=`<div class="fsec vofsec"><div class="sect-h">${ICO.cap}Mes villes et mes offres </div>
     <div class="vof">`;
   /* villes : une cascade par pays, tout replié */
   const paysList=[...new Set(LIEUX_REF.filter(l=>l.ville!=="—").map(l=>l.pays))].sort();
@@ -5057,7 +5054,6 @@ function resPageHtml(slug){
   if(ed) h+=`<div class="dp-add"><span class="k">Ajouter un bloc</span>`
     +[["p","Texte"],["h2","Titre"],["li","Puce"],["todo","Case à cocher"],["video","Vidéo"],["callout","Rappel"],["embed","Intégration"]]
       .map(([t,l])=>`<button class="btn btn-s" data-resblocadd="${slug}::${t}">+ ${l}</button>`).join("")+`</div>`;
-  h+=`<div class="dp-foot">Éditeur par blocs embarqué dans DELIV'IA (brique open source BlockNote, celle des ateliers de l'espace apprenant) : on écrit, on colle une vidéo, on réordonne. Le contenu vit dans DELIV'IA, plus sur un Notion externe.</div>`;
   return h+`</div>`;
 }
 /* ── pages autres applications ── */
