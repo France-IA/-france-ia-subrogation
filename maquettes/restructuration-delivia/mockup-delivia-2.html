@@ -238,7 +238,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .dp-meta{font-size:12px;color:var(--ink-400);margin-top:7px}
 .dp-act{margin-left:auto;display:flex;gap:8px;flex-shrink:0}
 .dp-body{padding:18px 0 4px}
-.dp-bloc{position:relative;padding:3px 34px 3px 0}
+.dp-bloc{position:relative;padding:3px 0}
+.dp-body.editing{padding-left:0}
 .dp-h2{font-size:17px;font-weight:600;color:var(--ink-900);margin:18px 0 4px;letter-spacing:-.01em}
 .dp-p{font-size:15px;line-height:1.75;color:var(--ink-700);margin:6px 0}
 .dp-li{display:flex;gap:10px;font-size:15px;line-height:1.7;color:var(--ink-700);margin:3px 0}
@@ -254,11 +255,16 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .dp-body.editing [contenteditable]{border-radius:6px;padding:2px 6px;margin-left:-6px;transition:background .12s}
 .dp-body.editing [contenteditable]:hover{background:#f8fafc}
 .dp-body.editing [contenteditable]:focus{outline:none;background:var(--primary-50)}
-.dp-del{position:absolute;right:0;top:6px;width:22px;height:22px;border-radius:6px;color:var(--ink-300);font-size:12px;display:none;align-items:center;justify-content:center}
-.dp-body.editing .dp-bloc:hover .dp-del{display:flex}
-.dp-del:hover{background:var(--err-50);color:var(--err)}
-.dp-add{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
-.dp-add .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);font-weight:600;margin-right:4px}
+.dp-h{position:absolute;left:-96px;top:3px;display:none;gap:2px}
+.dp-body.editing .dp-bloc:hover>.dp-h{display:flex}
+.dp-hb{width:21px;height:21px;border-radius:5px;color:var(--ink-300);font-size:12px;display:flex;align-items:center;justify-content:center;background:#fff}
+.dp-hb:hover{background:#f1f5f9;color:var(--ink-700)}
+.dp-hb.del:hover{background:var(--err-50);color:var(--err)}
+.dp-menu{position:absolute;left:-96px;top:26px;z-index:20;background:#fff;border:1px solid var(--line-2);border-radius:10px;box-shadow:0 12px 32px rgb(15 23 42/.14);padding:5px;display:flex;flex-direction:column;min-width:150px}
+.dp-menu button{text-align:left;padding:6px 10px;border-radius:7px;font-size:12.5px;color:var(--ink-700)}
+.dp-menu button:hover{background:var(--primary-50);color:var(--primary-dark)}
+.dp-vide{display:block;width:100%;text-align:left;padding:10px 0;font-size:14px;color:var(--ink-300)}
+.dp-vide:hover{color:var(--ink-400)}
 .dp-foot{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink-400);line-height:1.6}
 .backbtn{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--ink-500);margin-bottom:12px;cursor:pointer;border-radius:6px;padding:4px 8px}
 .backbtn:hover{background:#f1f5f9;color:var(--ink-700)}
@@ -1948,7 +1954,6 @@ const FRM = {
    factures:[]},
 };
 /* comptes ayant un accès à DELIV'IA, avec leurs droits page par page (admin : tout, non modifiable) */
-const PAGES_ACCES = [["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"],["anomalies","Anomalie"],["actions","Action"],["faq","FAQ & Feedback"],["generer","Générer"],["automatisations","Automatisations"],["templates","Templates"],["personnes","Personnes"],["rails","Paramétrage processus"],["lieux","Lieux & salles"],["resonb","Ressources & Onboarding"],["preuves","Preuves"]];
 const APPS_ACCES = [["apprenant","Espace client / apprenant"],["dash","Data Dashboard"]];
 const COMPTES = [
  {id:"u_jeanne",nom:"Jeanne Dubois",role:"admin",titre:"Admin · Customer Success",email:"jeanne@franceia.com",tel:"06 12 00 45 67",ghl:"91Bx12",qlb:"7a21-20",acces:null,apps:["apprenant","dash"]},
@@ -2151,7 +2156,7 @@ const S = {
   railAcc:{}, railColAcc:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
   fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", sortSess:"dt", sortSessDir:1, fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false,
-  appOpen:false, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null, stepIx:null, fPers:"clients", fRes:"formateurs", fResV:"ressources"};
+  appOpen:false, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null, resAdd:null, stepIx:null, fPers:"clients", fRes:"formateurs", fResV:"ressources"};
 
 const $ = s=>document.querySelector(s);
 (()=>{CARDS.filter(c=>c.waiting).forEach(c=>{(KB[c.kb].tasks[c.col]||[]).forEach((tk,i)=>{if(!tk.fin||tk.fin.includes(c.fin)){if(!tk.kind||tk.kind.includes(c.kind)){}}});
@@ -4325,15 +4330,16 @@ function ficheFormateurHtml(key){
     ${fld("Identifiant Qualiobee",`<span class="mono">${f.qlbId}</span>`)}
   </div></div>`;
   /* 2 · demandes */
-  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Demandes</div>`;
-  let dem="";
-  if(f.appro) dem+=`<div class="frow"><div class="tx"><div class="tt">Modification de profil en attente</div><div class="sm">${f.appro}</div></div><button class="btn btn-p" data-frmact="Approuver la modification">Approuver</button><button class="btn btn-s" data-frmact="Refuser la modification">Refuser</button></div>`;
-  f.quali.forEach(q=>{dem+=`<div class="frow"><div class="tx"><div class="tt">Demande de qualification · ${q[0]}</div><div class="sm">${q[1]}</div></div><button class="btn btn-p" data-frmact="Qualification acceptée">Accepter</button><button class="btn btn-s" data-frmact="Qualification refusée">Refuser</button></div>`});
-  if(f.retrait){
-    const sr=CARDS.find(c=>c.kb==="session_fia"&&c.frm===key&&c.col==="retrait")||CARDS.find(c=>c.kb==="session_fia"&&c.frm===key);
-    dem+=`<div class="frow"><div class="tx"><div class="tt">Retrait de session demandé</div><div class="sm">${f.retrait} · la carte est passée en colonne Retrait, c'est là qu'on tranche</div></div>${sr?`<a class="dlink" data-fiche="session::${sr.id}">Ouvrir la session</a>`:""}</div>`;
-  }
-  h+=(dem||`<div class="lrow"><span class="sm">Aucune demande en attente.</span></div>`)+`</div>`;
+  const dems=demandesDe(key);
+  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Demandes${dems.length?`<span class="chip warn" style="margin-left:8px">${dems.length} à traiter</span>`:""}</div>`;
+  h+=(dems.map(x=>{
+    if(x.sess){
+      const sr=CARDS.find(c=>c.kb==="session_fia"&&c.frm===key&&c.col==="retrait")||CARDS.find(c=>c.kb==="session_fia"&&c.frm===key);
+      return `<div class="frow"><div class="tx"><div class="tt">${x.t}</div><div class="sm">${x.d} · la carte est passée en colonne Retrait, c'est là qu'on tranche</div></div>${sr?`<a class="dlink" data-fiche="session::${sr.id}">Ouvrir la session</a>`:""}</div>`;
+    }
+    return `<div class="frow"><div class="tx"><div class="tt">${x.t}</div><div class="sm">${x.d}</div></div>`
+      +x.a.map((a,i)=>`<button class="btn btn-s ${i===0?"p":""}" data-frmact="${encodeURIComponent(a+" : "+f.nom)}">${a}</button>`).join("")+`</div>`;
+  }).join("")||`<div class="lrow"><span class="sm">Aucune demande en attente.</span></div>`)+`</div>`;
   /* 3 · factures : les cartes du rail Facturation formateur, repliées */
   const kf="frm-fact-"+key;
   h+=`<details class="accbloc" data-acc="${kf}" ${accKey(kf)?"open":""}><summary><span class="chev">▶</span><span class="tt">Factures</span><span class="end"><span class="sm">${factures.length}</span></span></summary><div class="inner">`
@@ -4368,9 +4374,8 @@ function ficheCompteHtml(id){
   <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>${idFld("ghl_user_id","ghl",u)}${u.role==="admin"?idFld("qualiobee_user_id","qlb",u):""}</div></div>`;
   /* droits d'accès : seulement pour l'interne, un externe n'a que son propre espace */
   if(u.role!=="admin") return h;
-  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Accès aux pages</div>`;
-  h+=`<div class="accgrid">`+PAGES_ACCES.map(([pid,lbl])=>{const on=u.role==="admin"||(u.acces||[]).includes(pid);return `<div class="accrow ${u.role==="admin"?"fixed":""}" ${u.role==="admin"?"":`data-acctoggle="${u.id}::${pid}"`}><span class="sw ${on?"on":""}"><i></i></span><span>${lbl}</span></div>`}).join("")+`</div>`;
-  h+=`<div class="subh">Applications de la plateforme</div><div class="accgrid">`+APPS_ACCES.map(([aid,lbl])=>{const on=(u.apps||[]).includes(aid);return `<div class="accrow" data-apptoggle="${u.id}::${aid}"><span class="sw ${on?"on":""}"><i></i></span><span>${lbl}</span></div>`}).join("")+`</div></div>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Applications de la plateforme</div>`;
+  h+=`<div class="accgrid">`+APPS_ACCES.map(([aid,lbl])=>{const on=(u.apps||[]).includes(aid);return `<div class="accrow" data-apptoggle="${u.id}::${aid}"><span class="sw ${on?"on":""}"><i></i></span><span>${lbl}</span></div>`}).join("")+`</div></div>`;
   return h;
 }
 /* 0 inscrits · 1 en cours d'inscription · 2 lost · 3 changés de session · 4 réservations (à part) */
@@ -4594,14 +4599,6 @@ function pagePersonnes(){
   let h=`<div class="pagehead"><h1>Personnes</h1></div>`;
   h+=chips([["",pops]], pop, "fPers");
   if(pop==="clients"||pop==="apprenants") return h+listeClientsHtml(pop);
-  const vues=pop==="formateurs"
-    ? [["liste","Liste"],["faq","FAQ & retours"],["demandes","Demandes"]]
-    : pop==="interne" ? [["liste","Liste"]]
-    : [["liste","Liste"],["faq","FAQ & retours"]];
-  const v=vues.some(x=>x[0]===S.fEqV)?S.fEqV:"liste";
-  if(vues.length>1) h+=`<div class="fbar" style="margin-top:-2px">`+chips([["",vues]], v, "fEqV")+`</div>`;
-  if(v==="faq") return h+pageFaq({pub:pop==="formateurs"?"Formateurs":pop==="setteurs"?"Setteurs":pop==="interne"?"Admins":"Closeurs"});
-  if(v==="demandes") return h+demandesHtml();
   return h+listeEquipeHtml(pop);
 }
 /* Ressources et parcours d'arrivée, par population : le contenu que France IA entretient. */
@@ -4898,13 +4895,27 @@ function onboardingHtml(pop){
   }).join("");
   return h+`</div>`+param;
 }
+/* Les demandes en attente d'un formateur : profil, qualification, retrait, documents.
+   Une seule source, lue par la colonne de la liste et par sa fiche. */
+function demandesDe(k){
+  const f=FRM[k]; if(!f) return [];
+  const out=[];
+  if(f.appro) out.push({t:"Modification de profil en attente",d:f.appro,a:["Approuver","Refuser"]});
+  (f.quali||[]).forEach(q=>out.push({t:"Demande de qualification · "+q[0],d:q[1],a:["Accepter","Refuser"]}));
+  if(f.retrait) out.push({t:"Retrait de session demandé",d:f.retrait,a:[],sess:1});
+  DEMANDES_FRM_ADMIN.forEach(([fam,items])=>items.forEach(([qui,quoi,quand,actes])=>{
+    if(qui===k&&fam==="Documents") out.push({t:"Document à fournir",d:quoi+" · "+quand,a:actes});
+  }));
+  return out;
+}
 function listeEquipeHtml(pop){
   let h=`<div class="fsec">`;
   if(pop==="formateurs"){
-    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>E-mail</th><th>Téléphone</th><th>Villes</th><th>Offres autorisées</th><th>Identifiant Qualiobee</th><th>Sessions à venir</th><th>Créé le</th><th>Fiche</th></tr></thead><tbody>`
+    h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>E-mail</th><th>Téléphone</th><th>Villes</th><th>Offres autorisées</th><th>Identifiant Qualiobee</th><th>Sessions à venir</th><th>Demandes</th><th>Créé le</th><th>Fiche</th></tr></thead><tbody>`
       +FORMATEURS.map(k=>{const f=FRM[k];
         const futures=CARDS.filter(c=>c.kb==="session_frm"&&c.frm===k&&c.col!=="termine").length;
-        return `<tr><td><b>${f.nom}</b></td><td>${f.email}</td><td>${f.tel}</td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td><span class="mono">${f.qlbId}</span></td><td>${futures}</td><td>${fmtJour(f.cree)}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche</a></td></tr>`}).join("")
+        const dem=demandesDe(k).length;
+        return `<tr><td><b>${f.nom}</b></td><td>${f.email}</td><td>${f.tel}</td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td><span class="mono">${f.qlbId}</span></td><td>${futures}</td><td>${dem?`<a class="chip warn" data-fiche="formateur::${k}" style="cursor:pointer">${dem} à traiter</a>`:'<span class="muted">aucune</span>'}</td><td>${fmtJour(f.cree)}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche</a></td></tr>`}).join("")
       +`</tbody></table></div>`;
   } else if(pop==="closeurs"||pop==="setteurs"){
     const role=pop==="closeurs"?"closer":"setter";
@@ -5114,21 +5125,26 @@ function resPageHtml(slug){
         : `<button class="btn btn-s" data-respageedit="${slug}">Modifier</button>`}</div>
     </div>`;
   h+=`<div class="dp-body ${ed?"editing":""}">`;
+  const TYPES=[["p","Texte"],["h2","Titre"],["li","Puce"],["todo","Case à cocher"],["video","Vidéo"],["callout","Rappel"],["embed","Intégration"]];
+  const menu=i=>ed?`<div class="dp-h">
+      <button class="dp-hb" data-resmenu="${slug}::${i}" title="Insérer un bloc en dessous">+</button>
+      <button class="dp-hb" data-resblocmove="${slug}::${i}::-1" title="Monter">↑</button>
+      <button class="dp-hb" data-resblocmove="${slug}::${i}::1" title="Descendre">↓</button>
+      <button class="dp-hb del" data-resblocdel="${slug}::${i}" title="Supprimer">✕</button>
+    </div>${S.resAdd===slug+"::"+i?`<div class="dp-menu">`+TYPES.map(([t,l])=>`<button data-resblocadd="${slug}::${t}::${i}">${l}</button>`).join("")+`</div>`:""}`:"";
   h+=p.blocs.map((b,i)=>{
-    const del=ed?`<button class="dp-del" data-resblocdel="${slug}::${i}" title="Supprimer ce bloc">✕</button>`:"";
     const at=ed?` contenteditable="true" data-bl="${i}"`:"";
-    if(b.t==="h2")     return `<div class="dp-bloc"><h2 class="dp-h2"${at}>${b.x}</h2>${del}</div>`;
-    if(b.t==="li")     return `<div class="dp-bloc"><div class="dp-li"><span class="dp-pt">•</span><span class="dp-tx"${at}>${b.x}</span></div>${del}</div>`;
-    if(b.t==="todo")   return `<div class="dp-bloc"><div class="dp-li"><span class="dp-box"></span><span class="dp-tx"${at}>${b.x}</span></div>${del}</div>`;
-    if(b.t==="callout")return `<div class="dp-bloc"><div class="dp-callout"><span class="dp-ico">${ICO.file}</span><span class="dp-tx"${at}>${b.x}</span></div>${del}</div>`;
-    if(b.t==="video")  return `<div class="dp-bloc"><div class="dp-video"><span class="dp-play">▶</span></div><div class="dp-cap"${at}>${b.x}</div>${del}</div>`;
-    if(b.t==="embed")  return `<div class="dp-bloc"><div class="dp-embed">Contenu intégré</div><div class="dp-cap"${at}>${b.x}</div>${del}</div>`;
-    return `<div class="dp-bloc"><p class="dp-p"${at}>${b.x}</p>${del}</div>`;
+    const co=b.t==="h2"     ? `<h2 class="dp-h2"${at}>${b.x}</h2>`
+      : b.t==="li"          ? `<div class="dp-li"><span class="dp-pt">•</span><span class="dp-tx"${at}>${b.x}</span></div>`
+      : b.t==="todo"        ? `<div class="dp-li"><span class="dp-box"></span><span class="dp-tx"${at}>${b.x}</span></div>`
+      : b.t==="callout"     ? `<div class="dp-callout"><span class="dp-ico">${ICO.file}</span><span class="dp-tx"${at}>${b.x}</span></div>`
+      : b.t==="video"       ? `<div class="dp-video"><span class="dp-play">▶</span></div><div class="dp-cap"${at}>${b.x}</div>`
+      : b.t==="embed"       ? `<div class="dp-embed">Contenu intégré</div><div class="dp-cap"${at}>${b.x}</div>`
+      : `<p class="dp-p"${at}>${b.x}</p>`;
+    return `<div class="dp-bloc">${menu(i)}${co}</div>`;
   }).join("");
+  if(ed) h+=`<button class="dp-vide" data-resblocadd="${slug}::p::${p.blocs.length-1}">Cliquez pour écrire, ou utilisez le + à gauche d'un bloc</button>`;
   h+=`</div>`;
-  if(ed) h+=`<div class="dp-add"><span class="k">Ajouter un bloc</span>`
-    +[["p","Texte"],["h2","Titre"],["li","Puce"],["todo","Case à cocher"],["video","Vidéo"],["callout","Rappel"],["embed","Intégration"]]
-      .map(([t,l])=>`<button class="btn btn-s" data-resblocadd="${slug}::${t}">+ ${l}</button>`).join("")+`</div>`;
   return h+`</div>`;
 }
 /* ── pages autres applications ── */
@@ -5293,6 +5309,13 @@ function fitBoard(){
   });
 }
 window.addEventListener("resize",fitBoard);
+/* la page de ressource s'enregistre à la main, jamais toute seule : même règle qu'en 1.0 */
+document.addEventListener("keydown",e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="s"&&S.resPageEdit){
+    e.preventDefault();
+    document.querySelector(`[data-respagesave="${S.resPageEdit}"]`)?.click();
+  }
+});
 /* un menu déroulant natif se dimensionne sur son option la plus longue : le chevron se retrouve
    loin du texte. On le ramène à la largeur de l'option réellement choisie. */
 function fitSelects(){
@@ -5354,7 +5377,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-acctoggle],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-resmenu],[data-resblocmove],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -5490,10 +5513,18 @@ document.addEventListener("click",e=>{
     document.querySelectorAll("#content [data-bl]").forEach(el=>{const b=p.blocs[parseInt(el.dataset.bl)];if(b)b.x=el.innerText.trim();});
     p.maj=new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"})+" · "+USERS[S.realRole].n;
     S.resPageEdit=null;render();toast(`Page <b>${p.t}</b> enregistrée : tout le monde la voit à jour.`);return}
+  if(t.dataset.resmenu){S.resAdd=S.resAdd===t.dataset.resmenu?null:t.dataset.resmenu;render();return}
   if(t.dataset.resblocadd){
-    const [slug,ty]=t.dataset.resblocadd.split("::"); const p=resPage(slug);
+    const [slug,ty,ix]=t.dataset.resblocadd.split("::"); const p=resPage(slug);
     const def={p:"Écrivez ici.",h2:"Titre de section",li:"Point de la liste",todo:"À faire",video:"Légende de la vidéo",callout:"Le point à retenir.",embed:"Légende du contenu intégré"};
-    p.blocs.push({t:ty,x:def[ty]||"Écrivez ici."});render();return}
+    const pos=ix===undefined?p.blocs.length:parseInt(ix)+1;
+    p.blocs.splice(pos,0,{t:ty,x:def[ty]||"Écrivez ici."});
+    S.resAdd=null;render();return}
+  if(t.dataset.resblocmove){
+    const [slug,ix,dir]=t.dataset.resblocmove.split("::"); const p=resPage(slug);
+    const i=parseInt(ix), j=i+parseInt(dir);
+    if(j>=0&&j<p.blocs.length){const b=p.blocs[i];p.blocs[i]=p.blocs[j];p.blocs[j]=b;}
+    S.resAdd=null;render();return}
   if(t.dataset.resblocdel){
     const [slug,ix]=t.dataset.resblocdel.split("::"); const p=resPage(slug);
     p.blocs.splice(parseInt(ix),1);render();return}
@@ -5636,7 +5667,6 @@ document.addEventListener("click",e=>{
   if(t.dataset.espace){toast("Ouverture de l'espace client / apprenant dans un nouvel onglet.");return}
   if(t.dataset.delsession){if(confirm("Supprimer cette session ? Les inscriptions payées bloqueront la suppression dans la vraie application.")){const c=CARDS.find(x=>x.id===t.dataset.delsession);CARDS.splice(CARDS.indexOf(c),1);S.fiche=null;toast("Session supprimée.");render();}return}
   if(t.dataset.copy){toast("Lien copié dans le presse-papier.");return}
-  if(t.dataset.acctoggle){const [uid,pid]=t.dataset.acctoggle.split("::");const u=COMPTES.find(x=>x.id===uid);u.acces=u.acces||[];const ix=u.acces.indexOf(pid);if(ix>=0)u.acces.splice(ix,1);else u.acces.push(pid);toast(`Accès <b>${PAGES_ACCES.find(p=>p[0]===pid)[1]}</b> ${ix>=0?"retiré":"accordé"} à ${u.nom}.`);render();return}
   if(t.dataset.apptoggle){const [uid,aid]=t.dataset.apptoggle.split("::");const u=COMPTES.find(x=>x.id===uid);u.apps=u.apps||[];const ix=u.apps.indexOf(aid);if(ix>=0)u.apps.splice(ix,1);else u.apps.push(aid);render();return}
   if(t.dataset.syncdrive){toast("Synchronisation avec le Drive lancée : les preuves déposées hors DELIV'IA seront reconnues dans quelques minutes.");return}
   if(t.dataset.vcback){S.voirComme=null; S.voirQui=null; S.role=S.realRole; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; S.fFact="cpf"; render(); return}
