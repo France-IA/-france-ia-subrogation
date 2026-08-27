@@ -96,6 +96,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .col-h .n{margin-left:auto;font-size:11px;color:var(--ink-400);font-variant-numeric:tabular-nums}
 .col-open{font-size:10.5px;color:var(--info);background:var(--info-50);border-radius:6px;padding:4px 8px;margin:0 2px 8px;display:block;line-height:1.45}
 /* paramétrage d'un rail : le même kanban, en plus large, avec trois colonnes par tâche */
+.procgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;max-width:840px}
+.proccard{display:flex;flex-direction:column;align-items:flex-start;gap:14px;background:#fff;border-radius:12px;box-shadow:var(--sh-carte);padding:18px 20px;text-align:left;transition:box-shadow .14s,transform .14s}
+.proccard:hover{box-shadow:var(--sh-hover);transform:translateY(-1px)}
+.pc-t{font-size:15px;font-weight:600;color:var(--ink-900)}
+.pc-a{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--primary-dark)}
+.pc-fl{transition:transform .14s}
+.proccard:hover .pc-fl{transform:translateX(3px)}
 .rl{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;padding:9px 2px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-800);line-height:1.5}
 .rl:first-of-type{border-top:none}
 .rl.sienne{background:linear-gradient(90deg,var(--primary-50),transparent 60%);border-radius:7px;padding-left:8px;margin-left:-8px}
@@ -3625,10 +3632,10 @@ function railAnos(kb){
 }
 /* Paramétrage > Processus : les rails, puis les lieux, chacun sa page de menu */
 function pageRailsListe(){
-  let h=`<div class="pagehead"><h1>Paramétrage des rails</h1></div>`;
-  h+=`<div class="fsec">`;
+  let h=`<div class="pagehead"><h1>Paramétrage processus</h1></div>`;
+  h+=`<div class="procgrid">`;
   h+=[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]
-    .map(([id,lbl])=>`<div class="frow"><div class="tx"><div class="tt">${lbl}</div></div><button class="btn btn-s" data-railopen="${id}">Paramétrer</button></div>`).join("");
+    .map(([id,lbl])=>`<button class="proccard" data-railopen="${id}"><span class="pc-t">${lbl}</span><span class="pc-a">Paramétrer <span class="pc-fl">→</span></span></button>`).join("");
   return h+`</div>`;
 }
 function pageLieuxSalles(){
