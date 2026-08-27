@@ -3665,6 +3665,20 @@ const CAS_FIN=[["cpf","CPF"],["fp_ent_man","Ent. mandat"],["fp_ent_vir","Ent. vi
 const CAS_COURT={cpf:"CPF",fp_ent_man:"Mandat",fp_ent_vir:"Virement",opco:"OPCO",fp_part:"Particulier"};
 const ACTEURS={fia:"Admin",closer:"Closeur",setter:"Setteur",formateur:"Formateur",client:"Client"};
 const ACTIONS_CABLEES=["Générer la facture","Générer le devis","Générer la convention","Générer le mandat de prélèvement","Déclarer l'entrée WEDOF","Déclarer la sortie WEDOF","Lancer la session Qualiobee","Créer le groupe WhatsApp","Ouvrir les émargements Qualiobee","Envoyer la demande de signature","Ouvrir EDOF","Déposer un fichier"];
+/* L'admin voit TOUTES les tâches, le détail du formateur compris : ce qui vit sur le rail du
+   formateur et manque au rail France IA y est recopié, à l'étape qui lui correspond, avec sa
+   sous-section. Le responsable reste le formateur, donc ces lignes s'affichent en gris chez l'admin. */
+[["session_fia","session_frm",[["demarree","preparer"],["enformation","animer"]]],
+ ["intra","intra_frm",[["preparer","preparer"],["enformation","animer"]]],
+ ["coaching","coaching_frm",[["preparer","preparer"],["encours","animer"]]]]
+.forEach(([kbA,kbB,paires])=>{
+  const A=KB[kbA], B=KB[kbB]; if(!A||!B) return;
+  paires.forEach(([colA,colB])=>{
+    const src=B.tasks[colB]||[], dst=A.tasks[colA];
+    if(!dst) return;
+    src.forEach(tk=>{ if(!dst.some(x=>x.t===tk.t)) dst.push(Object.assign({},tk)); });
+  });
+});
 /* une étape terminale ne porte aucune tâche : c'est voulu, le contrôle ne doit pas le reprocher */
 ["terminee","termine","final","lost"].forEach(id=>Object.values(KB).forEach(d=>{
   const c=d.cols.find(x=>x.id===id); if(c) c.vide=1;
