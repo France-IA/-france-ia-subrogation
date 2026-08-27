@@ -3600,7 +3600,7 @@ const RAIL_MAP = {
     axes:[["Offre",[["n1","Formation N1"],["n2","Formation N2"]]]],
     vues:{
       admin:    {n1:{kb:"session_fia"}, n2:{kb:"session_fia"}},
-      closer:   {n1:{kb:"session_fia",acces:"lecture",note:"le closeur voit la liste des sessions ouvertes, pas le kanban"}, n2:{kb:"session_fia",acces:"lecture",note:"le closeur voit la liste des sessions ouvertes, pas le kanban"}},
+      closer:   {n1:{kb:"session_fia",acces:"lecture",pasKanban:1}, n2:{kb:"session_fia",acces:"lecture",pasKanban:1}},
       formateur:{n1:{kb:"session_frm"}, n2:{kb:"session_frm"}},
       setter:   {n1:null, n2:null}}},
   inscription:{
@@ -3672,7 +3672,9 @@ function pageRail(){
   const page=S.rail.page, m=RAIL_MAP[page]||RAIL_MAP.sessions;
   const offres=railOffres(page).map(o=>o[0]);
   const offre=offres.includes(S.rail.offre)?S.rail.offre:offres[0];
-  const role=RAIL_ROLES.some(r=>r[0]===S.railRole)?S.railRole:"admin";
+  /* un rôle qui ne voit pas ce kanban n'a rien à faire dans le selecteur */
+  const roles=RAIL_ROLES.filter(([r])=>{const c=railCible(page,offre,r);return !!c&&!c.pasKanban;});
+  const role=roles.some(r=>r[0]===S.railRole)?S.railRole:(roles[0]||["admin"])[0];
   const cible=railCible(page,offre,role), acces=railAcces(page,offre,role);
   const offreLbl=(railOffres(page).find(o=>o[0]===offre)||[])[1];
   const roleLbl=(RAIL_ROLES.find(r=>r[0]===role)||[])[1];
@@ -3680,26 +3682,13 @@ function pageRail(){
   h+=`<div class="pagehead row"><h1>Paramétrer les étapes et les tâches</h1></div>`;
   /* les mêmes filtres que la page réelle, puis le rôle qui regarde */
   h+=`<div class="fbar">`+chips(m.axes, offre, "railOffre")+`</div>`;
-  h+=`<div class="fbar">`+chips([["Vue utilisateur",RAIL_ROLES]], role, "railRole")+`</div>`;
-
-  /* le rôle n'a pas ce rail : on le dit, et on peut lui ouvrir */
-  if(acces==="aucun"){
-    return h+`<div class="railacc none"><div class="ra-t">${roleLbl} ne voit pas « ${offreLbl} »</div>
-      <div class="ra-s">${cible?"L'accès a été retiré ici.":"Ce rail n'existe pas dans sa vision : rien ne s'affiche dans son menu."}</div>
-      <div class="ra-b"><button class="btn btn-s" data-railacc="${page}::${offre}::${role}::lecture">Ouvrir en lecture seule</button>
-      <button class="btn btn-p" data-railacc="${page}::${offre}::${role}::plein">Ouvrir avec les tâches</button></div></div>`;
-  }
+  h+=`<div class="fbar">`+chips([["Vue utilisateur",roles]], role, "railRole")+`</div>`;
   const kb=cible?cible.kb:null;
   if(!kb) return h+`<div class="railacc none"><div class="ra-t">Aucun rail derrière cette combinaison</div></div>`;
   const d=KB[kb];
   const parCas=railUtiliseFin(kb);
   const cas=CAS_FIN.some(c=>c[0]===S.railCas)?S.railCas:(cible.cas||"cpf");
 
-  /* la ligne d'accès : c'est ici qu'on modifie ce que ce rôle voit */
-  if(role!=="admin"){
-    h+=`<div class="railacc"><div class="ra-l"><b>${roleLbl}</b> ${acces==="lecture"?"voit ce rail en lecture seule":"voit ce rail et coche ses tâches"}${cible.note?` <span class="sm">· ${cible.note}</span>`:""}</div>
-      <div class="ra-seg"><button class="${acces==="plein"?"on":""}" data-railacc="${page}::${offre}::${role}::plein">Avec les tâches</button><button class="${acces==="lecture"?"on":""}" data-railacc="${page}::${offre}::${role}::lecture">Lecture seule</button><button data-railacc="${page}::${offre}::${role}::aucun">Aucun accès</button></div></div>`;
-  }
 
   /* contrôle de cohérence */
   const anos=railAnos(kb);
