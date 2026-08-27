@@ -137,9 +137,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .rl-ac{font-weight:600;color:var(--ink-900)}
 .rl-tpl{font-size:10.5px;color:#92400e;background:var(--warn-50);border:1px solid transparent;border-radius:4px;padding:1px 7px}
 .rl-tpl:hover{border-color:#fcd34d}
-.rl-c{font-size:10.5px;color:var(--primary-dark);background:var(--primary-50);border-radius:4px;padding:1px 7px}
 .rl-a{display:flex;gap:9px;font-size:11px;margin-left:auto;opacity:0;transition:opacity .12s;white-space:nowrap;order:1}
-.rl .rl-c{order:2}.rl .rl-tpl{order:3}.rl .rt-nat{order:4;min-width:78px;text-align:center}
+.rl .rl-tpl{order:3}.rl .rt-nat{order:4;min-width:78px;text-align:center}
 .rl:hover .rl-a{opacity:1}
 .rl-a .ilink{font-size:11px}
 .rl-g{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);margin:14px 0 2px;display:flex;align-items:center;gap:10px}
@@ -3611,7 +3610,7 @@ function pageRail(){
   /* un rôle qui ne voit pas ce kanban n'a rien à faire dans le selecteur */
   const roles=RAIL_ROLES.filter(([r])=>{const c=railCible(page,offre,r);return !!c&&!c.pasKanban;});
   const role=roles.some(r=>r[0]===S.railRole)?S.railRole:(roles[0]||["admin"])[0];
-  const cible=railCible(page,offre,role), acces=railAcces(page,offre,role);
+  const cible=railCible(page,offre,role);
   const offreLbl=(railOffres(page).find(o=>o[0]===offre)||[])[1];
   const roleLbl=(RAIL_ROLES.find(r=>r[0]===role)||[])[1];
   let h=`<button class="backbtn" data-railback="1">← Retour au paramétrage processus</button>`;
@@ -3650,7 +3649,6 @@ function pageRail(){
       const resp=parCas?respK:null;
       const g=tk.grp&&tk.grp!==last?`<div class="rl-g"><span contenteditable="true" data-grpren="${kb}::${c.id}::${encodeURIComponent(tk.grp)}">${tk.grp}</span><a class="ilink" data-grpmove="${kb}::${c.id}::${encodeURIComponent(tk.grp)}::-1" title="Monter la sous-section">↑</a><a class="ilink" data-grpmove="${kb}::${c.id}::${encodeURIComponent(tk.grp)}::1" title="Descendre la sous-section">↓</a><a class="ilink danger" data-grpdel="${kb}::${c.id}::${encodeURIComponent(tk.grp)}">retirer</a></div>`:""; last=tk.grp||last;
       const sienne=role!=="admin"&&respK===ROLE_OWNS[role];
-      const coche=role!=="admin"&&ROLE_OWNS[role]===tk.p&&!tk.auto&&acces==="plein"&&!masq;
       const cache=role!=="admin"&&railTkMasquee(kb,role,c.id,ix);
       const sp=splitActeur(tk);
       const acteur=ACTEURS[tk.p]||sp.who;
@@ -3660,7 +3658,6 @@ function pageRail(){
         <span class="rl-r ${resp||"multi"}">${respL}</span>
         <span class="rl-t">${respL!==acteur?`<b class="rl-ac">${acteur}</b> ${sp.what}`:cap(sp.what)}</span>
         <span class="rl-a"><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::-1">↑</a><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::1">↓</a><a class="ilink" data-tkedit="${kb}::${c.id}::${ix}">Modifier</a><a class="ilink danger" data-tkdel="${kb}::${c.id}::${ix}">Supprimer</a></span>
-        ${coche&&!cache?`<span class="rl-c">${roleLbl} coche</span>`:""}
         ${tk.tpl?`<button class="rl-tpl" data-tpl="${encodeURIComponent(tk.t)}">template</button>`:""}
         ${nat[0]==="simple"?"":`<span class="rt-nat ${nat[0]}">${nat[1]}</span>`}
       </div>`;
