@@ -1385,10 +1385,10 @@ const OFFRES = {n1:"Niveau 1", n2:"Niveau 2", intra:"Intra", coaching:"Coaching"
 
 const DELIVIA_TABS = {
   admin:[["Processus",[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]],
-         ["Divers",[["actions","Action"],["anomalies","Anomalie"],["preuves","Preuves"]]],
+         ["Divers",[["actions","Action"],["anomalies","Anomalie"],["faq","FAQ & Feedback"]]],
          ["Paramétrage",[["generer","Générer"],["automatisations","Automatisations"],["templates","Templates"],
-                         ["clients","Clients & apprenants"],["equipe","Équipe"],
-                         ["rails","Paramétrage des rails"],["lieux","Lieux & salles"]],{fold:1}]],
+                         ["personnes","Personnes"],["rails","Paramétrage processus"],["lieux","Lieux & salles"],
+                         ["resonb","Ressources & Onboarding"],["preuves","Preuves"]],{fold:1}]],
   closer:[["Processus",[["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"]]],
           ["Divers",[["anomalies","Anomalie"],["generer","Générer"],["faq","FAQ & Feedback"]]]],
   formateur:[["Mon activité",[["services","Mes prestations"],["aprendre","À prendre"]]],
@@ -1927,7 +1927,7 @@ const FRM = {
    factures:[]},
 };
 /* comptes ayant un accès à DELIV'IA, avec leurs droits page par page (admin : tout, non modifiable) */
-const PAGES_ACCES = [["sessions","Sessions"],["inscription","Inscription"],["facturation","Facturation"],["anomalies","Anomalies"],["actions","Actions"],["automatisations","Automatisations"],["templates","Templates"],["utilisateurs","Annuaire"],["faq","FAQ & Feedback"],["preuves","Preuves"],["generer","Générer"]];
+const PAGES_ACCES = [["sessions","Session"],["inscription","Inscription"],["facturation","Facturation"],["anomalies","Anomalie"],["actions","Action"],["faq","FAQ & Feedback"],["generer","Générer"],["automatisations","Automatisations"],["templates","Templates"],["personnes","Personnes"],["rails","Paramétrage processus"],["lieux","Lieux & salles"],["resonb","Ressources & Onboarding"],["preuves","Preuves"]];
 const APPS_ACCES = [["apprenant","Espace client / apprenant"],["dash","Data Dashboard"]];
 const COMPTES = [
  {id:"u_jeanne",nom:"Jeanne Dubois",role:"admin",titre:"Admin · Customer Success",email:"jeanne@franceia.com",tel:"06 12 00 45 67",ghl:"91Bx12",qlb:"7a21-20",acces:null,apps:["apprenant","dash"]},
@@ -2130,7 +2130,7 @@ const S = {
   railAcc:{}, railColAcc:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
   fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", sortSess:"dt", sortSessDir:1, fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false,
-  appOpen:false, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null, stepIx:null};
+  appOpen:false, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null, stepIx:null, fPers:"clients", fRes:"formateurs", fResV:"ressources"};
 
 const $ = s=>document.querySelector(s);
 (()=>{CARDS.filter(c=>c.waiting).forEach(c=>{(KB[c.kb].tasks[c.col]||[]).forEach((tk,i)=>{if(!tk.fin||tk.fin.includes(c.fin)){if(!tk.kind||tk.kind.includes(c.kind)){}}});
@@ -4598,13 +4598,38 @@ function lostModalHtml(){
   const pose=(arr)=>arr.forEach((x,i)=>{ const d=new Date(d0); d.setDate(d.getDate()+i*11+(i%3)*4); x.cree=d.toISOString().slice(0,10); });
   pose(CLIENTS); pose(APPRENANTS);
 })();
-function pageClients(){
-  const f=S.fCli==="apprenants"?"apprenants":"clients";
-  let h=`<div class="pagehead"><h1>Clients & apprenants</h1></div>`;
-  h+=chips([["",[["clients","Clients"],["apprenants","Apprenants"]]]], f, "fCli");
+/* Une seule page pour tout le monde : ceux qui achètent, ceux qui apprennent, ceux qui travaillent. */
+function pagePersonnes(){
+  const pops=[["clients","Clients"],["apprenants","Apprenants"],["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["interne","Interne"]];
+  const pop=pops.some(x=>x[0]===S.fPers)?S.fPers:"clients";
+  let h=`<div class="pagehead"><h1>Personnes</h1></div>`;
+  h+=chips([["",pops]], pop, "fPers");
+  if(pop==="clients"||pop==="apprenants") return h+listeClientsHtml(pop);
+  const vues=pop==="formateurs"
+    ? [["liste","Liste"],["faq","FAQ & retours"],["demandes","Demandes"]]
+    : pop==="interne" ? [["liste","Liste"]]
+    : [["liste","Liste"],["faq","FAQ & retours"]];
+  const v=vues.some(x=>x[0]===S.fEqV)?S.fEqV:"liste";
+  if(vues.length>1) h+=`<div class="fbar" style="margin-top:-2px">`+chips([["",vues]], v, "fEqV")+`</div>`;
+  if(v==="faq") return h+pageFaq({pub:pop==="formateurs"?"Formateurs":pop==="setteurs"?"Setteurs":pop==="interne"?"Admins":"Closeurs"});
+  if(v==="demandes") return h+demandesHtml();
+  return h+listeEquipeHtml(pop);
+}
+/* Ressources et parcours d'arrivée, par population : le contenu que France IA entretient. */
+function pageResOnb(){
+  const pops=[["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["interne","Interne"]];
+  const pop=pops.some(x=>x[0]===S.fRes)?S.fRes:"formateurs";
+  const v=S.fResV==="onboarding"?"onboarding":"ressources";
+  let h=`<div class="pagehead"><h1>Ressources & Onboarding</h1></div>`;
+  h+=chips([["",pops]], pop, "fRes");
+  h+=`<div class="fbar" style="margin-top:-2px">`+chips([["",[["ressources","Ressources"],["onboarding","Parcours d'arrivée"]]]], v, "fResV")+`</div>`;
+  return h+(v==="onboarding"?onboardingHtml(pop):tableauRessources(ressourcesDe(pop),pop));
+}
+function listeClientsHtml(f){
+  let h="";
   const sansAcc=x=>String(x).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
   const q=sansAcc(S.fCliQ||"").split(/\s+/).filter(Boolean);
-  h+=`<div class="fbar"><div class="fsearch">${ICO.search}<input type="text" data-fq="fCliQ" value="${(S.fCliQ||"").replace(/"/g,"&quot;")}" placeholder="${f==="clients"?"Nom du client, type…":"Nom, e-mail, client…"}"></div></div>`;
+  h+=`<div class="fbar" style="margin-top:-2px"><div class="fsearch">${ICO.search}<input type="text" data-fq="fCliQ" value="${(S.fCliQ||"").replace(/"/g,"&quot;")}" placeholder="${f==="clients"?"Nom du client, type…":"Nom, e-mail, client…"}"></div></div>`;
   const sk=S.sortCli||"nom", sd=S.sortCliDir||1;
   const th=(k,l)=>`<th class="sortable ${sk===k?"on":""}" data-sortcli="${k}">${l}<span class="arr">${sk===k?(sd>0?"▲":"▼"):"⇅"}</span></th>`;
   const cmp=(get)=>(a,b)=>{const x=get(a),y=get(b);return (x>y?1:x<y?-1:0)*sd};
@@ -4884,23 +4909,8 @@ function onboardingHtml(pop){
   }).join("");
   return h+`</div>`+param;
 }
-function pageEquipe(){
-  const pops=[["formateurs","Formateurs"],["closeurs","Closeurs"],["setteurs","Setteurs"],["interne","Interne"]];
-  const pop=pops.some(x=>x[0]===S.fEq)?S.fEq:"formateurs";
-  /* l'interne n'a que sa liste : ni parcours d'arrivée à suivre, ni espace de ressources dédié */
-  const vues=pop==="formateurs"
-    ? [["liste","Liste"],["onboarding","Onboarding"],["ressources","Ressources"],["faq","FAQ & retours"],["demandes","Demandes"]]
-    : pop==="interne" ? [["liste","Liste"]]
-    : [["liste","Liste"],["onboarding","Onboarding"],["ressources","Ressources"],["faq","FAQ & retours"]];
-  const v=vues.some(x=>x[0]===S.fEqV)?S.fEqV:"liste";
-  let h=`<div class="pagehead"><h1>Équipe</h1></div>`;
-  h+=chips([["",pops]], pop, "fEq");
-  if(vues.length>1) h+=`<div class="fbar" style="margin-top:-2px">`+chips([["",vues]], v, "fEqV")+`</div>`;
-  if(v==="onboarding") return h+onboardingHtml(pop);
-  if(v==="ressources") return h+tableauRessources(ressourcesDe(pop),pop);
-  if(v==="faq") return h+pageFaq({pub:pop==="formateurs"?"Formateurs":pop==="setteurs"?"Setteurs":pop==="interne"?"Admins":"Closeurs"});
-  if(v==="demandes") return h+demandesHtml();
-  h+=`<div class="fsec">`;
+function listeEquipeHtml(pop){
+  let h=`<div class="fsec">`;
   if(pop==="formateurs"){
     h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>E-mail</th><th>Téléphone</th><th>Villes</th><th>Offres autorisées</th><th>Identifiant Qualiobee</th><th>Sessions à venir</th><th>Créé le</th><th>Fiche</th></tr></thead><tbody>`
       +FORMATEURS.map(k=>{const f=FRM[k];
@@ -5232,8 +5242,8 @@ function render(){
     else if(S.tab==="services") h=pageServices();
     else if(S.tab==="aprendre") h=pageAPrendre();
     else if(S.tab==="utilisateurs") h=pageAnnuaire();
-    else if(S.tab==="clients") h=pageClients();
-    else if(S.tab==="equipe") h=pageEquipe();
+    else if(S.tab==="personnes") h=pagePersonnes();
+    else if(S.tab==="resonb") h=pageResOnb();
     else if(S.tab==="anomalies") h=pageAnomalies();
     else if(S.tab==="actions") h=pageActions();
     else if(S.tab==="automatisations") h=pageAutomatisations();
