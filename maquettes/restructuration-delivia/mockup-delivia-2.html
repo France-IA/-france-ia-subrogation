@@ -4949,7 +4949,7 @@ function onboardingHtml(pop){
   const secs=ONBOARDING[pop]||[];
   const etapes=secs.flatMap(([,its])=>its);
   const gens = pop==="formateurs"
-    ? FORMATEURS.map(k=>({nom:FRM[k].nom, faits:etapes.map((_,j)=>j<FRM[k].onboarding.filter(o=>o[1]).length), fiche:"formateur::"+k}))
+    ? FORMATEURS.map(k=>({nom:FRM[k].nom, faits:etapes.map((_,j)=>j<(FRM[k].onbFaits||0)), fiche:"formateur::"+k}))
     : COMPTES.filter(u=>pop==="interne"?u.role==="admin":u.role===(pop==="closeurs"?"closer":"setter"))
         .map((u,i)=>({nom:u.nom, faits:etapes.map((_,j)=>j<=((i+3)%(etapes.length+1))-1), fiche:"compte::"+u.id}));
   /* d'abord où en est chacun, ensuite le paramétrage du parcours */
