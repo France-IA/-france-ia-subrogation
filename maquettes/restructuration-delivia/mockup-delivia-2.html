@@ -2367,7 +2367,6 @@ function todoRefHtml(card,colId,i,tk){
 }
 function apTodoHtml(card,colId,i,tk,ghost){
   const aps=peopleFor(card).aps, items=apTodoItems(), k=key(card,colId,i), can=canCheck(tk);
-  const docsOk=DOCS_APPRENANT.filter(d=>d[1]).length;
   if(!aps.length) return `<div class="task other notmine" style="cursor:default"><span class="box"></span><span class="tx"><span class="lbl">${tk.t}</span></span></div>`;
   return aps.map((a,ai)=>{
     const kk=j=>k+"::"+ai+"::"+j;
@@ -2384,8 +2383,6 @@ function apTodoHtml(card,colId,i,tk,ghost){
         return g+`<div class="task notmine ${d?"done":""} ${can?"":"other"}" ${can&&!ghost?`data-todoi="${card.id}::${colId}::${i}::${ai}-${j}"`:'style="cursor:default"'}>
           <span class="box"></span><span class="tx"><span class="lbl">${it.lbl}</span></span></div>`;
       }).join("")
-      +`<div class="tgrp">Documents de son espace <span class="cnt3">${docsOk}/${DOCS_APPRENANT.length}</span></div>`
-      +DOCS_APPRENANT.map(([n,ok])=>`<div class="docrow ${ok?"":"off"}"><span class="dot"></span>${n}<span class="right sm">${ok?"disponible":"pas encore disponible"}</span></div>`).join("")
       +`</div></details></div>`;
   }).join("");
 }
@@ -3508,8 +3505,6 @@ const TODO_APPRENANT=[
   "1 idée de site ou d'application à développer sur Lovable"]],
  ["Le jour J",["Amener votre ordinateur portable"]],
 ];
-const DOCS_APPRENANT=[["Convocation",1],["Livret d'accueil",1],["Règlement intérieur",1],["CGV",1],["Facture",1],
- ["Convention / contrat",0],["Certificat de réalisation",0],["Attestation de fin de formation",0]];
 /* modèles de to do de session, par phase : ce que le formateur retrouve sur sa carte (rapatrié de l'admin BookMySessions) */
 const TODO_SESSION=[
  ["Avant la session",[
