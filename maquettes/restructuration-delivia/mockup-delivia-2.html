@@ -2767,7 +2767,7 @@ function modalHtml(){
   else h+=`<p class="empty">Aucune tâche à cette étape : elle est terminale.</p>`;
   if(stTks.length&&stDone===stTks.length&&ix<steps.length-1) h+=`<button class="stnext" data-step="${ix+1}">Étape suivante : ${steps[ix+1].label} <span>→</span></button>`;
   else if(stTks.length&&stDone===stTks.length&&ix===steps.length-1) h+=`<div class="stdone">Toutes les étapes sont franchies</div>`;
-  if(!passe&&!futur&&card.waiting){
+  if(!passe&&!futur&&card.waiting&&stDone===stTks.length){
     const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
     h+=`<div class="openline">🔒 <span>Étape complète. <b>${nc.label}</b> ouvre ${openDateStr(card,nc)} (${nc.open}).</span></div>`;
   }
