@@ -994,7 +994,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tl.ok>.tl-node::after{content:"";width:7px;height:3.5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(0.5px,-1px)}
 .tl.now>.tl-node{background:var(--primary);border-color:var(--primary)}
 .tl.now>.tl-node::after{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
-.tl.wait>.tl-node{border-style:dashed;border-color:#fcd34d;background:var(--warn-50)}
 .tl[data-c]{cursor:pointer}
 .tl[data-c]:hover>.tl-node{border-color:var(--primary)}
 .tl-l{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 9px;font-size:13.5px;line-height:1.5;color:var(--ink-700);padding:1px 0;flex:1;min-width:0}
@@ -1016,6 +1015,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .act-d{flex-shrink:0;font-size:11.5px;font-weight:600;color:var(--ink-400);white-space:nowrap;padding-top:2px}
 .act-d.ov{color:var(--err)} .act-d.td{color:var(--primary)} .act-d.sn{color:var(--warn)}
 .actlist{margin-bottom:18px}
+.tl-auto{font-size:10px;font-weight:600;color:#6d28d9;background:#f5f3ff;border-radius:4px;padding:1px 7px;white-space:nowrap}
 .tl-tpl{font-size:10.5px;color:var(--ink-400);background:#f8fafc;border:1px solid var(--line);border-radius:4px;padding:0 6px}
 .tl>.todobloc{margin-top:-1px}
 .tl>.todobloc>summary{margin:0;padding:3px 0;gap:9px}
@@ -1028,7 +1028,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tl-s{font-size:11.5px;color:var(--ink-400);background:#f8fafc;border:1px solid var(--line);border-radius:5px;padding:1px 8px}
 /* la prochaine action, dépliée : c'est la seule qui parle fort */
 .tl-card{background:var(--primary-50);border:1px solid #e0e7ff;border-radius:11px;padding:12px 14px;cursor:default}
-.tl-card.wait{background:var(--warn-50);border-color:#fde68a}
 .tl-card .who{display:inline-block;margin-bottom:4px}
 .tl-t{font-size:14px;font-weight:500;color:var(--ink-900);line-height:1.45}
 .tl-a{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:11px}
@@ -1039,8 +1038,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tl-b.p:hover{background:var(--primary-dark)}
 .tl-b.tpl{border-color:#fcd34d;color:#92400e;background:#fff}
 .tl-b.tpl:hover{background:var(--warn-50)}
-.tl-card.wait .tl-b{border-color:#fcd34d;color:#92400e}
-.tl-w{font-size:11.5px;color:#b45309;font-weight:500}
 /* l'étape franchie : un bouton pour passer à la suivante, comme en 1.0 */
 .stnext{margin-top:14px;width:100%;padding:9px;font-size:12.5px;font-weight:600;color:var(--primary-dark);background:var(--primary-50);border-radius:10px;display:flex;align-items:center;justify-content:center;gap:7px}
 .stnext:hover{background:#e0e7ff}
@@ -2357,6 +2354,12 @@ function premiereTache(card,colId){
   for(let i=0;i<tks.length;i++) if(!taskState(card,colId,i,tks[i])) return i;
   return -1;
 }
+/* La prochaine chose qu'un humain doit faire : l'automatique se règle sans personne. */
+function premiereAction(card,colId){
+  const tks=tasksFor(card,colId);
+  for(let i=0;i<tks.length;i++) if(!taskState(card,colId,i,tks[i])&&!tks[i].auto) return i;
+  return -1;
+}
 function apTodoItems(){ return TODO_APPRENANT.flatMap(([ph,its])=>its.map(l=>({ph,lbl:l}))); }
 function taskHtml(card,colId,i,tk,ghost,forceDone){
   const k=key(card,colId,i);
@@ -2368,23 +2371,23 @@ function taskHtml(card,colId,i,tk,ghost,forceDone){
   let h="";
   if(tk.grp){ const prev=tasksFor(card,colId)[i-1]; if(!prev||prev.grp!==tk.grp) h+=`<div class="tl-g">${tk.grp}</div>`; }
   const parts=splitActeur(tk,lbl);
-  const suivante = !ghost && !done && i===premiereTache(card,colId);
-  const attente = !ghost && autoAttente(tk) && !done;
-  /* quatre états, comme la 1.0 : faite, en attente d'un signal, prochaine action, à faire */
-  const etat = done?"ok":attente?"wait":suivante?"now":"todo";
+  const suivante = !ghost && !done && i===premiereAction(card,colId);
+  /* trois états : faite, action en cours, à faire. L'automatique ne prend jamais la carte,
+     il porte son badge et attend son signal sur une ligne comme les autres. */
+  const etat = done?"ok":suivante?"now":"todo";
   const clic = can ? `data-c="${card.id}" data-col="${colId}" data-i="${i}"` : "";
   const extras = `${tk.tpl?`<button class="tl-b tpl" data-tpl="${encodeURIComponent(tk.t)}">Voir le template</button>`:""}${tk.lien?`<button class="tl-b" data-frmact="${encodeURIComponent(tk.lien+" ouvert")}">${tk.lien}</button>`:""}`;
-  if(etat==="now"||etat==="wait"){
+  if(etat==="now"){
     h+=`<div class="tl ${etat}"><span class="tl-node"></span>
       <div class="tl-card ${etat}">
         ${whoTag(card,tk,parts.who)}
         <div class="tl-t">${cap(parts.what)}</div>
-        <div class="tl-a">${tk.btn&&can?`<button class="tl-b p" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tl-b" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${can&&!tk.btn?`<button class="tl-b p" ${clic}>Marquer comme fait</button>`:""}${extras}${etat==="wait"?`<span class="tl-w">DELIV'IA attend le signal</span>`:""}</div>
+        <div class="tl-a">${tk.btn&&can?`<button class="tl-b p" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tl-b" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${can&&!tk.btn?`<button class="tl-b p" ${clic}>Marquer comme fait</button>`:""}${extras}</div>
       </div></div>`;
   } else {
     h+=`<div class="tl ${etat} ${mine?"mine":""}" ${clic} ${clic?"":'style="cursor:default"'}>
       <span class="tl-node"></span>
-      <div class="tl-l">${whoTag(card,tk,parts.who)}<span class="lbl">${cap(parts.what)}</span>${tk.tpl?`<span class="tl-tpl" title="Un modèle de message est lié à cette tâche">modèle</span>`:""}</div>
+      <div class="tl-l">${whoTag(card,tk,parts.who)}<span class="lbl">${cap(parts.what)}</span>${tk.auto?`<span class="tl-auto" title="DELIV'IA s'en charge : personne ne la coche">automatique</span>`:""}${tk.tpl?`<span class="tl-tpl" title="Un modèle de message est lié à cette tâche">modèle</span>`:""}</div>
       </div>`;
   }
   if(multi){
@@ -2422,11 +2425,10 @@ function lienLigneFacture(txt){
   if(ap) return avant+`<a class="ilink" data-fiche="apprenant::${ap.id}">${nom}</a>`;
   return txt;
 }
-/* Deux natures d'automatisme, que le libellé distingue déjà :
-   « (automatique) » = DELIV'IA le fait en entrant dans l'étape, donc c'est fait ;
-   « (détecté automatiquement) » = DELIV'IA attend un signal du dehors, donc ça reste en attente. */
+/* Deux natures d'automatisme, que le libellé distingue déjà, et que la case suffit à montrer :
+   « (automatique) » = DELIV'IA le fait en entrant dans l'étape, donc la case arrive cochée ;
+   « (détecté automatiquement) » = DELIV'IA attend un signal du dehors, donc la case reste vide. */
 function autoFaite(tk){ return !!tk.auto && !/détect|constate/i.test(tk.t); }
-function autoAttente(tk){ return !!tk.auto && !autoFaite(tk); }
 function taskState(card,colId,i,tk){
   if(autoFaite(tk)) return true;
   if(tk.sub&&card.ech) return card.ech.every(e=>e.st==="ok");
@@ -3806,19 +3808,27 @@ function faqSectionHtml(pubImpose){
   return h;
 }
 function remonteesSectionHtml(){
-  const adm=S.role==="admin";
-  const dems=adm?toutesDemandesFrm():[];
-  const ft=["tout","bug","idee","question"].concat(adm?["demandes"]:[]).includes(S.fRemT)?S.fRemT:"tout";
+  const adm=S.role==="admin", moi=S.role==="formateur";
+  /* l'admin traite les demandes de tous les formateurs, le formateur suit les siennes,
+     le closeur et le setteur n'en ont pas */
+  const dems=adm?toutesDemandesFrm():moi?demandesDuFrm(FRM_MOI):[];
+  const avecDem=adm||moi;
+  const ft=["tout","bug","idee","question"].concat(avecDem?["demandes"]:[]).includes(S.fRemT)?S.fRemT:"tout";
   const types=[["bug","Bugs"],["idee","Idées"],["question","Questions"]]
-    .concat(adm?[["demandes",`Demandes${dems.length?` <span class="cnt2">${dems.length}</span>`:""}`]]:[]);
+    .concat(avecDem?[["demandes",`Demandes${dems.length?` <span class="cnt2">${dems.length}</span>`:""}`]]:[]);
   let h=`<div class="fbar">`+chips([["Type",types]], ft, "fRemT")+`</div>`;
   if(ft==="demandes"){
     return h+(dems.map(x=>{
-      const acts=x.sess
-        ? (()=>{const sr=CARDS.find(c=>c.kb==="session_fia"&&c.frm===x.frm&&c.col==="retrait")||CARDS.find(c=>c.kb==="session_fia"&&c.frm===x.frm);
-                return sr?`<a class="dlink" data-fiche="session::${sr.id}">Ouvrir la session</a>`:""})()
-        : x.a.map((a,i)=>`<button class="btn btn-s ${i===0?"p":""}" data-frmact="${encodeURIComponent(a+" : "+x.nom)}">${a}</button>`).join("");
-      return `<div class="frow"><div class="tx"><div class="tt">${x.t}</div><div class="sm"><a class="ilink" data-fiche="formateur::${x.frm}">${x.nom}</a> · ${x.d}</div></div><span class="dbtns">${acts}</span></div>`;
+      const acts=moi
+        ? (demandeAMoi(x)
+            ? `<button class="btn btn-s p" data-frmact="${encodeURIComponent("Dépôt du document : "+x.d)}">Déposer le document</button>`
+            : `<span class="chip warn">En attente de France IA</span>`)
+        : x.sess
+          ? (()=>{const sr=CARDS.find(c=>c.kb==="session_fia"&&c.frm===x.frm&&c.col==="retrait")||CARDS.find(c=>c.kb==="session_fia"&&c.frm===x.frm);
+                  return sr?`<a class="dlink" data-fiche="session::${sr.id}">Ouvrir la session</a>`:""})()
+          : x.a.map((a,i)=>`<button class="btn btn-s ${i===0?"p":""}" data-frmact="${encodeURIComponent(a+" : "+x.nom)}">${a}</button>`).join("");
+      const qui=moi?x.d:`<a class="ilink" data-fiche="formateur::${x.frm}">${x.nom}</a> · ${x.d}`;
+      return `<div class="frow"><div class="tx"><div class="tt">${x.t}</div><div class="sm">${qui}</div></div><span class="dbtns">${acts}</span></div>`;
     }).join("")||`<div class="lrow"><span class="sm">Aucune demande en attente.</span></div>`);
   }
   const list=REMONTEES.filter(r=>ft==="tout"||r.t===ft);
@@ -3833,13 +3843,18 @@ function remonteesSectionHtml(){
   return h;
 }
 
-/* Les demandes de tous les formateurs, rassemblées pour être traitées au même endroit. */
-function toutesDemandesFrm(){
-  return FORMATEURS.flatMap(k=>demandesDe(k).map(x=>Object.assign({},x,{frm:k,nom:FRM[k].nom})));
-}
+/* Le formateur connecté dans la maquette : ses écrans parlent de lui. */
+const FRM_MOI="Sarah K.";
+/* Les demandes sont une affaire de formateurs : personne d'autre n'en a. */
+function demandesDuFrm(k){ return demandesDe(k).map(x=>Object.assign({},x,{frm:k,nom:FRM[k].nom})); }
+function toutesDemandesFrm(){ return FORMATEURS.flatMap(k=>demandesDuFrm(k)); }
+/* De son côté, le formateur n'a de geste à faire que sur les documents qu'on lui réclame. */
+function demandeAMoi(x){ return x.t==="Document à fournir"; }
 /* Ce qui attend sur un onglet : ce qui se traite, jamais ce qui existe. */
 function tabCount(id){
-  if(id==="faq") return REMONTEES.filter(r=>r.st==="a_traiter").length+(S.role==="admin"?toutesDemandesFrm().length:0);
+  if(id==="faq") return REMONTEES.filter(r=>r.st==="a_traiter").length
+    +(S.role==="admin"?toutesDemandesFrm().length
+     :S.role==="formateur"?demandesDuFrm(FRM_MOI).filter(demandeAMoi).length:0);
   if(id==="anomalies") return Object.keys(ANO_VUES).reduce((t,v)=>t+anoCount(v),0);
   if(id==="actions") return mesTaches().filter(r=>r.u<=1).length;
   return 0;
