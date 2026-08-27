@@ -140,7 +140,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .rl-a{display:flex;gap:9px;font-size:11px;margin-left:auto;opacity:0;transition:opacity .12s;white-space:nowrap}
 .rl:hover .rl-a{opacity:1}
 .rl-a .ilink{font-size:11px}
-.rl-g{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);margin:14px 0 2px}
+.rl-g{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);margin:14px 0 2px;display:flex;align-items:center;gap:10px}
+.rl-g [contenteditable]{border-radius:4px;padding:1px 5px;margin-left:-5px}
+.rl-g [contenteditable]:hover{background:#f1f5f9}
+.rl-g [contenteditable]:focus{outline:none;background:var(--primary-50);color:var(--primary-dark)}
+.rl-g .ilink{font-size:10px;text-transform:none;letter-spacing:0;font-weight:600;opacity:0;transition:opacity .12s}
+.rl-g:hover .ilink{opacity:1}
 .rl-vide{font-size:12.5px;color:var(--ink-400);padding:10px 2px}
 .railsec.masq{opacity:.6}
 .railboard .col{flex:0 0 440px;min-width:440px}
@@ -662,6 +667,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .todobloc.done>summary .lbl{color:var(--ink-400);text-decoration:line-through}
 .todolist{padding:2px 0 6px 21px}
 .apbloc>summary .chip{margin-left:6px}
+.apchk{width:14px;height:14px;border:1.5px solid var(--ink-300);border-radius:4px;flex-shrink:0;position:relative}
+.apchk.on{background:var(--ok);border-color:var(--ok)}
+.apchk.on::after{content:"";position:absolute;left:2.5px;top:3px;width:7px;height:3.5px;border-left:1.8px solid #fff;border-bottom:1.8px solid #fff;transform:rotate(-45deg)}
 .docrow{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-600);padding:4px 0}
 .docrow .dot{width:6px;height:6px;border-radius:50%;background:var(--ok,#16a34a);flex-shrink:0}
 .docrow.off{color:var(--ink-400)}
@@ -1581,7 +1589,7 @@ tasks:{
   {t:"Admin France IA téléverse les preuves de l'apprenant sur Google Drive (automatique)",tPl:"Admin France IA téléverse les preuves de chaque apprenant sur Google Drive (automatique)",perAp:1,p:"fia",auto:1},
   {t:"Admin France IA déclare la sortie auprès de la CDC",tPl:"Admin France IA déclare la sortie de chaque apprenant auprès de la CDC",perAp:1,p:"fia",fin:["cpf"],fx:"carte_client",btn:"Déclarer la sortie"}],
  formation:[
-  {t:"Préparation de l'apprenant sur son espace",p:"client",resp:"formateur",apTodo:1},
+  {t:"Admin France IA vérifie que les apprenants ont réalisé leur to do",p:"fia",btn:"Voir l'avancement",kind2:"aptodo"},
   {t:"Admin France IA confirme que les émargements sont faits",p:"fia",btn:"Ouvrir les émargements Qualiobee"},
   {t:"Admin France IA confirme que les CPF sont inscrits à la certification",p:"fia",fin:["cpf"],btn:"Ouvrir WEDOF"}],
  absent:[
@@ -2185,7 +2193,7 @@ const S = {
   railAcc:{}, railColAcc:{}, railTkAcc:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
   fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", sortSess:"dt", sortSessDir:1, fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false,
-  appOpen:false, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null, resAdd:null, stepIx:null, fPers:"clients", fRes:"formateurs", fResV:"ressources"};
+  appOpen:false, apTodoFor:null, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null, resAdd:null, stepIx:null, fPers:"clients", fRes:"formateurs", fResV:"ressources"};
 
 const $ = s=>document.querySelector(s);
 (()=>{CARDS.filter(c=>c.waiting).forEach(c=>{(KB[c.kb].tasks[c.col]||[]).forEach((tk,i)=>{if(!tk.fin||tk.fin.includes(c.fin)){if(!tk.kind||tk.kind.includes(c.kind)){}}});
@@ -2446,14 +2454,13 @@ function taskHtml(card,colId,i,tk,ghost,forceDone){
       <div class="tl-card ${etat}">
         ${whoTag(card,tk,parts.who)}
         <div class="tl-t">${cap(parts.what)}</div>
-        ${tk.note?`<div class="tl-d">${tk.note}</div>`:""}
         <div class="tl-a">${tk.btn&&can?`<button class="tl-b p" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tl-b" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${can&&!tk.btn?`<button class="tl-b p" ${clic}>Marquer comme fait</button>`:""}${extras}${etat==="wait"?`<span class="tl-w">DELIV'IA attend le signal</span>`:""}</div>
       </div></div>`;
   } else {
     h+=`<div class="tl ${etat} ${mine?"mine":""}" ${clic} ${clic?"":'style="cursor:default"'}>
       <span class="tl-node"></span>
       <div class="tl-l">${whoTag(card,tk,parts.who)}<span class="lbl">${cap(parts.what)}</span>${tk.tpl?`<span class="tl-tpl" title="Un modèle de message est lié à cette tâche">modèle</span>`:""}</div>
-      ${tk.note&&!done?`<div class="tl-n">${tk.note}</div>`:""}</div>`;
+      </div>`;
   }
   if(multi){
     h+=`<div class="tl-sub">`+apsTk.map(a=>`<div class="tl-s">${a.nom}</div>`).join("")+`</div>`;
@@ -3228,6 +3235,28 @@ function newSessionModalHtml(){
     <div class="mactions"><button class="btn btn-s" data-close="1">Annuler</button><button class="btn btn-p" data-nssubmit="1">Créer la session</button></div>
   </div></div></div>`;
 }
+/* L'avancement des to do de l'espace apprenant, apprenant par apprenant : la vérification se fait
+   ici, sur une vue en lecture, pas en dépliant treize cases dans le kanban. */
+function apAvancement(ap,ix){
+  const items=apTodoItems();
+  const n=Math.min(items.length, 4+((ix*5)%(items.length-3)));
+  return {faits:n, total:items.length, items:items.map((it,j)=>({...it, done:j<n}))};
+}
+function apTodoModalHtml(){
+  const card=CARDS.find(c=>c.id===S.apTodoFor); if(!card) return "";
+  const aps=peopleFor(card).aps;
+  return `<div id="modal2"><div class="mbox" style="max-width:640px"><div class="mhead"><div class="row"><div class="t">To do de l'espace apprenant</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div><div class="s">${card.title}</div></div>
+  <div class="mbody">`
+  +(aps.length?aps.map((a,ix)=>{
+    const av=apAvancement(a,ix), k="apav-"+card.id+"-"+ix;
+    let last="";
+    return `<details class="accbloc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span><span class="tt">${a.nom}</span><span class="end"><span class="chip ${av.faits===av.total?"ok":"warn"}">${av.faits}/${av.total}</span></span></summary><div class="inner">`
+      +av.items.map(it=>{const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:"";last=it.ph;
+        return g+`<div class="lrow"><span class="apchk ${it.done?"on":""}"></span>${it.lbl}</div>`}).join("")
+      +`</div></details>`;
+  }).join(""):`<div class="lrow"><span class="sm">Aucun apprenant rattaché à cette carte.</span></div>`)
+  +`<div class="mactions"><button class="btn btn-s" data-close2="1">Fermer</button></div></div></div></div>`;
+}
 function demandesModalHtml(){
   const card=CARDS.find(c=>c.id===S.demandesFor); if(!card) return "";
   const list=DEMANDES_FRM[card.id]||[];
@@ -3581,8 +3610,6 @@ const TODO_AVANT=["Avant la session"], TODO_PENDANT=["Matin J1","Soir J1","Matin
   KB.session_frm.tasks.preparer.push(...parCol.preparer);
   KB.session_frm.tasks.animer.unshift(...parCol.animer);
 })();
-KB.session_fia.tasks.demarree.unshift({t:"ToDo session du formateur",p:"formateur",todoRef:{kb:"session_frm",col:"preparer"}});
-KB.session_fia.tasks.enformation.unshift({t:"ToDo session du formateur",p:"formateur",todoRef:{kb:"session_frm",col:"animer"}});
 /* avancement d'exemple : le formateur a déjà coché une partie de sa préparation */
 (()=>{ [["fs1","preparer",2],["fs1","animer",7],["fs2","preparer",3]].forEach(([cid,col,n])=>{
   const c=CARDS.find(x=>x.id===cid); if(!c) return;
@@ -3706,15 +3733,13 @@ function pageRail(){
     const masq=role!=="admin"&&railColMasquee(kb,role,c.id);
     let last="";
     let out=`<div class="fsec railsec ${masq?"masq":""}"><div class="sect-h">${c.label}<span class="n2">${tks.length}</span>${c.open?`<span class="n2">ouverture ${c.open}</span>`:""}${c.vide?`<span class="n2">étape terminale</span>`:""}
-      <span class="right railacts">${role==="admin"
-        ? `<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button><a class="ilink" data-colmove="${kb}::${c.id}::-1" title="Monter l'étape">↑</a><a class="ilink" data-colmove="${kb}::${c.id}::1" title="Descendre l'étape">↓</a><a class="ilink danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</a>`
-        : `<button class="btn btn-s" data-railcol="${kb}::${role}::${c.id}">${masq?"Rendre l'étape visible":"Masquer l'étape"}</button>`}</span></div>`;
+      <span class="right railacts">${role!=="admin"?`<button class="btn btn-s" data-railcol="${kb}::${role}::${c.id}">${masq?"Rendre l'étape visible":"Masquer l'étape"}</button>`:""}<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button><button class="btn btn-s" data-grpnew="${kb}::${c.id}">+ Sous-section</button><a class="ilink" data-colmove="${kb}::${c.id}::-1" title="Monter l'étape">↑</a><a class="ilink" data-colmove="${kb}::${c.id}::1" title="Descendre l'étape">↓</a><a class="ilink danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</a></span></div>`;
     out+=tks.map(tk=>{
       const ix=toutes.indexOf(tk);
       const nat=natureTk(tk);
       const respK=respCas(kb,tk,cas);
       const resp=parCas?respK:null;
-      const g=tk.grp&&tk.grp!==last?`<div class="rl-g">${tk.grp}</div>`:""; last=tk.grp||last;
+      const g=tk.grp&&tk.grp!==last?`<div class="rl-g"><span contenteditable="true" data-grpren="${kb}::${c.id}::${encodeURIComponent(tk.grp)}">${tk.grp}</span><a class="ilink danger" data-grpdel="${kb}::${c.id}::${encodeURIComponent(tk.grp)}">retirer</a></div>`:""; last=tk.grp||last;
       const sienne=role!=="admin"&&respK===ROLE_OWNS[role];
       const coche=role!=="admin"&&ROLE_OWNS[role]===tk.p&&!tk.auto&&acces==="plein"&&!masq;
       const cache=role!=="admin"&&railTkMasquee(kb,role,c.id,ix);
@@ -3728,7 +3753,7 @@ function pageRail(){
         ${nat[0]==="simple"?"":`<span class="rt-nat ${nat[0]}">${nat[1]}</span>`}
         ${tk.tpl?`<button class="rl-tpl" data-tpl="${encodeURIComponent(tk.t)}">template</button>`:""}
         ${coche&&!cache?`<span class="rl-c">${roleLbl} coche</span>`:""}
-        ${role==="admin"?`<span class="rl-a"><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::-1">↑</a><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::1">↓</a><a class="ilink" data-tkedit="${kb}::${c.id}::${ix}">Modifier</a><a class="ilink danger" data-tkdel="${kb}::${c.id}::${ix}">Supprimer</a></span>`:""}
+        <span class="rl-a"><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::-1">↑</a><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::1">↓</a><a class="ilink" data-tkedit="${kb}::${c.id}::${ix}">Modifier</a><a class="ilink danger" data-tkdel="${kb}::${c.id}::${ix}">Supprimer</a></span>
       </div>`;
     }).join("")||`<div class="rl-vide">${c.vide?"Aucune tâche attendue à cette étape.":"Aucune tâche dans ce cas."}</div>`;
     return out+`</div>`;
@@ -3755,7 +3780,7 @@ function tacheModalHtml(){
     ${parCas?`<div class="espin"><label>Cas d'application</label><div class="caswrap">`+CAS_FIN.map(([k,l])=>`<label class="casck"><input type="checkbox" data-tcas="${k}" ${(!tk.fin||tk.fin.includes(k))?"checked":""}> ${l}</label>`).join("")+`</div><div class="pd">Aucun coché revient à ne jamais afficher la tâche.</div></div>`:""}
     <div class="espin"><label>Template lié</label><select class="edin" data-tf="tpl"><option value="">Aucun</option>${TPL_CATS.flatMap(([,items])=>items).map(n=>`<option ${tk.tpl&&tk.tplNom===n?"selected":""}>${n}</option>`).join("")}</select>
       <a class="ilink" data-tplnew="1">Créer un template</a></div>
-    <div class="espin"><label>Note affichée sous la tâche</label><input class="edin" data-tf="note" value="${(tk.note||"").replace(/"/g,"&quot;")}" placeholder="Facultatif"></div>
+    <div class="espin"><label>Sous-section de l'étape</label><input class="edin" data-tf="grp" value="${(tk.grp||"").replace(/"/g,"&quot;")}" placeholder="Matin J1, Chemin 1 · absence justifiée… (facultatif)"></div>
     <div class="mactions">${m.i!=null?`<button class="btn btn-s danger" data-tkdel="${m.kb}::${m.col}::${m.i}">Supprimer</button>`:""}<button class="btn btn-s" data-close2="1">Annuler</button><button class="btn btn-p" data-tksave="1">Enregistrer</button></div>
   </div></div></div>`;
 }
@@ -4448,19 +4473,23 @@ function ficheSessionHtml(id){
   /* section 4 : apprenants */
   const inscs=CARDS.filter(i=>i.kb==="insc"&&(i.sess===c.sess||i.movedFrom===c.sess)).map(i=>({i,g:i.movedFrom===c.sess?3:sessionStatusGroup(i)})).sort((a,b)=>a.g-b.g);
   const GL=["Inscrits","En cours d'inscription","Lost","Changés de session","Réservations en cours (48 h)"];
-  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Apprenants <span class="n2">${inscs.length}</span><span class="right"><button class="btn btn-s" data-reserve="${c.id}">+ Réserver une place</button></span></div><div class="tblwrap"><table class="tbl"><thead><tr><th>Nom</th><th>Mode de paiement</th><th>Closeur / Setteur</th><th>Carte inscription</th></tr></thead><tbody>`;
+  h+=`<div class="fsec"><div class="sect-h">${ICO.user}Apprenants <span class="n2">${inscs.length}</span><span class="right"><button class="btn btn-s" data-reserve="${c.id}">+ Réserver une place</button></span></div><div class="tblwrap"><table class="tbl"><thead><tr><th>Nom</th><th>Mode de paiement</th><th>Closeur / Setteur</th><th>To do espace apprenant</th><th>Carte inscription</th></tr></thead><tbody>`;
   let lastG=-1;
   inscs.forEach(({i,g})=>{
-    if(g!==lastG){h+=`<tr class="tgrp2 ${g===4?"apart":""}"><td colspan="4">${GL[g]}</td></tr>`;lastG=g;}
+    if(g!==lastG){h+=`<tr class="tgrp2 ${g===4?"apart":""}"><td colspan="5">${GL[g]}</td></tr>`;lastG=g;}
     const {cl,aps}=peopleFor(i); const ap=aps[0];
     const moved=g===4;
     if(i.reserved){
-      h+=`<tr><td>${i.title}<div class="sm">Réservée jusqu'au ${fmtDT(i.expires)}${i.resNote?" · "+i.resNote:""}</div></td><td><span class="fintxt">À définir</span></td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td class="acts"><a class="ilink" data-prolong="${i.id}">Prolonger</a><a class="ilink danger" data-cancelres="${i.id}">Annuler</a></td></tr>`;
+      h+=`<tr><td>${i.title}<div class="sm">Réservée jusqu'au ${fmtDT(i.expires)}${i.resNote?" · "+i.resNote:""}</div></td><td><span class="fintxt">À définir</span></td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><span class="muted">—</span></td><td class="acts"><a class="ilink" data-prolong="${i.id}">Prolonger</a><a class="ilink danger" data-cancelres="${i.id}">Annuler</a></td></tr>`;
       return;
     }
-    h+=`<tr class="${g===2||g===3?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}${moved?`<div class="sm">Déplacée vers ${SESS[i.sess].lbl}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td><a class="ilink" data-open="${i.id}">${colLabel(i)}</a></td></tr>`;
+    h+=`<tr class="${g===2||g===3?"dim":""}"><td>${ap?`<a class="ilink" data-fiche="apprenant::${ap.id}">${ap.nom}</a>`:i.title}${cl&&cl.nom!==i.title?`<div class="sm">${cl.nom}</div>`:""}${moved?`<div class="sm">Déplacée vers ${SESS[i.sess].lbl}</div>`:""}</td><td>${badge(i.fin)}</td><td>${[i.closer,i.setter].filter(Boolean).join(" / ")}</td><td>${(()=>{
+      if(g!==0||!ap) return '<span class="muted">—</span>';
+      const av=apAvancement(ap,inscs.findIndex(x=>x.i.id===i.id));
+      return `<span class="chip ${av.faits===av.total?"ok":"warn"}">${av.faits}/${av.total}</span>`;
+    })()}</td><td><a class="ilink" data-open="${i.id}">${colLabel(i)}</a></td></tr>`;
   });
-  if(!inscs.length) h+=`<tr><td colspan="4" class="muted">Aucun apprenant inscrit.</td></tr>`;
+  if(!inscs.length) h+=`<tr><td colspan="5" class="muted">Aucun apprenant inscrit.</td></tr>`;
   h+=`</tbody></table></div></div>`;
   /* section 5 : publication ARD, visible dès que la session est publiée */
   if(c.col!=="brouillon"){
@@ -5303,6 +5332,7 @@ function render(){
   if(S.demandesFor) document.body.insertAdjacentHTML("beforeend", demandesModalHtml());
   if(S.switchFor) document.body.insertAdjacentHTML("beforeend", switchModalHtml());
   if(S.bibbyFor) document.body.insertAdjacentHTML("beforeend", bibbyModalHtml());
+  if(S.apTodoFor) document.body.insertAdjacentHTML("beforeend", apTodoModalHtml());
   if(S.lieuModal) document.body.insertAdjacentHTML("beforeend", lieuModalHtml());
   if(S.faqModal) document.body.insertAdjacentHTML("beforeend", faqModalHtml());
   if(S.tkEdit) document.body.insertAdjacentHTML("beforeend", tacheModalHtml());
@@ -5391,13 +5421,16 @@ document.addEventListener("click",e=>{
   if(tb){e.stopPropagation();const [c,col,i]=tb.dataset.tbtn.split("::");const cd=CARDS.find(x=>x.id===c);const tk=tasksFor(cd,col)[parseInt(i)];
     if(tk.kind2==="demandes"){S.demandesFor=c;S.demandesTask=[c,col,parseInt(i)];render();return}
     if(tk.kind2==="bibby"){S.bibbyFor=c;S.bibbyTask=[c,col,parseInt(i)];render();return}
+    if(tk.kind2==="aptodo"){S.apTodoFor=c;render();return}
     if(!taskState(cd,col,parseInt(i),tk)){toast(`<b>${tk.btn}</b> : ${cd.title}`);clickTask(c,col,parseInt(i));}return}
+  const gr=e.target.closest("[data-grpren]");
+  if(gr&&!e.target.closest("[data-grpdel]")){e.stopPropagation();return}
   const nf=e.target.closest(".navfold>summary");
   if(nf){const d=nf.parentElement;S.navFold[d.dataset.navfold]=!d.open}
   const ms=e.target.closest(".msec2>summary");
   if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
   if(e.target.id==="modal3"||e.target.closest("[data-close3]")){S.swFull=null;S.photos=null;render();return}
-  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.lieuModal=null;S.faqModal=null;S.espEdit=null;S.photos=null;S.photosEdit=null;S.tkEdit=null;S.tplNew=null;S.resNew=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
+  if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.apTodoFor=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.lieuModal=null;S.faqModal=null;S.espEdit=null;S.photos=null;S.photosEdit=null;S.tkEdit=null;S.tplNew=null;S.resNew=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
   const anoS=e.target.closest(".ano>summary");
   if(anoS){const d=anoS.parentElement;S.anoOpen=S.anoOpen||{};S.anoOpen[d.dataset.ano]=!d.open}
   const rapS=e.target.closest(".payrap>summary");
@@ -5410,7 +5443,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-resmenu],[data-resblocmove],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-colmove],[data-tkvis],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-resmenu],[data-resblocmove],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-colmove],[data-tkvis],[data-grpnew],[data-grpdel],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -5584,7 +5617,7 @@ document.addEventListener("click",e=>{
     if(cases.length){const coches=cases.filter(c=>c.checked).map(c=>c.dataset.tcas);
       tk.fin=coches.length===cases.length?null:coches;}
     const tpl=g("tpl").value; tk.tpl=tpl?1:0; tk.tplNom=tpl||null;
-    tk.note=(g("note").value||"").trim()||null;
+    tk.grp=(g("grp").value||"").trim()||null;
     if(m.i==null) KB[m.kb].tasks[m.col].push(tk);
     S.tkEdit=null;render();toast(`Tâche <b>${tk.t}</b> enregistrée.`);return}
   if(t.dataset.colnew){const kb=t.dataset.colnew;const id="etape"+(KB[kb].cols.length+1);
@@ -5595,6 +5628,13 @@ document.addEventListener("click",e=>{
     const nt=(d.tasks[col]||[]).length, lbl=(d.cols.find(c=>c.id===col)||{}).label||"";
     d.cols=d.cols.filter(c=>c.id!==col);delete d.tasks[col];render();
     toast(`Étape <b>${lbl}</b> supprimée${nt?` avec ses ${nt} tâche${nt>1?"s":""}`:""}.`);return}
+  if(t.dataset.grpnew){const [kb,col]=t.dataset.grpnew.split("::");
+    KB[kb].tasks[col]=KB[kb].tasks[col]||[];
+    KB[kb].tasks[col].push({t:"Nouvelle tâche",p:"fia",grp:"Nouvelle sous-section"});
+    render();toast("Sous-section ajoutée : renomme-la, puis range tes tâches dedans depuis « Modifier ».");return}
+  if(t.dataset.grpdel){const [kb,col,g]=t.dataset.grpdel.split("::");const nom=decodeURIComponent(g);
+    (KB[kb].tasks[col]||[]).forEach(tk=>{if(tk.grp===nom)tk.grp=null;});
+    render();toast(`Sous-section <b>${nom}</b> retirée : ses tâches restent à l'étape.`);return}
   if(t.dataset.colmove){const [kb,col,dir]=t.dataset.colmove.split("::");const cols=KB[kb].cols;
     const i=cols.findIndex(c=>c.id===col), j=i+parseInt(dir);
     if(i<0||j<0||j>=cols.length){toast("L'étape est déjà à cette extrémité du rail.");return}
@@ -5741,6 +5781,15 @@ document.addEventListener("click",e=>{
   if(t.dataset.open){
     S.histOpen=false; S.stepIx=null; S.modal=t.dataset.open;render();return}
 });
+document.addEventListener("blur",e=>{
+  const g=e.target.closest&&e.target.closest("[data-grpren]");
+  if(!g) return;
+  const [kb,col,anc]=g.dataset.grpren.split("::"); const avant=decodeURIComponent(anc);
+  const apres=(g.textContent||"").trim();
+  if(!apres||apres===avant) return;
+  (KB[kb].tasks[col]||[]).forEach(tk=>{if(tk.grp===avant)tk.grp=apres;});
+  render();toast(`Sous-section renommée en <b>${apres}</b>.`);
+},true);
 document.addEventListener("input",e=>{const ta=e.target.closest("[data-note]");if(!ta)return;const o=CLIENTS.find(c=>c.id===ta.dataset.note)||APPRENANTS.find(a=>a.id===ta.dataset.note)||CARDS.find(c=>c.id===ta.dataset.note);if(o)o.note=ta.value;});
 /* recherche globale */
 function openSearch(){$("#smodal").style.display="block";const i=$("#gsearchIn");i.value="";$("#gsearchRes").innerHTML="";setTimeout(()=>i.focus(),10);}
