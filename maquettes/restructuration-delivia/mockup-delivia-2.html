@@ -2757,14 +2757,19 @@ function infoFor(card){
 }
 /* le popup est en lecture : on modifie sur la fiche */
 function editPtr(card){
-  if(card.kb.startsWith("session")) return `<div class="editptr"><a class="ilink" data-fiche="session::${card.kb==="session_fia"?card.id:(CARDS.find(c=>c.kb==="session_fia"&&c.sess===card.sess)||{}).id||card.id}">Modifier → fiche session</a></div>`;
+  /* seul l'admin modifie une fiche : les autres y accèdent en lecture, sans qu'on leur
+     promette un droit qu'ils n'ont pas. */
+  const adm=S.role==="admin";
+  const lien=(t,id,quoi)=>`<div class="editptr"><a class="ilink" data-fiche="${t}::${id}">${adm?"Modifier → "+quoi:"Voir la "+quoi}</a></div>`;
+  if(card.kb.startsWith("session")) return lien("session", card.kb==="session_fia"?card.id:(CARDS.find(c=>c.kb==="session_fia"&&c.sess===card.sess)||{}).id||card.id, "fiche session");
   if(card.kb==="fact_com"){
     const u=COMPTES.find(x=>abrege(x.nom)===card.who);
-    return u?`<div class="editptr"><a class="ilink" data-fiche="compte::${u.id}">Modifier → fiche du compte</a></div>`:"";
+    return u&&adm?lien("compte",u.id,"fiche du compte"):"";
   }
   if(card.kb==="fact_frm") return "";
+  if(S.role==="formateur") return "";
   const {cl}=peopleFor(card);
-  return cl?`<div class="editptr"><a class="ilink" data-fiche="client::${cl.id}">Modifier → fiche client</a></div>`:"";
+  return cl?lien("client",cl.id,"fiche client"):"";
 }
 /* ce que le formateur a saisi pendant le coaching, consultable après coup */
 function coachingBlocHtml(card){
