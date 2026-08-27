@@ -149,10 +149,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .rl-g .ilink{font-size:10px;text-transform:none;letter-spacing:0;font-weight:600;opacity:0;transition:opacity .12s}
 .rl-g:hover .ilink{opacity:1}
 .rl-vide{font-size:12.5px;color:var(--ink-400);padding:10px 2px}
-.railsec.masq{opacity:.6}
-.railboard .col{flex:0 0 440px;min-width:440px}
-.railcol.masq{opacity:.55;border-style:dashed}
-.railcol.railnew{background:none;border-style:dashed;align-items:center;justify-content:center;min-height:120px}
 .rt-head{display:grid;grid-template-columns:96px 72px minmax(0,1fr);gap:10px;padding:0 4px 6px;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);border-bottom:1px solid var(--line-2);position:sticky;top:0;background:#fbfcfd;z-index:1}
 .rtask{display:grid;grid-template-columns:96px 72px minmax(0,1fr);gap:10px;padding:9px 4px;border-bottom:1px solid var(--line);font-size:12.5px;align-items:start}
 .rtask .rt-do{min-width:0}
@@ -571,9 +567,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .railacc{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:1px solid var(--line-2);border-radius:12px;padding:12px 15px;margin-bottom:14px}
 .railacc .ra-l{font-size:13px;color:var(--ink-700)}
 .railacc .ra-l b{color:var(--ink-900)}
-.railacc .ra-seg{margin-left:auto;display:flex;gap:4px;background:#f1f5f9;border-radius:9px;padding:3px}
-.railacc .ra-seg button{font-size:12px;font-weight:600;color:var(--ink-500);border-radius:7px;padding:5px 11px}
-.railacc .ra-seg button.on{background:#fff;color:var(--ink-900);box-shadow:var(--sh-carte)}
 .railacc.none{flex-direction:column;align-items:flex-start;gap:8px;border-style:dashed;padding:20px 18px}
 .railacc.none .ra-t{font-size:14.5px;font-weight:600;color:var(--ink-900)}
 .railacc.none .ra-s{font-size:13px;color:var(--ink-500);max-width:620px}
@@ -2196,7 +2189,7 @@ const APPRENANTS=[
 APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } });
 CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
 const S = {
-  railAcc:{}, railColAcc:{}, railTkAcc:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
+  railAcc:{}, railTkAcc:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
   fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", sortSess:"dt", sortSessDir:1, fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false,
   appOpen:false, apTodoFor:null, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null, resAdd:null, stepIx:null, fPers:"clients", fRes:"formateurs", fResV:"ressources"};
@@ -2396,51 +2389,8 @@ function prochaineTache(card,colId){
   return -1;
 }
 function apTodoItems(){ return TODO_APPRENANT.flatMap(([ph,its])=>its.map(l=>({ph,lbl:l}))); }
-/* les to do du formateur, lues sur SA carte : l'admin voit l'avancement réel, sans pouvoir cocher */
-function todoRefItems(card,tk){
-  const twin=CARDS.find(x=>x.kb===tk.todoRef.kb && x.sess===card.sess);
-  if(!twin) return [];
-  return tasksFor(twin,tk.todoRef.col).map((t,i)=>({lbl:t.t,ph:t.grp,lien:t.lien,done:!!S.checks[key(twin,tk.todoRef.col,i)]}))
-    .filter(x=>x.ph);
-}
-function todoRefHtml(card,colId,i,tk){
-  const items=todoRefItems(card,tk), k=key(card,colId,i);
-  if(!items.length) return `<div class="task other notmine" style="cursor:default"><span class="box"></span><span class="tx"><span class="lbl">${tk.t}</span></span></div>`;
-  const fait=items.filter(x=>x.done).length, tous=fait===items.length, ak="tref-"+k;
-  let last="";
-  return `<div class="tl ${tous?"ok":"todo"}"><span class="tl-node"></span><details class="todobloc ${tous?"done":""}" data-acc="${ak}" ${accKey(ak)?"open":""}>
-    <summary><span class="box ${tous?"on":""}"></span>${whoTag(card,tk,ACTEURS[tk.p]||"")}<span class="lbl">${tk.t}</span><span class="cnt3">${fait}/${items.length}</span><span class="chev">▸</span></summary>
-    <div class="todolist">`
-    +items.map(it=>{ const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:""; last=it.ph;
-      return g+`<div class="task other notmine ${it.done?"done":""}" style="cursor:default"><span class="box"></span><span class="tx"><span class="lbl">${it.lbl}</span></span></div>`;
-    }).join("")
-    +`</div></details></div>`;
-}
-function apTodoHtml(card,colId,i,tk,ghost){
-  const aps=peopleFor(card).aps, items=apTodoItems(), k=key(card,colId,i), can=canCheck(tk);
-  if(!aps.length) return `<div class="task other notmine" style="cursor:default"><span class="box"></span><span class="tx"><span class="lbl">${tk.t}</span></span></div>`;
-  return aps.map((a,ai)=>{
-    const kk=j=>k+"::"+ai+"::"+j;
-    const fait=items.filter((_,j)=>S.checks[kk(j)]).length, tous=fait===items.length;
-    const ak="apt-"+k+"-"+ai;
-    const certif = card.fin==="cpf" && !a.certif;
-    let last="";
-    return `<div class="tl ${tous?"ok":"todo"}"><span class="tl-node"></span><details class="todobloc apbloc ${tous?"done":""}" data-acc="${ak}" ${accKey(ak)?"open":""}>
-      <summary><span class="box ${tous?"on":""}"></span>${whoTag(card,tk,"Apprenant")}<span class="lbl">${a.nom} · espace apprenant</span>${certif?`<span class="chip err">certification non demandée</span>`:""}<span class="cnt3">${fait}/${items.length}</span><span class="chev">▸</span></summary>
-      <div class="todolist">`
-      +items.map((it,j)=>{
-        const g=it.ph!==last?`<div class="tgrp">${it.ph}</div>`:""; last=it.ph;
-        const d=!!S.checks[kk(j)];
-        return g+`<div class="task notmine ${d?"done":""} ${can?"":"other"}" ${can&&!ghost?`data-todoi="${card.id}::${colId}::${i}::${ai}-${j}"`:'style="cursor:default"'}>
-          <span class="box"></span><span class="tx"><span class="lbl">${it.lbl}</span></span></div>`;
-      }).join("")
-      +`</div></details></div>`;
-  }).join("");
-}
 function taskHtml(card,colId,i,tk,ghost,forceDone){
   const k=key(card,colId,i);
-  if(tk.apTodo) return apTodoHtml(card,colId,i,tk,ghost);
-  if(tk.todoRef) return todoRefHtml(card,colId,i,tk);
   const done=forceDone||(!ghost&&taskState(card,colId,i,tk));
   const can=canCheck(tk)&&!ghost&&!forceDone, mine=isMine(card,tk);
   const apsTk = tk.perAp ? peopleFor(card).aps : null;
@@ -2500,9 +2450,6 @@ function autoAttente(tk){ return !!tk.auto && !autoFaite(tk); }
 function taskState(card,colId,i,tk){
   if(autoFaite(tk)) return true;
   if(tk.sub&&card.ech) return card.ech.every(e=>e.st==="ok");
-  if(tk.todoRef){const its=todoRefItems(card,tk); return its.length>0 && its.every(x=>x.done);}
-  if(tk.apTodo){const k=key(card,colId,i), aps=peopleFor(card).aps;
-    return aps.length>0 && aps.every((_,ai)=>apTodoItems().every((_,j)=>S.checks[k+"::"+ai+"::"+j]));}
   return !!S.checks[key(card,colId,i)];
 }
 /* inscrits réels / en cours (dont réservations) / capacité d'une session */
@@ -3830,15 +3777,8 @@ function pageTemplates(){
   const f=S.fTpl||"Delivery";
   let h=`<div class="pagehead row"><h1>Templates</h1><button class="btn btn-s" data-tplnew="1">+ Nouveau template</button></div>`;
   h+=`<div class="tabsline">`+TPL_CATS.map(([c])=>`<button class="${f===c?"on":""}" data-chip="fTpl::${c}">${c}</button>`).join("")+`</div>`;
-  if(false){
-    h+=TODO_SESSION.map(([phase,items])=>`<div class="fsec"><div class="sect-h">${ICO.cap}${phase} <span class="n2">${items.length} à faire</span><span class="right"><button class="btn btn-s" data-frmact="${encodeURIComponent("Nouveau ToDo ajouté à la phase "+phase)}">+ Nouveau ToDo</button></span></div>`
-      +items.map(([lbl,src],i)=>`<div class="frow tplrow"><span class="sm" style="width:22px">${i+1}</span><div class="tx"><div class="tt">${lbl}</div></div>${src?`<a class="ilink" data-frmact="${encodeURIComponent("Lien "+src+" ouvert")}">${src}</a>`:""}<span class="sw on" data-frmact="${encodeURIComponent("ToDo désactivé pour les prochaines sessions")}"><i></i></span></div>`).join("")
-      +`</div>`).join("");
-    return h;
-  }
   const cat=TPL_CATS.find(([c])=>c===f)||TPL_CATS[0];
   const canal=n=>/WhatsApp|créneaux|attentes/i.test(n)?"WhatsApp":"Email";
-  const canaux=new Set(cat[1].map(canal));
   h+=`<div class="autolist">`+cat[1].map(n=>{
     const tp=tplFor(n), corps=(TPL_OVERRIDE[n]||tp.b||"").replace(/\s+/g," ").trim();
     return `<div class="autocard" data-tpl="${encodeURIComponent(n)}">
@@ -5474,7 +5414,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-resmenu],[data-resblocmove],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-colmove],[data-tkvis],[data-grpnew],[data-grpdel],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-resmenu],[data-resblocmove],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-colmove],[data-tkvis],[data-grpnew],[data-grpdel],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy2],[data-syncdrive],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -5595,10 +5535,6 @@ document.addEventListener("click",e=>{
     if((S.sortCli||"nom")===k) S.sortCliDir=(S.sortCliDir||1)*-1; else {S.sortCli=k;S.sortCliDir=1;}
     render();return}
   if(t.dataset.railopen){const p=t.dataset.railopen;S.rail={page:p,offre:railOffres(p)[0][0]};S.railVue="matrice";S.railRole="admin";S.railCas=null;render();return}
-  if(t.dataset.railacc){const [p,o,r,v]=t.dataset.railacc.split("::");S.railAcc[p+"::"+o+"::"+r]=v;render();
-    toast(v==="aucun"?`Rail retiré de la vision <b>${(RAIL_ROLES.find(x=>x[0]===r)||[])[1]}</b>.`:`Rail ouvert à <b>${(RAIL_ROLES.find(x=>x[0]===r)||[])[1]}</b> ${v==="lecture"?"en lecture seule":"avec ses tâches"}.`);return}
-  if(t.dataset.railcol){const [kb,r,col]=t.dataset.railcol.split("::");const k=kb+"::"+r+"::"+col;S.railColAcc[k]=!S.railColAcc[k];render();
-    toast(S.railColAcc[k]?"Étape masquée pour ce rôle.":"Étape rendue visible.");return}
   if(t.dataset.railback){S.rail=null;render();return}
   if(t.dataset.respage){S.resPage=t.dataset.respage;S.resPageEdit=null;S.fiche=null;S.modal=null;render();return}
   if(t.dataset.respageback){S.resPage=null;S.resPageEdit=null;render();return}
@@ -5779,7 +5715,6 @@ document.addEventListener("click",e=>{
   if(t.dataset.ardtoggle){const c=CARDS.find(x=>x.id===t.dataset.ardtoggle);c.ardVisible=c.ardVisible===false;toast(c.ardVisible?"Session visible sur ARD.":"Session masquée sur ARD.");render();return}
   if(t.dataset.espace){toast("Ouverture de l'espace client / apprenant dans un nouvel onglet.");return}
   if(t.dataset.delsession){if(confirm("Supprimer cette session ? Les inscriptions payées bloqueront la suppression dans la vraie application.")){const c=CARDS.find(x=>x.id===t.dataset.delsession);CARDS.splice(CARDS.indexOf(c),1);S.fiche=null;toast("Session supprimée.");render();}return}
-  if(t.dataset.copy){toast("Lien copié dans le presse-papier.");return}
   if(t.dataset.apptoggle){const [uid,aid]=t.dataset.apptoggle.split("::");const u=COMPTES.find(x=>x.id===uid);u.apps=u.apps||[];const ix=u.apps.indexOf(aid);if(ix>=0)u.apps.splice(ix,1);else u.apps.push(aid);render();return}
   if(t.dataset.syncdrive){toast("Synchronisation avec le Drive lancée : les preuves déposées hors DELIV'IA seront reconnues dans quelques minutes.");return}
   if(t.dataset.vcback){S.voirComme=null; S.voirQui=null; S.role=S.realRole; S.app="delivia"; S.fiche=null; S.modal=null; S.tab=DELIVIA_TABS[S.role][0][1][0][0]; S.fFact="cpf"; render(); return}
