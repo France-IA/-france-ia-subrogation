@@ -1825,6 +1825,10 @@ tasks:{
  payer:[{t:"Admin France IA règle la facture",p:"fia"}],
  termine:[]}},
 };
+/* Tant que l'inscription n'est pas validée, on est encore dans la vente : le closeur répond de
+   TOUTES les tâches de ces étapes, quel que soit le moyen de paiement et qui exécute le geste
+   (décision de Côme, 27/08/2026). */
+["recue","action","attente"].forEach(col=>(KB.insc.tasks[col]||[]).forEach(tk=>{ tk.resp="closer"; }));
 
 /* ════════════════════ ANOMALIES ════════════════════ */
 /* un type d'anomalie = un contrôle automatique (toutes les 6 h). v = le process où l'anomalie vit. */
@@ -2473,7 +2477,6 @@ function responsableOf(card,tk){
   const kb=card.kb;
   if(tk.p!=="client") return tk.p;
   if(kb.startsWith("session")||kb.startsWith("intra")||kb.startsWith("coaching")) return "fia";
-  if(["cpf","opco"].includes(card.fin)) return "fia";
   return "closer";
 }
 /* le responsable d'une tâche pour UN moyen de paiement donné : dans le paramétrage,
@@ -2482,7 +2485,6 @@ function respCas(kb,tk,cas){
   if(tk.resp) return tk.resp;
   if(tk.p!=="client") return tk.p;
   if(kb.startsWith("session")||kb.startsWith("intra")||kb.startsWith("coaching")) return "fia";
-  if(["cpf","opco"].includes(cas)) return "fia";
   return "closer";
 }
 /* le même couple, hors carte : dans le paramétrage on ne connaît pas le financement */
@@ -2490,7 +2492,7 @@ function respLabelKb(kb,tk){
   if(tk.resp) return ACTEURS[tk.resp]||tk.resp;
   if(tk.p!=="client") return ACTEURS[tk.p]||tk.p;
   if(kb.startsWith("session")||kb.startsWith("intra")||kb.startsWith("coaching")) return ACTEURS.fia;
-  return "Closeur, Admin si CPF ou OPCO";
+  return ACTEURS.closer;
 }
 /* l'étiquette d'une tâche : le responsable, puis celui qui agit quand ce n'est pas la même personne */
 function whoTag(card,tk,who){
