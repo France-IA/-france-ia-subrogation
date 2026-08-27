@@ -107,9 +107,24 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .pc-a{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--primary-dark)}
 .pc-fl{transition:transform .14s}
 .proccard:hover .pc-fl{transform:translateX(3px)}
-.rl{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;padding:9px 2px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-800);line-height:1.5}
-.rl:first-of-type{border-top:none}
-.rl.sienne{background:linear-gradient(90deg,var(--primary-50),transparent 60%);border-radius:7px;padding-left:8px;margin-left:-8px}
+.rl{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;padding:9px 2px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-900);line-height:1.5}
+.sect-h+.rl,.rl-g+.rl{border-top:none}
+.rl.pas .rl-t,.rl.pas .rl-ac{color:var(--ink-400)}
+.rl.pas .rl-ac{font-weight:500}
+.rl-b{width:15px;height:15px;border:1.5px solid var(--ink-300);border-radius:4px;flex:0 0 auto;align-self:center}
+.rl-oeil{width:22px;height:22px;border-radius:6px;color:var(--ink-400);display:flex;align-items:center;justify-content:center;flex:0 0 auto;align-self:center}
+.rl-oeil:hover{background:#f1f5f9;color:var(--ink-700)}
+.rl-oeil.off{color:var(--ink-300)}
+.rl.off .rl-t,.rl.off .rl-ac{color:var(--ink-300);text-decoration:line-through;text-decoration-color:var(--ink-300)}
+.rl.off .rl-r,.rl.off .rt-nat,.rl.off .rl-tpl{opacity:.45}
+.raillg{display:flex;align-items:center;gap:14px;margin-left:auto;font-size:11.5px;color:var(--ink-500)}
+.raillg span{display:inline-flex;align-items:center;gap:6px}
+.raillg .lg{width:9px;height:9px;border-radius:3px;display:inline-block}
+.raillg .lg.cablee{background:#a7f3d0}
+.raillg .lg.tpl{background:#fcd34d}
+.raillg .lg.auto{background:#c4b5fd}
+.railacts{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.railacts .ilink{font-size:12px}
 .rl-r{flex:0 0 auto;font-size:11.5px;font-weight:600;border-radius:5px;padding:2px 9px;white-space:nowrap}
 .rl-r.fia{background:#eef2ff;color:#4338ca}
 .rl-r.closer{background:#ecfdf5;color:#047857}
@@ -118,6 +133,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .rl-r.client{background:#fff7ed;color:#c2410c}
 .rl-r.multi{background:#f1f5f9;color:var(--ink-500)}
 .rl-t{flex:1;min-width:200px}
+.rl-ac{font-weight:600;color:var(--ink-900)}
 .rl-tpl{font-size:10.5px;color:#92400e;background:var(--warn-50);border:1px solid transparent;border-radius:4px;padding:1px 7px}
 .rl-tpl:hover{border-color:#fcd34d}
 .rl-c{font-size:10.5px;color:var(--primary-dark);background:var(--primary-50);border-radius:4px;padding:1px 7px}
@@ -976,8 +992,10 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tl-l{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 9px;font-size:13.5px;line-height:1.5;color:var(--ink-700);padding:1px 0}
 .tl.ok .tl-l{color:var(--ink-400)}
 .tl.ok .tl-l .lbl{text-decoration:line-through;text-decoration-color:var(--ink-300)}
-.tl.todo .tl-l{color:var(--ink-500)}
-.tl.todo.mine .tl-l{color:var(--ink-800)}
+.tl.todo .tl-l{color:var(--ink-400)}
+.tl.todo.mine .tl-l{color:var(--ink-900)}
+.tl.todo .tl-l .who{color:var(--ink-300)}
+.tl.todo.mine .tl-l .who{color:var(--ink-500)}
 .tl-l .who,.tl-card .who{font-size:11.5px;font-weight:600;color:var(--ink-400);background:none;padding:0;white-space:nowrap}
 .tl-l .who.duo2 b,.tl-card .who.duo2 b{color:var(--ink-500)}
 .tl.todo.mine .tl-l .who.duo2 b{color:var(--ink-700)}
@@ -2164,7 +2182,7 @@ const APPRENANTS=[
 APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } });
 CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
 const S = {
-  railAcc:{}, railColAcc:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
+  railAcc:{}, railColAcc:{}, railTkAcc:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
   fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", sortSess:"dt", sortSessDir:1, fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
   checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false,
   appOpen:false, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null, resAdd:null, stepIx:null, fPers:"clients", fRes:"formateurs", fResV:"ressources"};
@@ -2338,7 +2356,9 @@ function evRow(ev,state){ /* state : done | now | later */
   for(const base in amorce) amorce[base].forEach((n,ai)=>{ for(let j=0;j<n;j++) S.checks[`${base}::${ai}::${j}`]=true; });
 })();
 /* « Admin France IA déclare la sortie » → l'acteur d'un côté, l'action de l'autre */
-const ACTEUR_PREFIXES=[["Admin France IA","France IA"],["France IA","France IA"],["Formateur","Formateur"],["Closeur","Closeur"],["Setteur","Setteur"],["Client","Client"],["Apprenant","Apprenant"]];
+const ACTEUR_PREFIXES=[["Admin France IA","Admin"],["France IA","Admin"],["Admin","Admin"],["Formateur","Formateur"],["Closeur","Closeur"],["Setteur","Setteur"],["Client","Client"],["Apprenant","Apprenant"]];
+/* Après l'étiquette du responsable, la phrase recommence : elle prend sa majuscule. */
+function cap(t){ return t?t.charAt(0).toUpperCase()+t.slice(1):t; }
 function splitActeur(tk,lbl){
   const t=lbl||tk.t;
   for(const pair of ACTEUR_PREFIXES){
@@ -2425,14 +2445,14 @@ function taskHtml(card,colId,i,tk,ghost,forceDone){
     h+=`<div class="tl ${etat}"><span class="tl-node"></span>
       <div class="tl-card ${etat}">
         ${whoTag(card,tk,parts.who)}
-        <div class="tl-t">${parts.what}</div>
+        <div class="tl-t">${cap(parts.what)}</div>
         ${tk.note?`<div class="tl-d">${tk.note}</div>`:""}
         <div class="tl-a">${tk.btn&&can?`<button class="tl-b p" data-tbtn="${card.id}::${colId}::${i}">${tk.btn}</button>`:""}${tk.btnAuto&&!ghost?`<button class="tl-b" data-idlink="${card.id}::${tk.kind3}">${tk.btnAuto}</button>`:""}${can&&!tk.btn?`<button class="tl-b p" ${clic}>Marquer comme fait</button>`:""}${extras}${etat==="wait"?`<span class="tl-w">DELIV'IA attend le signal</span>`:""}</div>
       </div></div>`;
   } else {
     h+=`<div class="tl ${etat} ${mine?"mine":""}" ${clic} ${clic?"":'style="cursor:default"'}>
       <span class="tl-node"></span>
-      <div class="tl-l">${whoTag(card,tk,parts.who)}<span class="lbl">${parts.what}</span>${tk.tpl?`<span class="tl-tpl" title="Un modèle de message est lié à cette tâche">modèle</span>`:""}</div>
+      <div class="tl-l">${whoTag(card,tk,parts.who)}<span class="lbl">${cap(parts.what)}</span>${tk.tpl?`<span class="tl-tpl" title="Un modèle de message est lié à cette tâche">modèle</span>`:""}</div>
       ${tk.note&&!done?`<div class="tl-n">${tk.note}</div>`:""}</div>`;
   }
   if(multi){
@@ -2525,7 +2545,7 @@ function respLabelKb(kb,tk){
   if(tk.p==="formateur" && !kb.endsWith("_frm")) return ACTEURS.fia;
   if(tk.p!=="client") return ACTEURS[tk.p]||tk.p;
   if(kb.startsWith("session")||kb.startsWith("intra")||kb.startsWith("coaching")) return ACTEURS.fia;
-  return "Closeur, France IA si CPF ou OPCO";
+  return "Closeur, Admin si CPF ou OPCO";
 }
 /* l'étiquette d'une tâche : le responsable, puis celui qui agit quand ce n'est pas la même personne */
 function whoTag(card,tk,who){
@@ -3609,9 +3629,11 @@ function railAcces(page,offre,role){
   return !c?"aucun":(c.acces==="lecture"?"lecture":"plein");
 }
 function railColMasquee(kb,role,colId){ return !!S.railColAcc[kb+"::"+role+"::"+colId]; }
+/* Toutes les tâches existent partout : ce qui change d'un rôle à l'autre, c'est ce qu'il en voit. */
+function railTkMasquee(kb,role,colId,ix){ return !!S.railTkAcc[kb+"::"+role+"::"+colId+"::"+ix]; }
 const CAS_FIN=[["cpf","CPF"],["fp_ent_man","Ent. mandat"],["fp_ent_vir","Ent. virement"],["opco","OPCO"],["fp_part","Particulier"]];
 const CAS_COURT={cpf:"CPF",fp_ent_man:"Mandat",fp_ent_vir:"Virement",opco:"OPCO",fp_part:"Particulier"};
-const ACTEURS={fia:"France IA",closer:"Closeur",setter:"Setteur",formateur:"Formateur",client:"Client"};
+const ACTEURS={fia:"Admin",closer:"Closeur",setter:"Setteur",formateur:"Formateur",client:"Client"};
 const ACTIONS_CABLEES=["Générer la facture","Générer le devis","Générer la convention","Générer le mandat de prélèvement","Déclarer l'entrée WEDOF","Déclarer la sortie WEDOF","Lancer la session Qualiobee","Créer le groupe WhatsApp","Ouvrir les émargements Qualiobee","Envoyer la demande de signature","Ouvrir EDOF","Déposer un fichier"];
 /* une étape terminale ne porte aucune tâche : c'est voulu, le contrôle ne doit pas le reprocher */
 ["terminee","termine","final","lost"].forEach(id=>Object.values(KB).forEach(d=>{
@@ -3687,28 +3709,36 @@ function pageRail(){
 
   /* Le rail se lit de haut en bas, étape après étape : le moyen de paiement se choisit
      dans le filtre, jamais case par case dans un tableau. */
-  h+=`<div class="fbar">`+(parCas?chips([["Moyen de paiement",CAS_FIN]], cas, "railCas"):`<span class="sm">Ce rail ne dépend pas du moyen de paiement : toutes les cartes voient les mêmes tâches.</span>`)+`</div>`;
+  h+=`<div class="fbar">`+(parCas?chips([["Moyen de paiement",CAS_FIN]], cas, "railCas"):`<span class="sm">Ce rail ne dépend pas du moyen de paiement.</span>`)
+    +`<div class="raillg"><span><i class="lg cablee"></i>Action</span><span><i class="lg tpl"></i>Template</span><span><i class="lg auto"></i>Automatique</span></div></div>`;
   h+=d.cols.filter(c=>!(role!=="admin"&&railColMasquee(kb,role,c.id))).map(c=>{
     const toutes=d.tasks[c.id]||[];
     const tks=toutes.filter(tk=>!parCas||!tk.fin||tk.fin.includes(cas));
     const masq=role!=="admin"&&railColMasquee(kb,role,c.id);
     let last="";
     let out=`<div class="fsec railsec ${masq?"masq":""}"><div class="sect-h">${c.label}<span class="n2">${tks.length}</span>${c.open?`<span class="n2">ouverture ${c.open}</span>`:""}${c.vide?`<span class="n2">étape terminale</span>`:""}
-      <span class="right">${role==="admin"
-        ? `<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button>${toutes.length?"":`<button class="btn btn-s danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</button>`}`
-        : `<button class="btn btn-s" data-railcol="${kb}::${role}::${c.id}">${masq?"Rendre visible":"Masquer pour "+roleLbl.toLowerCase()}</button>`}</span></div>`;
+      <span class="right railacts">${role==="admin"
+        ? `<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button><a class="ilink" data-colmove="${kb}::${c.id}::-1" title="Monter l'étape">↑</a><a class="ilink" data-colmove="${kb}::${c.id}::1" title="Descendre l'étape">↓</a><a class="ilink danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</a>`
+        : `<button class="btn btn-s" data-railcol="${kb}::${role}::${c.id}">${masq?"Rendre l'étape visible":"Masquer l'étape"}</button>`}</span></div>`;
     out+=tks.map(tk=>{
       const ix=toutes.indexOf(tk);
       const nat=natureTk(tk);
-      const resp=parCas?respCas(kb,tk,cas):null;
+      const respK=respCas(kb,tk,cas);
+      const resp=parCas?respK:null;
       const g=tk.grp&&tk.grp!==last?`<div class="rl-g">${tk.grp}</div>`:""; last=tk.grp||last;
-      const sienne=role!=="admin"&&ROLE_OWNS[role]===tk.p&&!tk.auto&&acces==="plein"&&!masq;
-      return g+`<div class="rl ${sienne?"sienne":""}">
-        <span class="rl-r ${resp||"multi"}">${resp?ACTEURS[resp]:respLabelKb(kb,tk)}</span>
-        <span class="rl-t">${tk.t}</span>
+      const sienne=role!=="admin"&&respK===ROLE_OWNS[role];
+      const coche=role!=="admin"&&ROLE_OWNS[role]===tk.p&&!tk.auto&&acces==="plein"&&!masq;
+      const cache=role!=="admin"&&railTkMasquee(kb,role,c.id,ix);
+      const sp=splitActeur(tk);
+      const acteur=ACTEURS[tk.p]||sp.who;
+      const respL=resp?ACTEURS[resp]:respLabelKb(kb,tk);
+      return g+`<div class="rl ${role!=="admin"&&!sienne?"pas":""} ${cache?"off":""}">
+        ${role==="admin"?`<span class="rl-b"></span>`:`<button class="rl-oeil ${cache?"off":""}" data-tkvis="${kb}::${role}::${c.id}::${ix}" title="${cache?roleLbl+" ne voit pas cette tâche":roleLbl+" voit cette tâche"}">${cache?ICO.eyeoff:ICO.eye}</button>`}
+        <span class="rl-r ${resp||"multi"}">${respL}</span>
+        <span class="rl-t">${respL!==acteur?`<b class="rl-ac">${acteur}</b> ${sp.what}`:cap(sp.what)}</span>
         ${nat[0]==="simple"?"":`<span class="rt-nat ${nat[0]}">${nat[1]}</span>`}
         ${tk.tpl?`<button class="rl-tpl" data-tpl="${encodeURIComponent(tk.t)}">template</button>`:""}
-        ${sienne?`<span class="rl-c">${roleLbl} coche</span>`:""}
+        ${coche&&!cache?`<span class="rl-c">${roleLbl} coche</span>`:""}
         ${role==="admin"?`<span class="rl-a"><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::-1">↑</a><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::1">↓</a><a class="ilink" data-tkedit="${kb}::${c.id}::${ix}">Modifier</a><a class="ilink danger" data-tkdel="${kb}::${c.id}::${ix}">Supprimer</a></span>`:""}
       </div>`;
     }).join("")||`<div class="rl-vide">${c.vide?"Aucune tâche attendue à cette étape.":"Aucune tâche dans ce cas."}</div>`;
@@ -4110,6 +4140,7 @@ const ICO={
  refresh:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>',
  search:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
  lock:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+ eyeoff:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.24A9.1 9.1 0 0 1 12 4c6.5 0 10 8 10 8a18 18 0 0 1-2.16 3.19M6.6 6.6A18 18 0 0 0 2 12s3.5 8 10 8a9 9 0 0 0 5.4-1.6"/><path d="M14.1 14.1a3 3 0 1 1-4.2-4.2"/><path d="m2 2 20 20"/></svg>',
  eye:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
  out:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>',
  mail:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>',
@@ -5390,7 +5421,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-resmenu],[data-resblocmove],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-resmenu],[data-resblocmove],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-railacc],[data-railcol],[data-colmove],[data-tkvis],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbnew],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy],[data-syncdrive],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -5572,7 +5603,16 @@ document.addEventListener("click",e=>{
   if(t.dataset.coldel){const [kb,col]=t.dataset.coldel.split("::");const d=KB[kb];
     const n=CARDS.filter(c=>c.kb===kb&&c.col===col).length;
     if(n){toast(`Impossible : ${n} carte(s) vivent à cette étape. Une étape occupée s'archive, elle ne se supprime pas.`);return}
-    d.cols=d.cols.filter(c=>c.id!==col);delete d.tasks[col];render();toast("Étape supprimée.");return}
+    const nt=(d.tasks[col]||[]).length, lbl=(d.cols.find(c=>c.id===col)||{}).label||"";
+    d.cols=d.cols.filter(c=>c.id!==col);delete d.tasks[col];render();
+    toast(`Étape <b>${lbl}</b> supprimée${nt?` avec ses ${nt} tâche${nt>1?"s":""}`:""}.`);return}
+  if(t.dataset.colmove){const [kb,col,dir]=t.dataset.colmove.split("::");const cols=KB[kb].cols;
+    const i=cols.findIndex(c=>c.id===col), j=i+parseInt(dir);
+    if(i<0||j<0||j>=cols.length){toast("L'étape est déjà à cette extrémité du rail.");return}
+    const b=cols[i];cols[i]=cols[j];cols[j]=b;render();toast("Ordre des étapes modifié.");return}
+  if(t.dataset.tkvis){const k=t.dataset.tkvis;S.railTkAcc[k]=!S.railTkAcc[k];
+    const r=(RAIL_ROLES.find(x=>x[0]===k.split("::")[1])||[])[1]||"";
+    render();toast(S.railTkAcc[k]?`Tâche masquée pour ${r.toLowerCase()}.`:`Tâche rendue visible pour ${r.toLowerCase()}.`);return}
   if(t.dataset.resnew!==undefined){S.resNew=t.dataset.resnew||"formateurs";render();return}
   if(t.dataset.ressave){const [cle]=String(S.resNew).split("::");
     const g=i=>document.querySelectorAll("#modal2 .mbody input, #modal2 .mbody select")[i];
