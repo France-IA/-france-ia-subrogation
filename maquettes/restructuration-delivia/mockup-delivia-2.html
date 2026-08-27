@@ -2410,6 +2410,17 @@ function openDateStr(card,col){
   const dt=new Date(base+"T12:00:00"); dt.setDate(dt.getDate()+off);
   return "le "+dt.toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
 }
+/* Sur une facture de commission, chaque ligne nomme un client ou un apprenant : son nom mène à sa fiche. */
+function lienLigneFacture(txt){
+  const i=String(txt).lastIndexOf(" · ");
+  if(i<0) return txt;
+  const avant=txt.slice(0,i+3), nom=txt.slice(i+3);
+  const cl=CLIENTS.find(c=>c.nom===nom);
+  if(cl) return avant+`<a class="ilink" data-fiche="client::${cl.id}">${nom}</a>`;
+  const ap=APPRENANTS.find(a=>a.nom===nom);
+  if(ap) return avant+`<a class="ilink" data-fiche="apprenant::${ap.id}">${nom}</a>`;
+  return txt;
+}
 /* Deux natures d'automatisme, que le libellé distingue déjà :
    « (automatique) » = DELIV'IA le fait en entrant dans l'étape, donc c'est fait ;
    « (détecté automatiquement) » = DELIV'IA attend un signal du dehors, donc ça reste en attente. */
@@ -2672,7 +2683,7 @@ function modalHtml(){
   if(card.lines){
     const tot=card.lines.reduce((a,l)=>a+parseInt(l[1].replace(/\D/g,"")||0),0);
     h+=`<div class="mpanel"><div class="msec" style="margin-top:0">Lignes de la facture </div><div class="lines" style="border-top:none;padding-top:0">`
-      +card.lines.map((l,ix)=>`<div class="ln ${card.newLine&&ix===card.lines.length-1?"new":""}"><span class="k">${l[0]}</span><span>${l[1]}</span></div>`).join("")
+      +card.lines.map((l,ix)=>`<div class="ln ${card.newLine&&ix===card.lines.length-1?"new":""}"><span class="k">${lienLigneFacture(l[0])}</span><span>${l[1]}</span></div>`).join("")
       +`<div class="tot"><span>Total</span><span>${tot.toLocaleString("fr-FR")} €</span></div></div></div>`;
   }
   /* La note d'abord : elle ne doit jamais se lire après la liste des tâches */
@@ -3637,7 +3648,7 @@ function pageRail(){
       const nat=natureTk(tk);
       const respK=respCas(kb,tk,cas);
       const resp=parCas?respK:null;
-      const g=tk.grp&&tk.grp!==last?`<div class="rl-g"><span contenteditable="true" data-grpren="${kb}::${c.id}::${encodeURIComponent(tk.grp)}">${tk.grp}</span><a class="ilink danger" data-grpdel="${kb}::${c.id}::${encodeURIComponent(tk.grp)}">retirer</a></div>`:""; last=tk.grp||last;
+      const g=tk.grp&&tk.grp!==last?`<div class="rl-g"><span contenteditable="true" data-grpren="${kb}::${c.id}::${encodeURIComponent(tk.grp)}">${tk.grp}</span><a class="ilink" data-grpmove="${kb}::${c.id}::${encodeURIComponent(tk.grp)}::-1" title="Monter la sous-section">↑</a><a class="ilink" data-grpmove="${kb}::${c.id}::${encodeURIComponent(tk.grp)}::1" title="Descendre la sous-section">↓</a><a class="ilink danger" data-grpdel="${kb}::${c.id}::${encodeURIComponent(tk.grp)}">retirer</a></div>`:""; last=tk.grp||last;
       const sienne=role!=="admin"&&respK===ROLE_OWNS[role];
       const coche=role!=="admin"&&ROLE_OWNS[role]===tk.p&&!tk.auto&&acces==="plein"&&!masq;
       const cache=role!=="admin"&&railTkMasquee(kb,role,c.id,ix);
@@ -4301,9 +4312,9 @@ function ficheFormateurHtml(key){
     +`</div></details>`;
   /* 4 · onboarding et documents administratifs, repliés */
   const ko="frm-onb-"+key;
-  const faitsF=f.onbFaits||0, reste=ONB_FRM.length-faitsF;
-  h+=`<details class="accbloc" data-acc="${ko}" ${accKey(ko)?"open":""}><summary><span class="chev">▶</span><span class="tt">Onboarding</span><span class="end">${reste?`<span class="chip warn">${reste} à faire</span>`:`<span class="chip ok">complet</span>`}</span></summary><div class="inner">`
-    +ONB_FRM.map(([lbl],i)=>`<div class="lrow">${lbl}<span class="chip ${i<faitsF?"ok":"warn"}">${i<faitsF?"fait":"à faire"}</span></div>`).join("")
+  const faitsF=onbFaitsDe("formateurs",key), reste=faitsF.filter(x=>!x).length;
+  h+=`<details class="accbloc" data-acc="${ko}" ${accKey(ko)?"open":""}><summary><span class="chev">▶</span><span class="tt">Parcours d'arrivée</span><span class="end">${reste?`<span class="chip warn">${reste} à faire</span>`:`<span class="chip ok">complet</span>`}</span></summary><div class="inner">`
+    +onbTimelineHtml("formateurs",faitsF)
     +`<div class="subh" style="margin-top:14px">Documents administratifs</div>`
     +DOCS_FRM.map(([k,lbl])=>{const st=(f.docsEtat||{})[k]; return `<div class="lrow">${lbl}<span class="chip ${!st?"warn":/attente/.test(st)?"warn":"ok"}">${st||"non déposé"}</span></div>`}).join("")
     +`</div></details>`;
@@ -4324,6 +4335,20 @@ function ficheCompteHtml(id){
     <div class="fh-right">${editBtns("compte",u.id)}<button class="btn btn-s">Ré-inviter</button><button class="btn btn-s danger">Désactiver</button></div></div>
   <div class="idgrid">${fld("Nom",u.nom,"nom",u)}${fld("Email",u.email,"email",u)}${fld("Téléphone",u.tel,"tel",u)}${fld("Rôle",ROLES[u.role])}</div>
   <div class="idchips${S.editing?" editing":""}"><span class="lbl">Identifiants techniques</span>${idFld("ghl_user_id","ghl",u)}${u.role==="admin"?idFld("qualiobee_user_id","qlb",u):""}</div></div>`;
+  /* le parcours d'arrivée, lu dans la même liste que la page Ressources & Onboarding */
+  const popC=onbPopDuRole(u.role), faitsC=onbFaitsDe(popC,u.id);
+  const resteC=faitsC.filter(x=>!x).length, kc="cpt-onb-"+u.id;
+  h+=`<details class="accbloc" data-acc="${kc}" ${accKey(kc)?"open":""}><summary><span class="chev">▶</span><span class="tt">Parcours d'arrivée</span><span class="end">${resteC?`<span class="chip warn">${resteC} à faire</span>`:`<span class="chip ok">complet</span>`}</span></summary><div class="inner">`
+    +onbTimelineHtml(popC,faitsC)+`</div></details>`;
+  /* ses factures mensuelles : les cartes du rail Facturation closeur et setteur */
+  if(u.role==="closer"||u.role==="setter"){
+    const facts=CARDS.filter(c=>c.kb==="fact_com"&&c.who===abrege(u.nom)), kfc="cpt-fact-"+u.id;
+    h+=`<details class="accbloc" data-acc="${kfc}" ${accKey(kfc)?"open":""}><summary><span class="chev">▶</span><span class="tt">Factures</span><span class="end"><span class="sm">${facts.length}</span></span></summary><div class="inner">`
+      +(facts.length
+        ? `<div class="cardgrid">`+facts.map(c=>cardHtml(c, KB.fact_com.cols.find(x=>x.id===c.col), {})).join("")+`</div>`
+        : `<div class="lrow"><span class="sm">Aucune facture pour l'instant.</span></div>`)
+      +`</div></details>`;
+  }
   /* droits d'accès : seulement pour l'interne, un externe n'a que son propre espace */
   if(u.role!=="admin") return h;
   h+=`<div class="fsec"><div class="sect-h">${ICO.eye}Applications de la plateforme</div>`;
@@ -4811,13 +4836,29 @@ const ONBOARDING={
           ["Process",["Tour des process avec l'équipe"]]],
 };
 const ONB_POPS={formateurs:"Formateurs",closeurs:"Closeurs",setteurs:"Setteurs",interne:"Interne"};
+/* Un seul parcours par population : la page Ressources & Onboarding et les fiches lisent la même liste. */
+function onbEtapes(pop){ return (ONBOARDING[pop]||[]).flatMap(([,its])=>its); }
+function onbPopDuRole(role){ return role==="closer"?"closeurs":role==="setter"?"setteurs":"interne"; }
+function onbGens(pop){
+  const etapes=onbEtapes(pop);
+  if(pop==="formateurs") return FORMATEURS.map(k=>({id:k, nom:FRM[k].nom, faits:etapes.map((_,j)=>j<(FRM[k].onbFaits||0)), fiche:"formateur::"+k}));
+  const role=pop==="interne"?"admin":pop==="closeurs"?"closer":"setter";
+  return COMPTES.filter(u=>u.role===role).map((u,i)=>({id:u.id, nom:u.nom, faits:etapes.map((_,j)=>j<=((i+3)%(etapes.length+1))-1), fiche:"compte::"+u.id}));
+}
+function onbFaitsDe(pop,id){ const g=onbGens(pop).find(x=>x.id===id); return g?g.faits:onbEtapes(pop).map(()=>false); }
+/* où en est une personne : ses sections, un nœud par to do, le même dessin que dans une carte */
+function onbTimelineHtml(pop,faits){
+  let ix=0;
+  return `<div class="tlist">`+(ONBOARDING[pop]||[]).map(([fam,items])=>
+    `<div class="tl-g">${fam}</div>`+items.map(lbl=>{
+      const ok=faits[ix++];
+      return `<div class="tl ${ok?"ok":"todo"}"><span class="tl-node"></span><div class="tl-l"><span class="lbl">${lbl}</span></div></div>`;
+    }).join("")).join("")+`</div>`;
+}
 function onboardingHtml(pop){
   const secs=ONBOARDING[pop]||[];
-  const etapes=secs.flatMap(([,its])=>its);
-  const gens = pop==="formateurs"
-    ? FORMATEURS.map(k=>({nom:FRM[k].nom, faits:etapes.map((_,j)=>j<(FRM[k].onbFaits||0)), fiche:"formateur::"+k}))
-    : COMPTES.filter(u=>pop==="interne"?u.role==="admin":u.role===(pop==="closeurs"?"closer":"setter"))
-        .map((u,i)=>({nom:u.nom, faits:etapes.map((_,j)=>j<=((i+3)%(etapes.length+1))-1), fiche:"compte::"+u.id}));
+  const etapes=onbEtapes(pop);
+  const gens=onbGens(pop);
   /* d'abord où en est chacun, ensuite le paramétrage du parcours */
   let h="";
   const akp="onbparam-"+pop;
@@ -4842,13 +4883,7 @@ function onboardingHtml(pop){
       ${n===etapes.length?`<span class="chip ok">complet</span>`:`<span class="sm">${reste.length} à faire</span>`}
       <a class="ilink" data-fiche="${g.fiche}">Fiche</a></summary>
       <div class="inner">`
-      +`<div class="tlist">`+secs.map(([fam,items])=>{
-        const base=etapes.indexOf(items[0]);
-        return `<div class="tl-g">${fam}</div>`+items.map((lbl,ii)=>{
-          const ok=g.faits[base+ii];
-          return `<div class="tl ${ok?"ok":"todo"}"><span class="tl-node"></span><div class="tl-l"><span class="lbl">${lbl}</span></div></div>`;
-        }).join("");
-      }).join("")+`</div>`
+      +onbTimelineHtml(pop,g.faits)
       +`</div></details>`;
   }).join("");
   return h+`</div>`+param;
@@ -4918,7 +4953,7 @@ function pageAnnuaire(){
       +`</tbody></table></div>`;
   } else if(f==="formateurs"){
     h+=`<div class="tblwrap"><table class="tbl"><thead><tr><th>Formateur</th><th>Villes</th><th>Offres autorisées</th><th>Onboarding</th><th>À traiter</th><th>Fiche</th></tr></thead><tbody>`
-      +FORMATEURS.map(k=>{const f=FRM[k];const reste=ONB_FRM.length-(f.onbFaits||0);const att=(f.appro?1:0)+f.quali.length+(f.retrait?1:0);
+      +FORMATEURS.map(k=>{const f=FRM[k];const reste=onbEtapes("formateurs").length-(f.onbFaits||0);const att=(f.appro?1:0)+f.quali.length+(f.retrait?1:0);
         return `<tr><td><b>${f.nom}</b></td><td>${f.villes.join(" · ")}</td><td>${f.offres.join(" · ")}</td><td>${reste?`<span class="chip warn">${reste} à faire</span>`:`<span class="chip ok">complet</span>`}</td><td>${att?`<span class="chip warn">${att}</span>`:`<span class="muted">rien</span>`}</td><td><a class="ilink" data-fiche="formateur::${k}">Fiche formateur</a></td></tr>`}).join("")
       +`</tbody></table></div>`;
   } else if(f==="closeurs"||f==="setteurs"||f==="internes"){
@@ -5352,7 +5387,7 @@ document.addEventListener("click",e=>{
   if(!e.target.closest(".vcbtn")) document.getElementById("vcmenu")?.classList.remove("on");
   const dc=e.target.closest("[data-vdocclear]");
   if(dc){e.stopPropagation();const inp=document.querySelector(`[data-vdoc="${dc.dataset.vdocclear}"]`);if(inp)inp.value="";return}
-  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-resmenu],[data-resblocmove],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-colmove],[data-tkvis],[data-grpnew],[data-grpdel],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbedit],[data-onbsave],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy2],[data-syncdrive],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
+  const t=e.target.closest("[data-step],[data-respage],[data-respageback],[data-respageedit],[data-respagecancel],[data-respagesave],[data-resblocadd],[data-resblocdel],[data-resmenu],[data-resblocmove],[data-appsw],[data-remnew],[data-remtype],[data-remsend],[data-colmove],[data-tkvis],[data-grpnew],[data-grpdel],[data-grpmove],[data-sessdispo],[data-sigcheck],[data-faqedit],[data-espedit],[data-espsave],[data-espcancel],[data-sortcli],[data-todoi],[data-railopen],[data-railback],[data-tkcas],[data-tkmove],[data-tkdel],[data-tknew],[data-tkedit],[data-tksave],[data-colnew],[data-coldel],[data-tplnew],[data-tplsave],[data-resnew],[data-ressave],[data-ressec],[data-resdelsec],[data-resmovesec],[data-resmove],[data-resdel],[data-restoggle],[data-onbedit],[data-onbsave],[data-onbsec],[data-onbdelsec],[data-onbmovesec],[data-onbmove],[data-onbdel],[data-photos],[data-photoact],[data-photosedit],[data-photoscancel],[data-photossave],[data-autosave],[data-faqnew],[data-faqsave],[data-lieunew],[data-lieuedit],[data-sallenew],[data-salleedit],[data-lieusave],[data-lieu],[data-lieuback],[data-autoback],[data-autolaunch],[data-anogo],[data-logtoday],[data-logclear],[data-logdir],[data-prendrequal],[data-frmact],[data-autotoggle],[data-autorun],[data-tpledit],[data-relance],[data-frmfiche],[data-wa],[data-qard],[data-drive],[data-idlink],[data-idlinksave],[data-syncedof],[data-swfull],[data-swcancel],[data-swpast],[data-swsort],[data-syncghl],[data-vedit],[data-vcancel],[data-vsave],[data-sesspass],[data-anoact],[data-anorun],[data-anoall],[data-gen],[data-rap],[data-rejeu],[data-finedit],[data-finsave],[data-fincancel],[data-bibbysend],[data-bibbydepot],[data-app],[data-tab],[data-role],[data-chip],.task,.tl[data-c],[data-goto],[data-resa],[data-open],[data-fiche],[data-ficheback],[data-gotoinsc],[data-demande],[data-editstart],[data-editcancel],[data-editsave],[data-vcopen],[data-voircomme],[data-vcback],[data-logout],[data-gs],[data-newsession],[data-nstype],[data-nssubmit],[data-dvalid],[data-drefus],[data-switch],[data-switchto],[data-lost],[data-lostconfirm],[data-espace],[data-delsession],[data-copy2],[data-syncdrive],[data-apptoggle],[data-sort],[data-reserve],[data-reserveconfirm],[data-prolong],[data-cancelres],[data-ardtoggle],[data-plafondedit],[data-plafondcancel],[data-plafondsave]");
   if(!t) return;
   if(t.dataset.fiche){const [ty,fid]=t.dataset.fiche.split("::");S.modal=null;S.editing=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.fiche={t:ty,id:fid};S.app="delivia";if(ty==="session")S.tab="sessions";render();return}
   if(t.dataset.editstart){S.editing=t.dataset.editstart;render();return}
@@ -5537,6 +5572,17 @@ document.addEventListener("click",e=>{
     KB[kb].tasks[col]=KB[kb].tasks[col]||[];
     KB[kb].tasks[col].push({t:"Nouvelle tâche",p:"fia",grp:"Nouvelle sous-section"});
     render();toast("Sous-section ajoutée : renomme-la, puis range tes tâches dedans depuis « Modifier ».");return}
+  if(t.dataset.grpmove){const [kb,col,g,dir]=t.dataset.grpmove.split("::");const nom=decodeURIComponent(g);
+    const arr=KB[kb].tasks[col]||[];
+    /* l'étape se lit comme une suite de blocs : une sous-section, ou des tâches sans sous-section */
+    const blocs=[];
+    arr.forEach(tk=>{ const k=tk.grp||null, dern=blocs[blocs.length-1];
+      if(dern&&dern.k===k) dern.items.push(tk); else blocs.push({k,items:[tk]}); });
+    const i=blocs.findIndex(b=>b.k===nom), j=i+parseInt(dir);
+    if(i<0||j<0||j>=blocs.length){toast("La sous-section est déjà à cette extrémité de l'étape.");return}
+    [blocs[i],blocs[j]]=[blocs[j],blocs[i]];
+    KB[kb].tasks[col]=blocs.flatMap(b=>b.items);
+    render();toast(`Sous-section <b>${nom}</b> déplacée.`);return}
   if(t.dataset.grpdel){const [kb,col,g]=t.dataset.grpdel.split("::");const nom=decodeURIComponent(g);
     (KB[kb].tasks[col]||[]).forEach(tk=>{if(tk.grp===nom)tk.grp=null;});
     render();toast(`Sous-section <b>${nom}</b> retirée : ses tâches restent à l'étape.`);return}
