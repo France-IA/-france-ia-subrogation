@@ -1006,7 +1006,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tl-l .who,.tl-card .who{font-size:11.5px;font-weight:600;color:var(--ink-400);background:none;padding:0;white-space:nowrap}
 .tl-l .who.duo2 b,.tl-card .who.duo2 b{color:var(--ink-500)}
 .tl.todo.mine .tl-l .who.duo2 b{color:var(--ink-700)}
-.tl-n{font-size:11.5px;color:var(--ink-400);margin-top:2px;line-height:1.5}
 .actrow2{cursor:pointer;display:flex;align-items:flex-start;gap:12px;padding:8px 0}
 .actrow2:hover .tl-node{border-color:var(--primary)}
 .act-x{flex:1;min-width:0}
@@ -1029,8 +1028,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tl-card.wait{background:var(--warn-50);border-color:#fde68a}
 .tl-card .who{display:inline-block;margin-bottom:4px}
 .tl-t{font-size:14px;font-weight:500;color:var(--ink-900);line-height:1.45}
-.tl-d{font-size:12px;color:var(--ink-500);margin-top:4px;line-height:1.5}
-.tl-card.wait .tl-d{color:#92400e}
 .tl-a{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:11px}
 .tl-a:empty{display:none}
 .tl-b{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;font-size:11.5px;font-weight:600;border-radius:8px;background:#fff;border:1px solid #c7d2fe;color:var(--primary-dark);transition:all .12s}
@@ -1089,17 +1086,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 
 /* popup v22 : trois sections alignées, sans bloc coloré */
 .msep{border-top:1px solid var(--line);margin:16px 0 6px}
-.msec2{border-top:1px solid var(--line)}
-.msec2:first-of-type{border-top:none}
-.msec2>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;padding:10px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400)}
-.msec2[data-k="cur"]>summary{color:var(--ink-900)}
-.msec2[data-k="hist"] .hrow{opacity:1}
-.msec2[data-k="fut"] .ftask{opacity:1}
-.msec2>summary::-webkit-details-marker{display:none}
-.msec2>summary .chev{color:var(--ink-400);font-size:10px;transition:transform .15s}
-.msec2[open]>summary .chev{transform:rotate(90deg)}
-.msec2>summary .n2{font-weight:500;text-transform:none;letter-spacing:0;color:var(--ink-400);font-size:11px}
-.msec2>summary:hover{color:var(--ink-900)}
 .minner{padding:0 0 12px}
 .minner .tasks{margin-top:0;border-top:none;padding-top:0}
 .minner .empty{font-size:12px;color:var(--ink-400)}
@@ -1108,7 +1094,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .mpanel{background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:12px 14px;margin-top:14px}
 .mpanel:first-child{margin-top:0}
 .mtasks{padding-top:2px;padding-bottom:2px}
-.mtasks .msec2:first-of-type{border-top:none}
 .mnote .k{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-700)}
 .mnote .k svg{color:var(--ink-500)}
 .mnote .notes-ta{margin-top:8px;min-height:54px}
@@ -1136,14 +1121,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal .ilink{font-weight:600}
 #modal .msec{font-size:13px;margin-bottom:8px}
 #modal .mtasks{padding:8px 0 6px;display:flex;flex-direction:column;gap:11px}
-#modal .msec2{border-top:none;border:1px solid var(--line-2);border-radius:13px;background:#fff;padding:0 16px}
-#modal .msec2[data-k="cur"]{border-color:#d7dfe8;box-shadow:0 1px 3px 0 rgb(15 23 42/.05)}
-#modal .msec2[data-k="fut"]{border-style:solid}
-#modal .msec2:first-of-type{border-top:1px solid var(--line-2)}
-#modal .msec2[data-k="cur"]:first-of-type{border-top-color:#d7dfe8}
-#modal .msec2>summary{padding:13px 0;font-size:14.5px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink-900);gap:11px}
-#modal .msec2>summary .chev{width:20px;height:20px;border-radius:50%;background:#f1f5f9;display:inline-flex;align-items:center;justify-content:center;font-size:14px;line-height:1;color:var(--ink-600,#475569)}
-#modal .msec2>summary .n2{font-size:12px;font-weight:600;color:var(--ink-500);background:#f1f5f9;border-radius:999px;padding:2px 9px}
 #modal .minner{padding:0 0 15px 31px}
 #modal .task{padding:6px 2px;font-size:13.5px}
 #modal .task .box{border-radius:5px;width:15px;height:15px}
@@ -2121,7 +2098,7 @@ const CLIENTS=[
  {id:"cl_acme",nom:"ACME Conseil",type:"Entreprise",adr:"5 rue de la Bourse, 33000 Bordeaux",vat:"FR 42 842391557",resp:{n:"Jean Petit",e:"jean.petit@acme.fr",t:"06 78 41 20 19",app:1},siret:"842 391 557 00023",ref:"Jean Petit · jean.petit@acme.fr",mode:"Virement",mandat:null,
   ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"fp_ent_vir",factId:"f5",inscId:"i3"},{lbl:"Formation N2 · annulée",m:"1 650 €",fin:"fp_ent_vir",factId:"f9",inscId:null,note:"apprenant absent le J1, avoir émis le 4 août"}],apprenants:["ap_jean"],docs:["Devis DE-2026-0412 · signé","Convention · signée","Facture FA-2026-0533 · émise","Certificat de réalisation · à venir"]},
  {id:"cl_btp",nom:"BTP Sud",type:"Entreprise",note:"Première échéance refusée (provision insuffisante). Léa a demandé un rejeu après le 15/09, à confirmer par le closeur.",adr:"120 route de Narbonne, 31400 Toulouse",vat:"FR 17 512887224",resp:{n:"Léa Costa",e:"l.costa@btpsud.fr",t:"06 51 88 34 02",app:1},siret:"512 887 224 00011",ref:"Léa Costa · l.costa@btpsud.fr",mode:"Mandat SDD",mandat:"Actif · 2 échéances (1 refusée)",
-  ventes:[{lbl:"Formation N1 · 3 apprenants",m:"4 950 €",fin:"fp_ent_man",factId:"f6",inscId:"i4"}],apprenants:["ap_lea","ap_nico","ap_sonia"],docs:["Devis DE-2026-0388 · signé","Convention · signée","Facture FA-2026-0501 · émise","Certificat de réalisation · à venir"]},
+  ventes:[{lbl:"Formation N1 · 3 apprenants",m:"4 950 €",fin:"fp_ent_man",factId:"f6",inscId:"i4",apprenants:["ap_lea","ap_nico","ap_sonia"]}],apprenants:["ap_lea","ap_nico","ap_sonia"],docs:["Devis DE-2026-0388 · signé","Convention · signée","Facture FA-2026-0501 · émise","Certificat de réalisation · à venir"]},
  {id:"cl_hotel",nom:"Hôtel du Parc",type:"Entreprise (OPCO)",note:"OPCO AKTO, dossier déposé par Sofia le 12/08. La DRH veut la facture au nom du groupe, pas de l'hôtel : vérifier le SIRET avant génération.",adr:"2 esplanade des Quinconces, 33000 Bordeaux",vat:"FR 88 399120448",resp:{n:"Sofia Ricci",e:"s.ricci@hotelduparc.fr",t:"07 81 55 60 43",app:1},siret:"399 120 448 00034",ref:"Sofia Ricci · s.ricci@hotelduparc.fr",mode:"OPCO (AKTO)",mandat:null,
   ventes:[{lbl:"Formation N1",m:"1 650 €",fin:"opco",factId:"f3",inscId:"i5"}],apprenants:["ap_sofia"],docs:["Convention · signée","Facture FA-2026-0540 · à transmettre à l'OPCO","Feuille d'émargement collective · à venir","Certificat de réalisation · à venir"]},
  {id:"cl_marie",nom:"Marie Dupont",type:"Particulier",note:"Reste à charge de 150 € : a demandé à payer après sa paie du 28/08.",adr:"14 rue des Lilas, 75011 Paris",vat:null,resp:{n:"Marie Dupont",e:"marie.dupont@gmail.com",t:"06 12 45 78 90",app:1},siret:null,ref:null,mode:"CPF (CDC)",mandat:null,
@@ -2193,12 +2170,12 @@ const APPRENANTS=[
  {id:"ap_hugo",nom:"Hugo Martin",email:"hugo.martin@gmail.com",tel:"06 02 93 47 66",prenom:"Hugo",fam:"Martin",dom:"Design",adr:"40 rue Oberkampf",cp:"75011",ville:"Paris",spro:"Demandeur d'emploi",nais:"23/01/1996",client:"cl_hugo",insc:["i6"],type:"Particulier",afaire:["Répondre à votre questionnaire de satisfaction à froid"]},
  {id:"ap_awa",nom:"Awa Diallo",email:"awa.diallo@gmail.com",tel:"07 45 09 12 87",prenom:"Awa",fam:"Diallo",dom:"Ressources humaines",adr:"5 rue de la Paix",cp:"69002",ville:"Lyon",spro:"Salariée",nais:"15/06/1992",client:"cl_awa",insc:["c1"],type:"Particulière",afaire:["Signer votre convention de formation"]},
 ];
-APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } });
+APPRENANTS.forEach((a,i)=>{ if(!a.wdi){ a.wdi="550"+(1820+i*13); a.qli="3c8f-"+(104+i*7); a.apo="88An"+(42+i*3); a.wci="c917-"+(61+i*5); } if(!a.ghl) a.ghl="7Kd"+(210+i*4); });
 CLIENTS.forEach((c,i)=>{ if(!c.ghl){ c.ghl="91Bx"+(33+i*5); c.qonto="cli_74"+(12+i*2); c.qlb="7a21-"+(508+i*9); } });
 const S = {
   railAcc:{}, railTkAcc:{}, railRole:"admin", railOffre:null,role:"admin", realRole:"admin", voirComme:null, app:"delivia", tab:"inscription",
   fSession:"n1", fPreuvesOffre:"all", fPreuvesQ:"", fSessView:"kanban", sortSess:"dt", sortSessDir:1, fSessLieu:"all", fSessFrm:"all", fSessQ:"", calMonth:"2026-09", fInsc:"n1", fInscMode:"all", fFact:"cpf", fFactOffre:"all", fPreuves:"paris",
-  checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null, histOpen:false, curOpen:true, futOpen:false,
+  checks:{}, when:{}, unlocked:{}, fxDone:{}, simWarned:false, highlight:null, modal:null, tpl:null, openAcc:{}, editing:null, fiche:null,
   appOpen:false, apTodoFor:null, navFold:{}, fReg:"lieux", resPage:null, resPageEdit:null, resAdd:null, stepIx:null, fPers:"clients", fRes:"formateurs", fResV:"ressources"};
 
 const $ = s=>document.querySelector(s);
@@ -2277,19 +2254,6 @@ function clickTask(cardId,colId,i){
   if(S.checks[k]) S.when[k]=new Date(); else delete S.when[k];
   if(S.checks[k]) runFx(card,tk,k);
   if(colId===card.col){ tryAdvance(card); S.stepIx=null; }
-  render();
-}
-function clickEch(cardId,j){ /* réservé : les échéances se pilotent depuis le bloc paiements */
-  const card=CARDS.find(c=>c.id===cardId);
-  card.ech[j].st=card.ech[j].st==="ok"?"":"ok";
-  if(card.ech.every(e=>e.st==="ok")) toast(`Toutes les échéances encaissées : <b>${card.title}</b>`);
-  tryAdvance(card);
-  render();
-}
-function unlockCol(kb,colId){
-  S.unlocked[kb+"::"+colId]=true;
-  toast(`Étape ouverte en avance : les cartes prêtes peuvent maintenant y entrer.`);
-  CARDS.filter(c=>c.kb===kb&&c.waiting===colId).forEach(c=>{c.waiting=null;tryAdvance(c)});
   render();
 }
 
@@ -2386,13 +2350,7 @@ function splitActeur(tk,lbl){
    C'est elle, et elle seule, qui se déploie en carte. */
 function premiereTache(card,colId){
   const tks=tasksFor(card,colId);
-  for(let i=0;i<tks.length;i++) if(!tks[i].todoRef&&!tks[i].apTodo&&!taskState(card,colId,i,tks[i])) return i;
-  return -1;
-}
-function prochaineTache(card,colId){
-  const tks=tasksFor(card,colId);
-  for(let i=0;i<tks.length;i++) if(!taskState(card,colId,i,tks[i])&&canCheck(tks[i])) return i;
-  for(let i=0;i<tks.length;i++) if(!taskState(card,colId,i,tks[i])&&!tks[i].todoRef&&!tks[i].apTodo) return i;
+  for(let i=0;i<tks.length;i++) if(!taskState(card,colId,i,tks[i])) return i;
   return -1;
 }
 function apTodoItems(){ return TODO_APPRENANT.flatMap(([ph,its])=>its.map(l=>({ph,lbl:l}))); }
@@ -2559,13 +2517,6 @@ function cardHtml(card, colDef, opts={}){
   h+=`</div>`;
   return h;
 }
-function fmtWhen(d){
-  const today=new Date();
-  const sameDay=d.toDateString()===today.toDateString();
-  const dd=d.toLocaleDateString("fr-FR",{day:"numeric",month:"short"});
-  const hh=d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-  return (sameDay?"aujourd'hui":dd)+" · "+hh;
-}
 function fmtDT(iso){ const d=new Date(iso); return d.toLocaleDateString("fr-FR",{day:"numeric",month:"long"})+" à "+d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}); }
 /* « 26-27 septembre » plutôt que « 26 septembre et 27 septembre » quand la place manque */
 function fmtDatesCourt(card){
@@ -2586,51 +2537,12 @@ function fmtDates(card){
   return null;
 }
 function evFor(card,tk){ return tk.ev || ((tk.fx && (!tk.fxfin || tk.fxfin.includes(card.fin))) ? tk.fx : null); }
-function birthRow(card){
-  if(["insc","intra","coaching"].includes(card.kb)) return {d:card.ard?new Date(card.ard):null, t:"Carte créée : ARD soumis par le client", ev:1};
-  if(isFact(card)&&card.kb!=="fact_com") return {d:null, t:card.kb==="fact_frm"?"Carte créée au dépôt de la facture du formateur":"Carte créée par le kanban Inscription", ev:1};
-  if(card.kb==="fact_com") return {d:null, t:"Carte créée le 1er du mois", ev:1};
-  return null;
-}
-function historyFor(card){
-  const cols=colsFor(card);
-  const curIx=cols.findIndex(c=>c.id===card.col);
-  const past=cols.slice(0,curIx).filter(c=>!c.skip);
-  const rows=[];
-  const b=birthRow(card);
-  const origin=new Date(); origin.setDate(origin.getDate()-(past.length+1)*4);
-  if(b) rows.push({d:b.d||origin,t:b.t,ev:1,e:cols[0].label});
-  past.forEach((col,j)=>{
-    const base=new Date(); base.setDate(base.getDate()-(past.length-j)*4);
-    tasksFor(card,col.id).forEach((tk,i)=>{
-      const k=key(card,col.id,i);
-      const d=S.when[k]?new Date(S.when[k]):(()=>{const x=new Date(base);x.setHours(9+((i*2)%8),(i*17)%60,0,0);return x})();
-      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:col.label,mine:isMine(card,tk),tag:whoTag(card,tk,splitActeur(tk).who)});
-      const ev=evFor(card,tk); if(ev) rows.push({d:new Date(d.getTime()+60000),t:EV[ev],ev:1,e:col.label});
-    });
-  });
-  tasksFor(card,card.col).forEach((tk,i)=>{
-    if(taskState(card,card.col,i,tk)){
-      const k=key(card,card.col,i);
-      const d=S.when[k]?new Date(S.when[k]):new Date();
-      rows.push({d,t:tk.t,who:splitActeur(tk).who,what:splitActeur(tk).what,e:cols[curIx].label,mine:isMine(card,tk),tag:whoTag(card,tk,splitActeur(tk).who)});
-      const ev=evFor(card,tk); if(ev) rows.push({d:new Date(d.getTime()+60000),t:EV[ev],ev:1,e:cols[curIx].label});
-    }
-  });
-  rows.sort((a,b)=>a.d-b.d);
-  return rows;
-}
 /* Le chemin normal d'une carte : les étapes de dérivation (Lost, Absent, Retard) n'y entrent
    que si la carte s'y trouve. C'est ce chemin que les flèches parcourent. */
 function stepsFor(card){
   const cols=colsFor(card);
   const cur=cols.findIndex(c=>c.id===card.col);
   return cols.filter((c,i)=>!c.skip||i===cur);
-}
-function futureFor(card){
-  const cols=colsFor(card);
-  const curIx=cols.findIndex(c=>c.id===card.col);
-  return cols.slice(curIx+1).filter(c=>!c.skip).map(col=>({col,tasks:tasksFor(card,col.id)}));
 }
 function tplFor(label){
   const l=label.toLowerCase();
@@ -2838,7 +2750,6 @@ function chips(list, active, onKey){
   }
   return h+`</div>`;
 }
-function modesForOffre(offre){ return MODES_CLIENT.filter(m=>FIN[m].offres.includes(offre)); }
 
 /* ── pages DELIV'IA ── */
 function pageSessions(){
@@ -2936,14 +2847,6 @@ const DEMANDES_FRM_ADMIN=[
 /* Rien sur les sessions ici, volontairement : prendre une session se fait au shotgun depuis le
    kanban, et demander à s'en retirer fait passer la carte en colonne Retrait. Ces deux gestes se
    traitent là où ils se voient, sur le rail, pas dans une liste de demandes à part. */
-function demandesHtml(){
-  return DEMANDES_FRM_ADMIN.map(([fam,items])=>`<div class="fsec"><div class="sect-h">${ICO.eye}${fam} <span class="n2">${items.length}</span></div>`
-    +items.map(([qui,quoi,quand,actes])=>`<div class="demrow"><span class="avat">${initiales(qui)}</span>
-      <div class="tx"><div class="tt">${qui}</div><div class="sm">${quoi}</div></div>
-      <span class="quand">${quand}</span>
-      <span class="acts">`+actes.map((a,i)=>`<button class="btn btn-s ${i===0?"p":""}" data-frmact="${encodeURIComponent(a+" : "+qui)}">${a}</button>`).join("")+`</span></div>`).join("")
-    +`</div>`).join("");
-}
 const RESSOURCES=[
  ["Vos retours & KPIs",[
   ["Vos KPIs, verbatims et pistes d'amélioration IA","https://retours.franceia-dev.com","Lien",1]]],
@@ -3618,7 +3521,8 @@ const RAIL_MAP = {
 };
 function railOffres(page){ return (RAIL_MAP[page]||RAIL_MAP.sessions).axes.flatMap(a=>a[1]); }
 function railCible(page,offre,role){ const m=RAIL_MAP[page]||RAIL_MAP.sessions; return (m.vues[role]||{})[offre]||null; }
-/* l'accès d'un rôle à un rail est modifiable ici : la valeur posée à la main prime sur celle d'origine */
+/* l'accès d'un rôle à un rail vient de la carte de correspondance : il ne se règle plus à la main,
+   ce qui se règle par rôle, c'est la visibilité de chaque tâche. */
 function railAcces(page,offre,role){
   const k=page+"::"+offre+"::"+role;
   if(S.railAcc[k]) return S.railAcc[k];
@@ -3640,7 +3544,8 @@ const ACTEURS={fia:"Admin",closer:"Closeur",setter:"Setteur",formateur:"Formateu
 const ACTIONS_CABLEES=["Générer la facture","Générer le devis","Générer la convention","Générer le mandat de prélèvement","Déclarer l'entrée WEDOF","Déclarer la sortie WEDOF","Lancer la session Qualiobee","Créer le groupe WhatsApp","Ouvrir les émargements Qualiobee","Envoyer la demande de signature","Ouvrir EDOF","Déposer un fichier"];
 /* L'admin voit TOUTES les tâches, le détail du formateur compris : ce qui vit sur le rail du
    formateur et manque au rail France IA y est recopié, à l'étape qui lui correspond, avec sa
-   sous-section. Le responsable reste le formateur, donc ces lignes s'affichent en gris chez l'admin. */
+   sous-section. Le responsable reste le formateur : sur une carte, l'admin les lit en gris sans
+   pouvoir les cocher ; dans le paramétrage, tout reste noir, c'est son écran de réglage. */
 [["session_fia","session_frm",[["demarree","preparer"],["enformation","animer"]]],
  ["intra","intra_frm",[["preparer","preparer"],["enformation","animer"]]],
  ["coaching","coaching_frm",[["preparer","preparer"],["encours","animer"]]]]
@@ -4241,7 +4146,9 @@ function ficheApprenantHtml(id){
     const prix=(vente&&vente.m)||(fCard&&fCard.m)||null;
     /* le montant est celui de la vente : sur une vente groupée, il ne faut pas le lire
        comme le prix de cet apprenant-là */
-    const nbAp=vente?((vente.apprenants||(cl&&cl.apprenants)||[]).length):0;
+    /* on ne compte que ce que la vente porte elle-même : les apprenants du client ne disent
+       rien de cette vente-là quand il y en a plusieurs */
+    const nbAp=(vente&&vente.apprenants||[]).length;
     return `<details class="acc" data-acc="${k}" ${accKey(k)?"open":""}><summary><span class="chev">▶</span>
       <span class="tt">${offre}</span><span class="vsub">${dv?"· "+dv:"· date à caler"}${prix?" · "+prix+(nbAp>1?` <span class="vsub2">vente de ${nbAp} apprenants</span>`:""):""}</span></summary>
       <div class="inner">
@@ -5413,8 +5320,6 @@ document.addEventListener("click",e=>{
   if(gr&&!e.target.closest("[data-grpdel]")){e.stopPropagation();return}
   const nf=e.target.closest(".navfold>summary");
   if(nf){const d=nf.parentElement;S.navFold[d.dataset.navfold]=!d.open}
-  const ms=e.target.closest(".msec2>summary");
-  if(ms){const d=ms.parentElement;const k=d.dataset.k;if(k==="hist")S.histOpen=!d.open;else if(k==="cur")S.curOpen=!d.open;else S.futOpen=!d.open}
   if(e.target.id==="modal3"||e.target.closest("[data-close3]")){S.swFull=null;S.photos=null;render();return}
   if(e.target.id==="modal2"||e.target.closest("[data-close2]")){S.apTodoFor=null;S.demandesFor=null;S.switchFor=null;S.lostFor=null;S.reserveFor=null;S.bibbyFor=null;S.idLink=null;S.qard=null;S.wa=null;S.lieuModal=null;S.faqModal=null;S.espEdit=null;S.photos=null;S.photosEdit=null;S.tkEdit=null;S.tplNew=null;S.resNew=null;S.swFull=null;document.getElementById("modal2")?.remove();document.getElementById("modal3")?.remove();return}
   const anoS=e.target.closest(".ano>summary");
@@ -5760,7 +5665,7 @@ document.addEventListener("click",e=>{
   if((t.classList.contains("task")||t.classList.contains("tl"))&&t.dataset.c){clickTask(t.dataset.c,t.dataset.col,parseInt(t.dataset.i));return}
   if(t.dataset.step!==undefined){const n=parseInt(t.dataset.step);if(!isNaN(n)&&n>=0){S.stepIx=n;render();}return}
   if(t.dataset.open){
-    S.histOpen=false; S.stepIx=null; S.modal=t.dataset.open;render();return}
+    S.stepIx=null; S.modal=t.dataset.open;render();return}
 });
 document.addEventListener("blur",e=>{
   const g=e.target.closest&&e.target.closest("[data-grpren]");
