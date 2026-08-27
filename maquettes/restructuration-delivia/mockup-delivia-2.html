@@ -96,6 +96,26 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .col-h .n{margin-left:auto;font-size:11px;color:var(--ink-400);font-variant-numeric:tabular-nums}
 .col-open{font-size:10.5px;color:var(--info);background:var(--info-50);border-radius:6px;padding:4px 8px;margin:0 2px 8px;display:block;line-height:1.45}
 /* paramétrage d'un rail : le même kanban, en plus large, avec trois colonnes par tâche */
+.rl{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;padding:9px 2px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-800);line-height:1.5}
+.rl:first-of-type{border-top:none}
+.rl.sienne{background:linear-gradient(90deg,var(--primary-50),transparent 60%);border-radius:7px;padding-left:8px;margin-left:-8px}
+.rl-r{flex:0 0 auto;font-size:11.5px;font-weight:600;border-radius:5px;padding:2px 9px;white-space:nowrap}
+.rl-r.fia{background:#eef2ff;color:#4338ca}
+.rl-r.closer{background:#ecfdf5;color:#047857}
+.rl-r.setter{background:#ecfeff;color:#0e7490}
+.rl-r.formateur{background:#f5f3ff;color:#6d28d9}
+.rl-r.client{background:#fff7ed;color:#c2410c}
+.rl-r.multi{background:#f1f5f9;color:var(--ink-500)}
+.rl-t{flex:1;min-width:200px}
+.rl-tpl{font-size:10.5px;color:#92400e;background:var(--warn-50);border:1px solid transparent;border-radius:4px;padding:1px 7px}
+.rl-tpl:hover{border-color:#fcd34d}
+.rl-c{font-size:10.5px;color:var(--primary-dark);background:var(--primary-50);border-radius:4px;padding:1px 7px}
+.rl-a{display:flex;gap:9px;font-size:11px;margin-left:auto;opacity:0;transition:opacity .12s;white-space:nowrap}
+.rl:hover .rl-a{opacity:1}
+.rl-a .ilink{font-size:11px}
+.rl-g{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-400);margin:14px 0 2px}
+.rl-vide{font-size:12.5px;color:var(--ink-400);padding:10px 2px}
+.railsec.masq{opacity:.6}
 .railboard .col{flex:0 0 440px;min-width:440px}
 .railcol.masq{opacity:.55;border-style:dashed}
 .railcol.railnew{background:none;border-style:dashed;align-items:center;justify-content:center;min-height:120px}
@@ -903,7 +923,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .fut summary::before{content:"▸";font-size:10px;color:var(--ink-400);transition:transform .15s}
 .fut[open] summary::before{transform:rotate(90deg)}
 .fut summary .n2{font-weight:400;color:var(--ink-400);font-size:11px}
-.steps{margin-top:4px}
+.steps{margin-top:4px;padding-top:18px;border-top:1px solid var(--line-2)}
 .stepper{display:flex;align-items:center;padding:2px 0 16px}
 .stepper .st{width:26px;height:26px;border-radius:50%;background:#f1f5f9;color:var(--ink-400);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .14s}
 .stepper .st:hover{transform:scale(1.1)}
@@ -1050,12 +1070,12 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 #modal{background:rgba(15,23,42,.28);backdrop-filter:blur(2px);padding:5vh 16px}
 #modal .mbox{max-width:760px;border-radius:18px;box-shadow:0 24px 64px rgb(15 23 42/.18),0 0 0 1px rgb(15 23 42/.04);animation:mpop .18s ease-out}
 @keyframes mpop{0%{transform:translateY(6px) scale(.985);opacity:0}100%{transform:none;opacity:1}}
-#modal .mhead{border-bottom:none;padding:22px 26px 6px;border-radius:18px 18px 0 0}
+#modal .mhead{border-bottom:none;padding:26px 34px 8px;border-radius:18px 18px 0 0}
 #modal .mhead .t{font-size:18px;font-weight:600;letter-spacing:-.015em}
 #modal .mhead .row .badge{margin-left:6px}
 #modal .mclose{width:30px;height:30px;border-radius:50%;background:#f1f5f9;color:var(--ink-500);font-size:14px}
 #modal .mclose:hover{background:#e2e8f0;color:var(--ink-900)}
-#modal .mbody{padding:0 26px 22px;background:#fff;border-radius:0 0 18px 18px}
+#modal .mbody{padding:0 34px 28px;background:#fff;border-radius:0 0 18px 18px}
 #modal .mpanel{background:transparent;border:none;border-radius:0;padding:18px 0 16px;margin:0;border-top:1.5px solid #cbd5e1}
 #modal .mpanel:first-child{border-top:none;padding-top:10px}
 #modal .mpanel.mtasks{border-top:none;padding-top:6px}
@@ -2475,6 +2495,16 @@ function responsableOf(card,tk){
   if(["cpf","opco"].includes(card.fin)) return "fia";
   return "closer";
 }
+/* le responsable d'une tâche pour UN moyen de paiement donné : dans le paramétrage,
+   le filtre nous dit lequel, donc on peut nommer une seule personne au lieu d'une formule */
+function respCas(kb,tk,cas){
+  if(tk.resp) return tk.resp;
+  if(tk.p==="formateur" && !kb.endsWith("_frm")) return "fia";
+  if(tk.p!=="client") return tk.p;
+  if(kb.startsWith("session")||kb.startsWith("intra")||kb.startsWith("coaching")) return "fia";
+  if(["cpf","opco"].includes(cas)) return "fia";
+  return "closer";
+}
 /* le même couple, hors carte : dans le paramétrage on ne connaît pas le financement */
 function respLabelKb(kb,tk){
   if(tk.resp) return ACTEURS[tk.resp]||tk.resp;
@@ -2736,13 +2766,6 @@ function modalHtml(){
   }
   /* Tâches : trois sections dépliables, seule l'étape en cours est ouverte par défaut */
   h+=`<div class="mpanel mtasks">`;
-  const hist=historyFor(card);
-  const nHist=hist.filter(r=>!r.ev).length;
-  h+=`<details class="msec2" data-k="hist"${S.histOpen?" open":""}><summary><span class="chev">▸</span>Historique <span class="n2">${nHist}/${nHist}</span></summary><div class="minner">`;
-  h+=hist.map(r=>r.ev
-    ?`<div class="hrow ev"><span class="d">${fmtWhen(r.d)}</span><span class="dot"></span><span>${r.t}</span></div>`
-    :`<div class="hrow ${r.mine?"mine":""}"><span class="d">${fmtWhen(r.d)}</span><span class="ck">✓</span><span>${r.tag||(r.who?`<span class="who">${r.who}</span>`:"")}${r.what||r.t}<span class="e">·</span><span class="w">${r.e}</span></span></div>`).join("")||`<div class="hrow"><span class="w">Aucune tâche réalisée pour l'instant.</span></div>`;
-  h+=`</div></details>`;
   /* Le parcours des étapes : une seule à l'écran, les flèches font le reste. */
   const steps=stepsFor(card);
   const curIx=Math.max(0,steps.findIndex(c=>c.id===card.col));
@@ -2759,14 +2782,12 @@ function modalHtml(){
     <div class="stephead">
       <button class="stnav" data-step="${ix-1}" ${ix===0?"disabled":""} aria-label="Étape précédente">‹</button>
       <div class="stx"><div class="stt">${stCol.label}</div>
-        <div class="sts">Étape ${ix+1} sur ${steps.length}${passe?" · déjà franchie":futur?" · à venir":" · en cours"}${stCol.open?` · ouverture ${openDateStr(card,stCol)}`:""}</div></div>
+        ${stCol.open?`<div class="sts">Ouverture ${openDateStr(card,stCol)}</div>`:""}</div>
       <span class="stc">${stDone}/${stTks.length}</span>
       <button class="stnav" data-step="${ix+1}" ${ix===steps.length-1?"disabled":""} aria-label="Étape suivante">›</button>
     </div>`;
   if(stTks.length) h+=`<div class="tlist ${futur?"fut":""}">`+stTks.map((tk,i)=>taskHtml(card,stCol.id,i,tk,futur,passe)).join("")+`</div>`;
   else h+=`<p class="empty">Aucune tâche à cette étape : elle est terminale.</p>`;
-  if(stTks.length&&stDone===stTks.length&&ix<steps.length-1) h+=`<button class="stnext" data-step="${ix+1}">Étape suivante : ${steps[ix+1].label} <span>→</span></button>`;
-  else if(stTks.length&&stDone===stTks.length&&ix===steps.length-1) h+=`<div class="stdone">Toutes les étapes sont franchies</div>`;
   if(!passe&&!futur&&card.waiting&&stDone===stTks.length){
     const nc=KB[card.kb].cols.find(c=>c.id===card.waiting);
     h+=`<div class="openline">🔒 <span>Étape complète. <b>${nc.label}</b> ouvre ${openDateStr(card,nc)} (${nc.open}).</span></div>`;
@@ -2881,17 +2902,17 @@ function pageSessions(){
 }
 /* référentiel des lieux : pays, ville, lieu, salles (rapatrié de Staff) */
 const LIEUX_REF=[
- {id:"stf",n:"Station F",ville:"Paris",pays:"France",adr:"5 parvis Alan Turing, 75013 Paris",hal:1,qlb:"lieu_stf",photos:3,contact:"accueil@stationf.co · 01 84 60 00 00",accueil:"Se présenter à l'accueil du bâtiment, badge remis sur place.",
+ {id:"stf",n:"Station F",ville:"Paris",pays:"France",adr:"5 parvis Alan Turing, 75013 Paris",hal:1,qlb:"lieu_stf",edof:"20415783",photos:3,contact:"accueil@stationf.co · 01 84 60 00 00",accueil:"Se présenter à l'accueil du bâtiment, badge remis sur place.",
   msgAcces:"Votre QR code d'accès vous est envoyé la veille, par e-mail. Vous pouvez aussi vous le renvoyer ici. L'entrée se fait par l'entrée principale uniquement.",
   livret:"https://app.qualiobee.fr/documents/livret-accueil-stf",guide:"https://app.notion.com/p/guide-acces-station-f",dejeuner:"La Félicita (code promo SF3000)",
   salles:[["Boardroom Ada",12,"HAL-ADA-12"],["Boardroom Turing",10,"HAL-TUR-10"]]},
- {id:"bdx",n:"Quai des Chartrons",ville:"Bordeaux",pays:"France",adr:"12 quai des Chartrons, 33000 Bordeaux",hal:0,qlb:"lieu_bdx",photos:2,contact:"contact@quaideschartrons.fr · 05 56 00 11 22",accueil:"Sonner à la porte bleue, 2e étage.",
+ {id:"bdx",n:"Quai des Chartrons",ville:"Bordeaux",pays:"France",adr:"12 quai des Chartrons, 33000 Bordeaux",hal:0,qlb:"lieu_bdx",edof:"20416002",photos:2,contact:"contact@quaideschartrons.fr · 05 56 00 11 22",accueil:"Sonner à la porte bleue, 2e étage.",
   msgAcces:"L'accès se fait par la porte bleue côté quai. Sonnez à l'interphone, on vous ouvre.",livret:"https://app.qualiobee.fr/documents/livret-accueil-bdx",guide:"https://app.notion.com/p/guide-acces-bordeaux",dejeuner:"Brasserie des Chartrons, à trois minutes à pied",
   salles:[["Salle Garonne",14,null],["Salle Dordogne",8,null]]},
- {id:"lil",n:"Euratechnologies",ville:"Lille",pays:"France",adr:"165 avenue de Bretagne, 59000 Lille",hal:0,qlb:"lieu_lil",photos:1,contact:"contact@euratechnologies.com",
+ {id:"lil",n:"Euratechnologies",ville:"Lille",pays:"France",adr:"165 avenue de Bretagne, 59000 Lille",hal:0,qlb:"lieu_lil",edof:"20416147",photos:1,contact:"contact@euratechnologies.com",
   msgAcces:"Accueil au rez-de-chaussée du bâtiment principal, présentez-vous à la banque d'accueil.",livret:"https://app.qualiobee.fr/documents/livret-accueil-lil",guide:null,dejeuner:"Le Comptoir (à 4 minutes à pied)",
   salles:[["Salle Deûle",12,null]]},
- {id:"lyo",n:"Part-Dieu",ville:"Lyon",pays:"France",adr:"44 rue de la Villette, 69003 Lyon",hal:0,qlb:"lieu_lyo",photos:1,contact:"reservation@partdieu-espaces.fr",accueil:"Accès par le hall principal, 5e étage.",
+ {id:"lyo",n:"Part-Dieu",ville:"Lyon",pays:"France",adr:"44 rue de la Villette, 69003 Lyon",hal:0,qlb:"lieu_lyo",edof:"20416310",photos:1,contact:"reservation@partdieu-espaces.fr",accueil:"Accès par le hall principal, 5e étage.",
   msgAcces:"Accès par le hall principal, annoncez-vous à l'accueil : la salle est au 5e étage.",livret:"https://app.qualiobee.fr/documents/livret-accueil-lyo",guide:"https://app.notion.com/p/guide-acces-lyon",dejeuner:"Food court de la Part-Dieu, au 2e niveau",
   salles:[["Salle Rhône",12,null]]},
  {id:"client",n:"Chez le client",ville:"—",pays:"France",adr:"adresse fournie par le client à la confirmation",hal:0,qlb:null,photos:0,contact:null,accueil:"Le client précise l'accès dans sa fiche.",
@@ -2949,7 +2970,7 @@ function pageLieux(v){
     const ligne=l=>{
       const cap=l.salles.length?Math.max(...l.salles.map(s2=>s2[1])):null;
       const av=CARDS.filter(c=>c.kb==="session_fia"&&c.lieu&&c.lieu.startsWith(l.n)).length;
-      return `<tr class="rowlink" data-lieu="${l.id}"><td><b>${l.n}</b></td><td>${l.adr}</td><td>${l.salles.length||'<span class="muted">—</span>'}</td><td>${cap?cap+" places":'<span class="muted">—</span>'}</td><td>${l.hal?"HAL, au shotgun":"réservation directe"}</td><td>${l.qlb?`<span class="mono">${l.qlb}</span>`:'<span class="muted">non relié</span>'}</td><td>${av||'<span class="muted">aucune</span>'}</td></tr>`;
+      return `<tr class="rowlink" data-lieu="${l.id}"><td><b>${l.n}</b></td><td>${l.adr}</td><td>${l.salles.length||'<span class="muted">—</span>'}</td><td>${cap?cap+" places":'<span class="muted">—</span>'}</td><td>${l.hal?"HAL, au shotgun":"réservation directe"}</td><td>${l.qlb?`<span class="mono">${l.qlb}</span>`:'<span class="muted">non relié</span>'}</td><td>${l.edof?`<span class="mono">${l.edof}</span>`:'<span class="muted">non relié</span>'}</td><td>${av||'<span class="muted">aucune</span>'}</td></tr>`;
     };
     pays.forEach((pa,ix)=>{
       const dansPays=LIEUX_REF.filter(l=>l.pays===pa);
@@ -2962,7 +2983,7 @@ function pageLieux(v){
         const ns=dansVille.reduce((n,l)=>n+l.salles.length,0);
         const kv="lx-"+pa+"-"+vi;
         h+=`<details class="acc pvs" data-acc="${kv}" ${accKey(kv)?"open":""}><summary><span class="chev">▶</span><span class="tt">${vi==="—"?"Chez le client":vi}</span><span class="end"><span class="sm">${dansVille.length} lieu${dansVille.length>1?"x":""} · ${ns} salle${ns>1?"s":""}</span></span></summary>
-        <div class="inner"><div class="tblwrap"><table class="tbl"><thead><tr><th>Lieu</th><th>Adresse</th><th>Salles</th><th>Capacité</th><th>Accès</th><th>Qualiobee</th><th>Sessions à venir</th></tr></thead><tbody>`
+        <div class="inner"><div class="tblwrap"><table class="tbl"><thead><tr><th>Lieu</th><th>Adresse</th><th>Salles</th><th>Capacité</th><th>Accès</th><th>Qualiobee</th><th>EDOF</th><th>Sessions à venir</th></tr></thead><tbody>`
           +dansVille.map(ligne).join("")+`</tbody></table></div></div></details>`;
       });
       h+=`</div></details>`;
@@ -3016,7 +3037,8 @@ function lieuModalHtml(){
       <div class="genfld"><div class="k">Pays</div><select class="edin"><option>France</option><option>Belgique</option><option>Suisse</option><option>Luxembourg</option></select></div></div>
       <div class="genrow"><div class="genfld"><div class="k">Contact du lieu</div><input class="edin" value="${l&&l.contact?l.contact:""}" placeholder="accueil@lieu.fr · 01 00 00 00 00"></div>
       <div class="genfld"><div class="k">Réservation</div><select class="edin"><option ${l&&l.hal?"selected":""}>HAL Station F, au shotgun</option><option ${l&&!l.hal?"selected":""}>Réservation directe auprès du lieu</option></select></div></div>
-      <div class="genrow"><div class="genfld"><div class="k">Identifiant Qualiobee</div><input class="edin" value="${l&&l.qlb?l.qlb:""}" placeholder="uuid du lieu chez Qualiobee"><div class="pd">Il rattache la session au lieu quand elle est créée chez Qualiobee. Qualiobee n'expose pas de page publique pour un lieu : c'est un identifiant, pas un lien.</div></div>
+      <div class="genrow"><div class="genfld"><div class="k">Identifiant EDOF</div><input class="edin" value="${l&&l.edof?l.edof:""}" placeholder="identifiant du lieu de formation sur EDOF"></div>
+      <div class="genfld"><div class="k">Identifiant Qualiobee</div><input class="edin" value="${l&&l.qlb?l.qlb:""}" placeholder="uuid du lieu chez Qualiobee"><div class="pd">Il rattache la session au lieu quand elle est créée chez Qualiobee. Qualiobee n'expose pas de page publique pour un lieu : c'est un identifiant, pas un lien.</div></div>
       <div class="genfld"><div class="k">Message d'accueil</div><input class="edin" value="${l&&l.accueil?l.accueil:""}" placeholder="Ce que l'apprenant doit savoir en arrivant"><div class="pd">Repris dans le guide d'accès envoyé aux apprenants.</div></div></div>`;
   }
   return `<div id="modal2"><div class="mbox" style="max-width:640px"><div class="mhead"><div class="row"><div class="t">${titre}</div><button class="mclose" data-close2="1" aria-label="Fermer">✕</button></div>${sous?`<div class="s">${sous}</div>`:""}</div>
@@ -3040,6 +3062,8 @@ function ficheLieuHtml(id){
        :fld("Réservation",l.hal?"HAL Station F, au shotgun à l'ouverture du créneau":"Réservation directe auprès du lieu")}
     ${ed?fld("Identifiant Qualiobee",l.qlb,"qlb",l)
        :fld("Identifiant Qualiobee",l.qlb?`<span class="mono">${l.qlb}</span> <a class="ilink" data-copy2="${l.qlb}">copier</a>`:null)}
+    ${ed?fld("Identifiant EDOF",l.edof,"edof",l)
+       :fld("Identifiant EDOF",l.edof?`<span class="mono">${l.edof}</span> <a class="ilink" data-copy2="${l.edof}">copier</a>`:null)}
     <div class="fld"><div class="k">Description ARD</div><div class="v">${l.photos} photo${l.photos>1?"s":""} et le texte d'accès <a class="ilink" data-photos="${l.id}">gérer</a></div></div>
   </div></div>`;
   /* 2 · salles */
@@ -3618,13 +3642,11 @@ function pageRail(){
   const cible=railCible(page,offre,role), acces=railAcces(page,offre,role);
   const offreLbl=(railOffres(page).find(o=>o[0]===offre)||[])[1];
   const roleLbl=(RAIL_ROLES.find(r=>r[0]===role)||[])[1];
-  const vue=S.railVue==="apercu"?"apercu":"matrice";
-  let h=`<button class="backbtn" data-railback="1">← Retour au paramétrage des rails</button>`;
+  let h=`<button class="backbtn" data-railback="1">← Retour au paramétrage processus</button>`;
   h+=`<div class="pagehead row"><h1>Paramétrer les étapes et les tâches</h1></div>`;
   /* les mêmes filtres que la page réelle, puis le rôle qui regarde */
   h+=`<div class="fbar">`+chips(m.axes, offre, "railOffre")+`</div>`;
-  h+=`<div class="fbar">`+chips([["Vue utilisateur",RAIL_ROLES]], role, "railRole")
-    +chips([["Vue",[["matrice","Matrice"],["apercu","Aperçu"]]]], vue, "railVue")+`</div>`;
+  h+=`<div class="fbar">`+chips([["Vue utilisateur",RAIL_ROLES]], role, "railRole")+`</div>`;
 
   /* le rôle n'a pas ce rail : on le dit, et on peut lui ouvrir */
   if(acces==="aucun"){
@@ -3651,72 +3673,36 @@ function pageRail(){
     ? `<div class="railano"><div class="k">${anos.length} point${anos.length>1?"s":""} à regarder dans ce rail</div><ul>`+anos.slice(0,6).map(a=>`<li>${a}</li>`).join("")+(anos.length>6?`<li class="sm">et ${anos.length-6} autre(s)</li>`:"")+`</ul></div>`
     : "";
 
-  if(vue==="matrice"){
-    /* le rail se lit comme son kanban : une colonne par étape, dans l'ordre de progression,
-       et dans chaque colonne les tâches en trois colonnes claires. */
-    h+=`<div class="board railboard">`;
-    h+=d.cols.map(c=>{
-      const tks=d.tasks[c.id]||[];
-      const masq=role!=="admin"&&railColMasquee(kb,role,c.id);
-      const mienne=tk=>ROLE_OWNS[role]===tk.p;
-      let head=`<div class="col railcol ${masq?"masq":""}"><div class="col-h"><span class="pill"></span><h3>${c.label}</h3><span class="n">${tks.length}</span></div>`;
-      const notes=[];
-      if(c.open) notes.push(`Ouverture : ${c.open}`);
-      if(c.cas) notes.push(`Seulement ${c.cas.map(k=>(CAS_FIN.find(x=>x[0]===k)||[])[1]).join(", ")}`);
-      if(c.vide) notes.push(`Étape terminale, aucune tâche attendue`);
-      if(masq) notes.push(`Masquée pour ${roleLbl.toLowerCase()}`);
-      if(notes.length) head+=`<div class="col-open">${notes.join(" · ")}</div>`;
-      head+=`<div class="colbody">`;
-      head+=`<div class="rt-head"><span>Responsable</span><span>Acteur</span><span>Action</span></div>`;
-      head+=(tks.map((tk,i)=>{
-        const nat=natureTk(tk);
-        const coche = role!=="admin" && mienne(tk) && !tk.auto && acces==="plein" && !masq;
-        return `<div class="rtask">
-          <span class="rt-c">${respLabelKb(kb,tk)}</span>
-          <span class="rt-c">${ACTEURS[tk.p]||tk.p}</span>
-          <div class="rt-do">
-            <div class="rt-lbl">${tk.t}</div>
-            ${tk.grp?`<div class="rt-sm">${tk.grp}</div>`:""}
-            ${tk.todoRef?`<div class="rt-sm">les to do du formateur, repliées sur la carte</div>`:""}
-            ${tk.apTodo?`<div class="rt-sm">une sous-carte par apprenant</div>`:""}
-            <div class="rt-cas">`
-              +(parCas?CAS_FIN.map(([k,lbl])=>{const on=!tk.fin||tk.fin.includes(k);
-                  return `<span class="rt-p ${on?"on":""}" ${role==="admin"?`data-tkcas="${kb}::${c.id}::${i}::${k}"`:""} title="${lbl}">${CAS_COURT[k]||lbl}</span>`}).join("")
-                :`<span class="rt-p on">tous les cas</span>`)
-              +(nat[0]==="simple"?"":`<span class="rt-nat ${nat[0]}">${nat[1]}</span>`)
-              +(tk.tpl?`<span class="rt-p tpl" data-tpl="${encodeURIComponent(tk.t)}">template</span>`:"")
-              +(coche?`<span class="rt-p on">${roleLbl} coche</span>`:"")
-            +`</div>
-            ${role==="admin"?`<div class="rt-acts"><a class="ilink" data-tkmove="${kb}::${c.id}::${i}::-1">↑</a><a class="ilink" data-tkmove="${kb}::${c.id}::${i}::1">↓</a><a class="ilink" data-tkedit="${kb}::${c.id}::${i}">Modifier</a><a class="ilink danger" data-tkdel="${kb}::${c.id}::${i}">Supprimer</a></div>`:""}
-          </div></div>`;
-      }).join("")||`<div class="rt-vide">Aucune tâche à cette étape.</div>`);
-      head+=`<div class="rt-add">${role==="admin"
-        ? `<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button>${tks.length?"":`<button class="btn btn-s danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</button>`}`
-        : `<button class="btn btn-s" data-railcol="${kb}::${role}::${c.id}">${masq?"Rendre visible":"Masquer pour "+roleLbl.toLowerCase()}</button>`}</div>`;
-      return head+`</div></div>`;
-    }).join("");
-    if(role==="admin") h+=`<div class="col railcol railnew"><button class="btn btn-s" data-colnew="${kb}">+ Ajouter une étape</button></div>`;
-    h+=`</div>`;
-  } else {
-    h+=`<div class="fbar">`+(parCas?chips([["Cas",CAS_FIN]], cas, "railCas"):`<span class="sm">Ce rail ne dépend pas du mode de paiement : toutes les cartes voient les mêmes tâches.</span>`)+`</div>`;
-    h+=`<div class="board apercuboard">`;
-    h+=d.cols.filter(c=>!(role!=="admin"&&railColMasquee(kb,role,c.id))).map(c=>{
-      const tks=(d.tasks[c.id]||[]).filter(tk=>!tk.fin||tk.fin.includes(cas));
-      let last="";
-      return `<div class="col"><div class="col-h"><span class="pill"></span><h3>${c.label}</h3><span class="n">${tks.length}</span></div>`
-        +(c.open?`<div class="col-open">Ouverture : ${c.open}</div>`:"")
-        +`<div class="colbody">`
-        +(tks.map(tk=>{ const g=tk.grp&&tk.grp!==last?`<div class="tgrp">${tk.grp}</div>`:""; last=tk.grp||last;
-          const nat=natureTk(tk);
-          const sienne=role!=="admin"&&ROLE_OWNS[role]===tk.p;
-          return g+`<div class="aptask ${sienne?"mine":""}"><span class="box"></span>
-            <div class="ap-x"><div class="ap-t">${tk.t}</div>
-            <div class="ap-m"><span class="rt-p on">${respLabelKb(kb,tk)}${(ACTEURS[tk.p]&&respLabelKb(kb,tk)!==ACTEURS[tk.p])?" ▸ "+ACTEURS[tk.p]:""}</span>${nat[0]==="simple"?"":`<span class="rt-nat ${nat[0]}">${nat[1]}</span>`}${tk.tpl?`<span class="rt-p tpl">template</span>`:""}</div></div></div>`;
-        }).join("")||`<div class="rt-vide">Aucune tâche dans ce cas.</div>`)
-        +`</div></div>`;
-    }).join("");
-    h+=`</div>`;
-  }
+  /* Le rail se lit de haut en bas, étape après étape : le moyen de paiement se choisit
+     dans le filtre, jamais case par case dans un tableau. */
+  h+=`<div class="fbar">`+(parCas?chips([["Moyen de paiement",CAS_FIN]], cas, "railCas"):`<span class="sm">Ce rail ne dépend pas du moyen de paiement : toutes les cartes voient les mêmes tâches.</span>`)+`</div>`;
+  h+=d.cols.filter(c=>!(role!=="admin"&&railColMasquee(kb,role,c.id))).map(c=>{
+    const toutes=d.tasks[c.id]||[];
+    const tks=toutes.filter(tk=>!parCas||!tk.fin||tk.fin.includes(cas));
+    const masq=role!=="admin"&&railColMasquee(kb,role,c.id);
+    let last="";
+    let out=`<div class="fsec railsec ${masq?"masq":""}"><div class="sect-h">${c.label}<span class="n2">${tks.length}</span>${c.open?`<span class="n2">ouverture ${c.open}</span>`:""}${c.vide?`<span class="n2">étape terminale</span>`:""}
+      <span class="right">${role==="admin"
+        ? `<button class="btn btn-s" data-tknew="${kb}::${c.id}">+ Tâche</button>${toutes.length?"":`<button class="btn btn-s danger" data-coldel="${kb}::${c.id}">Supprimer l'étape</button>`}`
+        : `<button class="btn btn-s" data-railcol="${kb}::${role}::${c.id}">${masq?"Rendre visible":"Masquer pour "+roleLbl.toLowerCase()}</button>`}</span></div>`;
+    out+=tks.map(tk=>{
+      const ix=toutes.indexOf(tk);
+      const nat=natureTk(tk);
+      const resp=parCas?respCas(kb,tk,cas):null;
+      const g=tk.grp&&tk.grp!==last?`<div class="rl-g">${tk.grp}</div>`:""; last=tk.grp||last;
+      const sienne=role!=="admin"&&ROLE_OWNS[role]===tk.p&&!tk.auto&&acces==="plein"&&!masq;
+      return g+`<div class="rl ${sienne?"sienne":""}">
+        <span class="rl-r ${resp||"multi"}">${resp?ACTEURS[resp]:respLabelKb(kb,tk)}</span>
+        <span class="rl-t">${tk.t}</span>
+        ${nat[0]==="simple"?"":`<span class="rt-nat ${nat[0]}">${nat[1]}</span>`}
+        ${tk.tpl?`<button class="rl-tpl" data-tpl="${encodeURIComponent(tk.t)}">template</button>`:""}
+        ${sienne?`<span class="rl-c">${roleLbl} coche</span>`:""}
+        ${role==="admin"?`<span class="rl-a"><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::-1">↑</a><a class="ilink" data-tkmove="${kb}::${c.id}::${ix}::1">↓</a><a class="ilink" data-tkedit="${kb}::${c.id}::${ix}">Modifier</a><a class="ilink danger" data-tkdel="${kb}::${c.id}::${ix}">Supprimer</a></span>`:""}
+      </div>`;
+    }).join("")||`<div class="rl-vide">${c.vide?"Aucune tâche attendue à cette étape.":"Aucune tâche dans ce cas."}</div>`;
+    return out+`</div>`;
+  }).join("");
+  if(role==="admin") h+=`<div class="railadd"><button class="btn btn-s" data-colnew="${kb}">+ Ajouter une étape</button></div>`;
   return h;
 }
 /* création ou modification d'une tâche */
