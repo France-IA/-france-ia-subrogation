@@ -146,10 +146,10 @@ body[data-icons="B"] .ic.s{width:10px;height:10px}
 .tl:hover .ib.unlock{opacity:1}
 .tl.now .ib.unlock{opacity:.75}
 .ib.unlock:hover{color:var(--warn);background:var(--warn-50);opacity:1}
-body[data-icons="C"] .ib{color:var(--ink-400)}
-body[data-icons="C"] .ib:hover{background:transparent}
-body[data-icons="C"] .ib:hover .ic.round{background:var(--primary-50)}
-body[data-icons="C"] .ib.unlock:hover .ic.round{background:var(--warn-50)}
+body[data-icons="C"] .ib,body[data-round="1"] .ib{color:var(--ink-400)}
+body[data-icons="C"] .ib:hover,body[data-round="1"] .ib:hover{background:transparent}
+body[data-icons="C"] .ib:hover .ic.round,body[data-round="1"] .ib:hover .ic.round{background:var(--primary-50)}
+body[data-icons="C"] .ib.unlock:hover .ic.round,body[data-round="1"] .ib.unlock:hover .ic.round{background:var(--warn-50)}
 
 /* en attente d'un signal externe */
 .wait{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:var(--ink-400);white-space:nowrap}
@@ -184,14 +184,54 @@ body[data-icons="C"] .ib.unlock:hover .ic.round{background:var(--warn-50)}
 .hint b{color:var(--ink-600);font-weight:600}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink-900);color:#fff;font-size:12.5px;padding:9px 14px;border-radius:9px;opacity:0;transition:all .18s;pointer-events:none;box-shadow:0 10px 30px rgb(0 0 0/.25)}
 .toast.on{opacity:1;transform:translateX(-50%)}
+/* ─── gestes particuliers ─── */
+.gcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(680px,1fr));gap:26px;align-items:start}
+.gbox{background:#fff;border-radius:18px;box-shadow:0 24px 64px rgb(15 23 42/.08),0 0 0 1px rgb(15 23 42/.04);padding:22px 34px 18px}
+.gt{font-size:14.5px;font-weight:600;color:var(--ink-900);margin-bottom:12px}
+.tl-nat{margin-left:2px}
+.evrow{position:relative;display:flex;align-items:center;font-size:11.5px;font-weight:600;color:var(--ok);margin:2px 0 6px;padding:2px 0 2px 2px}
+.evrow .ev-node{position:absolute;left:-28px;top:2px;width:19px;height:19px;display:flex;align-items:center;justify-content:center}
+.evrow .dot{width:7px;height:7px;border-radius:50%;background:#10b981}
+.paypanel{margin:0 0 10px 6px;border:1px solid var(--line-2);border-radius:9px;background:#fff;padding:9px 11px}
+.paypanel .pph{display:flex;align-items:baseline;gap:8px;font-size:11px;color:var(--ink-500);padding-bottom:7px;border-bottom:1px solid var(--line)}
+.paypanel .pph .ttl{font-weight:600;color:var(--ink-800);font-size:11.5px}
+.paypanel .pph .rest{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink-700)}
+.paytbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.paytbl td{padding:5px 0;border-bottom:1px solid var(--line);color:var(--ink-600)}
+.paytbl tr:last-child td{border-bottom:none}
+.paytbl .amt{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink-800);white-space:nowrap}
+.paytbl .lib{color:var(--ink-700)}
+.paytbl .dt{color:var(--ink-400);white-space:nowrap}
+.paytbl .act{text-align:right;white-space:nowrap}
+.paytbl .act .b2{height:20px;font-size:10.5px;padding:0 7px;margin-left:6px}
+.paynone{font-size:11px;color:var(--ink-400);padding:6px 0 2px;line-height:1.5}
+.chip{display:inline-flex;align-items:center;border-radius:999px;padding:1.5px 9px;font-size:10.5px;font-weight:500;background:#f1f5f9;color:var(--ink-500)}
+.chip.ok{background:var(--ok-50);color:var(--ok)}
+.chip.err{background:var(--err-50);color:var(--err)}
+.inl .fld{margin-top:8px}
+.inl .fld .k{font-size:10.5px;font-weight:600;color:var(--ink-500);margin-bottom:3px}
+.inl .fld input,.inl .fld select,.inl .fld textarea{margin-top:0}
+.inl select{width:100%;font:inherit;font-size:12.5px;padding:6px 9px;border:1px solid var(--line-2);border-radius:7px;outline:none;color:var(--ink-800);background:#fff}
+.inl textarea{width:100%;font:inherit;font-size:12.5px;padding:7px 9px;border:1px solid var(--line-2);border-radius:7px;outline:none;color:var(--ink-800);min-height:64px;resize:vertical}
+.inl .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.inl .drop{margin-top:8px;border:1.5px dashed var(--line-2);border-radius:9px;padding:14px;text-align:center;color:var(--ink-400);font-size:12px;cursor:pointer;transition:all .12s}
+.inl .drop:hover,.inl .drop.on{border-color:#c7d2fe;background:var(--primary-50);color:var(--primary-dark)}
+.inl .cand{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px}
+.inl .cand:last-child{border-bottom:none}
+.inl .cand .dt{color:var(--ink-400);width:58px;flex:none}
+.inl .cand .lb{flex:1;color:var(--ink-700)}
+.inl .cand .lb small{display:block;color:var(--ink-400);font-size:10.5px}
+.inl .cand .amt{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink-800)}
+.inl .chk{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-600);margin-top:8px}
+.inl .chk input{width:auto;margin:0}
 </style>
 </head>
-<body data-icons="A">
+<body data-icons="A" data-round="1">
 <div class="page">
   <div class="head">
     <div>
       <h1>Tâches sur les cartes — proposition</h1>
-      <div class="d">DELIV'IA 2.0 · popup process · 2 septembre 2026 · v2</div>
+      <div class="d">DELIV'IA 2.0 · popup process · 2 septembre 2026 · v3</div>
     </div>
     <span class="demo">Maquette interactive · données factices</span>
   </div>
@@ -204,19 +244,7 @@ body[data-icons="C"] .ib.unlock:hover .ic.round{background:var(--warn-50)}
     <div class="lg"><b><i>5</i>Revenir en arrière, pas décocher</b>Une flèche sur chaque tâche faite : ce qui repasse à faire est annoncé, la reprise est journalisée.</div>
   </div>
 
-  <div class="board">
-    <div class="bh"><span class="t">Icônes : trois familles</span><span class="s">Choisis-en une, elle s'applique aux deux cartes ci-dessous.</span>
-      <span class="sw"><button class="on" data-sw="A">A · Trait fin</button><button data-sw="B">B · Trait marqué</button><button data-sw="C">C · Rond</button></span></div>
-    <div class="grid">
-      <div class="h"></div><div class="h"><b>A</b>trait fin, arrondi</div><div class="h"><b>B</b>trait marqué, géométrique</div><div class="h"><b>C</b>gestes dans un rond, comme la croix de la popup</div>
-      <div class="r">Revenir en arrière</div><div data-fam="A"><span class="ib"><i class="ic" data-ic="revenir"></i></span></div><div data-fam="B"><span class="ib"><i class="ic" data-ic="revenir"></i></span></div><div data-fam="C"><span class="ib"><i class="ic round" data-ic="revenir"></i></span></div>
-      <div class="r">Débloquer</div><div data-fam="A"><span class="ib"><i class="ic" data-ic="unlock"></i></span></div><div data-fam="B"><span class="ib"><i class="ic" data-ic="unlock"></i></span></div><div data-fam="C"><span class="ib"><i class="ic round" data-ic="unlock"></i></span></div>
-      <div class="r">En attente</div><div data-fam="A"><span class="wait"><span class="dot"></span>en attente</span></div><div data-fam="B"><span class="wait"><i class="ic" data-ic="attente"></i>en attente</span></div><div data-fam="C"><span class="wait"><span class="dots"><i></i><i></i><i></i></span>en attente</span></div>
-      <div class="r">Ouvrir un document</div><div class="ctx" data-fam="A"><span class="tr act">F-2026-0142 <i class="ic s" data-ic="lien"></i></span></div><div class="ctx" data-fam="B"><span class="tr act">F-2026-0142 <i class="ic s" data-ic="lien"></i></span></div><div class="ctx" data-fam="C"><span class="tr act">F-2026-0142 <i class="ic s" data-ic="lien"></i></span></div>
-      <div class="r">Copier</div><div class="ctx" data-fam="A"><span class="tr act">F-2026-0142 <i class="ic s" data-ic="copier"></i></span></div><div class="ctx" data-fam="B"><span class="tr act">F-2026-0142 <i class="ic s" data-ic="copier"></i></span></div><div class="ctx" data-fam="C"><span class="tr act">F-2026-0142 <i class="ic s" data-ic="copier"></i></span></div>
-      <div class="r">Déplier</div><div class="ctx" data-fam="A"><span class="tr act">4 certificats <i class="ic s" data-ic="deplier"></i></span></div><div class="ctx" data-fam="B"><span class="tr act">4 certificats <i class="ic s" data-ic="deplier"></i></span></div><div class="ctx" data-fam="C"><span class="tr act">4 certificats <i class="ic s" data-ic="deplier"></i></span></div>
-    </div>
-  </div>
+  <p class="cap" style="margin:-6px 0 14px 6px">Icônes : famille A (trait fin), gestes de retour et de déblocage posés dans un rond · choix de Côme du 02/09</p>
 
   <div class="cols">
 
@@ -331,53 +359,118 @@ body[data-icons="C"] .ib.unlock:hover .ic.round{background:var(--warn-50)}
     </div>
 
   </div>
+  <div class="cap" style="margin-top:38px">Gestes particuliers · chaque famille de tâche, avec son geste et sa trace</div>
+  <div class="gcols">
+
+    <div class="gbox"><div class="gt">Argent</div>
+      <div class="tlist" data-list>
+        <div class="tl ok" data-kind="auto-detect"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Constate le paiement du client</span><a class="tr" href="#" title="Ouvrir la transaction dans Qonto">virement du 28 août · 1 650 € <i class="ic s" data-ic="lien"></i></a></div><div class="tl-r"></div></div>
+        <div class="tl now" data-kind="auto-detect" data-btn="Rapprocher" data-panel="rap"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Constate le paiement du client</span><span class="tr soft">aucun virement rattaché</span></div><div class="tl-r"></div></div>
+        <div class="paypanel"><div class="pph"><span class="ttl">Paiements</span><span>facture <a class="ilink" href="#">F-2026-0143</a> · 1 650 €</span><span class="rest">Reste dû 1 650 €</span></div><div class="paynone">Le virement arrive de Qonto seul quand il porte le numéro de facture. Sinon, « Rapprocher » le cherche parmi les virements sans facture.</div></div>
+        <div class="tl now" data-kind="auto-detect"><span class="tl-node"></span><div class="tl-m"><span class="who">Client</span><span class="lbl">Encaisse toutes les échéances</span><span class="tr soft">1 sur 3</span></div><div class="tl-r"></div></div>
+        <div class="paypanel"><div class="pph"><span class="ttl">Paiements</span><span>facture <a class="ilink" href="#">F-2026-0144</a> · 1 650 €</span><span class="rest">Reste dû 1 100 €</span></div>
+          <table class="paytbl"><tbody>
+            <tr><td class="lib">Échéance 1</td><td class="dt">12 août</td><td class="amt">550 €</td><td class="act"><span class="chip ok">Encaissée</span></td></tr>
+            <tr><td class="lib">Échéance 2</td><td class="dt">12 sept.</td><td class="amt">550 €</td><td class="act"><span class="chip err">Refusée</span> <button class="b2 g" data-toast="Prélèvement rejoué chez Qonto, le résultat arrive par webhook">Rejouer</button></td></tr>
+            <tr><td class="lib">Échéance 3</td><td class="dt">12 oct.</td><td class="amt">550 €</td><td class="act"><span class="chip">À venir</span></td></tr>
+          </tbody></table></div>
+        <div class="tl now" data-kind="auto" data-btn="Marquer acquittée"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Tamponne la facture acquittée</span></div><div class="tl-r"></div></div>
+        <div class="tl ok" data-kind="bouton"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Enregistre un remboursement</span><a class="tr" href="#">avoir AV-2026-003 <i class="ic s" data-ic="lien"></i></a></div><div class="tl-r"></div></div>
+        <div class="tl ok" data-kind="auto-detect"><span class="tl-node"></span><div class="tl-m"><span class="who">Client</span><span class="lbl">Signe le lien de mandat de prélèvement</span><span class="tr soft">signé le 21 août</span></div><div class="tl-r"></div></div>
+        <div class="evrow"><span class="ev-node"><span class="dot"></span></span>Création de la carte facturation client</div>
+      </div>
+    </div>
+
+    <div class="gbox"><div class="gt">Pièces jointes</div>
+      <div class="tlist" data-list>
+        <div class="tl now" data-kind="bouton" data-btn="Déposer le justificatif" data-panel="depot" data-file="certificat-medical.pdf"><span class="tl-node"></span><div class="tl-m"><span class="who">Closeur</span><span class="lbl">Récupère la pièce justificative de l'absence</span></div><div class="tl-r"></div></div>
+        <div class="tl now" data-kind="bouton" data-btn="Déposer ma facture" data-panel="depot" data-file="facture-formateur-sept.pdf"><span class="tl-node"></span><div class="tl-m"><span class="who">Formateur</span><span class="lbl">Dépose sa facture</span></div><div class="tl-r"></div></div>
+        <div class="tl now" data-kind="bouton" data-btn="Téléverser" data-panel="depot" data-file="export-edof-durand.pdf"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Importe l'export EDOF</span></div><div class="tl-r"></div></div>
+        <div class="tl ok" data-kind="bouton"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Exporte la discussion WhatsApp</span><a class="tr" href="#">export-whatsapp.zip <i class="ic s" data-ic="lien"></i></a><button class="b2 t" data-toast="Un nouveau fichier remplace l'ancien sur le Drive" title="Remplacer le fichier">remplacer</button></div><div class="tl-r"></div></div>
+        <div class="tl ok" data-kind="auto"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Téléverse les émargements signés sur le Drive</span><a class="tr" href="#">Drive <i class="ic s" data-ic="lien"></i></a></div><div class="tl-r"></div></div>
+      </div>
+    </div>
+
+    <div class="gbox"><div class="gt">Liaisons et identifiants</div>
+      <div class="tlist" data-list>
+        <div class="tl now" data-kind="auto-detect" data-btn="Lier à la main" data-panel="lier" data-label="Identifiant du contact GHL" data-ph="91Bx33"><span class="tl-node"></span><div class="tl-m"><span class="who">Closeur</span><span class="lbl">Lie le compte GHL</span></div><div class="tl-r"></div></div>
+        <div class="tl ok" data-kind="auto-detect"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Lie le numéro de dossier WEDOF</span><a class="tr" href="#">2026-CPF-8841 <i class="ic s" data-ic="lien"></i></a></div><div class="tl-r"></div></div>
+        <div class="tl now" data-kind="bouton" data-btn="Renseigner" data-panel="whatsapp"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Crée le groupe WhatsApp</span></div><div class="tl-r"></div></div>
+        <div class="tl now" data-kind="bouton" data-btn="Synchroniser" data-panel="sync"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Synchronise la fiche avec GHL</span></div><div class="tl-r"></div></div>
+      </div>
+    </div>
+
+    <div class="gbox"><div class="gt">Lieu, formateur, demandes</div>
+      <div class="tlist" data-list>
+        <div class="tl now" data-kind="bouton" data-btn="Renseigner" data-panel="lieu"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Réserve et paie le lieu</span></div><div class="tl-r"></div></div>
+        <div class="tl now" data-kind="bouton" data-btn="Voir les demandes" data-panel="demandes"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Valide la demande du formateur</span><span class="tr soft">2 demandes</span></div><div class="tl-r"></div></div>
+        <div class="tl ok" data-kind="bouton"><span class="tl-node"></span><div class="tl-m"><span class="who">Formateur</span><span class="lbl">Demande cette session</span><span class="tr soft">demandée le 28 août</span></div><div class="tl-r"></div></div>
+        <div class="tl now" data-kind="bouton" data-btn="Lancer"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Lance la session Qualiobee</span></div><div class="tl-r"></div></div>
+        <div class="tl now" data-kind="bouton" data-btn="Ouvrir Certifopac" data-link="1"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Confirme que les CPF sont inscrits à la certification</span><span class="tr soft">3 sur 4</span></div><div class="tl-r"></div></div>
+      </div>
+    </div>
+
+    <div class="gbox"><div class="gt">Messages et signatures</div>
+      <div class="tlist" data-list>
+        <div class="tl now" data-kind="manuel" data-nobtn="1"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Envoie le message WhatsApp de la veille du J1</span><a class="tr" href="#" title="Voir le modèle du message">modèle <i class="ic s" data-ic="lien"></i></a></div><div class="tl-r"></div></div>
+        <div class="tl ok" data-kind="auto"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Envoie le mail de bienvenue</span><a class="tr" href="#" title="Relire le mail envoyé">envoyé le 21 août à 10:42 <i class="ic s" data-ic="lien"></i></a></div><div class="tl-r"></div></div>
+        <div class="tl now" data-kind="bouton" data-btn="Envoyer à tous" data-panel="signature"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Envoie la demande de signature de la convention</span><span class="tr soft">3 sur 4 signées</span></div><div class="tl-r"></div></div>
+        <div class="tl ok" data-kind="auto-detect"><span class="tl-node"></span><div class="tl-m"><span class="who">Client</span><span class="lbl">Signe la convention depuis son espace</span><a class="tr" href="#">signée le 22 août <i class="ic s" data-ic="lien"></i></a></div><div class="tl-r"></div></div>
+      </div>
+    </div>
+
+    <div class="gbox"><div class="gt">Bibby et coaching</div>
+      <div class="tlist" data-list>
+        <div class="tl now" data-kind="bouton" data-btn="Envoyer à Bibby"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Envoie le dossier à Bibby</span><span class="tr soft">facture ✓ · émargements ✓ · dossier EDOF ✓</span></div><div class="tl-r"></div></div>
+        <div class="tl ok" data-kind="bouton"><span class="tl-node"></span><div class="tl-m"><span class="who">Admin</span><span class="lbl">Crée la remise sur Bibby Factor</span><a class="tr" href="#">remise n° 4471 <i class="ic s" data-ic="lien"></i></a></div><div class="tl-r"></div></div>
+        <div class="tl now" data-kind="bouton" data-btn="Ajouter une séance" data-panel="seance"><span class="tl-node"></span><div class="tl-m"><span class="who">Formateur</span><span class="lbl">Retranscrit le créneau choisi dans son agenda</span></div><div class="tl-r"></div></div>
+        <div class="tl now" data-kind="bouton" data-btn="Déposer le compte rendu" data-panel="cr"><span class="tl-node"></span><div class="tl-m"><span class="who">Formateur</span><span class="lbl">Dépose le compte rendu de séance</span><span class="tr soft">séance 1 · 12 sept.</span></div><div class="tl-r"></div></div>
+        <div class="tl ok" data-kind="bouton"><span class="tl-node"></span><div class="tl-m"><span class="who">Formateur</span><span class="lbl">Recueille et soumet le témoignage de clôture</span><a class="tr" href="#">témoignage <i class="ic s" data-ic="lien"></i></a></div><div class="tl-r"></div></div>
+        <div class="tl todo" data-kind="manuel"><span class="tl-node"></span><div class="tl-m"><span class="who">Formateur</span><span class="lbl">Partager la page Session</span><a class="tr" href="#">Notion <i class="ic s" data-ic="lien"></i></a><a class="tr" href="#">Vidéo <i class="ic s" data-ic="lien"></i></a></div><div class="tl-r"></div></div>
+      </div>
+    </div>
+
+  </div>
+  <p class="hint"><b>À essayer</b> : Rapprocher (recherche parmi les virements sans facture), Déposer (zone de dépôt), Lier à la main, Renseigner (lieu et salle, groupe WhatsApp), Voir les demandes, Envoyer à tous (relances par apprenant), Ajouter une séance.</p>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
 (function(){
-  /* ── les trois familles d'icônes ── */
   const S=(paths,w)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round">'+paths+'</svg>';
   const ICONS={
-    A:{ /* trait fin, arrondi */
-      revenir:S('<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/>',1.6),
-      unlock:S('<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',1.6),
-      attente:S('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',1.6),
-      lien:S('<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',1.8),
-      copier:S('<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',1.6),
-      deplier:S('<path d="m6 9 6 6 6-6"/>',1.8)
-    },
-    B:{ /* trait marqué, géométrique */
-      revenir:S('<polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/>',2.4),
-      unlock:S('<path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/>',2.2),
-      attente:S('<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>',2.2),
-      lien:S('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',2.4),
-      copier:S('<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',2.2),
-      deplier:S('<path d="m6 9 6 6 6-6"/>',2.6)
-    },
-    C:{ /* dans un rond : trait moyen, gestes posés dans une pastille grise */
-      revenir:S('<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',2),
-      unlock:S('<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',2),
-      attente:S('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',2),
-      lien:S('<path d="M7 17 17 7"/><path d="M7 7h10v10"/>',2.2),
-      copier:S('<rect width="14" height="14" x="8" y="8" rx="3" ry="3"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',2),
-      deplier:S('<path d="m6 9 6 6 6-6"/>',2.4)
-    }
+    A:{ revenir:S('<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/>',1.6),
+        unlock:S('<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',1.6),
+        attente:S('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',1.6),
+        lien:S('<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',1.8),
+        copier:S('<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',1.6),
+        deplier:S('<path d="m6 9 6 6 6-6"/>',1.8) },
+    B:{ revenir:S('<polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/>',2.4),
+        unlock:S('<path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/>',2.2),
+        attente:S('<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>',2.2),
+        lien:S('<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',2.4),
+        copier:S('<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',2.2),
+        deplier:S('<path d="m6 9 6 6 6-6"/>',2.6) },
+    C:{ revenir:S('<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',2),
+        unlock:S('<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',2),
+        attente:S('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',2),
+        lien:S('<path d="M7 17 17 7"/><path d="M7 7h10v10"/>',2.2),
+        copier:S('<rect width="14" height="14" x="8" y="8" rx="3" ry="3"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',2),
+        deplier:S('<path d="m6 9 6 6 6-6"/>',2.4) }
   };
   const fam=()=>document.body.dataset.icons||'A';
   function renderIcons(root){
     (root||document).querySelectorAll('[data-ic]').forEach(el=>{
-      const scope=el.closest('[data-fam]');
-      const f=scope?scope.dataset.fam:fam();
+      const scope=el.closest('[data-fam]'); const f=scope?scope.dataset.fam:fam();
       el.innerHTML=ICONS[f][el.dataset.ic];
-      if(!scope) el.classList.toggle('round',(f==='C')&&(el.dataset.ic==='revenir'||el.dataset.ic==='unlock'));
+      if(!scope) el.classList.toggle('round',(f==='C'||document.body.dataset.round==='1')&&(el.dataset.ic==='revenir'||el.dataset.ic==='unlock'));
     });
   }
   const ic=(name,extra)=>'<i class="ic '+(extra||'')+'" data-ic="'+name+'"></i>';
-  const waitHtml=(title)=>{
+  const waitHtml=(txt,title)=>{
     const f=fam();
     const inner=f==='A'?'<span class="dot"></span>':f==='B'?ic('attente'):'<span class="dots"><i></i><i></i><i></i></span>';
-    return '<span class="wait" title="'+title+'">'+inner+'en attente</span>';
+    return '<span class="wait" title="'+title+'">'+inner+txt+'</span>';
   };
   const NAT={manuel:['manuelle','manuel',"Quelqu'un le fait dehors, puis coche la case. DELIV'IA n'appelle rien."],
     bouton:['bouton',"bouton d'action","Un humain clique, et c'est DELIV'IA qui exécute l'appel. La coche suit l'exécution réussie, pas le clic."],
@@ -386,68 +479,121 @@ body[data-icons="C"] .ib.unlock:hover .ic.round{background:var(--warn-50)}
   const natHtml=k=>'<span class="tl-nat '+NAT[k][0]+'" title="'+NAT[k][2]+'">'+NAT[k][1]+'</span>';
 
   const toastEl=document.getElementById('toast');
-  let tt;function toast(m){toastEl.textContent=m;toastEl.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('on'),1500);}
+  let tt;function toast(m){toastEl.textContent=m;toastEl.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('on'),1600);}
   const lbl=r=>r.querySelector('.lbl').textContent;
   const rows=list=>[...list.querySelectorAll('.tl')];
-  const rightOf=r=>r.querySelector('.tl-r');
   const UNLOCK=()=>'<button class="ib unlock" data-unlock title="Débloquer à la main · motif obligatoire, journalisé">'+ic('unlock')+'</button>';
+  const manuelLike=r=>r.dataset.kind==='manuel'||r.dataset.kind==='bouton';
 
-  /* redessine la zone droite d'une ligne selon son état et sa nature */
+  /* la zone droite d'une ligne, selon son état, sa nature et son geste propre */
   function paint(r){
-    const kind=r.dataset.kind, right=rightOf(r), node=r.querySelector('.tl-node');
+    const k=r.dataset.kind, right=r.querySelector('.tl-r'), node=r.querySelector('.tl-node');
     node.classList.remove('hand');node.removeAttribute('data-node');
+    const btn=r.dataset.btn, panel=r.dataset.panel;
+    const act=(cls)=>'<button class="b2 '+cls+'" '+(panel?'data-open="'+panel+'"':'data-valider')+'>'+btn+'</button>';
     let h='';
     if(r.classList.contains('ok')){
-      if(kind==='manuel'||kind==='bouton') h+='<button class="ib back" data-back title="Revenir ici">'+ic('revenir')+'</button>';
+      if(manuelLike(r)) h+='<button class="ib back" data-back title="Revenir ici">'+ic('revenir')+'</button>';
     }else if(r.classList.contains('now')){
-      if(kind==='manuel'){h+='<button class="b2 p" data-valider>Valider</button>';node.classList.add('hand');node.setAttribute('data-node','');}
-      else if(kind==='bouton'){h+='<button class="b2 p" data-valider>'+(r.dataset.btn||'Valider')+'</button>';}
-      else if(kind==='auto'){h+=waitHtml("DELIV'IA exécute cette tâche à son tour")+UNLOCK();}
-      else {h+=waitHtml('Se coche quand le signal externe arrive')+UNLOCK();}
+      if(k==='manuel'){ if(!r.dataset.nobtn) h+='<button class="b2 p" data-valider>Valider</button>'; node.classList.add('hand');node.setAttribute('data-node',''); }
+      else if(k==='bouton'){
+        if(r.dataset.link){ h+='<button class="b2 g" data-toast="Ouvre '+btn.replace('Ouvrir ','')+' dans un nouvel onglet">'+btn+' '+ic('lien','s')+'</button>'; node.classList.add('hand');node.setAttribute('data-node',''); }
+        else h+=act('p');
+      }
+      else if(k==='auto'){ h+=(btn?act('g'):waitHtml('en cours',"DELIV'IA exécute cette tâche à son tour"))+UNLOCK(); }
+      else { h+=waitHtml('en attente','Se coche quand le signal externe arrive')+(btn?act('g'):'')+UNLOCK(); }
     }else{
-      if(kind==='auto'||kind==='auto-detect') h+=UNLOCK();
+      if(k==='auto'||k==='auto-detect') h+=UNLOCK();
     }
-    right.innerHTML=h+natHtml(kind);
+    right.innerHTML=h+natHtml(k);
     renderIcons(right);
   }
   function recount(list){
-    const rs=rows(list), done=rs.filter(r=>r.classList.contains('ok')).length;
-    list.closest('.steps').querySelector('[data-count]').textContent=done+'/'+rs.length;
+    const c=list.closest('.steps')?.querySelector('[data-count]'); if(!c) return;
+    const rs=rows(list); c.textContent=rs.filter(r=>r.classList.contains('ok')).length+'/'+rs.length;
   }
   function setNow(list){
-    const rs=rows(list);rs.forEach(r=>{if(!r.classList.contains('ok')){r.classList.remove('now','todo');r.classList.add('todo');}});
+    const rs=rows(list), lib=list.closest('.gbox');
+    if(lib){ rs.forEach(paint); return; }             /* la galerie garde chaque ligne dans son état de démonstration */
+    rs.forEach(r=>{if(!r.classList.contains('ok')){r.classList.remove('now','todo');r.classList.add('todo');}});
     const first=rs.find(r=>!r.classList.contains('ok'));if(first){first.classList.remove('todo');first.classList.add('now');}
     rs.forEach(paint);recount(list);
   }
   function closeInl(list){list.querySelectorAll('.inl').forEach(e=>e.remove());}
-  function fait(r,trace){
+  function fait(r,trace,lien){
     r.classList.remove('now','todo');r.classList.add('ok');
-    if(trace){const s=document.createElement('span');s.className='tr soft';s.textContent=trace;r.querySelector('.tl-m').appendChild(s);}
+    r.querySelectorAll('.tr.soft').forEach(s=>s.remove());
+    if(trace){
+      const s=document.createElement(lien?'a':'span'); s.className='tr'+(lien?'':' soft'); if(lien) s.href='#';
+      s.innerHTML=trace+(lien?' '+ic('lien','s'):''); r.querySelector('.tl-m').appendChild(s); renderIcons(s);
+    }
   }
+  const acts=(ok,cancel)=>'<div class="acts"><button class="b2 g" data-cancel>'+(cancel||'Annuler')+'</button>'+(ok?'<button class="b2 p" data-confirm>'+ok+'</button>':'')+'</div>';
+  const PANELS={
+    rap:r=>'<div class="q">Rapprocher un virement reçu</div><input placeholder="Nom, référence, montant…">'
+      +'<div style="margin-top:8px">'
+      +'<div class="cand"><span class="dt">28 août</span><span class="lb">VIR SEPA CAMILLE DURAND<small>FORMATION IA</small></span><span class="amt">+1 650 €</span><button class="b2 p" data-confirm data-trace="virement du 28 août · 1 650 €" data-lien="1">Lier</button></div>'
+      +'<div class="cand"><span class="dt">27 août</span><span class="lb">VIR SEPA SAS ATELIER NOVA<small>ACOMPTE FORMATION</small></span><span class="amt">+3 300 €</span><button class="b2 g" data-confirm data-trace="virement du 27 août · 3 300 €" data-lien="1">Lier</button></div>'
+      +'<div class="cand"><span class="dt">26 août</span><span class="lb">VIR INST M. BENALI<small>—</small></span><span class="amt">+1 650 €</span><button class="b2 g" data-confirm data-trace="virement du 26 août · 1 650 €" data-lien="1">Lier</button></div>'
+      +'</div><div class="paynone">Le lien part dans Qonto, qui tamponne la facture ; DELIV\'IA relit ensuite son statut.</div>'+acts(null),
+    depot:r=>'<div class="q">'+r.dataset.btn+'</div><div class="drop" data-drop>Glisser le fichier ici, ou cliquer pour le choisir</div>'+acts('Déposer'),
+    lier:r=>'<div class="q">'+lbl(r)+'</div><div class="fld"><div class="k">'+r.dataset.label+'</div><input placeholder="'+r.dataset.ph+'" data-in></div>'
+      +'<div class="paynone">DELIV\'IA relit la fiche et resynchronise coordonnées, responsable et opportunité.</div>'+acts('Lier'),
+    whatsapp:r=>'<div class="q">Groupe WhatsApp de la session</div><div class="fld"><div class="k">Identifiant du groupe</div><input placeholder="120363…@g.us" data-in></div><div class="fld"><div class="k">Lien d\'invitation</div><input placeholder="https://chat.whatsapp.com/…"></div>'+acts('Enregistrer'),
+    sync:r=>'<div class="q">Synchroniser avec GHL</div>'
+      +'<div class="cand"><span class="lb">Téléphone<small>DELIV\'IA : 06 12 34 56 78 · GHL : +33 6 12 34 56 78</small></span><span class="chip">identique</span></div>'
+      +'<div class="cand"><span class="lb">Adresse<small>DELIV\'IA : vide · GHL : 12 rue des Lilas, 75011 Paris</small></span><button class="b2 g" data-toast="Adresse reprise de GHL">Reprendre</button></div>'
+      +'<div class="cand"><span class="lb">Closeur<small>DELIV\'IA : Loïc · GHL : Pénélope</small></span><button class="b2 g" data-toast="Closeur remplacé par la valeur GHL">Remplacer</button></div>'
+      +acts('Appliquer'),
+    lieu:r=>'<div class="q">Lieu et salle des deux jours</div><div class="two"><div class="fld"><div class="k">J1 · 26 août</div><select><option>Station F · Salle 2</option><option>Station F · Salle 4</option><option>MyCowork Montorgueil</option></select></div><div class="fld"><div class="k">J2 · 27 août</div><select><option>Station F · Salle 2</option><option>Station F · Salle 4</option><option>MyCowork Montorgueil</option></select></div></div>'
+      +'<label class="chk"><input type="checkbox" data-paye>Lieu payé</label>'+acts('Enregistrer'),
+    demandes:r=>'<div class="q">Demandes de formateurs</div>'
+      +'<div class="cand"><span class="lb">Léo Martin<small>demandé le 28 août · 4 sessions animées</small></span><button class="b2 p" data-confirm data-trace="Léo Martin · acceptée le 2 sept.">Accepter</button><button class="b2 g" data-toast="Demande refusée, le formateur est prévenu">Refuser</button></div>'
+      +'<div class="cand"><span class="lb">Inès Petit<small>demandé le 29 août · première session</small></span><button class="b2 p" data-confirm data-trace="Inès Petit · acceptée le 2 sept.">Accepter</button><button class="b2 g" data-toast="Demande refusée, le formateur est prévenu">Refuser</button></div>'+acts(null,'Fermer'),
+    signature:r=>'<div class="q">Signatures de la convention</div>'
+      +'<div class="cand"><span class="lb">Camille Durand</span><span class="chip ok">signée le 22 août</span></div>'
+      +'<div class="cand"><span class="lb">Léo Martin</span><span class="chip ok">signée le 22 août</span></div>'
+      +'<div class="cand"><span class="lb">Inès Petit</span><span class="chip ok">signée le 23 août</span></div>'
+      +'<div class="cand"><span class="lb">Sami Benali<small>demande envoyée le 21 août · relance R1 le 24 août</small></span><button class="b2 p" data-toast="Relance R2 envoyée, avec le lien de son espace">Relancer</button></div>'+acts(null,'Fermer'),
+    seance:r=>'<div class="q">Séance 1</div><div class="two"><div class="fld"><div class="k">Date</div><input type="date" value="2026-09-12" data-in></div><div class="fld"><div class="k">Heure</div><input type="time" value="10:00"></div></div><div class="fld"><div class="k">Durée</div><select><option>1 h</option><option>1 h 30</option><option>2 h</option></select></div>'+acts('Ajouter'),
+    cr:r=>'<div class="q">Compte rendu de la séance 1</div><textarea data-in placeholder="Ce qui a été travaillé, ce qui reste à faire"></textarea>'+acts('Déposer')
+  };
+  const TRACE={depot:r=>[r.dataset.file+' · Drive',true],lier:(r,d)=>[(d.querySelector('[data-in]').value||r.dataset.ph),true],whatsapp:()=>['groupe',true],sync:()=>['synchronisée le 2 sept.',false],
+    lieu:(r,d)=>['Station F · Salle 2'+(d.querySelector('[data-paye]').checked?' · payé':''),false],seance:()=>['séance 1 · 12 sept. · 10:00 · 1 h',false],cr:()=>['compte rendu',true]};
 
   document.addEventListener('click',e=>{
     const sw=e.target.closest('[data-sw]');
     if(sw){document.body.dataset.icons=sw.dataset.sw;document.querySelectorAll('[data-sw]').forEach(b=>b.classList.toggle('on',b===sw));document.querySelectorAll('[data-list]').forEach(l=>rows(l).forEach(paint));renderIcons();return;}
+    const tb=e.target.closest('[data-toast]'); if(tb){e.preventDefault();toast(tb.dataset.toast);return;}
+    const drop=e.target.closest('[data-drop]'); if(drop){drop.classList.add('on');drop.textContent=drop.closest('.inl').previousElementSibling.dataset.file+' · prêt à déposer';return;}
     const list=e.target.closest('[data-list]');
     const pop=e.target.closest('[data-pop]');
     document.querySelectorAll('.pop.open').forEach(p=>{if(p!==pop)p.classList.remove('open');});
     if(pop&&e.target.closest('.tr')){pop.classList.toggle('open');e.preventDefault();return;}
     if(e.target.closest('.pop .menu a')){e.preventDefault();toast('Ouvre le certificat dans un nouvel onglet');return;}
-    const cp=e.target.closest('[data-copy]');
-    if(cp){toast('Numéro copié : '+cp.dataset.copy);return;}
+    const cp=e.target.closest('[data-copy]'); if(cp){toast('Numéro copié : '+cp.dataset.copy);return;}
     if(e.target.closest('a.tr')){e.preventDefault();toast('Ouvre le document dans un nouvel onglet');return;}
     if(!list)return;
     const r=e.target.closest('.tl');
     if(e.target.closest('[data-valider]')||e.target.closest('[data-node]')){
       closeInl(list);
-      fait(r,r.dataset.kind==='manuel'?'à l\'instant':'');setNow(list);
-      toast(r.dataset.kind==='manuel'?'Tâche validée':'Action lancée, la coche suit son exécution');return;
+      const k=r.dataset.kind;
+      fait(r,k==='manuel'?'à l\'instant':(r.dataset.btn==='Marquer acquittée'?'acquittée le 2 sept.':r.dataset.btn==='Lancer'?'lancée le 2 sept.':r.dataset.btn==='Envoyer à Bibby'?'envoyé le 2 sept.':''),false);
+      setNow(list);toast(k==='manuel'?'Tâche validée':'Action lancée, la coche suit son exécution');return;
+    }
+    const op=e.target.closest('[data-open]');
+    if(op){ closeInl(list); const d=document.createElement('div'); d.className='inl'; d.innerHTML=PANELS[op.dataset.open](r); r.after(d); const f=d.querySelector('input,textarea'); if(f) f.focus(); return; }
+    if(e.target.closest('[data-confirm]')){
+      const b=e.target.closest('[data-confirm]'), d=b.closest('.inl'), prev=d.previousElementSibling, name=prev.dataset.panel;
+      let tr,lien;
+      if(b.dataset.trace){tr=b.dataset.trace;lien=!!b.dataset.lien;} else {[tr,lien]=TRACE[name]?TRACE[name](prev,d):['',false];}
+      d.remove(); fait(prev,tr,lien); setNow(list); toast('Enregistré'); return;
     }
     if(e.target.closest('[data-back]')){
       closeInl(list);
       const rs=rows(list), i=rs.indexOf(r);
-      const reopen=rs.slice(i).filter(x=>x.classList.contains('ok')&&(x.dataset.kind==='manuel'||x.dataset.kind==='bouton'));
-      const keep=rs.slice(i).filter(x=>x.classList.contains('ok')&&!(x.dataset.kind==='manuel'||x.dataset.kind==='bouton'));
+      const reopen=rs.slice(i).filter(x=>x.classList.contains('ok')&&manuelLike(x));
+      const keep=rs.slice(i).filter(x=>x.classList.contains('ok')&&!manuelLike(x));
       const d=document.createElement('div');d.className='inl';
       d.innerHTML='<div class="q">Revenir à « '+lbl(r)+' » ?</div>'
         +'<div class="li"><span class="k">Repassent à faire</span><span>'+reopen.map(lbl).join(' · ')+'</span></div>'
@@ -459,7 +605,7 @@ body[data-icons="C"] .ib.unlock:hover .ic.round{background:var(--warn-50)}
     if(e.target.closest('[data-confirm-back]')){
       const d=e.target.closest('.inl'), prev=d.previousElementSibling;
       const rs=rows(list), i=rs.indexOf(prev);
-      rs.slice(i).forEach(x=>{if(x.classList.contains('ok')&&(x.dataset.kind==='manuel'||x.dataset.kind==='bouton')){x.classList.remove('ok');x.classList.add('todo');const s=x.querySelector('.tr.soft');if(s)s.remove();}});
+      rs.slice(i).forEach(x=>{if(x.classList.contains('ok')&&manuelLike(x)){x.classList.remove('ok');x.classList.add(x===prev?'now':'todo');x.querySelectorAll('.tr.soft').forEach(s=>s.remove());}});
       d.remove();setNow(list);toast('Reprise journalisée');return;
     }
     if(e.target.closest('[data-unlock]')){
@@ -473,7 +619,7 @@ body[data-icons="C"] .ib.unlock:hover .ic.round{background:var(--warn-50)}
     }
     if(e.target.closest('[data-confirm-unlock]')){
       const d=e.target.closest('.inl'), prev=d.previousElementSibling, motif=d.querySelector('input').value.trim();
-      d.remove();fait(prev,'débloquée · '+motif);setNow(list);toast('Débloquée, motif journalisé');return;
+      d.remove();fait(prev,'débloquée · '+motif,false);setNow(list);toast('Débloquée, motif journalisé');return;
     }
     if(e.target.closest('[data-cancel]')){e.target.closest('.inl').remove();return;}
   });
