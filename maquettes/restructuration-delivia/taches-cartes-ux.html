@@ -223,14 +223,56 @@ body[data-icons="C"] .ib.unlock:hover .ic.round,body[data-round="1"] .ib.unlock:
 .inl .cand .amt{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink-800)}
 .inl .chk{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-600);margin-top:8px}
 .inl .chk input{width:auto;margin:0}
+
+/* ─── mises en page ─── structure commune : node · m(who · body(lbl · tr)) · r(gestes) · ic(icônes) · nat ─── */
+.lay-d{font-size:12px;color:var(--ink-500);line-height:1.5;display:none;padding:2px 2px 0}
+.lay-d.on{display:block}
+.tl-body{display:inline}
+.tl-tr{display:inline}
+.tl-tr:empty,.tl-r:empty,.tl-ic:empty{display:none}
+.tl-ic{display:inline-flex;align-items:center;gap:4px;flex:none}
+.tl-nat{flex:none}
+/* 0 · actuel : tout coule sur une ligne */
+body[data-lay="0"] .tl-r{margin-left:auto}
+body[data-lay="0"] .tl-r:empty{display:block;margin-left:auto;min-height:0}
+/* A · deux lignes : who · libellé · icônes · pastille, puis trace · gestes */
+body[data-lay="A"] .tl{display:grid;grid-template-columns:70px minmax(0,1fr) auto auto;grid-template-areas:"who lbl ico nat" ". tr act act";column-gap:10px;row-gap:0;align-items:center}
+body[data-lay="A"] .tl-m,body[data-lay="A"] .tl-body{display:contents}
+body[data-lay="A"] .who{grid-area:who;margin:0}
+body[data-lay="A"] .lbl{grid-area:lbl}
+body[data-lay="A"] .tl-tr{grid-area:tr;display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:3px}
+body[data-lay="A"] .tl-r{grid-area:act;justify-self:end;margin:3px 0 0;min-height:0}
+body[data-lay="A"] .tl-ic{grid-area:ico}
+body[data-lay="A"] .tl-nat{grid-area:nat;justify-self:end}
+body[data-lay="A"] .tl-m .tr,body[data-lay="A"] .tl-m .pop{margin-left:0}
+body[data-lay="A"] .tl-node{top:8px;margin-top:0}
+/* B · une ligne, colonnes fixes à droite : gestes · icône · pastille */
+body[data-lay="B"] .tl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto) 24px 158px;column-gap:10px;align-items:center}
+body[data-lay="B"] .tl-m{display:flex;align-items:baseline;gap:10px;min-width:0}
+body[data-lay="B"] .who{width:70px;flex:none;margin:0}
+body[data-lay="B"] .tl-body{flex:1;min-width:0;display:block}
+body[data-lay="B"] .tl-r{justify-self:end;margin:0;min-height:0}
+body[data-lay="B"] .tl-ic{justify-self:center}
+body[data-lay="B"] .tl-nat{justify-self:start}
+/* C · gestes alignés en colonnes sur la ligne, la trace descend sous le libellé */
+body[data-lay="C"] .tl{display:grid;grid-template-columns:70px minmax(0,1fr) minmax(0,auto) 24px 158px;grid-template-areas:"who lbl act ico nat" ". tr tr tr tr";column-gap:10px;row-gap:0;align-items:center}
+body[data-lay="C"] .tl-m,body[data-lay="C"] .tl-body{display:contents}
+body[data-lay="C"] .who{grid-area:who;margin:0}
+body[data-lay="C"] .lbl{grid-area:lbl}
+body[data-lay="C"] .tl-tr{grid-area:tr;display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:3px}
+body[data-lay="C"] .tl-r{grid-area:act;justify-self:end;margin:0;min-height:0}
+body[data-lay="C"] .tl-ic{grid-area:ico;justify-self:center}
+body[data-lay="C"] .tl-nat{grid-area:nat;justify-self:start}
+body[data-lay="C"] .tl-m .tr,body[data-lay="C"] .tl-m .pop{margin-left:0}
+body[data-lay="C"] .tl-node{top:8px;margin-top:0}
 </style>
 </head>
-<body data-icons="A" data-round="1">
+<body data-icons="A" data-round="1" data-lay="A">
 <div class="page">
   <div class="head">
     <div>
       <h1>Tâches sur les cartes — proposition</h1>
-      <div class="d">DELIV'IA 2.0 · popup process · 2 septembre 2026 · v3</div>
+      <div class="d">DELIV'IA 2.0 · popup process · 2 septembre 2026 · v4</div>
     </div>
     <span class="demo">Maquette interactive · données factices</span>
   </div>
@@ -243,7 +285,13 @@ body[data-icons="C"] .ib.unlock:hover .ic.round,body[data-round="1"] .ib.unlock:
     <div class="lg"><b><i>5</i>Revenir en arrière, pas décocher</b>Une flèche sur chaque tâche faite : ce qui repasse à faire est annoncé, la reprise est journalisée.</div>
   </div>
 
-  <p class="cap" style="margin:-6px 0 14px 6px">Icônes : famille A (trait fin), gestes de retour et de déblocage posés dans un rond · choix de Côme du 02/09</p>
+  <div class="board"><div class="bh"><span class="t">Mise en page des lignes</span><span class="s">Mêmes éléments, trois alignements. Le choix s'applique à toute la page.</span>
+    <span class="sw"><button data-lay="0">Actuel</button><button class="on" data-lay="A">A · Deux lignes</button><button data-lay="B">B · Une ligne, colonnes</button><button data-lay="C">C · Trace dessous</button></span></div>
+    <div class="lay-d" data-lay-d="0">La version présentée cet après-midi : tout coule sur une ligne, la trace suit le libellé, les gestes et la pastille se rangent à droite.</div>
+    <div class="lay-d on" data-lay-d="A">Première ligne toujours la même : responsable, libellé, pastille. Tout ce qui varie, trace et gestes, descend sur une seconde ligne alignée sous le libellé.</div>
+    <div class="lay-d" data-lay-d="B">Une seule ligne. Le libellé et sa trace coulent à gauche ; à droite, trois colonnes fixes : les gestes, l'icône, la pastille, alignées d'une ligne à l'autre. Les libellés longs passent sur deux lignes.</div>
+    <div class="lay-d" data-lay-d="C">Les gestes, l'icône et la pastille restent sur la ligne du libellé, en colonnes fixes ; seule la trace descend, alignée sous le libellé. Entre A et B.</div>
+  </div>
 
   <div class="cols">
 
@@ -488,21 +536,23 @@ body[data-icons="C"] .ib.unlock:hover .ic.round,body[data-round="1"] .ib.unlock:
     node.classList.remove('hand');node.removeAttribute('data-node');
     const btn=r.dataset.btn, panel=r.dataset.panel;
     const act=(cls)=>'<button class="b2 '+cls+'" '+(panel?'data-open="'+panel+'"':'data-valider')+'>'+btn+'</button>';
-    let h='';
+    let h='', icons='';
     if(r.classList.contains('ok')){
-      if(manuelLike(r)) h+='<button class="ib back" data-back title="Revenir ici">'+ic('revenir')+'</button>';
+      if(manuelLike(r)) icons+='<button class="ib back" data-back title="Revenir ici">'+ic('revenir')+'</button>';
     }else if(r.classList.contains('now')){
       if(k==='manuel'){ if(!r.dataset.nobtn) h+='<button class="b2 p" data-valider>Valider</button>'; node.classList.add('hand');node.setAttribute('data-node',''); }
       else if(k==='bouton'){
         if(r.dataset.link){ h+='<button class="b2 g" data-toast="Ouvre '+btn.replace('Ouvrir ','')+' dans un nouvel onglet">'+btn+' '+ic('lien','s')+'</button>'; node.classList.add('hand');node.setAttribute('data-node',''); }
         else h+=act('p');
       }
-      else if(k==='auto'){ h+=(btn?act('g'):waitHtml('en cours',"DELIV'IA exécute cette tâche à son tour"))+UNLOCK(); }
-      else { h+=waitHtml('en attente','Se coche quand le signal externe arrive')+(btn?act('g'):'')+UNLOCK(); }
+      else if(k==='auto'){ h+=(btn?act('g'):waitHtml('en cours',"DELIV'IA exécute cette tâche à son tour")); icons+=UNLOCK(); }
+      else { h+=waitHtml('en attente','Se coche quand le signal externe arrive')+(btn?act('g'):''); icons+=UNLOCK(); }
     }else{
-      if(k==='auto'||k==='auto-detect') h+=UNLOCK();
+      if(k==='auto'||k==='auto-detect') icons+=UNLOCK();
     }
-    right.innerHTML=h+natHtml(k);
+    right.innerHTML=h;
+    const icb=r.querySelector(':scope > .tl-ic'); if(icb){ icb.innerHTML=icons; renderIcons(icb); }
+    let nat=r.querySelector(':scope > .tl-nat'); if(!nat){nat=document.createElement('span'); r.appendChild(nat);} nat.outerHTML=natHtml(k);
     renderIcons(right);
   }
   function recount(list){
@@ -522,9 +572,17 @@ body[data-icons="C"] .ib.unlock:hover .ic.round,body[data-round="1"] .ib.unlock:
     r.querySelectorAll('.tr.soft').forEach(s=>s.remove());
     if(trace){
       const s=document.createElement(lien?'a':'span'); s.className='tr'+(lien?'':' soft'); if(lien) s.href='#';
-      s.innerHTML=trace+(lien?' '+ic('lien','s'):''); r.querySelector('.tl-m').appendChild(s); renderIcons(s);
+      s.innerHTML=trace+(lien?' '+ic('lien','s'):''); traceBox(r).appendChild(s); renderIcons(s);
     }
   }
+  /* la trace vit dans un conteneur propre, pour que chaque mise en page puisse la placer */
+  function traceBox(r){ const m=r.querySelector('.tl-m'); let b=m.querySelector('.tl-tr'); if(!b){ b=document.createElement('span'); b.className='tl-tr'; (m.querySelector('.tl-body')||m).appendChild(b); } return b; }
+  document.querySelectorAll('.tl').forEach(r=>{
+    const m=r.querySelector('.tl-m'); const b=traceBox(r);
+    [...m.children].forEach(c=>{ if(c!==b && (c.classList.contains('tr')||c.classList.contains('pop'))) b.appendChild(c); });
+    const body=document.createElement('span'); body.className='tl-body'; const lbl=m.querySelector('.lbl'); m.insertBefore(body,lbl); body.appendChild(lbl); body.appendChild(b);
+    const icb=document.createElement('span'); icb.className='tl-ic'; r.querySelector('.tl-r').after(icb);
+  });
   const acts=(ok,cancel)=>'<div class="acts"><button class="b2 g" data-cancel>'+(cancel||'Annuler')+'</button>'+(ok?'<button class="b2 p" data-confirm>'+ok+'</button>':'')+'</div>';
   const PANELS={
     rap:r=>'<div class="q">Rapprocher un virement reçu</div><input placeholder="Nom, référence, montant…">'
@@ -559,6 +617,8 @@ body[data-icons="C"] .ib.unlock:hover .ic.round,body[data-round="1"] .ib.unlock:
     lieu:(r,d)=>['Station F · Salle 2'+(d.querySelector('[data-paye]').checked?' · payé':''),false],seance:()=>['séance 1 · 12 sept. · 10:00 · 1 h',false],cr:()=>['compte rendu',true]};
 
   document.addEventListener('click',e=>{
+    const ly=e.target.closest('[data-lay]');
+    if(ly&&ly.tagName==='BUTTON'){document.body.dataset.lay=ly.dataset.lay;document.querySelectorAll('button[data-lay]').forEach(b=>b.classList.toggle('on',b===ly));document.querySelectorAll('[data-lay-d]').forEach(d=>d.classList.toggle('on',d.dataset.layD===ly.dataset.lay));return;}
     const sw=e.target.closest('[data-sw]');
     if(sw){document.body.dataset.icons=sw.dataset.sw;document.querySelectorAll('[data-sw]').forEach(b=>b.classList.toggle('on',b===sw));document.querySelectorAll('[data-list]').forEach(l=>rows(l).forEach(paint));renderIcons();return;}
     const tb=e.target.closest('[data-toast]'); if(tb){e.preventDefault();toast(tb.dataset.toast);return;}
