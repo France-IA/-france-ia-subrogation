@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tâches sur les cartes — proposition UX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8fafc; --surface:#fff; --ink-900:#0f172a; --ink-800:#1e293b; --ink-700:#334155; --ink-600:#475569;
+  --ink-500:#64748b; --ink-400:#94a3b8; --ink-300:#cbd5e1;
+  --line:#f1f5f9; --line-2:#e2e8f0;
+  --primary:#4f46e5; --primary-dark:#4338ca; --primary-50:#eef2ff;
+  --ok:#059669; --ok-50:#ecfdf5; --warn:#d97706; --warn-50:#fffbeb;
+  --err:#e11d48; --err-50:#fff1f2;
+  --sh-carte:0 1px 3px 0 rgb(0 0 0/.04),0 1px 2px -1px rgb(0 0 0/.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+body{font-family:Inter,system-ui,-apple-system,sans-serif;background:#e9edf3;color:var(--ink-800);font-size:14px;line-height:normal}
+a{color:inherit;text-decoration:none}
+
+/* ─── page ─── */
+.page{max-width:1240px;margin:0 auto;padding:34px 22px 80px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.head h1{font-size:22px;font-weight:600;letter-spacing:-.015em;color:var(--ink-900)}
+.head .d{font-size:12px;color:var(--ink-500);margin-top:5px}
+.demo{font-size:11px;font-weight:600;color:var(--warn);background:var(--warn-50);border:1px solid #fde68a;border-radius:999px;padding:4px 11px;white-space:nowrap}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-bottom:28px}
+.lg{background:#fff;border-radius:12px;padding:13px 15px;box-shadow:var(--sh-carte);font-size:12.5px;line-height:1.5;color:var(--ink-700)}
+.lg b{display:flex;align-items:center;gap:8px;color:var(--ink-900);font-weight:600;margin-bottom:4px}
+.lg b i{font-style:normal;width:20px;height:20px;border-radius:50%;background:var(--primary);color:#fff;font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(560px,1fr));gap:26px;align-items:start}
+@media (max-width:640px){.cols{grid-template-columns:1fr}}
+.cap{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-500);margin:0 0 10px 6px}
+
+/* ─── popup (copie des règles #modal de v182.css) ─── */
+.mbox{background:#fff;border-radius:18px;box-shadow:0 24px 64px rgb(15 23 42/.12),0 0 0 1px rgb(15 23 42/.04);width:100%}
+.mhead{padding:26px 34px 8px}
+.mhead .row{display:flex;align-items:center;gap:10px}
+.mhead .t{font-size:18px;font-weight:600;letter-spacing:-.015em;color:var(--ink-900)}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:1.5px 8px;font-size:10.5px;font-weight:500;white-space:nowrap;margin-left:6px;background:var(--primary-50);color:var(--primary-dark)}
+.mclose{margin-left:auto;width:30px;height:30px;border-radius:50%;background:#f1f5f9;color:var(--ink-500);font-size:14px;display:flex;align-items:center;justify-content:center}
+.mbody{padding:0 34px 28px}
+.mpanel{padding:18px 0 16px;border-top:1.5px solid #cbd5e1}
+.mpanel:first-child{border-top:none;padding-top:10px}
+.mpanel.mtasks{border-top:none;padding-top:6px}
+.igrid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px 22px}
+.ifld .k{font-size:11px;font-weight:500;color:var(--ink-400)}
+.ifld .v{font-size:13.5px;color:var(--ink-900);margin-top:2px}
+.ilink{color:var(--primary);font-weight:600;cursor:pointer}
+.ilink:hover{text-decoration:underline;text-underline-offset:2px}
+.editptr{text-align:right;font-size:11px;margin-top:10px}
+.mnote .k{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-700)}
+.notes-ta{width:100%;font:inherit;font-size:13px;color:var(--ink-700);border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin-top:8px;background:#fbfcfd;min-height:54px;line-height:1.5}
+
+/* stepper (inchangé) */
+.steps{margin-top:4px;padding-top:18px;border-top:1px solid var(--line-2)}
+.stepper{display:flex;align-items:center;padding:2px 0 16px}
+.stepper .st{width:26px;height:26px;border-radius:50%;background:#f1f5f9;color:var(--ink-400);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stepper .st.vu{background:var(--primary);color:#fff;box-shadow:var(--sh-carte)}
+.stepper .st.ok{background:var(--ok);color:#fff}
+.stepper .stl{width:18px;height:1px;background:var(--line-2);flex:none}
+.stepper .stl.ok{background:#6ee7b7}
+.stepper .stn{margin-left:auto;font-size:11.5px;color:var(--ink-400);font-variant-numeric:tabular-nums}
+.stephead{display:flex;align-items:center;gap:10px;padding:0 0 12px}
+.stnav{width:30px;height:30px;border-radius:9px;background:#f8fafc;color:var(--ink-500);font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stnav[disabled]{opacity:.3;cursor:default}
+.stx{flex:1;min-width:0}
+.stt{font-size:14.5px;font-weight:600;color:var(--ink-900)}
+.stc{font-size:12px;font-weight:600;color:var(--ink-500);background:#f1f5f9;border-radius:999px;padding:2px 10px;font-variant-numeric:tabular-nums}
+
+/* ─── la liste des tâches : UNE géométrie ─── */
+.tlist{position:relative;padding-left:28px;margin-top:2px}
+.tlist::before{content:"";position:absolute;left:9px;top:12px;bottom:12px;width:1px;background:var(--line-2)}
+.tl{position:relative;display:flex;align-items:center;gap:9px;padding:6px 0 6px 2px;min-height:32px;border-radius:6px}
+.tl-node{position:absolute;left:-28px;top:50%;margin-top:-9.5px;width:19px;height:19px;border-radius:50%;background:#fff;border:2px solid var(--line-2);display:flex;align-items:center;justify-content:center;z-index:1;transition:all .14s}
+.tl.ok>.tl-node{background:var(--ok);border-color:var(--ok)}
+.tl.ok>.tl-node::after{content:"";width:7px;height:3.5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(.5px,-1px)}
+.tl.now>.tl-node{background:var(--primary);border-color:var(--primary);cursor:pointer}
+.tl.now>.tl-node::after{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
+.tl.now>.tl-node.hand:hover::after{width:7px;height:3.5px;border-radius:0;background:none;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(.5px,-1px)}
+.who{font-size:11.5px;font-weight:600;color:var(--ink-400);white-space:nowrap;flex:none}
+.tl.now .who{color:var(--ink-500)}
+.lbl{font-size:13.5px;line-height:1.45;color:var(--ink-400);min-width:0}
+.tl.now .lbl{color:var(--ink-900);font-weight:600}
+.tl.ok .lbl{text-decoration:line-through;text-decoration-color:var(--ink-300)}
+.tl-m{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
+.tl-r{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none;min-height:24px}
+
+/* la trace : ce que la tâche a produit ou ce dont elle a besoin */
+.tr{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:5px;font-size:11.5px;font-weight:500;color:var(--ink-600);background:#f8fafc;border:1px solid var(--line-2);white-space:nowrap;font-variant-numeric:tabular-nums;transition:all .12s}
+.tr.num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;letter-spacing:.01em}
+.tr[href],.tr.act{cursor:pointer}
+.tr[href]:hover,.tr.act:hover{border-color:#c7d2fe;color:var(--primary-dark);background:var(--primary-50)}
+.tr .g{font-size:10px;color:var(--ink-400)}
+.tr[href]:hover .g,.tr.act:hover .g{color:var(--primary)}
+.tr.soft{border-color:transparent;background:transparent;padding:0;color:var(--ink-400);font-weight:500}
+.tl.now .tr{border-color:#c7d2fe;color:var(--primary-dark);background:#fff}
+.tl.now .tr:hover{background:var(--primary-50)}
+
+/* nature : un glyphe, pas une pastille */
+.nat{width:18px;height:18px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:var(--ink-300);flex:none;cursor:help}
+.nat.b{color:#6366f1;background:#eef2ff}
+.nat.x{color:#7c3aed;background:#f5f3ff}
+.nat.d{color:#0891b2;background:#ecfeff}
+.tl.ok .nat,.tl.todo .nat{opacity:.55}
+.tl.now .nat{opacity:1}
+
+/* boutons compacts : sur la ligne, jamais dessous */
+.b2{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 10px;border-radius:7px;font-size:11.5px;font-weight:600;white-space:nowrap;transition:all .12s;border:1px solid transparent}
+.b2.p{background:var(--primary);color:#fff;box-shadow:var(--sh-carte)}
+.b2.p:hover{background:var(--primary-dark)}
+.b2.g{border-color:var(--line-2);color:var(--ink-600);background:#fff}
+.b2.g:hover{border-color:#c7d2fe;color:var(--primary-dark);background:var(--primary-50)}
+.b2.t{color:var(--ink-400);padding:0 6px}
+.b2.t:hover{color:var(--primary-dark);background:var(--primary-50)}
+.b2.n{color:var(--ink-500);background:#f1f5f9}
+.b2.n:hover{color:var(--ink-800)}
+
+/* en attente d'un signal externe */
+.wait{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;color:var(--ink-400);white-space:nowrap}
+.wait i{width:7px;height:7px;border-radius:50%;background:#6366f1;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+
+/* Débloquer : un cadenas, visible au survol */
+.unlock{width:24px;height:24px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink-300);opacity:0;transition:all .12s;flex:none}
+.tl:hover .unlock{opacity:1}
+.tl.now .unlock{opacity:.7}
+.unlock:hover{color:var(--warn);background:var(--warn-50);opacity:1}
+.unlock svg{width:14px;height:14px}
+
+/* Revenir ici : visible au survol d'une tâche faite */
+.back{opacity:0}
+.tl.ok:hover .back{opacity:1}
+
+/* les panneaux en ligne (confirmation, motif) */
+.inl{margin:2px 0 8px 0;background:#fff;border:1px solid var(--line-2);border-radius:10px;padding:11px 13px;box-shadow:0 6px 18px rgb(15 23 42/.06);font-size:12.5px;color:var(--ink-700);line-height:1.5}
+.inl .q{font-weight:600;color:var(--ink-900);margin-bottom:6px}
+.inl .li{display:flex;align-items:baseline;gap:8px;padding:2px 0;color:var(--ink-600)}
+.inl .li .k{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-400);width:112px;flex:none}
+.inl .li .keep{color:var(--ink-400)}
+.inl .li .keep .tr{height:18px;font-size:11px;margin-left:4px}
+.inl input{width:100%;font:inherit;font-size:12.5px;padding:6px 9px;border:1px solid var(--line-2);border-radius:7px;margin-top:8px;outline:none;color:var(--ink-800)}
+.inl input:focus{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-50)}
+.inl .acts{display:flex;gap:8px;margin-top:10px;justify-content:flex-end}
+
+/* dépliage des certificats */
+.pop{position:relative}
+.pop .menu{position:absolute;top:24px;left:0;z-index:5;background:#fff;border:1px solid var(--line-2);border-radius:9px;box-shadow:0 10px 30px rgb(15 23 42/.12);padding:6px;min-width:220px;display:none}
+.pop.open .menu{display:block}
+.pop .menu a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 9px;border-radius:6px;font-size:12.5px;color:var(--ink-700)}
+.pop .menu a:hover{background:var(--primary-50);color:var(--primary-dark)}
+.pop .menu a .g{font-size:10px;color:var(--ink-400)}
+.tl-aps{margin:0 0 4px 4px;padding-left:10px;border-left:2px solid var(--line);font-size:11.5px;color:var(--ink-400);display:flex;gap:10px}
+
+.hint{margin:16px 6px 0;font-size:11.5px;color:var(--ink-400);line-height:1.5}
+.hint b{color:var(--ink-600);font-weight:600}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink-900);color:#fff;font-size:12.5px;padding:9px 14px;border-radius:9px;opacity:0;transition:all .18s;pointer-events:none;box-shadow:0 10px 30px rgb(0 0 0/.25)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="head">
+    <div>
+      <h1>Tâches sur les cartes — proposition</h1>
+      <div class="d">DELIV'IA 2.0 · popup process · 2 septembre 2026</div>
+    </div>
+    <span class="demo">Maquette interactive · données factices</span>
+  </div>
+
+  <div class="legend">
+    <div class="lg"><b><i>1</i>Une seule géométrie</b>Chaque tâche est une ligne. La tâche en cours n'est plus encadrée : nœud plein, libellé appuyé, action à droite.</div>
+    <div class="lg"><b><i>2</i>Un geste à la fois</b>Seule la tâche en cours se valide, par son bouton ou son nœud. Le reste est calme.</div>
+    <div class="lg"><b><i>3</i>Débloquer devient un cadenas</b>Sur les tâches automatiques, au survol. Motif obligatoire, journalisé, comme aujourd'hui.</div>
+    <div class="lg"><b><i>4</i>Chaque tâche montre sa trace</b>Numéro de facture, certificats, date de signature : cliquables, au même endroit sur toutes les lignes.</div>
+    <div class="lg"><b><i>5</i>Revenir en arrière, pas décocher</b>« Revenir ici » sur une tâche faite : ce qui repasse à faire est annoncé, la reprise est journalisée.</div>
+  </div>
+
+  <div class="cols">
+
+    <!-- ══════════════ A. Carte facturation CPF ══════════════ -->
+    <div>
+      <div class="cap">Carte facturation CPF</div>
+      <div class="mbox" id="A">
+        <div class="mhead"><div class="row"><div class="t">Camille Durand</div><span class="badge">Niveau 1</span><button class="mclose" aria-label="Fermer">✕</button></div></div>
+        <div class="mbody">
+          <div class="mpanel">
+            <div class="igrid">
+              <div class="ifld"><div class="k">Client</div><div class="v ilink">Camille Durand</div></div>
+              <div class="ifld"><div class="k">Apprenant</div><div class="v ilink">Camille Durand</div></div>
+              <div class="ifld"><div class="k">Mode de paiement</div><div class="v">CPF</div></div>
+              <div class="ifld"><div class="k">Date</div><div class="v">30 juillet et 31 juillet</div></div>
+              <div class="ifld"><div class="k">Lieu</div><div class="v">MyCowork Montorgueil</div></div>
+              <div class="ifld"><div class="k">Closeur / Setteur</div><div class="v">Loïc / Pénélope</div></div>
+              <div class="ifld"><div class="k">Montant</div><div class="v">1 650 €</div></div>
+            </div>
+            <div class="editptr"><span class="ilink">Modifier → fiche client</span></div>
+          </div>
+          <div class="mpanel mnote"><div class="k">Note</div><div class="notes-ta">—</div></div>
+
+          <div class="mpanel mtasks"><div class="steps">
+            <div class="stepper"><span class="st ok">✓</span><i class="stl ok"></i><span class="st vu">2</span><i class="stl"></i><span class="st">3</span><i class="stl"></i><span class="st">4</span><i class="stl"></i><span class="st">5</span><span class="stn">3/13</span></div>
+            <div class="stephead"><button class="stnav">‹</button><div class="stx"><div class="stt">Sortie validée par EDOF</div></div><span class="stc" data-count>1/9</span><button class="stnav">›</button></div>
+
+            <div class="tlist" data-list>
+              <div class="tl ok" data-kind="bouton" data-btn="Ouvrir la facture">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Génère la facture Qonto au montant CDC</span><a class="tr num" href="#" title="Ouvrir la facture dans Qonto">F-2026-0142 <span class="g">↗</span></a></div>
+                <div class="tl-r"><button class="b2 t back" data-back title="Rouvrir cette tâche">↶ Revenir ici</button><span class="nat b" title="Bouton d'action : un humain clique, DELIV'IA exécute">▶</span></div>
+              </div>
+              <div class="tl now" data-kind="manuel">
+                <span class="tl-node hand" data-node title="Valider"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Transmet le numéro de facture sur EDOF</span><span class="tr num act" data-copy="F-2026-0142" title="Copier le numéro">F-2026-0142 <span class="g">⧉</span></span></div>
+                <div class="tl-r"><button class="b2 p" data-valider>Valider</button></div>
+              </div>
+              <div class="tl todo" data-kind="auto">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Téléverse la facture Bibby sur le Drive</span></div>
+                <div class="tl-r"><button class="unlock" data-unlock title="Débloquer à la main · motif obligatoire, journalisé"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></button><span class="nat x" title="Exécuté automatiquement par DELIV'IA, sans clic">⚡</span></div>
+              </div>
+              <div class="tl todo" data-kind="bouton" data-btn="Générer">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Génère les émargements signés</span></div>
+                <div class="tl-r"><span class="nat b" title="Bouton d'action : un humain clique, DELIV'IA exécute">▶</span></div>
+              </div>
+              <div class="tl todo" data-kind="auto">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Téléverse les émargements signés sur le Drive</span></div>
+                <div class="tl-r"><button class="unlock" data-unlock title="Débloquer à la main · motif obligatoire, journalisé"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></button><span class="nat x" title="Exécuté automatiquement par DELIV'IA, sans clic">⚡</span></div>
+              </div>
+              <div class="tl todo" data-kind="bouton" data-btn="Générer">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Génère et téléverse le dossier EDOF sur DELIV'IA</span></div>
+                <div class="tl-r"><span class="nat b" title="Bouton d'action : un humain clique, DELIV'IA exécute">▶</span></div>
+              </div>
+              <div class="tl todo" data-kind="auto">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Téléverse le dossier EDOF sur Google Drive</span></div>
+                <div class="tl-r"><button class="unlock" data-unlock title="Débloquer à la main · motif obligatoire, journalisé"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></button><span class="nat x" title="Exécuté automatiquement par DELIV'IA, sans clic">⚡</span></div>
+              </div>
+              <div class="tl todo" data-kind="bouton" data-btn="Envoyer">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Envoie le dossier individuel à Bibby par mail</span></div>
+                <div class="tl-r"><span class="nat b" title="Bouton d'action : un humain clique, DELIV'IA exécute">▶</span></div>
+              </div>
+              <div class="tl todo" data-kind="bouton" data-btn="Créer la remise">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Crée la remise sur Bibby Factor</span></div>
+                <div class="tl-r"><span class="nat b" title="Bouton d'action : un humain clique, DELIV'IA exécute">▶</span></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+      <p class="hint"><b>À essayer</b> : cliquer <b>F-2026-0142</b> (copie), <b>Valider</b>, survoler la première ligne (<b>↶ Revenir ici</b>), survoler une ligne automatique (cadenas).</p>
+    </div>
+
+    <!-- ══════════════ B. Carte inscription N1 groupée ══════════════ -->
+    <div>
+      <div class="cap">Carte inscription · Niveau 1 · 4 apprenants</div>
+      <div class="mbox" id="B">
+        <div class="mhead"><div class="row"><div class="t">Atelier Nova</div><span class="badge">Niveau 1</span><button class="mclose" aria-label="Fermer">✕</button></div></div>
+        <div class="mbody">
+          <div class="mpanel">
+            <div class="igrid">
+              <div class="ifld"><div class="k">Client</div><div class="v ilink">Atelier Nova</div></div>
+              <div class="ifld"><div class="k">Apprenants</div><div class="v"><span class="ilink">Camille Durand</span>, <span class="ilink">Léo Martin</span>, <span class="ilink">Inès Petit</span>, <span class="ilink">Sami Benali</span></div></div>
+              <div class="ifld"><div class="k">Mode de paiement</div><div class="v">Virement</div></div>
+              <div class="ifld"><div class="k">Date</div><div class="v">26 août et 27 août</div></div>
+              <div class="ifld"><div class="k">Lieu</div><div class="v">Station F</div></div>
+              <div class="ifld"><div class="k">Closeur / Setteur</div><div class="v">Loïc / Pénélope</div></div>
+              <div class="ifld"><div class="k">Montant</div><div class="v">6 600 €</div></div>
+            </div>
+            <div class="editptr"><span class="ilink">Modifier → fiche client</span></div>
+          </div>
+          <div class="mpanel mnote"><div class="k">Note</div><div class="notes-ta">—</div></div>
+
+          <div class="mpanel mtasks"><div class="steps">
+            <div class="stepper"><span class="st ok">✓</span><i class="stl ok"></i><span class="st ok">✓</span><i class="stl ok"></i><span class="st ok">✓</span><i class="stl ok"></i><span class="st vu">4</span><i class="stl"></i><span class="st">5</span><span class="stn">14/19</span></div>
+            <div class="stephead"><button class="stnav">‹</button><div class="stx"><div class="stt">En formation</div></div><span class="stc" data-count>3/6</span><button class="stnav">›</button></div>
+
+            <div class="tlist" data-list>
+              <div class="tl ok" data-kind="manuel">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Vérifie les émargements J1 et J2</span><a class="tr" href="#" title="Ouvrir les émargements signés">Émargements <span class="g">↗</span></a></div>
+                <div class="tl-r"><button class="b2 t back" data-back title="Rouvrir cette tâche">↶ Revenir ici</button></div>
+              </div>
+              <div class="tl ok" data-kind="auto" data-keep="4 certificats">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Génère tous les certificats de réalisation</span>
+                  <span class="pop" data-pop><span class="tr act">4 certificats <span class="g">▾</span></span>
+                    <div class="menu">
+                      <a href="#">Camille Durand <span class="g">↗</span></a><a href="#">Léo Martin <span class="g">↗</span></a><a href="#">Inès Petit <span class="g">↗</span></a><a href="#">Sami Benali <span class="g">↗</span></a>
+                    </div>
+                  </span>
+                </div>
+                <div class="tl-r"><span class="nat x" title="Exécuté automatiquement par DELIV'IA, sans clic">⚡</span></div>
+              </div>
+              <div class="tl ok" data-kind="manuel">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Envoie les certificats aux apprenants</span><span class="tr soft">le 29 août</span></div>
+                <div class="tl-r"><button class="b2 t back" data-back title="Rouvrir cette tâche">↶ Revenir ici</button></div>
+              </div>
+              <div class="tl now" data-kind="auto-detect">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Client</span><span class="lbl">Fait la demande d'inscription à la certification</span><span class="tr soft">2 sur 4</span></div>
+                <div class="tl-r"><span class="wait" title="Se coche quand le dossier de certification arrive de WEDOF"><i></i>en attente</span><button class="unlock" data-unlock title="Débloquer à la main · motif obligatoire, journalisé"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></button><span class="nat d" title="Détecté : se coche seul quand le signal externe arrive">◎</span></div>
+              </div>
+              <div class="tl-aps"><span>Camille Durand ✓</span><span>Léo Martin ✓</span><span>Inès Petit</span><span>Sami Benali</span></div>
+              <div class="tl todo" data-kind="bouton" data-btn="Ouvrir Certifopac">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Confirme que les CPF sont inscrits à la certification</span></div>
+                <div class="tl-r"><span class="nat b" title="Bouton d'action : un humain clique, DELIV'IA exécute">▶</span></div>
+              </div>
+              <div class="tl todo" data-kind="bouton" data-btn="Transmettre">
+                <span class="tl-node"></span>
+                <div class="tl-m"><span class="who">Admin</span><span class="lbl">Transmet la pièce justificative à la CDC</span></div>
+                <div class="tl-r"><span class="nat b" title="Bouton d'action : un humain clique, DELIV'IA exécute">▶</span></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+      </div>
+      <p class="hint"><b>À essayer</b> : cliquer <b>4 certificats</b>, survoler « Vérifie les émargements » puis <b>↶ Revenir ici</b> (deux tâches repassent à faire, les certificats restent), cliquer le cadenas de la ligne en attente.</p>
+    </div>
+
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const UNLOCK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';
+  const toastEl=document.getElementById('toast');
+  let tt;function toast(m){toastEl.textContent=m;toastEl.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('on'),1500);}
+  const lbl=r=>r.querySelector('.lbl').textContent;
+  const rows=list=>[...list.querySelectorAll('.tl')];
+
+  function rightOf(r){return r.querySelector('.tl-r');}
+  function natOf(r){const n=r.querySelector('.nat');return n?n.outerHTML:'';}
+
+  /* redessine la zone droite d'une ligne selon son état et sa nature */
+  function paint(r){
+    const kind=r.dataset.kind, nat=natOf(r), right=rightOf(r);
+    r.querySelector('.tl-node').classList.remove('hand');r.querySelector('.tl-node').removeAttribute('data-node');
+    if(r.classList.contains('ok')){
+      right.innerHTML=(kind==='manuel'||kind==='bouton'?'<button class="b2 t back" data-back title="Rouvrir cette tâche">↶ Revenir ici</button>':'')+nat;
+    }else if(r.classList.contains('now')){
+      if(kind==='manuel'){right.innerHTML='<button class="b2 p" data-valider>Valider</button>';r.querySelector('.tl-node').classList.add('hand');r.querySelector('.tl-node').setAttribute('data-node','');}
+      else if(kind==='bouton'){right.innerHTML='<button class="b2 p" data-valider>'+(r.dataset.btn||'Valider')+'</button>'+nat;}
+      else if(kind==='auto'){right.innerHTML='<span class="wait" title="DELIV\'IA exécute cette tâche à son tour"><i></i>en cours</span><button class="unlock" data-unlock title="Débloquer à la main · motif obligatoire, journalisé">'+UNLOCK+'</button>'+nat;}
+      else {right.innerHTML='<span class="wait" title="Se coche quand le signal externe arrive"><i></i>en attente</span><button class="unlock" data-unlock title="Débloquer à la main · motif obligatoire, journalisé">'+UNLOCK+'</button>'+nat;}
+    }else{
+      right.innerHTML=(kind==='auto'||kind==='auto-detect'?'<button class="unlock" data-unlock title="Débloquer à la main · motif obligatoire, journalisé">'+UNLOCK+'</button>':'')+nat;
+    }
+  }
+  function recount(list){
+    const rs=rows(list), done=rs.filter(r=>r.classList.contains('ok')).length;
+    const c=list.closest('.steps').querySelector('[data-count]');c.textContent=done+'/'+rs.length;
+  }
+  function setNow(list){
+    const rs=rows(list);rs.forEach(r=>{if(!r.classList.contains('ok')){r.classList.remove('now','todo');r.classList.add('todo');}});
+    const first=rs.find(r=>!r.classList.contains('ok'));if(first){first.classList.remove('todo');first.classList.add('now');}
+    rs.forEach(paint);recount(list);
+  }
+  function closeInl(list){list.querySelectorAll('.inl').forEach(e=>e.remove());}
+  function fait(r,trace){
+    r.classList.remove('now','todo');r.classList.add('ok');
+    if(trace){const m=r.querySelector('.tl-m');const s=document.createElement('span');s.className='tr soft';s.textContent=trace;m.appendChild(s);}
+  }
+
+  document.addEventListener('click',e=>{
+    const list=e.target.closest('[data-list]');
+    /* dépliage certificats */
+    const pop=e.target.closest('[data-pop]');
+    document.querySelectorAll('.pop.open').forEach(p=>{if(p!==pop)p.classList.remove('open');});
+    if(pop&&e.target.closest('.tr')){pop.classList.toggle('open');e.preventDefault();return;}
+    if(e.target.closest('.pop .menu a')){e.preventDefault();toast('Ouvre le certificat dans un nouvel onglet');return;}
+    /* copie */
+    const cp=e.target.closest('[data-copy]');
+    if(cp){toast('Numéro copié : '+cp.dataset.copy);return;}
+    if(e.target.closest('a.tr')){e.preventDefault();toast('Ouvre le document dans un nouvel onglet');return;}
+    if(!list)return;
+    const r=e.target.closest('.tl');
+    /* valider la tâche en cours */
+    if(e.target.closest('[data-valider]')||e.target.closest('[data-node]')){
+      closeInl(list);
+      const t=r.dataset.kind==='manuel'?'à l\'instant':'';
+      fait(r,t);setNow(list);toast(r.dataset.kind==='manuel'?'Tâche validée':'Action lancée, la coche suit son exécution');return;
+    }
+    /* revenir ici */
+    if(e.target.closest('[data-back]')){
+      closeInl(list);
+      const rs=rows(list), i=rs.indexOf(r);
+      const reopen=rs.slice(i).filter(x=>x.classList.contains('ok')&&(x.dataset.kind==='manuel'||x.dataset.kind==='bouton'));
+      const keep=rs.slice(i).filter(x=>x.classList.contains('ok')&&!(x.dataset.kind==='manuel'||x.dataset.kind==='bouton'));
+      const d=document.createElement('div');d.className='inl';
+      d.innerHTML='<div class="q">Revenir à « '+lbl(r)+' » ?</div>'
+        +'<div class="li"><span class="k">Repassent à faire</span><span>'+reopen.map(lbl).join(' · ')+'</span></div>'
+        +(keep.length?'<div class="li"><span class="k">Gardent leur résultat</span><span class="keep">'+keep.map(x=>lbl(x)+(x.dataset.keep?' <span class="tr">'+x.dataset.keep+'</span>':'')).join(' · ')+'</span></div>':'')
+        +'<input placeholder="Motif (facultatif)">'
+        +'<div class="acts"><button class="b2 g" data-cancel>Annuler</button><button class="b2 p" data-confirm-back>Revenir</button></div>';
+      r.after(d);d.querySelector('input').focus();return;
+    }
+    if(e.target.closest('[data-confirm-back]')){
+      const d=e.target.closest('.inl'), prev=d.previousElementSibling;
+      const rs=rows(list), i=rs.indexOf(prev);
+      rs.slice(i).forEach(x=>{if(x.classList.contains('ok')&&(x.dataset.kind==='manuel'||x.dataset.kind==='bouton')){x.classList.remove('ok');x.classList.add('todo');const s=x.querySelector('.tr.soft');if(s)s.remove();}});
+      d.remove();setNow(list);toast('Reprise journalisée');return;
+    }
+    /* débloquer */
+    if(e.target.closest('[data-unlock]')){
+      closeInl(list);
+      const d=document.createElement('div');d.className='inl';
+      d.innerHTML='<div class="q">Débloquer « '+lbl(r)+' »</div><input placeholder="Motif obligatoire">'
+        +'<div class="acts"><button class="b2 g" data-cancel>Annuler</button><button class="b2 p" data-confirm-unlock disabled style="opacity:.45">Débloquer</button></div>';
+      r.after(d);const inp=d.querySelector('input');inp.focus();
+      inp.addEventListener('input',()=>{const b=d.querySelector('[data-confirm-unlock]');b.disabled=!inp.value.trim();b.style.opacity=inp.value.trim()?'1':'.45';});
+      return;
+    }
+    if(e.target.closest('[data-confirm-unlock]')){
+      const d=e.target.closest('.inl'), prev=d.previousElementSibling, motif=d.querySelector('input').value.trim();
+      d.remove();fait(prev,'débloquée · '+motif);setNow(list);toast('Débloquée, motif journalisé');return;
+    }
+    if(e.target.closest('[data-cancel]')){e.target.closest('.inl').remove();return;}
+  });
+  document.querySelectorAll('[data-list]').forEach(l=>{rows(l).forEach(paint);recount(l);});
+})();
+</script>
+</body>
+</html>
