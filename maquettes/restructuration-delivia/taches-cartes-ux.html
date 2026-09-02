@@ -97,12 +97,13 @@ a{color:inherit;text-decoration:none}
 .tl.now>.tl-node{background:var(--primary);border-color:var(--primary);cursor:pointer}
 .tl.now>.tl-node::after{content:"";width:6px;height:6px;border-radius:50%;background:#fff}
 .tl.now>.tl-node.hand:hover::after{width:7px;height:3.5px;border-radius:0;background:none;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(.5px,-1px)}
-.who{font-size:11.5px;font-weight:600;color:var(--ink-400);white-space:nowrap;flex:none}
+.who{font-size:11.5px;font-weight:600;color:var(--ink-400);white-space:nowrap;margin-right:9px}
 .tl.now .who{color:var(--ink-500)}
-.lbl{font-size:13.5px;line-height:1.45;color:var(--ink-400);min-width:0}
+.lbl{font-size:13.5px;color:var(--ink-400)}
 .tl.now .lbl{color:var(--ink-900);font-weight:600}
 .tl.ok .lbl{text-decoration:line-through;text-decoration-color:var(--ink-300)}
-.tl-m{flex:1;min-width:0;display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px}
+.tl-m{flex:1;min-width:0;line-height:1.55}
+.tl-m .tr,.tl-m .pop{margin-left:10px;vertical-align:baseline}
 .tl-r{margin-left:auto;display:flex;align-items:center;gap:10px;flex:none;min-height:24px}
 
 /* la trace : du texte, rien autour */
