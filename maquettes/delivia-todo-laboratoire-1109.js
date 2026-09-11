@@ -25,7 +25,7 @@ const examples = [
   { id: 'long', type: 'bouton', state: 'todo', text: 'Vérifier l’ensemble des justificatifs transmis pour finaliser le dossier d’inscription', button: 'Consulter les pièces justificatives', action: 'read', group: 'long' },
   { id: 'bypass', type: 'manuel', state: 'ok', text: 'Contrôle validé exceptionnellement avec une justification', button: 'Voir le motif', action: 'reason', note: 'Contournement · justification conservée', noteKind: 'bypass', group: 'done' },
 ];
-let mode = 'new', variant = 'standard', scenario = 'all', feedbackTimer, menuAnchor, dialogAnchor;
+let mode = 'new', variant = 'lines', scenario = 'all', feedbackTimer, menuAnchor, dialogAnchor;
 const completed = new Set();
 
 function element(tag, className, text) {
@@ -59,8 +59,7 @@ function makeRow(example) {
   const actions = element('div', 'tl-r');
   if (example.lock && !done) actions.append(template.content.querySelector('.ib.unlock').cloneNode(true));
   if (example.button && !(done && example.action === 'complete')) {
-    const primary = example.state === 'now' && example.mine && !done;
-    const button = element('button', `b2 ${primary ? 'p' : 'g'}`, example.button);
+    const button = element('button', 'b2 g', example.button);
     button.type = 'button'; button.id = `action-${example.id}`; button.dataset.action = example.action || 'read';
     button.disabled = !!example.disabled;
     if (example.disabled) button.title = example.note;
@@ -96,6 +95,7 @@ function transformSource() {
     if (lock) actions.prepend(lock);
     row.querySelector('.tl-ic').remove();
     const button = actions.querySelector('.b2');
+    button.classList.remove('p'); button.classList.add('g');
     button.textContent = ['Préparer l’e-mail', 'Lier les identifiants', 'État de signature'][index];
     button.removeAttribute('title');
   });
