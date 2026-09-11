@@ -46,6 +46,26 @@ function natureFor(type, done) {
   return nature;
 }
 
+function actionFor(example, done) {
+  const disabled = !!example.disabled;
+  if (example.type === 'manuel') return { label: 'Valider', action: 'complete', disabled: disabled || done };
+  if (example.type === 'detectee') return { label: 'Actualiser', action: 'refresh', disabled };
+  if (example.type === 'executee') return { label: 'Relancer', action: 'retry', disabled };
+  return { label: example.button || 'Ouvrir', action: example.action || 'read', disabled };
+}
+
+function highlightCurrent() {
+  const rows = [...root.querySelectorAll('.tl')];
+  const available = row => !row.classList.contains('ok') && !row.querySelector('.b2').disabled;
+  const current = rows.find(row => row.classList.contains('now') && available(row)) || rows.find(available);
+  rows.forEach(row => {
+    row.classList.toggle('now', row === current);
+    row.classList.toggle('todo', row !== current && !row.classList.contains('ok'));
+    if (row === current) row.setAttribute('aria-current', 'step');
+    else row.removeAttribute('aria-current');
+  });
+}
+
 function makeRow(example) {
   const done = example.state === 'ok' || completed.has(example.id);
   const row = element('div', `tl ${done ? 'ok' : example.state} ${example.mine ? 'mine' : ''}`);
@@ -58,10 +78,12 @@ function makeRow(example) {
   text.append(body); row.append(text);
   const actions = element('div', 'tl-r');
   if (example.lock && !done) actions.append(template.content.querySelector('.ib.unlock').cloneNode(true));
-  if (example.button && !(done && example.action === 'complete')) {
-    const button = element('button', 'b2 g', example.button);
-    button.type = 'button'; button.id = `action-${example.id}`; button.dataset.action = example.action || 'read';
-    button.disabled = !!example.disabled;
+  {
+    const choice = actionFor(example, done);
+    const button = element('button', 'b2 g', choice.label);
+    button.type = 'button'; button.id = `action-${example.id}`; button.dataset.action = choice.action;
+    button.disabled = choice.disabled;
+    if (done && example.type === 'manuel') button.title = 'Tâche déjà validée';
     if (example.disabled) button.title = example.note;
     if (example.id === 'long') button.title = example.button;
     if (example.action === 'menu') {
@@ -81,7 +103,13 @@ function finishRow(row, label) {
   row.classList.remove('now'); row.classList.add('ok');
   row.querySelector('.ib.unlock')?.remove();
   const button = row.querySelector('.b2');
-  if (button) { button.textContent = label; button.classList.remove('p'); button.classList.add('g'); }
+  if (button) {
+    const type = Object.keys(types).find(k => row.querySelector('.tl-nat').classList.contains(k));
+    const choice = mode === 'new' ? actionFor({ type, button: label }, true) : { label, disabled: false };
+    button.textContent = choice.label; button.disabled = choice.disabled;
+    if (choice.action) button.dataset.action = choice.action;
+    button.classList.remove('p'); button.classList.add('g');
+  }
   if (mode === 'new') row.querySelector('.tl-nat .ic').innerHTML = check;
 }
 
@@ -96,7 +124,8 @@ function transformSource() {
     row.querySelector('.tl-ic').remove();
     const button = actions.querySelector('.b2');
     button.classList.remove('p'); button.classList.add('g');
-    button.textContent = ['Préparer l’e-mail', 'Lier les identifiants', 'État de signature'][index];
+    const choice = actionFor({ type, button: ['Préparer l’e-mail', 'Lier les identifiants', 'État de signature'][index] }, false);
+    button.textContent = choice.label; button.dataset.action = choice.action;
     button.removeAttribute('title');
   });
 }
@@ -120,7 +149,7 @@ function render() {
   document.getElementById('done-control').hidden = mode !== 'new' || scenario !== 'card';
   if (mode === 'new' && source) transformSource();
   if (mode === 'new' && !source) {
-    const selected = examples.filter(e => scenario === 'all' || e.group === scenario || (scenario === 'none' && e.id === 'done-empty'));
+    const selected = examples.filter(e => scenario === 'all' || e.group === scenario || (scenario === 'simple' && ['done-empty', 'manual', 'detected-empty', 'executed-empty'].includes(e.id)));
     root.querySelector('.tlist').replaceChildren(...selected.map(makeRow));
     root.querySelector('.stt').textContent = scenarioSelect.selectedOptions[0].textContent;
     const done = selected.filter(e => e.state === 'ok' || completed.has(e.id)).length;
@@ -140,6 +169,7 @@ function render() {
   }
   document.getElementById('preview-help').textContent = mode === 'old' ? 'Copie de la carte source, avec des identités fictives.' : source ? 'Compare le rendu et survole les icônes.' : 'Cas indépendants · menus et fenêtres cliquables · simulation uniquement.';
   root.querySelector('textarea').setAttribute('readonly', '');
+  if (mode === 'new') highlightCurrent();
   applyVariant();
 }
 
@@ -234,7 +264,8 @@ root.addEventListener('click', e => {
       root.querySelector(`[data-case="${id}"] .tl-nat`).focus({ preventScroll: true });
       explain('Coche simulée dans cette page uniquement. Rien n’est enregistré dans DELIV’IA.'); break;
     }
-    case 'retry': openDetail(button, 'Relancer l’automatisation', 'Voici la porte de relance manuelle après une erreur. Aucun service n’est contacté dans cette maquette.', [['Simuler la relance', 'Démonstration uniquement : l’automatisation n’a pas été exécutée.']]); break;
+    case 'refresh': openDetail(button, 'Actualiser l’état', 'Ce bouton relit le signal attendu et met à jour son état. Il ne rejoue pas une action et ne valide pas la tâche à la main. Ici, aucun service n’est contacté.', [['Simuler l’actualisation', 'Démonstration uniquement : aucun état métier n’a été modifié.']]); break;
+    case 'retry': openDetail(button, 'Relancer l’automatisation', 'Ce bouton permet de rejouer l’action automatique, notamment après un échec. L’application demanderait confirmation avant un nouvel envoi. Ici, aucun service n’est contacté.', [['Simuler la relance', 'Démonstration uniquement : l’automatisation n’a pas été exécutée.']]); break;
     case 'reason': openDetail(button, 'Justification du contournement', 'Exemple fictif : contrôle déjà effectué et preuve vérifiée par l’équipe. La tâche reste identifiable comme un contournement.', [['Voir la trace', 'Équipe de démonstration · 11 septembre à 09:00.']]); break;
     case 'read': openDetail(button, button.textContent.trim(), 'Cette fenêtre représente la consultation du document ou du dossier associé à la tâche. Aucun service connecté.', [['Afficher l’aperçu', 'Contenu de démonstration · aucune donnée réelle.']]); break;
     default: explain('Maquette de présentation : aucun envoi, aucune validation, aucune modification de données.');
