@@ -8,85 +8,85 @@
 <style>
   :root {
     color-scheme: light;
-    --page-bg: #f9f9f7;
-    --surface: #fcfcfb;
-    --surface-2: #ffffff;
-    --text-primary: #0b0b0b;
-    --text-secondary: #52514e;
-    --text-muted: #898781;
-    --border: rgba(11,11,11,0.10);
-    --border-strong: rgba(11,11,11,0.16);
-    --gridline: #e1e0d9;
+    --page-bg: #f5f4ef;
+    --surface: #ffffff;
+    --surface-2: #faf9f5;
+    --text-primary: #17160f;
+    --text-secondary: #5c5a4f;
+    --text-muted: #918e80;
+    --border: rgba(23,22,15,0.09);
+    --border-strong: rgba(23,22,15,0.16);
     --accent: #4379f2;
     --accent-ink: #2451c9;
-    --accent-soft: #e8edfd;
+    --accent-soft: #eaf0ff;
     --good: #0ca30c;
     --good-ink: #056b05;
-    --good-soft: #e3f5e2;
+    --good-soft: #e2f5e1;
+    --warn: #f2a71b;
+    --warn-ink: #8a5c06;
+    --warn-soft: #fcf0d6;
     --critical: #d03b3b;
     --critical-ink: #a52424;
     --critical-soft: #fbe8e6;
-    --map-fill: #eef1f8;
-    --map-stroke: #b7c1de;
-    --demo: #a36a0c;
-    --demo-soft: #fbf0dc;
-    --shadow: 0 1px 2px rgba(11,11,11,0.04), 0 8px 24px -12px rgba(11,11,11,0.16);
+    --map-fill: #f1efe6;
+    --map-stroke: #d6d0bf;
+    --shadow: 0 1px 2px rgba(23,22,15,0.04), 0 8px 22px -12px rgba(23,22,15,0.16);
     --font-display: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --page-bg: #0d0d0d;
-      --surface: #1a1a19;
-      --surface-2: #201f1d;
-      --text-primary: #ffffff;
-      --text-secondary: #c3c2b7;
-      --text-muted: #8f8d84;
-      --border: rgba(255,255,255,0.10);
-      --border-strong: rgba(255,255,255,0.18);
-      --gridline: #2c2c2a;
-      --accent: #7c9cf5;
-      --accent-ink: #a9bef9;
-      --accent-soft: rgba(124,156,245,0.16);
-      --good: #35c235;
-      --good-ink: #6adf6a;
-      --good-soft: rgba(53,194,53,0.14);
-      --critical: #e66767;
-      --critical-ink: #f19a9a;
-      --critical-soft: rgba(230,103,103,0.16);
-      --map-fill: #202433;
-      --map-stroke: #3a4360;
-      --demo: #e0ad4f;
-      --demo-soft: rgba(224,173,79,0.16);
-      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+      --page-bg: #121210;
+      --surface: #1d1c19;
+      --surface-2: #242320;
+      --text-primary: #f5f4ee;
+      --text-secondary: #c7c4b6;
+      --text-muted: #8f8c7e;
+      --border: rgba(255,255,255,0.09);
+      --border-strong: rgba(255,255,255,0.17);
+      --accent: #86a4f6;
+      --accent-ink: #aec1f9;
+      --accent-soft: rgba(134,164,246,0.15);
+      --good: #3fc93f;
+      --good-ink: #79e479;
+      --good-soft: rgba(63,201,63,0.15);
+      --warn: #e6b354;
+      --warn-ink: #ecc781;
+      --warn-soft: rgba(230,179,84,0.16);
+      --critical: #ea7373;
+      --critical-ink: #f3a3a3;
+      --critical-soft: rgba(234,115,115,0.15);
+      --map-fill: #26251f;
+      --map-stroke: #3c3a30;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 22px -12px rgba(0,0,0,0.5);
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --page-bg: #0d0d0d;
-    --surface: #1a1a19;
-    --surface-2: #201f1d;
-    --text-primary: #ffffff;
-    --text-secondary: #c3c2b7;
-    --text-muted: #8f8d84;
-    --border: rgba(255,255,255,0.10);
-    --border-strong: rgba(255,255,255,0.18);
-    --gridline: #2c2c2a;
-    --accent: #7c9cf5;
-    --accent-ink: #a9bef9;
-    --accent-soft: rgba(124,156,245,0.16);
-    --good: #35c235;
-    --good-ink: #6adf6a;
-    --good-soft: rgba(53,194,53,0.14);
-    --critical: #e66767;
-    --critical-ink: #f19a9a;
-    --critical-soft: rgba(230,103,103,0.16);
-    --map-fill: #202433;
-    --map-stroke: #3a4360;
-    --demo: #e0ad4f;
-    --demo-soft: rgba(224,173,79,0.16);
-    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    --page-bg: #121210;
+    --surface: #1d1c19;
+    --surface-2: #242320;
+    --text-primary: #f5f4ee;
+    --text-secondary: #c7c4b6;
+    --text-muted: #8f8c7e;
+    --border: rgba(255,255,255,0.09);
+    --border-strong: rgba(255,255,255,0.17);
+    --accent: #86a4f6;
+    --accent-ink: #aec1f9;
+    --accent-soft: rgba(134,164,246,0.15);
+    --good: #3fc93f;
+    --good-ink: #79e479;
+    --good-soft: rgba(63,201,63,0.15);
+    --warn: #e6b354;
+    --warn-ink: #ecc781;
+    --warn-soft: rgba(230,179,84,0.16);
+    --critical: #ea7373;
+    --critical-ink: #f3a3a3;
+    --critical-soft: rgba(234,115,115,0.15);
+    --map-fill: #26251f;
+    --map-stroke: #3c3a30;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 22px -12px rgba(0,0,0,0.5);
   }
 
   * { box-sizing: border-box; }
@@ -98,290 +98,217 @@
     -webkit-font-smoothing: antialiased;
   }
   .page {
-    max-width: 1180px;
+    max-width: 760px;
     margin: 0 auto;
     padding-inline: 20px;
-    padding-block: 20px 60px;
-  }
-
-  .demo-banner {
+    padding-block: 26px 40px;
     display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--demo-soft);
-    color: var(--demo);
-    border: 1px solid var(--demo);
-    border-radius: 10px;
-    padding: 8px 14px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-bottom: 18px;
+    flex-direction: column;
+    gap: 16px;
   }
 
-  .topbar {
+  header.topbar {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
-    align-items: flex-end;
-    gap: 20px 32px;
-    padding-bottom: 22px;
-    margin-bottom: 22px;
-    border-bottom: 1px solid var(--border);
+    gap: 10px 20px;
   }
+  .title-block { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
   .eyebrow {
-    display: block;
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     color: var(--accent-ink);
-    margin-bottom: 6px;
   }
   h1 {
     margin: 0;
-    font-size: clamp(1.9rem, 3vw, 2.4rem);
+    font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: -0.01em;
-    text-wrap: balance;
   }
-  .subtitle {
-    margin: 4px 0 0;
-    color: var(--text-secondary);
-    font-size: 0.98rem;
-  }
-  .meta { text-align: right; max-width: 360px; }
+  .subtitle { margin: 0; color: var(--text-secondary); font-size: 0.86rem; }
   .legend {
     display: flex;
-    gap: 14px;
-    justify-content: flex-end;
+    gap: 12px;
     flex-wrap: wrap;
-    margin-bottom: 8px;
   }
   .legend-item {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.82rem;
+    gap: 5px;
+    font-size: 0.74rem;
+    font-weight: 600;
     color: var(--text-secondary);
-    font-weight: 500;
   }
-  .legend-item i {
-    width: 10px; height: 10px; border-radius: 50%;
-    display: inline-block;
-    box-shadow: 0 0 0 1px var(--border-strong) inset;
-  }
+  .legend-item i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
   .legend-item.good i { background: var(--good); }
+  .legend-item.warn i { background: var(--warn); }
   .legend-item.critical i { background: var(--critical); }
-  .snapshot {
-    margin: 0;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-  }
 
-  main { display: flex; flex-direction: column; gap: 28px; }
-
-  .map-card {
-    position: relative;
+  .panel {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 18px;
     box-shadow: var(--shadow);
-    padding: 18px 18px 8px;
+    padding: 18px;
   }
-  .map-card svg { display: block; width: 100%; height: auto; }
-  .france-outline { fill: var(--map-fill); stroke: var(--map-stroke); stroke-width: 1.4; }
+  .layout { display: flex; gap: 22px; align-items: stretch; flex-wrap: wrap; }
 
+  .map-pane {
+    position: relative;
+    flex: 0 0 auto;
+    width: 300px;
+    max-width: 100%;
+  }
+  .map-pane svg { display: block; width: 100%; height: auto; }
+  .france-outline { fill: var(--map-fill); stroke: var(--map-stroke); stroke-width: 1.6; }
   .city { cursor: pointer; outline: none; }
   .city .marker {
     stroke: var(--surface);
-    stroke-width: 3;
+    stroke-width: 2.2;
     transition: transform 120ms ease, filter 120ms ease;
     transform-origin: center;
     transform-box: fill-box;
   }
   .city .marker.good { fill: var(--good); }
+  .city .marker.warn { fill: var(--warn); }
   .city .marker.critical { fill: var(--critical); }
-  .city:hover .marker, .city:focus-visible .marker, .city.pinned .marker {
-    transform: scale(1.08);
-    filter: brightness(1.06);
+  .city:hover .marker, .city:focus-visible .marker, .city.hovered .marker {
+    transform: scale(1.35);
+    filter: brightness(1.05);
   }
-  .city:focus-visible .marker { stroke: var(--accent); stroke-width: 4; }
-  .marker-count {
-    fill: #fff;
-    font-family: var(--font-mono);
-    font-weight: 600;
-    text-anchor: middle;
-    dominant-baseline: central;
-    pointer-events: none;
-  }
-  .marker-flag {
-    fill: #fff;
-    font-family: var(--font-display);
-    font-weight: 700;
-    text-anchor: middle;
-    dominant-baseline: central;
-    pointer-events: none;
-    font-size: 12px;
-  }
+  .city:focus-visible .marker { stroke: var(--accent); stroke-width: 3; }
   .marker-label {
-    fill: var(--text-primary);
+    fill: var(--text-secondary);
     font-size: 13px;
     font-weight: 600;
     text-anchor: middle;
     pointer-events: none;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .city .marker { transition: none; }
-  }
+  @media (prefers-reduced-motion: reduce) { .city .marker { transition: none; } }
 
   .tooltip {
     position: fixed;
     z-index: 40;
-    max-width: 300px;
-    background: var(--surface-2);
-    border: 1px solid var(--border-strong);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    padding: 14px 16px;
-    font-size: 0.86rem;
-    line-height: 1.45;
+    background: var(--text-primary);
+    color: var(--page-bg);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.35;
     pointer-events: none;
+    box-shadow: var(--shadow);
+    white-space: nowrap;
   }
   .tooltip[hidden] { display: none; }
-  .tooltip h3 {
-    margin: 0 0 2px;
-    font-size: 1rem;
+  .tooltip b { font-weight: 700; }
+
+  .list-pane { flex: 1 1 260px; min-width: 240px; display: flex; flex-direction: column; }
+  .city-row {
+    all: unset;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
-    gap: 8px;
-  }
-  .tooltip .tt-status {
-    margin: 0 0 10px;
-    font-size: 0.76rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-  }
-  .tooltip .tt-status.good { color: var(--good-ink); }
-  .tooltip .tt-status.critical { color: var(--critical-ink); }
-  .tooltip ul { list-style: none; margin: 0 0 8px; padding: 0; display: flex; flex-direction: column; gap: 4px; }
-  .tooltip li { display: flex; align-items: center; gap: 6px; }
-  .tt-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
-  .tt-dot.actif { background: var(--good); }
-  .tt-dot.onboarding { background: var(--accent); }
-  .tt-name { flex: 1; }
-  .tt-badge {
-    font-size: 0.68rem; font-weight: 600; padding: 1px 6px; border-radius: 999px;
-    color: var(--text-secondary); background: var(--gridline);
-  }
-  .tooltip .tt-reasons {
-    margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border-strong);
-    color: var(--critical-ink); font-size: 0.8rem;
-  }
-  .tooltip .tt-reasons li { align-items: flex-start; color: var(--text-primary); }
-  .tooltip .tt-reasons li::before { content: "!"; font-weight: 700; color: var(--critical); flex: none; }
-  .tooltip .tt-note { margin-top: 6px; color: var(--text-muted); font-size: 0.76rem; }
-
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 14px;
-  }
-  .city-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--border);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    padding: 16px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    scroll-margin-top: 20px;
-  }
-  .city-card.good { border-left-color: var(--good); }
-  .city-card.critical { border-left-color: var(--critical); }
-  .city-card header {
-    display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  }
-  .city-card h2 { margin: 0; font-size: 1.05rem; font-weight: 700; }
-  .pill {
-    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
-    padding: 3px 9px; border-radius: 999px; white-space: nowrap;
-  }
-  .pill.good { color: var(--good-ink); background: var(--good-soft); }
-  .pill.critical { color: var(--critical-ink); background: var(--critical-soft); }
-  .count-line {
-    margin: 0; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary);
-    font-variant-numeric: tabular-nums;
-  }
-  .trainers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-  .trainers li { display: flex; align-items: center; gap: 7px; font-size: 0.88rem; }
-  .trainers .tt-name { flex: 1; }
-  .trainers .status-tag {
-    font-size: 0.68rem; font-weight: 600; padding: 1px 7px; border-radius: 999px; color: var(--text-secondary); background: var(--gridline);
-  }
-  .trainers .status-tag.onboarding { color: var(--accent-ink); background: var(--accent-soft); }
-  .empty-trainers { font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
-  .reasons {
-    margin: 0; padding: 8px 0 0; border-top: 1px dashed var(--border-strong);
-    list-style: none; display: flex; flex-direction: column; gap: 5px;
-  }
-  .reasons li { display: flex; gap: 6px; font-size: 0.82rem; color: var(--text-primary); }
-  .reasons li::before { content: "!"; font-weight: 700; color: var(--critical); flex: none; }
-  .note-line { margin: 0; font-size: 0.76rem; color: var(--text-muted); }
-
-  footer {
-    margin-top: 28px;
-    padding-top: 16px;
+    gap: 9px;
+    padding: 8px 8px;
+    border-radius: 9px;
+    cursor: pointer;
     border-top: 1px solid var(--border);
-    font-size: 0.76rem;
-    color: var(--text-muted);
   }
+  .city-row:first-child { border-top: none; }
+  .city-row:hover, .city-row:focus-visible { background: var(--surface-2); }
+  .row-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .row-dot.good { background: var(--good); }
+  .row-dot.warn { background: var(--warn); }
+  .row-dot.critical { background: var(--critical); }
+  .row-name { font-weight: 600; font-size: 0.88rem; flex: none; }
+  .row-count {
+    font-family: var(--font-mono); font-size: 0.76rem; color: var(--text-muted);
+    margin-left: auto; font-variant-numeric: tabular-nums;
+  }
+  .row-pill {
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 999px; white-space: nowrap;
+  }
+  .row-pill.good { color: var(--good-ink); background: var(--good-soft); }
+  .row-pill.warn { color: var(--warn-ink); background: var(--warn-soft); }
+  .row-pill.critical { color: var(--critical-ink); background: var(--critical-soft); }
+  .chevron {
+    width: 14px; height: 14px; flex: none; color: var(--text-muted);
+    transition: transform 150ms ease;
+  }
+  .city-row[aria-expanded="true"] .chevron { transform: rotate(90deg); }
+
+  .row-detail { overflow: hidden; max-height: 0; transition: max-height 180ms ease; }
+  .row-detail.open { max-height: 260px; }
+  .row-detail-inner { padding: 4px 8px 12px 26px; display: flex; flex-direction: column; gap: 8px; }
+  .trainers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .trainers li { display: flex; align-items: center; gap: 7px; font-size: 0.82rem; }
+  .trainers .dot { width: 6px; height: 6px; border-radius: 50%; flex: none; }
+  .trainers .dot.actif { background: var(--good); }
+  .trainers .dot.onboarding { background: var(--accent); }
+  .trainers .t-name { flex: 1; }
+  .trainers .t-status {
+    font-size: 0.64rem; font-weight: 600; padding: 1px 6px; border-radius: 999px;
+    color: var(--text-secondary); background: var(--surface-2); border: 1px solid var(--border);
+  }
+  .trainers .t-status.onboarding { color: var(--accent-ink); background: var(--accent-soft); border-color: transparent; }
+  .empty-trainers { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
+  .flags { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .flags li { display: flex; gap: 6px; font-size: 0.78rem; line-height: 1.4; }
+  .flags li.f-critical { color: var(--critical-ink); }
+  .flags li.f-warn { color: var(--warn-ink); }
+  .flags li::before { flex: none; font-weight: 700; }
+  .flags li.f-critical::before { content: "!"; color: var(--critical); }
+  .flags li.f-warn::before { content: "~"; color: var(--warn); }
+  .note-line { margin: 0; font-size: 0.72rem; color: var(--text-muted); }
+
+  footer { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
   footer p { margin: 0 0 4px; }
 
-  @media (max-width: 640px) {
-    .topbar { align-items: flex-start; }
-    .meta { text-align: left; max-width: none; }
-    .legend { justify-content: flex-start; }
-    .map-card { padding: 12px 10px 6px; }
+  @media (max-width: 560px) {
+    .page { padding-block: 18px 32px; }
+    .layout { flex-direction: column; }
+    .map-pane { width: 100%; max-width: 280px; margin: 0 auto; }
   }
 </style>
 
 <div class="page">
-  <p class="demo-banner">⚠ Démo — données anonymisées (formateurs fictifs, dispositions réelles)</p>
-
   <header class="topbar">
-    <div class="title-block">
-      <span class="eyebrow">France IA · Onboarding &amp; Delivery</span>
-      <h1>Dispatch</h1>
-      <p class="subtitle">Couverture formateurs par ville ouverte</p>
-    </div>
-    <div class="meta">
-      <div class="legend">
-        <span class="legend-item good"><i></i>Ville couverte</span>
-        <span class="legend-item critical"><i></i>Ville à surveiller</span>
+    <div>
+      <div class="title-block">
+        <span class="eyebrow">France IA</span>
+        <h1>Dispatch</h1>
       </div>
-      <p class="snapshot">Photo au 15/09/2026 — Notion « To Do List Onboarding » + sessions DELIV&#39;IA</p>
+      <p class="subtitle">Couverture formateurs par ville ouverte — photo au 15/09/2026</p>
+    </div>
+    <div class="legend">
+      <span class="legend-item good"><i></i>Couverte</span>
+      <span class="legend-item warn"><i></i>Flux tendu</span>
+      <span class="legend-item critical"><i></i>À surveiller</span>
     </div>
   </header>
 
-  <main>
-    <section class="map-card" aria-label="Carte des villes ouvertes">
-      <svg viewBox="0 0 530 500" role="img" aria-labelledby="map-title">
-        <title id="map-title">Carte de France — 6 villes ouvertes et leur couverture formateurs</title>
-        <path class="france-outline" d="M 292.1,3.9 L 272.1,8.4 L 262.4,20.7 L 253.2,58.2 L 204.6,90.1 L 138.0,81.2 L 125.2,98.5 L 142.2,137.7 L 27.4,152.3 L 17.7,171.9 L 42.4,180.8 L 70.5,187.5 L 115.6,213.8 L 156.1,276.5 L 155.3,360.5 L 143.7,426.0 L 132.2,432.7 L 200.4,470.2 L 258.2,481.4 L 296.7,483.1 L 312.1,471.4 L 350.7,436.6 L 407.3,436.6 L 428.9,446.7 L 456.2,438.3 L 480.5,414.3 L 489.4,409.2 L 460.5,347.1 L 462.4,291.1 L 437.4,274.3 L 450.8,235.1 L 492.9,196.5 L 499.0,141.1 L 512.5,115.9 L 466.3,106.4 L 437.4,89.6 L 393.0,64.4 L 339.1,44.8 Z"></path>
-        <g id="markers"></g>
-      </svg>
-      <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
-    </section>
-
-    <section class="cards" id="cards" aria-label="Détail par ville"></section>
-  </main>
+  <div class="panel">
+    <div class="layout">
+      <div class="map-pane">
+        <svg viewBox="0 0 530 500" role="img" aria-labelledby="map-title">
+          <title id="map-title">Carte de France — 6 villes ouvertes et leur couverture formateurs</title>
+          <path class="france-outline" d="M 292.1,3.9 L 272.1,8.4 L 262.4,20.7 L 253.2,58.2 L 204.6,90.1 L 138.0,81.2 L 125.2,98.5 L 142.2,137.7 L 27.4,152.3 L 17.7,171.9 L 42.4,180.8 L 70.5,187.5 L 115.6,213.8 L 156.1,276.5 L 155.3,360.5 L 143.7,426.0 L 132.2,432.7 L 200.4,470.2 L 258.2,481.4 L 296.7,483.1 L 312.1,471.4 L 350.7,436.6 L 407.3,436.6 L 428.9,446.7 L 456.2,438.3 L 480.5,414.3 L 489.4,409.2 L 460.5,347.1 L 462.4,291.1 L 437.4,274.3 L 450.8,235.1 L 492.9,196.5 L 499.0,141.1 L 512.5,115.9 L 466.3,106.4 L 437.4,89.6 L 393.0,64.4 L 339.1,44.8 Z"></path>
+          <g id="markers"></g>
+        </svg>
+        <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+      </div>
+      <div class="list-pane" id="list-pane"></div>
+    </div>
+  </div>
 
   <footer>
-    <p>Maquette de démo — noms de formateurs fictifs, statuts et couverture par ville réalistes (données réelles au 15/09/2026, anonymisées pour cette page publique).</p>
-    <p>Sources d'origine : fiches 🎓 « Actif » ou « Onboarding formateur en cours » de la base Notion Onboarding (ville = colonne Place) et sessions DELIV&#39;IA actives sans formateur assigné (fenêtre des 30 prochains jours ; les sessions plus lointaines sont indicatives, pas alarmantes).</p>
+    <p><b style="color:var(--text-secondary)">Seuils</b> — 🟢 couverte : 4 formateurs actifs/onboarding ou plus. 🟠 flux tendu : 2 à 3 formateurs, la ville tient mais sans relais si l'un est indisponible. 🔴 à surveiller : moins de 2 formateurs, ou une session à venir (≤ 30 j) sans formateur alloué.</p>
+    <p>Formateurs : fiches 🎓 « Actif » ou « Onboarding formateur en cours » de la base Notion « To Do List Onboarding » (ville = colonne Place). Sessions sans formateur : DELIV'IA, sessions actives hors terminée/abandonnée.</p>
   </footer>
 </div>
 
@@ -391,112 +318,97 @@
     paris: {
       name: "Paris", emoji: "🗼", x: 290.6, y: 125.6,
       trainers: [
-        {name: "Adrien Lemoine", status: "actif"},
-        {name: "Sami Touré", status: "actif"},
-        {name: "Karim Benali", status: "actif"},
-        {name: "Julien Roques", status: "actif"},
-        {name: "Noham Diallo", status: "actif"}
+        {name: "Antoine Madelin", status: "actif"},
+        {name: "Islem Temassine", status: "actif"},
+        {name: "Michaël Amar", status: "actif"},
+        {name: "Pierre Penhard", status: "actif"},
+        {name: "Djouzar Abassebay", status: "actif"}
       ],
-      ok: false,
-      reasons: ["2 sessions inter sans formateur alloué, prévues le 05/10/2026 (moins de 30 jours)"],
-      note: "+ 32 autres sessions sans formateur plus lointaines (normal à ce stade du pipeline, pas comptées comme alerte)"
+      level: "critical",
+      flags: [{type: "critical", text: "2 sessions inter sans formateur alloué, prévues le 05/10/2026 (moins de 30 jours)"}],
+      note: "+ 32 autres sessions sans formateur plus lointaines (normal à ce stade du pipeline)"
     },
     montpellier: {
       name: "Montpellier", emoji: "☀️", x: 350.3, y: 419.2,
       trainers: [
-        {name: "Camille Perrot", status: "onboarding"},
-        {name: "Hugo Lambert", status: "actif"}
+        {name: "Azélie Bernard", status: "onboarding"},
+        {name: "Edouard Willemsen", status: "actif"}
       ],
-      ok: true,
-      reasons: [],
+      level: "warn",
+      flags: [{type: "warn", text: "2 formateurs couvrent la ville : si l'un est indisponible, aucun relais immédiat"}],
       note: "2 sessions sans formateur plus tard (26/10 et 23/11), pas encore urgentes"
     },
     lille: {
       name: "Lille", emoji: "🔔", x: 318.6, y: 26.4,
       trainers: [
-        {name: "Thomas Girard", status: "onboarding"}
+        {name: "Clément Solibieda", status: "onboarding"}
       ],
-      ok: false,
-      reasons: ["Seulement 1 formateur actif/onboarding (minimum recommandé : 2)"],
+      level: "critical",
+      flags: [{type: "critical", text: "Seulement 1 formateur actif/onboarding (minimum recommandé : 2)"}],
       note: "+ 1 session sans formateur le 26/10 (au-delà de 30 jours)"
     },
     rennes: {
       name: "Rennes", emoji: "⚜️", x: 135.5, y: 167.5,
       trainers: [
-        {name: "Maxime Renaud", status: "onboarding"}
+        {name: "Guillaume Serot", status: "onboarding"}
       ],
-      ok: false,
-      reasons: ["Seulement 1 formateur actif/onboarding (minimum recommandé : 2)"],
+      level: "critical",
+      flags: [{type: "critical", text: "Seulement 1 formateur actif/onboarding (minimum recommandé : 2)"}],
       note: "+ 2 sessions sans formateur (26/10 et 23/11)"
     },
     lyon: {
       name: "Lyon", emoji: "🦁", x: 386.7, y: 298.7,
       trainers: [],
-      ok: false,
-      reasons: ["Aucun formateur actif/onboarding assigné à cette ville"],
+      level: "critical",
+      flags: [{type: "critical", text: "Aucun formateur actif/onboarding assigné à cette ville"}],
       note: "+ 2 sessions sans formateur (26/10 et 16/11)"
     },
     marseille: {
       name: "Marseille", emoji: "⛵", x: 407.3, y: 436.8,
       trainers: [],
-      ok: false,
-      reasons: ["Aucun formateur actif/onboarding assigné à cette ville", "Aucune session enregistrée dans DELIV'IA pour cette ville"],
+      level: "critical",
+      flags: [
+        {type: "critical", text: "Aucun formateur actif/onboarding assigné à cette ville"},
+        {type: "critical", text: "Aucune session enregistrée dans DELIV'IA pour cette ville"}
+      ],
       note: ""
     }
   };
-
+  var ORDER = ["paris", "montpellier", "lille", "rennes", "lyon", "marseille"];
+  var LEVEL_LABEL = {good: "Couverte", warn: "Flux tendu", critical: "À surveiller"};
   var STATUS_LABEL = {actif: "Actif", onboarding: "Onboarding"};
   var SVGNS = "http://www.w3.org/2000/svg";
+
   var markersG = document.getElementById("markers");
   var tooltip = document.getElementById("tooltip");
-  var cardsSection = document.getElementById("cards");
-  var pinnedKey = null;
+  var listPane = document.getElementById("list-pane");
+  var openKey = null;
 
   function radiusFor(count) {
-    if (count === 0) return 11;
-    return Math.min(11 + count * 3.2, 27);
+    return Math.min(4 + count * 0.9, 9);
   }
 
-  Object.keys(CITY_DATA).forEach(function (key) {
+  ORDER.forEach(function (key) {
     var c = CITY_DATA[key];
-    var count = c.trainers.length;
-    var r = radiusFor(count);
-    var statusClass = c.ok ? "good" : "critical";
+    var r = radiusFor(c.trainers.length);
 
     var g = document.createElementNS(SVGNS, "g");
     g.setAttribute("class", "city");
     g.setAttribute("data-city", key);
     g.setAttribute("tabindex", "0");
     g.setAttribute("role", "button");
-    g.setAttribute("aria-label", c.name + ", " + count + " formateur" + (count === 1 ? "" : "s") + ", " + (c.ok ? "ville couverte" : "ville à surveiller"));
+    g.setAttribute("aria-label", c.name + ", " + c.trainers.length + " formateur(s), " + LEVEL_LABEL[c.level]);
 
     var circle = document.createElementNS(SVGNS, "circle");
     circle.setAttribute("cx", c.x);
     circle.setAttribute("cy", c.y);
     circle.setAttribute("r", r);
-    circle.setAttribute("class", "marker " + statusClass);
+    circle.setAttribute("class", "marker " + c.level);
     g.appendChild(circle);
-
-    var countText = document.createElementNS(SVGNS, "text");
-    countText.setAttribute("x", c.x);
-    countText.setAttribute("y", c.y);
-    countText.setAttribute("class", "marker-count");
-    countText.setAttribute("font-size", Math.max(11, r * 0.62));
-    countText.textContent = count;
-    g.appendChild(countText);
-
-    if (!c.ok) {
-      var flag = document.createElementNS(SVGNS, "text");
-      flag.setAttribute("x", c.x + r * 0.72);
-      flag.setAttribute("y", c.y - r * 0.72);
-      flag.setAttribute("class", "marker-flag");
-      flag.textContent = "!";
-      g.appendChild(flag);
-    }
 
     var label = document.createElementNS(SVGNS, "text");
     label.setAttribute("x", c.x);
-    label.setAttribute("y", c.y + r + 16);
+    label.setAttribute("y", c.y + r + 13);
     label.setAttribute("class", "marker-label");
     label.textContent = c.emoji + " " + c.name;
     g.appendChild(label);
@@ -504,104 +416,104 @@
     markersG.appendChild(g);
   });
 
-  function buildTooltipHTML(c) {
-    var html = "";
-    html += '<h3>' + c.emoji + ' ' + c.name + '</h3>';
-    html += '<p class="tt-status ' + (c.ok ? 'good' : 'critical') + '">' + (c.ok ? 'VILLE COUVERTE' : 'VILLE À SURVEILLER') + ' · ' + c.trainers.length + ' formateur' + (c.trainers.length === 1 ? '' : 's') + '</p>';
-    if (c.trainers.length) {
-      html += '<ul>';
-      c.trainers.forEach(function (t) {
-        html += '<li><span class="tt-dot ' + t.status + '"></span><span class="tt-name">' + t.name + '</span><span class="tt-badge">' + STATUS_LABEL[t.status] + '</span></li>';
-      });
-      html += '</ul>';
-    } else {
-      html += '<p class="empty-trainers">Aucun formateur actif ou en onboarding.</p>';
-    }
-    if (c.reasons.length) {
-      html += '<ul class="tt-reasons">';
-      c.reasons.forEach(function (r) { html += '<li>' + r + '</li>'; });
-      html += '</ul>';
-    }
-    if (c.note) html += '<p class="tt-note">' + c.note + '</p>';
-    return html;
-  }
-
   function positionTooltip(svgEl, x, y) {
     var pt = svgEl.createSVGPoint();
     pt.x = x; pt.y = y;
-    var screenPt = pt.matrixTransform(svgEl.getScreenCTM());
-    var tw = tooltip.offsetWidth || 280;
-    var th = tooltip.offsetHeight || 120;
-    var left = screenPt.x + 16;
-    var top = screenPt.y - th / 2;
-    if (left + tw > window.innerWidth - 12) left = screenPt.x - tw - 16;
-    if (top < 12) top = 12;
-    if (top + th > window.innerHeight - 12) top = window.innerHeight - th - 12;
+    var p = pt.matrixTransform(svgEl.getScreenCTM());
+    var tw = tooltip.offsetWidth || 160;
+    var left = p.x - tw / 2;
+    var top = p.y - 34;
+    if (left < 8) left = 8;
+    if (left + tw > window.innerWidth - 8) left = window.innerWidth - tw - 8;
+    if (top < 8) top = p.y + 14;
     tooltip.style.left = left + "px";
     tooltip.style.top = top + "px";
   }
 
   function showTooltip(key, groupEl) {
     var c = CITY_DATA[key];
-    tooltip.innerHTML = buildTooltipHTML(c);
+    tooltip.innerHTML = c.emoji + ' <b>' + c.name + '</b> · ' + c.trainers.length + ' formateur' + (c.trainers.length === 1 ? '' : 's') + ' · ' + LEVEL_LABEL[c.level];
     tooltip.hidden = false;
     var circle = groupEl.querySelector("circle");
-    var svgEl = groupEl.closest("svg");
-    positionTooltip(svgEl, parseFloat(circle.getAttribute("cx")), parseFloat(circle.getAttribute("cy")));
+    positionTooltip(groupEl.closest("svg"), parseFloat(circle.getAttribute("cx")), parseFloat(circle.getAttribute("cy")));
+  }
+  function hideTooltip() { tooltip.hidden = true; }
+
+  function setRowOpen(key, open) {
+    var row = listPane.querySelector('.city-row[data-city="' + key + '"]');
+    var detail = listPane.querySelector('.row-detail[data-city="' + key + '"]');
+    if (!row || !detail) return;
+    row.setAttribute("aria-expanded", open ? "true" : "false");
+    detail.classList.toggle("open", open);
   }
 
-  function hideTooltip() {
-    tooltip.hidden = true;
+  function toggleRow(key) {
+    if (openKey && openKey !== key) setRowOpen(openKey, false);
+    var willOpen = openKey !== key;
+    setRowOpen(key, willOpen);
+    openKey = willOpen ? key : null;
+  }
+
+  function highlightMarker(key, on) {
+    var g = markersG.querySelector('[data-city="' + key + '"]');
+    if (g) g.classList.toggle("hovered", on);
   }
 
   markersG.querySelectorAll(".city").forEach(function (g) {
     var key = g.getAttribute("data-city");
-    g.addEventListener("mouseenter", function () { if (!pinnedKey) showTooltip(key, g); });
-    g.addEventListener("mouseleave", function () { if (!pinnedKey) hideTooltip(); });
+    g.addEventListener("mouseenter", function () { showTooltip(key, g); });
+    g.addEventListener("mouseleave", hideTooltip);
     g.addEventListener("focus", function () { showTooltip(key, g); });
-    g.addEventListener("blur", function () { if (pinnedKey !== key) hideTooltip(); });
+    g.addEventListener("blur", hideTooltip);
     g.addEventListener("click", function () {
-      if (pinnedKey === key) {
-        pinnedKey = null; g.classList.remove("pinned"); hideTooltip();
-      } else {
-        if (pinnedKey) { var prev = markersG.querySelector('[data-city="' + pinnedKey + '"]'); if (prev) prev.classList.remove("pinned"); }
-        pinnedKey = key; g.classList.add("pinned"); showTooltip(key, g);
-      }
+      toggleRow(key);
+      var row = listPane.querySelector('.city-row[data-city="' + key + '"]');
+      if (row) row.scrollIntoView({block: "nearest", behavior: "smooth"});
     });
     g.addEventListener("keydown", function (e) {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); g.click(); }
-      if (e.key === "Escape") { pinnedKey = null; g.classList.remove("pinned"); hideTooltip(); }
     });
   });
+  document.addEventListener("scroll", hideTooltip, true);
 
-  document.addEventListener("scroll", function () { if (!pinnedKey) hideTooltip(); }, true);
-
-  // Detail cards (always visible, doubles as the accessible/table view)
-  var order = ["paris", "montpellier", "lille", "rennes", "lyon", "marseille"];
-  order.forEach(function (key) {
+  ORDER.forEach(function (key) {
     var c = CITY_DATA[key];
-    var statusClass = c.ok ? "good" : "critical";
-    var article = document.createElement("article");
-    article.className = "city-card " + statusClass;
+
+    var row = document.createElement("button");
+    row.className = "city-row";
+    row.type = "button";
+    row.setAttribute("data-city", key);
+    row.setAttribute("aria-expanded", "false");
+    row.setAttribute("aria-controls", "detail-" + key);
+    row.innerHTML =
+      '<span class="row-dot ' + c.level + '"></span>' +
+      '<span class="row-name">' + c.emoji + ' ' + c.name + '</span>' +
+      '<span class="row-count">' + c.trainers.length + '</span>' +
+      '<span class="row-pill ' + c.level + '">' + LEVEL_LABEL[c.level] + '</span>' +
+      '<svg class="chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    row.addEventListener("click", function () { toggleRow(key); });
+    row.addEventListener("mouseenter", function () { highlightMarker(key, true); });
+    row.addEventListener("mouseleave", function () { highlightMarker(key, false); });
+    listPane.appendChild(row);
 
     var trainersHTML = c.trainers.length
       ? '<ul class="trainers">' + c.trainers.map(function (t) {
-          return '<li><span class="tt-dot ' + t.status + '"></span><span class="tt-name">' + t.name + '</span><span class="status-tag ' + t.status + '">' + STATUS_LABEL[t.status] + '</span></li>';
+          return '<li><span class="dot ' + t.status + '"></span><span class="t-name">' + t.name + '</span><span class="t-status ' + t.status + '">' + STATUS_LABEL[t.status] + '</span></li>';
         }).join("") + '</ul>'
       : '<p class="empty-trainers">Aucun formateur actif ou en onboarding.</p>';
 
-    var reasonsHTML = c.reasons.length
-      ? '<ul class="reasons">' + c.reasons.map(function (r) { return '<li>' + r + '</li>'; }).join("") + '</ul>'
+    var flagsHTML = c.flags.length
+      ? '<ul class="flags">' + c.flags.map(function (f) { return '<li class="f-' + f.type + '">' + f.text + '</li>'; }).join("") + '</ul>'
       : '';
 
     var noteHTML = c.note ? '<p class="note-line">' + c.note + '</p>' : '';
 
-    article.innerHTML =
-      '<header><h2>' + c.emoji + ' ' + c.name + '</h2><span class="pill ' + statusClass + '">' + (c.ok ? 'Couverte' : 'À surveiller') + '</span></header>' +
-      '<p class="count-line">' + c.trainers.length + ' formateur' + (c.trainers.length === 1 ? '' : 's') + ' actif' + (c.trainers.length === 1 ? '' : 's') + '/onboarding</p>' +
-      trainersHTML + reasonsHTML + noteHTML;
-
-    cardsSection.appendChild(article);
+    var detail = document.createElement("div");
+    detail.className = "row-detail";
+    detail.setAttribute("data-city", key);
+    detail.id = "detail-" + key;
+    detail.innerHTML = '<div class="row-detail-inner">' + trainersHTML + flagsHTML + noteHTML + '</div>';
+    listPane.appendChild(detail);
   });
 })();
 </script>
