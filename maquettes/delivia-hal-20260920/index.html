@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DELIV’IA · Réserver le lieu — Maquette</title>
+<style>
+:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#27334b;background:#f1f3f9;font-synthesis:none;--violet:#6356e8;--muted:#8590a5;--line:#e9ecf3}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:40px 22px}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #beb7ff;outline-offset:4px}.backdrop{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 20% 15%,#e4e1fa88,transparent 55%)}.workspace{position:fixed;inset:0;padding:32px 45px;opacity:.22;pointer-events:none}.brand{font-weight:800;font-size:21px;letter-spacing:-1px}.workspace-line{margin-top:25px;width:45%;height:11px;background:#bcc4d5;border-radius:8px}.workspace-cards{display:flex;gap:24px;margin-top:54px}.workspace-cards span{height:460px;flex:1;border-radius:20px;background:#e0e5ef}.dialog{position:relative;width:min(820px,100%);background:#fff;border:1px solid #fff;border-radius:22px;box-shadow:0 34px 100px #32406725,0 4px 20px #32406708;overflow:hidden}.top{padding:29px 32px 22px;display:flex;align-items:flex-start;justify-content:space-between}.eyebrow{font-size:11px;color:var(--muted);letter-spacing:1.25px;font-weight:650;text-transform:uppercase;margin-bottom:8px}h1{font-size:25px;letter-spacing:-.8px;font-weight:650;margin:0}.close{border:0;color:#8490a4;background:none;border-radius:7px;font-size:25px;width:30px;height:32px;line-height:28px}.content{padding:0 32px 26px}.place{display:flex;justify-content:space-between;align-items:center;gap:18px;margin:0 0 22px;padding:15px 17px;border:1px solid #dddfe9;border-radius:12px}.place-main{display:flex;align-items:center;gap:12px}.place-icon{width:35px;height:35px;background:#f1efff;border-radius:9px;display:grid;place-items:center;color:var(--violet)}.place-title{font-weight:600;font-size:15px}.place-address{font-size:12px;color:var(--muted);margin-top:4px}.chevron{color:#9aa3b5;font-size:14px}.dates{display:grid;grid-template-columns:1fr 1fr;gap:14px}.day{padding:16px 17px;border:1px solid var(--line);border-radius:12px}.day-label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:#60708a}.day-label strong{color:#33415a;font-weight:600}.time{font-size:12px;color:var(--muted)}.room-choice{font-weight:600;margin-top:12px;font-size:15px;min-height:21px}.room-choice.empty{color:#adb4c3;font-weight:400}.availability-line{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:24px 0 13px}.link-button{display:inline-flex;gap:8px;align-items:center;padding:0;border:0;background:none;color:var(--violet);font-size:13px;font-weight:600}.link-button svg{width:17px;height:17px}.legend{font-size:11px;color:#8c92a4}.table-wrap{border:1px solid var(--line);border-radius:12px;overflow:hidden}table{width:100%;border-collapse:collapse;table-layout:fixed}th{padding:12px 16px;background:#fafbfe;border-bottom:1px solid var(--line);font-size:12px;color:#727d94;font-weight:500;text-align:center}th:first-child{text-align:left;width:54%}th strong{display:block;font-size:13px;font-weight:600;color:#41516b;margin-bottom:3px}td{height:64px;border-bottom:1px solid #f0f2f7;text-align:center;padding:0 16px}tr:last-child td{border:0}.room-cell{text-align:left}.room-name{font-size:14px;font-weight:550;display:flex;gap:9px;align-items:center;flex-wrap:wrap}.capacity{display:flex;align-items:center;gap:5px;font-size:11px;color:#9aa3b3;margin-top:5px}.capacity svg{width:12px;height:12px}.badge{font-size:10px;line-height:20px;color:#6754cc;padding:0 7px;background:#f0edff;border-radius:5px;font-weight:600}.availability{position:relative;display:inline-grid;place-items:center;vertical-align:middle;min-width:72px;min-height:42px;border-radius:8px;cursor:pointer}.availability:hover{background:#f5f3ff}.availability input{position:absolute;width:100%;height:100%;opacity:0;cursor:pointer;margin:0}.radio-mark{display:grid;place-items:center;width:21px;height:21px;border:1.5px solid #cdd2df;border-radius:50%;background:white;pointer-events:none}.availability input:checked+.radio-mark{background:var(--violet);border-color:var(--violet);box-shadow:0 0 0 4px #f0edff}.availability input:checked+.radio-mark:after{content:"";width:5px;height:9px;border:solid white;border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-2px}.availability input:focus-visible+.radio-mark{outline:3px solid #bcb4ff;outline-offset:5px}.unavailable{font-size:12px;color:#adb5c3}.request{font-size:11px;color:#9aa3b3}.selection-note{display:flex;align-items:center;gap:7px;font-size:12px;color:#7567bc;margin-top:14px;min-height:18px}.selection-note svg{height:15px;width:15px;flex:none}.footer{padding:18px 32px;display:flex;align-items:center;justify-content:space-between;gap:18px;border-top:1px solid var(--line);background:#fdfdff}.mockup-label{font-size:11px;color:#99a1b1;line-height:1.7}.actions{display:flex;align-items:center;gap:13px}.cancel{background:transparent;color:#727d92;border:0;padding:11px 10px;font-size:13px}.confirm{display:flex;align-items:center;justify-content:center;gap:9px;background:var(--violet);border:1px solid var(--violet);padding:12px 15px;border-radius:9px;color:#fff;font-size:12px;font-weight:600;box-shadow:0 3px 7px #6356e81a;white-space:nowrap}.confirm svg{width:14px;height:14px}.confirm:hover:not(:disabled){background:#5649d5}.confirm:disabled{background:#e4e0f8;border-color:#e4e0f8;color:#aaa1cf;box-shadow:none;cursor:not-allowed}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:13px 20px;border-radius:11px;background:#303348;color:white;font-size:13px;box-shadow:0 8px 30px #1e24332b;width:max-content;max-width:90vw;text-align:center;z-index:3}.reopen{position:relative;border:0;background:var(--violet);color:white;padding:13px 18px;border-radius:10px;font-size:14px}[hidden]{display:none!important}
+@media(max-width:650px){body{padding:18px 10px}.top{padding:23px 20px 20px}.content{padding:0 20px 20px}.footer{padding:16px 20px;align-items:stretch;flex-direction:column;gap:9px}.actions{justify-content:flex-end}.mockup-label{text-align:center}.dates{gap:9px}.day{padding:13px 11px}.day-label{align-items:flex-start;flex-direction:column;gap:5px}.room-choice{font-size:13px}.legend{display:none}th:first-child{width:49%}th,td{padding-left:10px;padding-right:10px}.availability{min-width:45px}.room-name{font-size:12px;gap:4px}.badge{font-size:9px}.time{font-size:11px}.confirm{font-size:11px;padding:12px}h1{font-size:23px}.workspace{padding:22px}}
+</style>
+</head>
+<body>
+<div class="workspace" aria-hidden="true"><div class="brand">DELIV’IA</div><div class="workspace-line"></div><div class="workspace-cards"><span></span><span></span><span></span></div></div>
+<div class="backdrop"></div>
+<main class="dialog" role="dialog" aria-labelledby="dialog-title" aria-modal="true" id="dialog">
+  <header class="top"><div><div class="eyebrow">Préparer la session</div><h1 id="dialog-title">Réserver le lieu</h1></div><button class="close" aria-label="Fermer la maquette" id="close">×</button></header>
+  <section class="content">
+    <div class="place"><div class="place-main"><span class="place-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 21V7a2 2 0 0 1 2-2h5m0 16V3h9v18M2 21h20M7 9h1m-1 4h1m-1 4h1m7-10h2m-2 4h2m-2 4h2"/></svg></span><div><div class="place-title">Station F</div><div class="place-address">5 parvis Alan Turing · Paris</div></div></div><span class="chevron" aria-hidden="true">⌄</span></div>
+    <div class="dates">
+      <div class="day"><div class="day-label"><strong>Jeudi 24 septembre</strong><span class="time">09:00 – 18:00</span></div><div class="room-choice empty" id="choice-0">Choisir une salle</div></div>
+      <div class="day"><div class="day-label"><strong>Vendredi 25 septembre</strong><span class="time">09:00 – 18:00</span></div><div class="room-choice empty" id="choice-1">Choisir une salle</div></div>
+    </div>
+    <div class="availability-line"><button class="link-button" id="toggle" aria-expanded="false" aria-controls="availability-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 2v6m10-6v6M3 11h18m-14 5h3m4 0h3"/></svg>Disponibilités HAL<span aria-hidden="true" id="toggle-arrow">⌄</span></button><span class="legend" id="legend" hidden>Journées complètes · 9 h à 18 h</span></div>
+    <div id="availability-panel" hidden>
+      <div class="table-wrap"><table aria-label="Disponibilités fictives des salles Station F, septembre 2026"><thead><tr><th>Salle</th><th><strong>24 sept.</strong>Jeudi</th><th><strong>25 sept.</strong>Vendredi</th></tr></thead><tbody id="rooms"></tbody></table></div>
+      <div class="selection-note" id="selection-note" aria-live="polite"><span> </span></div>
+    </div>
+  </section>
+  <footer class="footer"><div class="mockup-label">Maquette · disponibilités fictives<br>24 et 25 septembre 2026</div><div class="actions"><button class="cancel" id="cancel">Annuler</button><button class="confirm" id="confirm" disabled>Valider &amp; réserver sur HAL<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button></div></footer>
+</main>
+<button id="reopen" class="reopen" hidden>Ouvrir la maquette</button>
+<div class="toast" role="status" id="toast" hidden></div>
+<script>
+"use strict";
+// Démonstration locale : aucune API, aucun stockage, aucune réservation réelle.
+const rooms = [
+  {name:"BodyBoard",capacity:13,days:[true,true]},
+  {name:"Central Room",capacity:16,days:[false,false],request:true},
+  {name:"CruiseShip",capacity:13,days:[true,true]},
+  {name:"OpenAI",capacity:16,days:[false,true]},
+  {name:"Mistral",capacity:11,days:[true,false]},
+  {name:"PlugandPlay",capacity:11,days:[true,true]}
+];
+const selections=[null,null];
+const $=id=>document.getElementById(id);
+const person='<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><circle cx="8" cy="4" r="2.3"/><path d="M3 14v-2a5 5 0 0 1 10 0v2"/></svg>';
+$('rooms').innerHTML=rooms.map((room,index)=>'<tr><td class="room-cell"><div class="room-name">'+room.name+(room.days.every(Boolean)?'<span class="badge">2 jours</span>':'')+'</div><div class="capacity">'+person+room.capacity+' personnes</div></td>'+room.days.map((available,day)=>'<td>'+(room.request?'<span class="request">Sur demande</span>':available?'<label class="availability"><input type="radio" name="day-'+day+'" value="'+index+'" aria-label="'+room.name+', '+(24+day)+' septembre 2026, 9 h à 18 h" data-day="'+day+'"><span class="radio-mark" aria-hidden="true"></span></label>':'<span class="unavailable">Indisponible</span>')+'</td>').join('')+'</tr>').join('');
+function updateSelection(){
+  selections.forEach((selected,day)=>{
+    $('choice-'+day).textContent=selected===null?'Choisir une salle':rooms[selected].name;
+    $('choice-'+day).classList.toggle('empty',selected===null);
+  });
+  const complete=selections.every(selected=>selected!==null);
+  $('confirm').disabled=!complete;
+  $('selection-note').textContent=complete?(selections[0]===selections[1]?'Même salle les deux jours.':'Une salle différente chaque jour.'):'Le badge « 2 jours » indique une salle disponible sur les deux dates.';
+}
+$('rooms').addEventListener('change',event=>{
+  if(event.target.matches('input[type="radio"]')){
+    selections[Number(event.target.dataset.day)]=Number(event.target.value);
+    updateSelection();
+  }
+});
+$('toggle').addEventListener('click',()=>{
+  const expanded=$('toggle').getAttribute('aria-expanded')==='true';
+  $('toggle').setAttribute('aria-expanded',String(!expanded));
+  $('availability-panel').hidden=expanded;
+  $('legend').hidden=expanded;
+  $('toggle-arrow').textContent=expanded?'⌄':'⌃';
+  updateSelection();
+});
+let toastTimer;
+function toast(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').hidden=false;toastTimer=setTimeout(()=>{$('toast').hidden=true;},6500);}
+$('confirm').addEventListener('click',()=>{if(selections.every(selected=>selected!==null)){toast('Simulation terminée · aucune réservation réelle effectuée.');}});
+function closeDialog(){$('dialog').hidden=true;$('reopen').hidden=false;$('reopen').focus();}
+$('close').addEventListener('click',closeDialog);
+$('cancel').addEventListener('click',closeDialog);
+$('reopen').addEventListener('click',()=>{$('dialog').hidden=false;$('reopen').hidden=true;$('toggle').focus();});
+document.addEventListener('keydown',event=>{
+  if($('dialog').hidden)return;
+  if(event.key==='Escape'){closeDialog();return;}
+  if(event.key==='Tab'){
+    const focusable=Array.from($('dialog').querySelectorAll('button:not(:disabled),input:not(:disabled)')).filter(el=>el.getClientRects().length>0);
+    const first=focusable[0],last=focusable[focusable.length-1];
+    if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+  }
+});
+$('toggle').focus();
+</script>
+</body>
+</html>
