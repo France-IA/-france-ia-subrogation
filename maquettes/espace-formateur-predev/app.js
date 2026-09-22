@@ -117,5 +117,4 @@ function toast(text){const t=$('#toast');t.textContent=text;t.classList.add('sho
 $('#page-content').addEventListener('click',e=>{const b=e.target.closest('[data-open-space]');if(b)openProfile(b.dataset.openSpace,'space');if(e.target.closest('[data-progress]'))openProgress();});
 $('#new-question').addEventListener('click',openQuestion);
 $('#faq-button').addEventListener('click',()=>openRequests('faq'));
-$('#feedback-button').addEventListener('click',()=>openRequests('session'));
 renderPage();

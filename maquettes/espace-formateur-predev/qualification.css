@@ -74,4 +74,11 @@ dialog[data-kind="qualification"] .dialog-footer{flex-wrap:wrap}
 .task-optional{display:inline-block;margin-left:6px;padding:1px 5px;border-radius:4px;background:#f1f5f9;color:var(--ink-500);font-size:9.5px;font-weight:400;line-height:1.5;white-space:nowrap}
 .trainer-process-step{margin-bottom:18px}.trainer-process-step h3{font-size:14px}.trainer-process-step ul{padding-left:18px;font-size:12px;color:var(--ink-500);line-height:1.7;margin-top:10px}.trainer-process-step li{margin-top:7px}
 .profile-tabs{overflow-x:auto}.profile-tabs button{white-space:nowrap}
+dialog[data-kind="profile"]{width:min(960px,calc(100vw - 32px));height:min(870px,calc(100dvh - 40px));max-height:calc(100dvh - 40px)}
+dialog[data-kind="profile"] .dialog-body{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+dialog[data-kind="profile"] .general-info,dialog[data-kind="profile"] .profile-tabs{flex:none}
+dialog[data-kind="profile"] .profile-detail{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 4px 12px}
+dialog[data-kind="profile"] .profile-detail iframe{height:100%;min-height:280px}
+.q-inline-actions{display:flex;align-items:center;gap:12px;margin-top:18px}.q-inline-actions .q-aide{max-width:none}.q-inline-actions .btn{margin-left:auto}
+[data-qualification-profile] .q-champ{min-height:112px}[data-qualification-profile] .q-profile-top{margin-bottom:12px}
 @media(max-width:550px){.profile-tabs button{flex:none;font-size:11px;padding:9px 10px}.q-profile-top{flex-wrap:wrap}.q-profile-top .pill{font-size:10px}.q-profile-top>.btn{font-size:11px}.q-layout{margin-top:12px}.q-aide{max-width:none;flex-basis:100%}}
