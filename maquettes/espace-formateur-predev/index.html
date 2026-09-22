@@ -7,55 +7,75 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="description" content="Préversion interactive anonymisée de l’espace formateur DELIV’IA. Données fictives, aucune connexion aux applications.">
   <title>DELIV’IA · Espace formateur · Maquette A</title>
-  <link rel="stylesheet" href="styles.css?v=20260922-2">
-  <script src="app.js?v=20260922-2" defer></script>
-  <script src="preparation.js?v=20260922-2" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260922-3">
+  <link rel="stylesheet" href="delivia-native.css?v=20260922-3">
+  <link rel="stylesheet" href="session-layout.css?v=20260922-3">
+  <script src="app.js?v=20260922-3" defer></script>
+  <script src="preparation.js?v=20260922-3" defer></script>
+  <script src="session-card.js?v=20260922-3" defer></script>
 </head>
 <body>
   <div class="demo-band">PRÉDEV · Maquette anonymisée · Données fictives · Aucune connexion aux applications</div>
-  <header class="appbar">
-    <div class="brand">France <em>IA</em><span class="tricolore"><i></i><i></i><i></i></span></div>
-    <div class="crumb"><strong>DELIV’IA</strong><span>/</span><button id="back-to-card">Mes prestations</button></div>
-    <button class="btn btn-s" id="faq-button">FAQ & Feedback</button>
-    <span class="avatar small" aria-label="Formateur de démonstration : Formateur Démo">FD</span>
-  </header>
-  <div id="workspace" hidden>
-    <header class="session-header">
-      <div>
-        <div class="eyebrow">SESSION · NIVEAU 1 · INTERMÉDIAIRE</div>
-        <h1>13 & 14 octobre 2026 <span class="pill">À préparer</span></h1>
-        <p class="session-meta">Paris · Salle Démo <span>·</span> Formateur Démo <span>·</span> 4 apprenants fictifs</p>
-      </div>
-      <div class="header-actions">
-        <button id="task-toggle" class="btn btn-s" aria-expanded="false">Étapes et tâches</button>
-        <button id="reduce-button" class="btn btn-s"><span data-icon="minimize"></span>Réduire</button>
-      </div>
-    </header>
-    <div class="workspace-grid">
-      <aside class="task-rail" id="task-rail" aria-label="Étapes et tâches de la session">
-        <div class="rail-top"><strong>Mon déroulé de session</strong><span class="muted">Formateur</span></div>
-        <div id="task-list"></div>
-        <button id="feedback-button" class="rail-feedback">Feedback de session <span class="request-count">0</span><span>↗</span></button>
-      </aside>
-      <main class="workspace-main" id="main-panel">
-        <nav class="page-tabs" id="page-tabs" aria-label="Pages de cette session" role="tablist"></nav>
-        <div class="page-content" id="page-content"></div>
-        <footer class="workspace-footer">
-          <span class="muted">Une question ou un besoin en séance ?</span>
-          <button class="btn btn-p" id="new-question"><span data-icon="plus"></span>Noter une question ou un besoin</button>
-        </footer>
+  <div id="app">
+    <aside id="sidebar" aria-label="Navigation DELIV’IA">
+      <div class="brand"><div class="word">France <em>IA</em></div><span class="tri"><i></i><i></i><i></i></span><div class="plt">Plateforme France IA</div></div>
+      <div id="appzone"><div class="nav-label appzl">Application <span class="chev">⌄</span></div><button class="appsw" data-demo-link="DELIV’IA"><span class="dot" style="background:var(--primary)"></span><span class="nm">DELIV’IA</span></button></div>
+      <nav id="subnav">
+        <div class="subgrp">Mon activité</div>
+        <button class="subtab active" id="back-to-card">Mes prestations</button>
+        <button class="subtab" data-demo-link="À prendre">À prendre</button>
+        <div class="subgrp">Divers</div>
+        <button class="subtab" data-demo-link="Mon profil">Mon profil</button>
+        <button class="subtab" data-demo-link="Ressources & onboarding">Ressources & onboarding</button>
+        <button class="subtab" id="faq-button">FAQ & Demandes</button>
+      </nav>
+      <div id="usermenu"><span class="avatar avat">FD</span><div><div class="un">Formateur Démo</div><div class="ue">Compte fictif</div></div><button class="out" aria-label="Déconnexion — démonstration" data-demo-link="Déconnexion">↪</button></div>
+    </aside>
+    <div id="main">
+      <header id="topbar"><button id="sidebar-toggle" class="vcbtn" aria-label="Afficher ou masquer le menu" aria-expanded="true">◧</button><div id="crumb">DELIV’IA<span class="sep">/</span><span class="crumb-current">Mes prestations</span></div><button id="gsearch" data-demo-link="Recherche">⌕ <span>Rechercher</span><kbd>⌘K</kbd></button></header>
+      <div id="visionbanner"><span>◉</span><span>Vision <b>Formateur</b> — tu agis en tant que Formateur Démo</span><button data-demo-link="Vision administrateur">Revenir en admin</button></div>
+      <main id="content">
+        <div class="pagehead"><h1>Mes prestations</h1><button class="btn btn-s" id="process-button">Process complet Sessions N1</button></div>
+        <div class="chips" id="offer-tabs" aria-label="Type de prestation"><button class="active" data-offer="Sessions N1" aria-pressed="true">Sessions N1</button><button data-offer="Sessions N2" aria-pressed="false">Sessions N2</button><button data-offer="Intra" aria-pressed="false">Intra</button><button data-offer="Coaching" aria-pressed="false">Coaching</button></div>
+        <div class="board-tools"><button class="btn btn-s" id="my-tasks" aria-pressed="false">Mes tâches</button><span id="board-hint" role="status"></span></div>
+        <div id="session-board" class="board" aria-label="Mes prestations par étape"></div>
       </main>
     </div>
   </div>
-  <section id="compact-stage" aria-label="Carte session réduite">
-    <div class="compact-intro"><h1>Mes prestations</h1><p>Sessions N1</p></div>
-    <div class="compact-card">
-      <div class="eyebrow">À PRÉPARER</div>
-      <h2>13 & 14 octobre 2026</h2>
-      <p>Paris · Salle Démo · 4 apprenants</p>
-      <button class="btn btn-p" id="reopen-card">Ouvrir la carte session</button>
-    </div>
-  </section>
+
+  <!-- Une seule carte, jamais clonée : son DOM reste identique en mode centré et latéral. -->
+  <dialog id="modal" data-kind="session-shell" aria-labelledby="session-title">
+    <article class="mbox" id="task-rail" aria-label="Carte session">
+      <div class="mhead"><div class="row"><h2 class="t" id="session-title">Paris · Salle Démo 13/10 - 14/10</h2><div class="mhead-actions"><button class="card-expand" data-expand disabled aria-label="Ouvrir l’espace formateur" title="Ouvrir l’espace formateur"><span data-icon="maximize"></span><span>Espace formateur</span></button></div><button class="mclose" id="close-session" aria-label="Fermer la carte">✕</button></div></div>
+      <div class="mbody">
+        <div class="mpanel"><div class="igrid">
+          <div class="ifld"><div class="k">Session</div><div class="v"><button class="ilink" data-session-details>Paris · Salle Démo 13/10 - 14/10</button></div></div>
+          <div class="ifld"><div class="k">Offre</div><div class="v">Niveau 1</div></div>
+          <div class="ifld"><div class="k">Dates</div><div class="v">13 octobre et 14 octobre</div></div>
+          <div class="ifld"><div class="k">Lieu J1 et J2</div><div class="v"><span class="ntag bleu">France IA</span></div></div>
+          <div class="ifld"><div class="k">Salle</div><div class="v"><span class="ntag bleu">Salle Démo</span></div></div>
+          <div class="ifld"><div class="k">Formateur</div><div class="v"><span class="ntag vert">Formateur Démo</span></div></div>
+          <div class="ifld wide"><div class="k">Inscrits</div><div class="v"><b>4</b> inscrits · <b>0</b> en cours · 7 places</div></div>
+        </div></div>
+        <div class="mpanel mnote"><label class="k" for="session-note">Note</label><textarea class="notes-ta" id="session-note" aria-label="Note de session"></textarea></div>
+        <div class="mpanel mtasks"><div class="steps">
+          <div class="stepper" id="session-stepper" aria-label="Étapes de la session"></div>
+          <div class="stephead"><button class="stnav" id="previous-step" aria-label="Étape précédente">‹</button><div class="stx"><div class="stt" id="step-title"></div><div class="sts" id="step-date"></div></div><span class="stc" id="step-count"></span><button class="stnav" id="next-step" aria-label="Étape suivante">›</button></div>
+          <div class="openline" id="step-lock" hidden></div>
+          <div class="openline">👁 <span>Tu coches <b>en tant que Formateur Démo</b> : les changements restent dans cette maquette, sans enregistrement réel.</span></div>
+          <div id="task-list" class="tlist"></div>
+        </div></div>
+        <div class="mpanel card-sections"><button class="rail-feedback" id="feedback-button">Feedback de session <span class="request-count">0</span><span>↗</span></button></div>
+      </div>
+    </article>
+    <section id="workspace" aria-label="Espace formateur" aria-hidden="true" inert>
+      <header class="trainer-head"><div><h1 id="trainer-title">Espace formateur</h1><p>13 & 14 octobre 2026 · Session Niveau 1</p></div><div class="header-actions"><button class="btn btn-s" id="task-toggle" aria-expanded="false">Carte session</button><button class="btn btn-s" id="reduce-button" aria-label="Réduire l’espace formateur" title="Réduire l’espace formateur"><span data-icon="minimize"></span><span class="reduce-label">Réduire</span></button></div></header>
+      <nav class="page-tabs" id="page-tabs" aria-label="Pages de cette session" role="tablist"></nav>
+      <div class="page-content" id="page-content"></div>
+      <footer class="workspace-footer"><button class="btn btn-p" id="new-question"><span data-icon="plus"></span>Noter une question ou un besoin</button></footer>
+    </section>
+    <div id="card-dock"><span data-workspace-gate role="status"></span><button id="automatic-preparation" class="btn btn-s">Préparation automatique</button><button class="btn btn-p" data-expand disabled><span data-icon="maximize"></span>Ouvrir l’espace formateur</button></div>
+  </dialog>
   <div id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
