@@ -18,17 +18,30 @@ function changeQualification(day,id,patch){
 function validQualification(row){return hasWords(row.note)&&row.note.length<=qualificationLimit&&row.besoin.length<=qualificationLimit&&(row.aucune_suite_possible||hasWords(row.besoin));}
 function qualificationStatus(row){return row.saved?'Enregistrée':hasWords(row.note)||hasWords(row.besoin)||row.aucune_suite_possible?'À compléter':'À renseigner';}
 function refreshQualificationViews(){
- $$('[data-qualification-profile]').forEach(renderQualificationProfile);
+ $$('[data-qualification-profile]').forEach(root=>{if(!root.contains(document.activeElement)||!document.activeElement.matches('textarea,input'))renderQualificationProfile(root);});
  if(typeof renderSessionTasks==='function')renderSessionTasks();
 }
 function dayButtons(day,attr){return '<div class="q-days" aria-label="Journée du bilan">'+[1,2].map(d=>'<button type="button" '+attr+'="'+d+'" aria-pressed="'+(d===day)+'">J'+d+'</button>').join('')+'</div>';}
 function renderQualificationProfile(root){
  const id=root.dataset.qualificationProfile,day=Number(root.dataset.day),row=readQualification(day,id);
- root.innerHTML='<div class="q-profile-top">'+dayButtons(day,'data-profile-day')+'<span class="pill '+(row.saved?'ok':'neutral')+'">'+qualificationStatus(row)+'</span><button class="btn btn-p" data-open-qualification="'+id+'" data-day="'+day+'">Qualifier ↗</button></div>'+(row.fromJ1&&(hasWords(row.note)||hasWords(row.besoin))?'<p class="q-message">Notes du J1 à compléter pour le J2.</p>':'')+'<article class="ai-document"><h3>Niveau, retours & points à retenir</h3><p class="q-texte">'+escapeHtml(row.note||'Non renseigné')+'</p><h3>Besoin identifié & upsell possible</h3><p class="q-texte">'+escapeHtml(row.aucune_suite_possible?'Aucune suite possible':row.besoin||'Non renseigné')+'</p></article>';
+ root.innerHTML='<div class="q-profile-top">'+dayButtons(day,'data-profile-day')+'<span class="pill '+(row.saved?'ok':'neutral')+'" data-inline-status>'+qualificationStatus(row)+'</span></div>'+(row.fromJ1&&(hasWords(row.note)||hasWords(row.besoin))?'<p class="q-message">Notes du J1 à compléter ; le bilan J1 reste conservé.</p>':'')+['note','besoin'].map(key=>'<details class="q-section" open><summary>'+(key==='note'?'Niveau, retours & points à retenir':'Besoin identifié & upsell possible')+'</summary><div class="q-contenu"><textarea class="q-champ" data-inline-field="'+key+'" aria-label="'+(key==='note'?'Niveau, retours et points à retenir':'Besoin identifié et upsell possible')+'" maxlength="8000" '+(key==='besoin'&&row.aucune_suite_possible?'readonly':'')+'>'+escapeHtml(row[key])+'</textarea>'+(key==='besoin'?'<label class="q-aucuneSuite"><input type="checkbox" data-inline-none '+(row.aucune_suite_possible?'checked':'')+'> Aucune suite possible</label>':'')+'</div></details>').join('')+'<p class="q-erreur" data-inline-error role="alert" hidden></p><div class="q-inline-actions"><span class="q-aide">Maquette · sauvegarde dans cet onglet uniquement.</span><button class="btn btn-p" data-inline-save>Enregistrer</button></div>';
 }
+document.addEventListener('input',e=>{
+ const field=e.target.dataset.inlineField,root=e.target.closest('[data-qualification-profile]');if(!root||!field)return;
+ changeQualification(Number(root.dataset.day),root.dataset.qualificationProfile,{[field]:e.target.value});
+ $('[data-inline-status]',root).textContent='À compléter';$('[data-inline-status]',root).className='pill neutral';$('[data-inline-error]',root).hidden=true;
+});
+document.addEventListener('change',e=>{
+ if(!e.target.matches('[data-inline-none]'))return;const root=e.target.closest('[data-qualification-profile]');
+ changeQualification(Number(root.dataset.day),root.dataset.qualificationProfile,{aucune_suite_possible:e.target.checked});
+ $('[data-inline-field=besoin]',root).readOnly=e.target.checked;$('[data-inline-status]',root).textContent='À compléter';$('[data-inline-status]',root).className='pill neutral';
+});
 document.addEventListener('click',e=>{
  const day=e.target.closest('[data-profile-day]');if(day){const root=day.closest('[data-qualification-profile]');root.dataset.day=day.dataset.profileDay;renderQualificationProfile(root);}
- const open=e.target.closest('[data-open-qualification]');if(open)openQualification(Number(open.dataset.day),open.dataset.openQualification);
+ const save=e.target.closest('[data-inline-save]');if(save){const root=save.closest('[data-qualification-profile]'),day=Number(root.dataset.day),id=root.dataset.qualificationProfile,row=readQualification(day,id);
+  if(!validQualification(row)){const error=$('[data-inline-error]',root);error.hidden=false;error.textContent=!hasWords(row.note)?'Renseigne un niveau, un retour ou un point à retenir.':'Décris le besoin identifié ou coche « Aucune suite possible ».';return;}
+  qualificationState[day].rows[id]={...row,saved:true,fromJ1:false};refreshQualificationViews();toast('Qualification conservée dans la maquette.');
+ }
 });
 function openQualification(day=qualificationDay,id=learners[0].id){
  // Une seule modale de qualification, quel que soit le point d’entrée.
