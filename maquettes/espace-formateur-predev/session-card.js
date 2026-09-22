@@ -23,20 +23,22 @@ const compactMedia=matchMedia('(max-width:1199px)');
 const stepItems=step=>step.items||step.groups.flatMap(g=>g[1]);
 function renderSessionTasks(){
  const step=sessionSteps[sessionStep],items=stepItems(step);
- const all=sessionSteps.flatMap(s=>stepItems(s).map((t,i)=>({id:s.id+'-'+i,item:t})));
- $('#session-stepper').innerHTML=sessionSteps.map((s,i)=>{const done=stepItems(s).length>0&&stepItems(s).every((_,j)=>completed.has(s.id+'-'+j));return (i?'<span class="stl"></span>':'')+'<button class="st '+(done?'ok':i===sessionStep?'vu':i===1?'cur':'')+'" data-step="'+i+'" title="'+s.label+'" aria-label="'+s.label+'" '+(i===sessionStep?'aria-current="step"':'')+'>'+(done?'✓':i+1)+'</button>';}).join('')+'<span class="stn">'+all.filter(t=>completed.has(t.id)).length+'/'+all.length+'</span>';
+ const indexed=stepItems(step).map((item,i)=>({id:step.id+'-'+i,item}));
+ const required=indexed.filter(t=>!t.item[3]?.optional);
+ const all=sessionSteps.flatMap(s=>stepItems(s).map((t,i)=>({id:s.id+'-'+i,item:t}))).filter(t=>!t.item[3]?.optional);
+ $('#session-stepper').innerHTML=sessionSteps.map((s,i)=>{const done=stepItems(s).length>0&&stepItems(s).every((t,j)=>t[3]?.optional||completed.has(s.id+'-'+j));return (i?'<span class="stl"></span>':'')+'<button class="st '+(done?'ok':i===sessionStep?'vu':i===1?'cur':'')+'" data-step="'+i+'" title="'+s.label+'" aria-label="'+s.label+'" '+(i===sessionStep?'aria-current="step"':'')+'>'+(done?'✓':i+1)+'</button>';}).join('')+'<span class="stn">'+all.filter(t=>completed.has(t.id)).length+'/'+all.length+'</span>';
  $('#step-title').textContent=step.label;$('#step-date').textContent=step.date?'Ouverture '+step.date:'';
- $('#step-count').textContent=items.filter((_,i)=>completed.has(step.id+'-'+i)).length+'/'+items.length;
+ $('#step-count').textContent=required.filter(t=>completed.has(t.id)).length+'/'+required.length;
  $('#previous-step').disabled=sessionStep===0;$('#next-step').disabled=sessionStep===sessionSteps.length-1;
  let counter=0;
- const row=item=>{const id=step.id+'-'+counter++,done=completed.has(id);const state=done?'ok':counter===items.findIndex((_,i)=>!completed.has(step.id+'-'+i))+1?'now':'todo';
- return '<div class="tl todo-card '+state+' mine" data-task-id="'+id+'"><span class="tl-nat manuelle main tl-node" role="img" aria-label="'+(done?'Tâche terminée':'Tâche manuelle')+'">'+nativeIcon(done?'check':'main')+'</span><div class="tl-m"><span class="who">Formateur</span><span class="tl-body"><span class="lbl">'+escapeHtml(item[0])+'</span></span></div><div class="tl-r"><span class="tl-ic"></span><div class="tl-action-slot"><button class="tl-primary" data-task-action="'+id+'" title="'+escapeHtml(item[2]|| (done?'Repasser à faire':'Valider'))+'"><span>'+escapeHtml(item[2]||(done?'Terminée':'Valider'))+'</span></button></div></div></div>';};
+ const row=item=>{const id=step.id+'-'+counter++,done=completed.has(id);const state=done?'ok':counter===items.findIndex((t,i)=>!t[3]?.optional&&!completed.has(step.id+'-'+i))+1?'now':'todo';
+ return '<div class="tl todo-card '+state+' mine" data-task-id="'+id+'" data-task-key="'+(item[3]?.key||id)+'" '+(item[3]?.optional?'data-optional="true"':'')+'><span class="tl-nat manuelle main tl-node" role="img" aria-label="'+(done?'Tâche terminée':'Tâche manuelle')+'">'+nativeIcon(done?'check':'main')+'</span><div class="tl-m"><span class="who">Formateur</span><span class="tl-body"><span class="lbl">'+escapeHtml(item[0])+(item[3]?.optional?'<small class="task-optional">Facultatif</small>':'')+'</span></span></div><div class="tl-r"><span class="tl-ic"></span><div class="tl-action-slot"><button class="tl-primary" data-task-action="'+id+'" title="'+escapeHtml(item[2]|| (done?'Repasser à faire':'Valider'))+'"><span>'+escapeHtml(item[2]||(done?'Terminée':'Valider'))+'</span></button></div></div></div>';};
  $('#task-list').innerHTML=step.groups?step.groups.map(g=>'<div class="tl-g">'+escapeHtml(g[0])+'</div>'+g[1].map(row).join('')).join(''):items.length?items.map(row).join(''):'<p class="empty">Aucune tâche à cette étape.</p>';
  updateWorkspaceAccess();
 }
 function updateWorkspaceAccess(){
  const allowed=sessionStep===1||sessionStep===2;
- $$('[data-expand]').forEach(b=>{b.disabled=!pipeline.generated||!allowed;b.title=!allowed?'Disponible aux étapes Préparer et Animer':!pipeline.generated?'Les synthèses sont en préparation':'Ouvrir l’espace formateur';});
+ $$('[data-expand]').forEach(b=>{b.disabled=!pipeline.generated||!allowed;b.title=!allowed?'Disponible aux étapes Préparer et Animer':!pipeline.generated?(pipeline.summary==='failed'?'Synthèses indisponibles — contacter l’administration':'Les synthèses sont en préparation'):'Ouvrir l’espace formateur';});
 }
 function selectSessionStep(i){sessionStep=Math.max(0,Math.min(i,sessionSteps.length-1));renderSessionTasks();}
 $('#session-stepper').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(b)selectSessionStep(Number(b.dataset.step));});
@@ -86,14 +88,13 @@ compactMedia.addEventListener('change',()=>{mobileCard=false;syncWorkspaceVisibi
 const originalRunAction=runAction;
 runAction=function(action){
  if(['profiles','wow',...copiedPages.map(p=>p.id)].includes(action)){
-  if(!pipeline.generated)return openGeneration();
+  if(!pipeline.generated)return toast(pipeline.summary==='failed'?'Synthèses indisponibles — contacter l’administration.':'Les synthèses sont en préparation.');
   if(!workspaceExpanded)expandWorkspace();else showTrainerPanel();
  }
  return originalRunAction(action);
 };
-function openAutomaticPreparation(){modal({title:'Préparation automatique',sub:'Prête — J−14 formation',kind:'automatic-preparation',body:'<div data-ready-process></div>',footer:'<button class="btn btn-s" data-close>Fermer</button>'});refreshPipeline();}
-$('#automatic-preparation').addEventListener('click',openAutomaticPreparation);
-$('#process-button').addEventListener('click',openAutomaticPreparation);
+function openTrainerProcess(){modal({title:'Process complet Sessions N1',kind:'trainer-process',body:sessionSteps.map(s=>'<section class="trainer-process-step"><h3>'+s.label+'</h3><ul>'+stepItems(s).map(t=>'<li>'+escapeHtml(t[0])+(t[3]?.optional?' <small class="task-optional">Facultatif</small>':'')+'</li>').join('')+'</ul></section>').join(''),footer:'<button class="btn btn-s" data-close>Fermer</button>'});}
+$('#process-button').addEventListener('click',openTrainerProcess);
 $('[data-session-details]').addEventListener('click',()=>modal({title:'Informations de la session',kind:'session-details',body:'<p>Paris · Salle Démo<br>13 et 14 octobre 2026 · Niveau 1<br>4 apprenants · Formateur Démo</p>',footer:'<button class="btn btn-s" data-close>Fermer</button>'}));
 function renderBoard(offer='Sessions N1'){
  const names=['À prendre','Préparer','Animer','Facturer','Terminé','Retrait'];
