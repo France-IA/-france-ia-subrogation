@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Espace apprenants · maquette de refonte (test)</title>
+<!--
+  Maquette de TEST, statique, données 100% fictives. Reproduit la vraie UI actuelle de
+  l'espace apprenants (repo France-IA/plateforme-apprenants, dossier src/app/espace/)
+  pour servir de point de départ à une refonte visuelle — un fichier autonome, sans build,
+  à l'instar de maquettes/restructuration-delivia/. Aucune connexion à une vraie base.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-900:#0f172a; --ink-700:#334155; --ink-500:#475569; --ink-400:#64748b;
+  --surface-50:#f8fafc; --surface-100:#f1f5f9; --surface-200:#e2e8f0;
+  --brand-600:#4f46e5; --brand-700:#4338ca;
+  --warning-50:#fffbeb; --warning-700:#b45309;
+  --success-50:#ecfdf5; --success-700:#047857;
+  --error-50:#fff1f2; --error-600:#e11d48; --error-700:#be123c;
+  --radius-carte:0.75rem; --radius-controle:0.375rem;
+  --shadow-carte:0 1px 3px 0 rgb(0 0 0/.04),0 1px 2px -1px rgb(0 0 0/.04);
+}
+*{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased}
+body{margin:0;font-family:Inter,system-ui,-apple-system,sans-serif;background:var(--surface-50);color:var(--ink-900);font-size:14px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+button{font:inherit}
+
+/* ── Bandeau obligatoire (dépôt public) ─────────────────────────── */
+.bandeau{background:#111827;color:#f1f5f9;font-size:12px;line-height:1.6;padding:9px 16px;text-align:center}
+.bandeau b{color:#fbbf24;font-weight:600}
+
+/* ── Coque ───────────────────────────────────────────────────────── */
+header.coque{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--surface-200)}
+.entete-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 24px}
+.entete-inner img{height:34px;width:auto;display:block}
+
+.profil{position:relative}
+.profil-bouton{display:flex;align-items:center;gap:8px;border:0;background:none;cursor:pointer;padding:4px 6px;border-radius:999px;color:var(--ink-900)}
+.profil-bouton:hover{background:var(--surface-100)}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--brand-600);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:12px;flex-shrink:0}
+.nom-complet{font-size:13.5px;font-weight:500;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.profil-menu{position:absolute;right:0;top:calc(100% + 6px);background:#fff;border-radius:var(--radius-controle);box-shadow:var(--shadow-carte);border:1px solid var(--surface-100);min-width:190px;padding:6px;display:none;z-index:20}
+.profil-menu.open{display:block}
+.profil-menu button{width:100%;text-align:left;padding:9px 10px;border-radius:6px;background:none;border:0;font-size:13px;color:var(--ink-700);cursor:pointer}
+.profil-menu button:hover{background:var(--surface-50)}
+
+main{max-width:960px;margin:0 auto;padding:24px 24px 64px;display:flex;flex-direction:column;gap:24px}
+
+/* ── Carte ───────────────────────────────────────────────────────── */
+.carte{background:#fff;border-radius:var(--radius-carte);box-shadow:var(--shadow-carte);overflow:hidden}
+
+/* ── Information ────────────────────────────────────────────────── */
+.info-corps{display:flex;flex-direction:column;gap:12px;padding:14px 24px}
+h2.titre-section{font-size:20px;font-weight:600;color:var(--ink-900);margin:0}
+.tags{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.tag{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:var(--surface-100);padding:3px 10px;font-size:12.5px;font-weight:500;color:var(--ink-700)}
+.tag svg{width:14px;height:14px;color:var(--ink-400);flex-shrink:0}
+a.tag{text-decoration:none;cursor:pointer;transition:background .12s,color .12s}
+a.tag:hover{background:var(--surface-200);color:var(--ink-900)}
+a.tag svg.externe{width:12px;height:12px}
+.texte-discret{font-size:13px;line-height:1.65;color:var(--ink-500);margin:0}
+.filet-haut{border-top:1px solid var(--surface-100);padding:16px 24px}
+
+/* ── Boutons ─────────────────────────────────────────────────────── */
+.bouton{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:6px;border-radius:var(--radius-controle);padding:8px 16px;font-size:14px;font-weight:500;border:0;cursor:pointer;text-decoration:none;transition:background .12s;white-space:nowrap}
+.bouton.primaire{background:var(--brand-600);color:#fff}
+.bouton.primaire:hover{background:var(--brand-700)}
+.bouton.obligatoire{background:var(--error-600);color:#fff}
+.bouton.obligatoire:hover{background:var(--error-700)}
+.bouton.secondaire{background:#fff;border:1px solid var(--surface-200);color:var(--ink-700)}
+.bouton.secondaire:hover{background:var(--surface-50)}
+.bouton svg{width:16px;height:16px}
+
+/* ── Statut chip ─────────────────────────────────────────────────── */
+.statut{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:500;flex-shrink:0}
+.statut svg{width:13px;height:13px}
+.statut.attente{background:var(--warning-50);color:var(--warning-700)}
+.statut.fait{background:var(--success-50);color:var(--success-700)}
+.statut.bloque{background:var(--error-50);color:var(--error-700)}
+.statut.neutre{background:var(--surface-100);color:var(--ink-500)}
+
+/* ── En-tête de carte (À faire / Documents) ─────────────────────── */
+.entete-carte{display:flex;min-height:56px;align-items:center;gap:8px;padding:14px 24px}
+.entete-carte.avec-filet{border-bottom:1px solid var(--surface-100)}
+.entete-carte h2{flex:1;min-width:0}
+summary.entete-carte{cursor:pointer;list-style:none}
+summary.entete-carte::-webkit-details-marker{display:none}
+.chevron{width:16px;height:16px;color:var(--ink-400);transition:transform .15s;flex-shrink:0}
+details[open]>summary .chevron{transform:rotate(90deg)}
+
+/* ── Liste des tâches ────────────────────────────────────────────── */
+ul.liste{list-style:none;margin:0;padding:0}
+ul.liste>li{border-top:1px solid var(--surface-100)}
+ul.liste>li:first-child{border-top:0}
+
+.tache{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:14px;padding:16px 24px}
+.tache-gauche{display:flex;align-items:flex-start;gap:10px;min-width:0}
+.tache-icone{margin-top:2px;width:18px;height:18px;flex-shrink:0}
+.tache-icone.alerte{color:var(--error-700)}
+.tache-icone.attente{color:var(--warning-700)}
+.tache-titre-ligne{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.tache-titre{font-weight:600;color:var(--ink-900)}
+.tache-titre.bloquant{color:var(--error-700)}
+.tache-detail{margin:4px 0 0;font-size:13px;line-height:1.65;color:var(--ink-500)}
+
+/* ── Checklist (préparation / certification) ────────────────────── */
+.souscompteur{margin:2px 0 0}
+.souscompteur .texte-discret{margin-top:2px}
+.checklist{list-style:none;margin:12px 0 0;padding:0}
+.checklist>li{display:flex;align-items:flex-start;gap:10px;border-left:2px solid var(--error-700);padding-left:14px;margin-bottom:2px}
+.checklist>li.coche{border-left-color:transparent}
+.checklist input[type=checkbox]{width:18px;height:18px;margin-top:13px;accent-color:var(--error-700);flex-shrink:0;cursor:pointer}
+.checklist>li.coche input[type=checkbox]{accent-color:var(--brand-600)}
+.checklist .ligne{min-height:44px;display:flex;align-items:center;flex:1;min-width:0;font-size:13.5px;color:var(--ink-900);font-weight:500;cursor:pointer;line-height:1.5;padding:2px 0}
+.checklist>li.coche .ligne{color:var(--ink-400);text-decoration:line-through;font-weight:400}
+.checklist-note{margin:0 0 10px 28px;font-size:13px;line-height:1.65;color:var(--ink-500)}
+
+/* ── Dépliants génériques ────────────────────────────────────────── */
+details.deplie{border-top:1px solid var(--surface-100);margin-top:2px}
+details.deplie summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:10px 0;font-size:13.5px;color:var(--ink-900)}
+details.deplie summary::-webkit-details-marker{display:none}
+details.deplie .contenu-deplie{padding:0 0 14px 0;font-size:13px;line-height:1.7;color:var(--ink-500)}
+
+/* ── Cadre Qualiobee intégré (émargement / questionnaire / quiz / convention) ── */
+.cadre-qualiobee{margin-top:12px;border-radius:var(--radius-controle);border:1px dashed var(--surface-200);background:var(--surface-50);padding:14px 16px}
+.cadre-qualiobee p.provenance{font-size:12px;color:var(--ink-500);margin:0 0 12px}
+.cadre-qualiobee .faux-champ{background:#fff;border:1px solid var(--surface-200);border-radius:6px;padding:10px 12px;font-size:12.5px;color:var(--ink-400);margin-bottom:10px}
+
+/* ── Lignes Qualiobee (questionnaires / quiz / émargements) ─────── */
+.ligne-q{padding:14px 24px;border-top:1px solid var(--surface-100)}
+.ligne-q:first-child{border-top:0}
+.ligne-q-entete{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.ligne-q-nom{font-weight:600;color:var(--ink-900);font-size:13.5px}
+
+/* ── Documents ───────────────────────────────────────────────────── */
+.corps-documents{border-top:1px solid var(--surface-100);padding:20px 24px;display:flex;flex-direction:column;gap:20px}
+.groupe-titre{font-size:13px;font-weight:600;color:var(--ink-400);margin:0 0 2px}
+.rangee{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-top:1px solid var(--surface-100)}
+.rangee:first-child{border-top:0}
+.rangee .nom{font-size:13.5px;font-weight:600;color:var(--ink-900);margin:0}
+.rangee .nom.ombre{color:var(--ink-500);font-weight:400}
+.rangee .detail{font-size:13px;color:var(--ink-500);margin:2px 0 0}
+.rangee .detail.alerte{color:var(--error-700)}
+
+@media (max-width: 640px){
+  .entete-inner,main,.tache,.entete-carte,.filet-haut,.info-corps,.corps-documents,.ligne-q{padding-left:16px;padding-right:16px}
+  .nom-complet{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bandeau">
+  Maquette de <b>test</b> — dépôt public, données <b>100&nbsp;% fictives</b>. Aucun rapport avec un
+  apprenant réel : ne pas utiliser pour une vraie inscription. Base de travail pour la refonte de
+  l'espace apprenants (état actuel reproduit depuis le vrai code, France-IA/plateforme-apprenants).
+</div>
+
+<header class="coque">
+  <div class="entete-inner">
+    <img src="logo-france-ia.webp" alt="France IA">
+    <div class="profil">
+      <button class="profil-bouton" onclick="document.getElementById('menu-profil').classList.toggle('open')">
+        <span class="nom-complet" title="Camille Dupont">Camille Dupont</span>
+        <span class="avatar">CD</span>
+      </button>
+      <div class="profil-menu" id="menu-profil">
+        <button type="button">Se déconnecter</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <h1 class="sr-only">Mon espace de formation</h1>
+
+  <!-- ============================================================ -->
+  <!-- INFORMATION — où, quand, avec qui. Déroulée d'office, en tags. -->
+  <!-- ============================================================ -->
+  <section aria-labelledby="information-titre">
+    <div class="carte">
+      <div class="info-corps">
+        <h2 id="information-titre" class="titre-section">Information</h2>
+        <div class="tags">
+          <span class="tag">IA Générative — Niveau 1</span>
+          <span class="tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M8 3v5M16 3v5M3.5 10.5h17"/></svg>
+            30 sept. – 1 oct. 2026
+          </span>
+          <span class="tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 1.8"/></svg>
+            9 h – 18 h
+          </span>
+          <span class="tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6.5-6.1 6.5-10.5a6.5 6.5 0 1 0-13 0C5.5 14.9 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.5"/></svg>
+            Station F
+          </span>
+          <span class="tag">5 Parvis Alan Turing, 75013 Paris</span>
+          <span class="tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6.5h10.5M9 12h10.5M9 17.5h10.5"/><path d="M4.5 6.5h.01M4.5 12h.01M4.5 17.5h.01"/></svg>
+            Auditorium
+          </span>
+          <a class="tag" href="#" onclick="return false" title="Infos de la salle : comment entrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3.5H7A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5z"/><path d="M13.5 3.5V8.5h5"/></svg>
+            Infos de la salle : comment entrer
+            <svg class="externe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4.5h5.5V10M19.5 4.5 11 13"/><path d="M18 14.5v4a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6h4"/></svg>
+          </a>
+          <span class="tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c0-3.6 3.1-5.5 7-5.5s7 1.9 7 5.5"/></svg>
+            Julien Castex
+          </span>
+        </div>
+        <p class="texte-discret">À votre arrivée : présentez-vous à l'accueil du 3ᵉ étage, un badge visiteur vous sera remis.</p>
+      </div>
+      <div class="filet-haut">
+        <p class="texte-discret" style="margin-bottom:10px">
+          Votre QR code d'accès vous est envoyé la veille, par e-mail. Vous pouvez aussi vous le
+          renvoyer ici. L'entrée se fait par l'entrée principale uniquement.
+        </p>
+        <button class="bouton secondaire" onclick="this.textContent='QR code renvoyé'">Renvoyer mon QR code</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- À FAIRE — la page. Tout le reste lui cède la place.           -->
+  <!-- ============================================================ -->
+  <section aria-labelledby="a-faire-titre">
+    <div class="carte">
+      <div class="entete-carte avec-filet">
+        <h2 id="a-faire-titre" class="titre-section" style="font-size:20px">À faire</h2>
+        <span class="statut attente" id="compteur-a-faire">5 à faire</span>
+      </div>
+
+      <ul class="liste">
+        <!-- Préparation : la checklist se coche sur place, treize points réels du Niveau 1. -->
+        <li>
+          <div class="tache" style="padding-bottom:6px">
+            <div style="width:100%">
+              <div class="tache-titre-ligne">
+                <span class="tache-titre">Préparer votre formation</span>
+                <span class="statut bloque" id="statut-preparation">8/13</span>
+              </div>
+              <p class="tache-detail">Comptez 30 minutes à 1&nbsp;h&nbsp;30. Cochez au fur et à mesure : la ligne se referme dès qu'elle est faite.</p>
+
+              <ul class="checklist" id="checklist-preparation">
+                <li class="coche"><input type="checkbox" checked onchange="basculer(this)"><label class="ligne">Programme des deux journées parcouru</label></li>
+                <li class="coche"><input type="checkbox" checked onchange="basculer(this)"><label class="ligne">Compte ChatGPT créé</label></li>
+                <li class="coche"><input type="checkbox" checked onchange="basculer(this)"><label class="ligne">Compte Claude créé</label></li>
+                <li><input type="checkbox" onchange="basculer(this)"><label class="ligne">Compte NotebookLM créé</label></li>
+                <li><input type="checkbox" onchange="basculer(this)"><label class="ligne">Compte Lovable créé</label></li>
+                <li class="coche"><input type="checkbox" checked onchange="basculer(this)"><label class="ligne">Pour les débutants : regarder la vidéo de mise à niveau sur ChatGPT</label></li>
+                <li class="coche"><input type="checkbox" checked onchange="basculer(this)"><label class="ligne">5 à 10 PDF professionnels rassemblés sur mon ordinateur</label></li>
+                <li><input type="checkbox" onchange="basculer(this)"><label class="ligne">1 fichier Excel ou CSV avec des données professionnelles prêt</label></li>
+                <li class="coche"><input type="checkbox" checked onchange="basculer(this)"><label class="ligne">3 tâches répétitives identifiées</label></li>
+                <li class="coche"><input type="checkbox" checked onchange="basculer(this)"><label class="ligne">1 problème professionnel à résoudre en tête</label></li>
+                <li><input type="checkbox" onchange="basculer(this)"><label class="ligne">1 idée de GPT utile pour mon métier</label></li>
+                <li><input type="checkbox" onchange="basculer(this)"><label class="ligne">1 idée de site ou d'application à développer sur Lovable</label></li>
+                <li class="coche"><input type="checkbox" checked onchange="basculer(this)"><label class="ligne">Amener votre ordinateur portable</label></li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+        <!-- Émargement : OBLIGATOIRE, conditionne le certificat de réalisation — rouge. -->
+        <li>
+          <div class="tache">
+            <div class="tache-gauche">
+              <svg class="tache-icone alerte" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5 21 19.5H3z"/><path d="M12 10v4M12 16.75h.01"/></svg>
+              <div style="min-width:0">
+                <div class="tache-titre-ligne">
+                  <span class="tache-titre bloquant">Signer mes émargements</span>
+                  <span class="statut bloque">0/4</span>
+                </div>
+                <p class="tache-detail">Une signature par demi-journée, ouverte dès le début de la séance.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ligne-q">
+            <p class="ligne-q-entete"><span class="ligne-q-nom">Jour 1 — matin</span><span class="statut neutre">Bientôt</span></p>
+            <p class="texte-discret" style="margin-top:6px">Ouvre le 30 septembre à 9 h.</p>
+          </div>
+          <div class="ligne-q">
+            <p class="ligne-q-entete"><span class="ligne-q-nom">Jour 1 — après-midi</span><span class="statut neutre">Bientôt</span></p>
+            <p class="texte-discret" style="margin-top:6px">Ouvre le 30 septembre à 14 h.</p>
+          </div>
+          <div class="ligne-q">
+            <p class="ligne-q-entete"><span class="ligne-q-nom">Jour 2 — matin</span><span class="statut neutre">Bientôt</span></p>
+            <p class="texte-discret" style="margin-top:6px">Ouvre le 1 octobre à 9 h.</p>
+          </div>
+          <div class="ligne-q">
+            <p class="ligne-q-entete"><span class="ligne-q-nom">Jour 2 — après-midi</span><span class="statut neutre">Bientôt</span></p>
+            <p class="texte-discret" style="margin-top:6px">Ouvre le 1 octobre à 14 h.</p>
+          </div>
+        </li>
+
+        <!-- Questionnaires : non obligatoire — bleu / dépliant intégré Qualiobee. -->
+        <li>
+          <div class="tache">
+            <div class="tache-gauche">
+              <svg class="tache-icone attente" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 1.8"/></svg>
+              <div style="min-width:0">
+                <div class="tache-titre-ligne">
+                  <span class="tache-titre">Répondre à vos questionnaires</span>
+                  <span class="statut attente">1/2</span>
+                </div>
+                <p class="tache-detail">Vos retours nous servent à ajuster la formation.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ligne-q">
+            <p class="ligne-q-entete"><span class="ligne-q-nom">Questionnaire d'attentes et de besoins</span><span class="statut fait">Répondu</span></p>
+          </div>
+          <div class="ligne-q">
+            <details class="deplie">
+              <summary>
+                <span class="ligne-q-nom" style="font-weight:600">Questionnaire de satisfaction à chaud</span>
+                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5.5 6.5 6.5L9 18.5"/></svg>
+              </summary>
+              <div class="contenu-deplie">
+                <div class="cadre-qualiobee">
+                  <p class="provenance">Ce questionnaire est hébergé par Qualiobee, notre outil de conformité. Vous le remplissez directement chez lui, sans quitter votre espace.</p>
+                  <div class="faux-champ">Se remplit à la fin de la formation.</div>
+                  <button class="bouton primaire" disabled style="opacity:.5;cursor:not-allowed">Répondre</button>
+                </div>
+              </div>
+            </details>
+          </div>
+        </li>
+
+        <!-- Quiz : non obligatoire — bleu. -->
+        <li>
+          <div class="tache">
+            <div class="tache-gauche">
+              <svg class="tache-icone attente" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 1.8"/></svg>
+              <div style="min-width:0">
+                <div class="tache-titre-ligne">
+                  <span class="tache-titre">Passer le quiz</span>
+                  <span class="statut neutre">0/1</span>
+                </div>
+                <p class="tache-detail">Ouvre le dernier jour de la formation.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- Certification (CPF) : checklist à trois cases, la première constatée par le système. -->
+        <li>
+          <div class="tache" style="padding-bottom:6px">
+            <div style="width:100%">
+              <div class="tache-titre-ligne">
+                <svg class="tache-icone attente" style="display:inline;margin-top:0;vertical-align:-3px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 1.8"/></svg>
+                <span class="tache-titre">Votre certification</span>
+                <span class="statut attente" id="statut-certif">0/3</span>
+              </div>
+              <p class="tache-detail">Certification RS6891 — visible parce que votre formation est financée par le CPF.</p>
+
+              <ul class="checklist" id="checklist-certification" style="margin-top:14px">
+                <li>
+                  <input type="checkbox" disabled title="Constatée automatiquement par notre système, dès votre inscription chez Certifopac.">
+                  <div style="min-width:0;padding:8px 0">
+                    <label class="ligne" style="cursor:default">Vous inscrire à la certification</label>
+                    <p class="checklist-note">Vous pouvez la cocher pour vous repérer. Notre système la coche aussi de lui-même dès qu'il voit votre inscription chez Certifopac.</p>
+                    <div style="margin-top:6px;display:flex;flex-direction:column;gap:10px">
+                      <a class="bouton secondaire" href="#" onclick="return false" style="width:fit-content">M'inscrire</a>
+                      <details class="deplie" style="border-top:0;margin-top:0">
+                        <summary style="min-height:32px"><span>Comment vous inscrire</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5.5 6.5 6.5L9 18.5"/></svg></summary>
+                        <div class="contenu-deplie">Rendez-vous sur la plateforme Certifopac avec votre compte CPF, recherchez la certification RS6891 « France IA », puis validez votre réservation.</div>
+                      </details>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <input type="checkbox" onchange="basculer(this)">
+                  <div style="min-width:0;padding:8px 0">
+                    <label class="ligne">Préparer votre certification : vos livrables écrit et oral (votre dossier)</label>
+                    <p class="checklist-note">À rendre au plus tard deux semaines avant la date de votre oral, dans « Ma réservation » sur la plateforme Certifopac.</p>
+                    <a class="bouton secondaire" href="#" onclick="return false" style="width:fit-content;margin-top:6px">Préparer ma certification</a>
+                  </div>
+                </li>
+                <li>
+                  <input type="checkbox" onchange="basculer(this)">
+                  <label class="ligne">Passer votre oral</label>
+                </li>
+              </ul>
+
+              <details class="deplie" style="margin-top:10px">
+                <summary><span>Comment se passe la certification</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5.5 6.5 6.5L9 18.5"/></svg></summary>
+                <div class="contenu-deplie">Quatre étapes : l'inscription chez Certifopac, un dossier écrit, un oral devant un jury, puis le résultat remonté par Certifopac dans votre espace.</div>
+              </details>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- DOCUMENTS — repliée, en bas.                                   -->
+  <!-- ============================================================ -->
+  <section aria-labelledby="documents-titre">
+    <div class="carte">
+      <details>
+        <summary class="entete-carte">
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5.5 6.5 6.5L9 18.5"/></svg>
+          <h2 id="documents-titre" class="titre-section" style="font-size:20px">Documents</h2>
+          <span class="statut fait">1/3</span>
+        </summary>
+
+        <div class="corps-documents">
+          <section>
+            <p class="groupe-titre">Disponible</p>
+            <div class="rangee">
+              <p class="nom">Convocation</p>
+              <button class="bouton secondaire">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 11l4.5 4.5L16.5 11M4.5 19.5h15"/></svg>
+                Télécharger
+              </button>
+            </div>
+          </section>
+
+          <section>
+            <p class="groupe-titre">Pas encore disponible</p>
+            <div class="rangee">
+              <p class="nom ombre">Certificat de réalisation</p>
+              <p class="detail alerte" style="width:100%">Disponible une fois vos émargements signés.</p>
+            </div>
+            <div class="rangee">
+              <p class="nom ombre">Attestation de fin de formation</p>
+              <p class="detail" style="width:100%">Disponible à la fin de la formation.</p>
+            </div>
+          </section>
+
+          <section>
+            <p class="groupe-titre">Signé par votre financeur</p>
+            <div class="rangee">
+              <p class="nom ombre">Convention / contrat</p>
+            </div>
+          </section>
+
+          <section>
+            <p class="groupe-titre">Émargements (0/4 signés)</p>
+            <div class="rangee"><p class="nom ombre">Jour 1 — matin</p><p class="detail" style="width:100%">Ouvre le 30 septembre à 9 h.</p></div>
+            <div class="rangee"><p class="nom ombre">Jour 1 — après-midi</p><p class="detail" style="width:100%">Ouvre le 30 septembre à 14 h.</p></div>
+            <div class="rangee"><p class="nom ombre">Jour 2 — matin</p><p class="detail" style="width:100%">Ouvre le 1 octobre à 9 h.</p></div>
+            <div class="rangee"><p class="nom ombre">Jour 2 — après-midi</p><p class="detail" style="width:100%">Ouvre le 1 octobre à 14 h.</p></div>
+            <p class="texte-discret" style="margin-top:8px">Vous signez sur la page de Qualiobee, l'outil qui gère le suivi de votre formation, sans quitter votre espace. Ce lien vous est personnel, ne le transmettez pas.</p>
+          </section>
+        </div>
+      </details>
+    </div>
+  </section>
+</main>
+
+<script>
+// Interactions de démonstration uniquement — aucune écriture, tout reste local à la page.
+function basculer(caseACocher) {
+  const ligne = caseACocher.closest('li');
+  ligne.classList.toggle('coche', caseACocher.checked);
+  const liste = caseACocher.closest('ul.checklist');
+  const total = liste.querySelectorAll('input[type=checkbox]').length;
+  const faits = liste.querySelectorAll('input[type=checkbox]:checked').length;
+  if (liste.id === 'checklist-preparation') {
+    document.getElementById('statut-preparation').textContent = faits + '/' + total;
+  }
+  if (liste.id === 'checklist-certification') {
+    document.getElementById('statut-certif').textContent = faits + '/' + total;
+  }
+}
+document.addEventListener('click', function (evenement) {
+  const menu = document.getElementById('menu-profil');
+  if (!menu.contains(evenement.target) && !evenement.target.closest('.profil-bouton')) {
+    menu.classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
