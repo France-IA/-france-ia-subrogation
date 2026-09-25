@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Espace apprenant France IA</title>
+<meta name="description" content="Maquette de l’espace apprenant V2 : trois parcours, supports d’atelier en grand, données fictives.">
+<!--
+  Maquette de l'espace apprenant V2, données fictives.
+  Organisation : trois parcours (inscription, formation, facturation) et une page d'accueil « Ma session ».
+  Style : maquette de référence de l’espace apprenant (Manrope, DM Sans, Fragment Mono ; fond #f3f9fe ; navy #141d46 ; rose actif).
+  Frise des étapes : DELIV'IA 1 (nœuds ronds, seule l'étape en cours se déploie avec son bouton).
+  Les « Commandes de démo » en bas de la barre latérale n'existent pas en production.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --blue:#4379f2; --bleu-texte:#1c4eba; --bleu-fond:#eef4fe; --bleu-bord:#d6e3fc;
+  --ink:#16161a; --line:#e6e6ee; --cream:#f5f3ec;
+  --navy:#141d46; --navy-2:#24305f; --texte:#4c5270; --texte-clair:#6a7186;
+  --page:#f3f9fe; --carte:#ffffff; --bord:#e7eef7; --bord-fin:#eef3f9; --survol:#f6f8fc;
+  --rose:#fae9e3; --rose-pale:#f9ecea; --rose-1:#fcf6f4; --rose-2:#f8f1f6; --brun:#8a5743;
+  --bloc:#f4f6fa; --bloc-txt:#3f4257; --gris-pastille:#f1f4f9;
+  --rouge:#c23b3b; --rouge-bg:#fdecea; --vert:#1c7a52; --vert-bg:#e9f6ee;
+  --piste:#e6ecf5;
+  --mono:'Fragment Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --titre:'Manrope','DM Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--texte);font-family:'DM Sans',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.6}
+h1,h2,h3,h4{font-family:var(--titre);color:var(--navy);margin:0;letter-spacing:-.01em;font-weight:700}
+p{margin:0}
+ul,ol{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--bleu-texte)}
+img{max-width:100%}
+svg{display:block}
+[hidden]{display:none!important}
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+:focus{outline:none}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:8px}
+.mono,.cpt{font-family:var(--mono)}
+
+/* ══════════ STRUCTURE ══════════ */
+.app{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100vh;align-items:start;background:linear-gradient(90deg,#fff 0 299px,var(--bord) 299px 300px,transparent 300px)}
+.principal{min-width:0}
+.scene{width:100%;max-width:1120px;margin:0 auto;padding:28px 32px 80px}
+
+/* ══════════ BARRE LATÉRALE ══════════ */
+.lateral{position:sticky;top:0;height:100vh;overflow:hidden;background:#fff;border-right:1px solid var(--bord);display:flex;flex-direction:column}
+.zone-nav{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:22px 14px 12px}
+.zone-nav::-webkit-scrollbar{width:8px}
+.zone-nav::-webkit-scrollbar-thumb{background:#e4e9f2;border-radius:99px}
+.tete-lat{display:flex;align-items:center;justify-content:space-between;padding:0 8px 18px}
+.logo{display:block;height:30px;width:auto}
+.fermer.fermer-tiroir{display:none}
+
+.arbre,.arbre ul{list-style:none;margin:0;padding:0}
+.arbre>li.n1{border-top:1px solid var(--bord-fin);padding:4px 0}
+.arbre>li.n1:last-child{border-bottom:1px solid var(--bord-fin)}
+.arbre>li.accueil{padding-bottom:10px}
+
+.rang{display:flex;align-items:center;border-radius:10px;padding-left:var(--ind,0px)}
+.rang:hover{background:var(--survol)}
+.rang.actif,.rang.actif:hover{background:var(--rose)}
+.chev{flex-shrink:0;width:24px;height:38px;border:0;background:none;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--texte-clair);padding:0}
+.chev svg{width:15px;height:15px;transition:transform .15s}
+.chev[aria-expanded="true"] svg{transform:rotate(90deg)}
+.chev-vide{flex-shrink:0;width:24px}
+.lien{flex:1;min-width:0;display:flex;align-items:center;gap:10px;min-height:40px;padding:8px 10px 8px 0;text-decoration:none;color:var(--navy);border-radius:10px}
+.lien .t{flex:1;min-width:0;line-height:1.3}
+.n1>.rang .lien .t{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.n1>.rang .lien{min-height:46px}
+.n2>.rang .lien .t{font-size:14px;font-weight:600}
+.rang-jour{display:flex;align-items:center;width:100%;min-height:38px;border:0;background:none;border-radius:10px;padding:6px 10px 6px var(--ind,0px);text-align:left;color:var(--navy-2);gap:0}
+.rang-jour:hover{background:var(--survol)}
+.rang-jour .chev-i{flex-shrink:0;width:24px;display:flex;justify-content:center;color:var(--texte-clair)}
+.rang-jour .chev-i svg{width:14px;height:14px;transition:transform .15s}
+.rang-jour[aria-expanded="true"] .chev-i svg{transform:rotate(90deg)}
+.rang-jour .t{flex:1;min-width:0;font-size:13.5px;font-weight:600;line-height:1.3}
+
+.item{display:flex;align-items:center;gap:10px;min-height:40px;padding:6px 10px 6px calc(var(--ind,0px) + 6px);border-radius:10px;text-decoration:none;color:var(--navy);font-size:13.5px;line-height:1.35}
+.item:hover{background:var(--survol)}
+.item .t{flex:1;min-width:0}
+.item.actif,.item.actif:hover{background:var(--rose);color:var(--navy)}
+.item.ferme{color:var(--texte-clair)}
+.item.actif.ferme{color:var(--navy)}
+.pastille{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--gris-pastille);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:var(--titre)}
+.pastille svg{width:13px;height:13px}
+.item.fait .pastille{background:var(--vert-bg);color:var(--vert)}
+.item.ferme .pastille{background:#f4f6fa;color:#7d8499}
+.item.actif .pastille{background:var(--brun);color:#fff}
+.item.courant .pastille{background:#fff;box-shadow:inset 0 0 0 1.5px var(--brun);color:var(--brun)}
+.item.courant .t{font-weight:600}
+.rang-jour.courant .t{color:var(--navy);font-weight:700}
+.rang-jour.courant .t::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--brun);margin-left:8px;vertical-align:1px}
+.item.discret{font-size:13px;color:var(--texte-clair);min-height:34px}
+.item.discret .pastille{background:none;color:var(--texte-clair)}
+.item.discret.actif .pastille{background:var(--brun);color:#fff}
+
+.meta{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11.5px;color:var(--texte-clair);white-space:nowrap}
+.meta svg{width:12px;height:12px}
+.cpt{font-size:12px;font-weight:400;color:var(--texte-clair);letter-spacing:.02em;white-space:nowrap}
+
+.etiq{flex-shrink:0;display:inline-flex;align-items:center;font-size:11px;font-weight:700;letter-spacing:.01em;padding:3px 8px;border-radius:99px;background:var(--rouge-bg);color:var(--rouge);white-space:nowrap;line-height:1.3}
+.heure{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-weight:400;letter-spacing:0;font-size:11.5px;padding:2px 8px;border-radius:99px;background:var(--gris-pastille);color:var(--navy-2);white-space:nowrap;line-height:1.5}
+.heure svg{width:11px;height:11px}
+
+.bas-lat{flex-shrink:0;padding:12px 14px 14px;border-top:1px solid var(--bord-fin);background:#fff;display:flex;flex-direction:column;gap:10px}
+.bas-lat .demo{max-height:46vh;overflow-y:auto}
+.profil{display:flex;align-items:center;gap:10px;padding:4px 8px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;flex-shrink:0;font-family:var(--titre)}
+.profil .nom{font-size:14px;font-weight:600;color:var(--navy);line-height:1.25}
+.btn-question{display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;border:1px solid #d8e0ed;background:#fff;border-radius:10px;font-size:14px;font-weight:600;color:var(--navy)}
+.btn-question:hover{background:#fbfcfe}
+.btn-question svg{width:17px;height:17px;color:var(--navy-2)}
+
+.demo{background:#f6f8fc;border:1px dashed #cfd8e6;border-radius:12px;padding:0 11px}
+.demo>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--texte-clair);cursor:pointer}
+.demo>summary::-webkit-details-marker{display:none}
+.demo>summary svg{width:13px;height:13px;transition:transform .15s}
+.demo[open]>summary svg{transform:rotate(180deg)}
+.demo .corps-demo{padding:0 0 12px;display:flex;flex-direction:column;gap:8px}
+.demo-l{font-size:11.5px;font-weight:600;color:var(--texte)}
+.demo select{width:100%;border:1px solid var(--bord);border-radius:8px;padding:7px 8px;font-size:12.5px;background:#fff;color:var(--navy)}
+.bascule{display:flex;background:#e9edf5;border-radius:99px;padding:3px;gap:2px}
+.bascule button{flex:1;border:0;background:none;border-radius:99px;padding:6px;font-size:12px;font-weight:600;color:var(--texte)}
+.bascule button[aria-pressed="true"]{background:#fff;color:var(--navy);box-shadow:0 1px 2px rgba(20,29,70,.12)}
+.demo-c{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:1.4;color:var(--texte);cursor:pointer}
+.demo-c input{margin:1px 0 0;width:15px;height:15px;accent-color:var(--blue);flex-shrink:0}
+
+/* Rail (mode agrandi) */
+.rail{display:flex;flex-direction:column;align-items:center;gap:6px;min-height:100%}
+.rail-btn{flex-shrink:0;width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--navy);background:none;border:0;text-decoration:none}
+.rail-btn:hover{background:var(--survol)}
+.rail-btn.actif{background:var(--rose);color:var(--brun)}
+.rail-btn svg{width:21px;height:21px}
+.rail-sep{flex-shrink:0;width:28px;height:1px;background:var(--bord);margin:6px 0}
+.rail-prog{display:flex;flex-direction:column;align-items:center;gap:8px}
+.rail-prog .j{font-family:var(--mono);font-size:11px;color:var(--texte-clair)}
+.rail-prog .j svg{width:16px;height:16px}
+.rail-liste{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;align-items:center;gap:6px}
+.rail-liste a{display:block;border-radius:50%;text-decoration:none}
+.rail-liste a:hover .pastille{box-shadow:inset 0 0 0 1.5px #cdd6e4}
+.rail-liste .fait .pastille{background:var(--vert-bg);color:var(--vert)}
+.rail-liste .ferme .pastille{background:#f4f6fa;color:#7d8499}
+.rail-liste .courant .pastille{background:#fff;box-shadow:inset 0 0 0 1.5px var(--brun);color:var(--brun)}
+.rail-liste .actif .pastille{background:var(--brun);box-shadow:none;color:#fff}
+.rail-bas{margin-top:auto;padding-top:10px}
+
+/* ══════════ ÉLÉMENTS COMMUNS ══════════ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border-radius:10px;padding:10px 18px;font-size:15px;font-weight:600;border:1px solid #d8e0ed;background:#fff;color:var(--navy);text-decoration:none;white-space:nowrap;line-height:1.2}
+.btn:hover{background:#fbfcfe}
+.btn svg{width:16px;height:16px}
+.btn.plein{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.plein:hover{background:#0d1435}
+.btn.rouge{background:var(--rouge);border-color:var(--rouge);color:#fff}
+.btn.rouge:hover{background:#a93232}
+.btn.ok{background:var(--vert-bg);border-color:#bfe3cf;color:var(--vert)}
+.btn.grand{min-height:50px;padding:12px 24px;font-size:15.5px}
+.lien-texte{display:inline;background:none;border:0;padding:0;color:var(--bleu-texte);font-weight:600;font-size:inherit;text-decoration:none;text-align:left}
+.lien-texte:hover{text-decoration:underline}
+.piste{display:block;flex:1 1 auto;min-width:60px;height:8px;border-radius:99px;background:var(--piste);overflow:hidden}
+.piste i{display:block;height:100%;border-radius:99px;background:var(--blue);transition:width .3s}
+.carte{background:var(--carte);border:1px solid var(--bord);border-radius:16px;padding:32px 36px 36px}
+.sur-titre{font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--bleu-texte);margin-bottom:12px}
+.titre-page{font-size:36px;font-weight:800;line-height:1.12;letter-spacing:-.025em}
+.tete{display:flex;align-items:flex-end;justify-content:space-between;gap:14px 28px;flex-wrap:wrap;margin-bottom:26px}
+.tete .titre-page{flex:1 1 auto;min-width:0}
+.tete-prog{display:flex;align-items:center;gap:12px;width:220px;padding-bottom:6px}
+.filet{height:1px;background:var(--bord-fin);margin:24px 0 26px}
+.statut{display:flex;align-items:center;gap:9px;font-size:15.5px;font-weight:600;color:var(--vert);margin-bottom:22px}
+.statut svg{width:18px;height:18px}
+.verrou-page{display:inline-flex;align-items:center;gap:9px;margin-top:18px;padding:9px 14px;border-radius:10px;background:var(--gris-pastille);color:var(--navy-2);font-family:var(--mono);font-size:13.5px}
+.verrou-page svg{width:16px;height:16px}
+.titre-section{font-size:20px;margin:36px 0 14px}
+
+/* ══════════ ACCUEIL ══════════ */
+.bandeau{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:18px;padding:34px 32px 34px;margin-bottom:18px;min-height:156px}
+.drapeau{position:absolute;left:0;top:0;display:flex;width:216px;height:5px}
+.drapeau i{flex:1}
+.drapeau i:nth-child(1){background:var(--blue)}
+.drapeau i:nth-child(2){background:#eceef2}
+.drapeau i:nth-child(3){background:#f81f1f}
+.bandeau .eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--bleu-texte);margin-bottom:14px;position:relative}
+.bandeau h1{font-size:32px;line-height:1.12;font-weight:700;letter-spacing:-.02em;color:var(--ink);position:relative;max-width:640px}
+.bandeau h1 em{font-style:normal;color:var(--blue)}
+.bandeau .deco{position:absolute;right:-14px;bottom:-6px;width:290px;pointer-events:none}
+.bandeau .deco svg{width:100%;height:auto}
+
+.a-faire{display:flex;align-items:center;justify-content:space-between;gap:18px 28px;flex-wrap:wrap;border-radius:16px;padding:26px 28px;background:linear-gradient(100deg,var(--rose-1),var(--rose-2));border:1px solid #f1e3df;margin-bottom:18px}
+.af-txt{flex:1 1 360px;min-width:0}
+.af-sur{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--brun);margin-bottom:8px}
+.a-faire h2{font-size:24px;line-height:1.2;letter-spacing:-.015em}
+.af-ligne{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;margin-top:10px;font-size:15px;color:var(--navy-2)}
+.af-ligne .piste{max-width:260px;background:#efe4e0}
+
+
+.parcours-grille{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.parcours-grille.deux{grid-template-columns:repeat(2,minmax(0,1fr))}
+.carte-parcours{display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:12px;align-items:center;background:#fff;border:1px solid var(--bord);border-radius:14px;padding:18px 18px 16px;text-decoration:none;color:var(--texte);transition:border-color .14s,box-shadow .14s}
+.carte-parcours:hover{border-color:#d3ddec;box-shadow:0 8px 22px -16px rgba(20,29,70,.35)}
+.cp-tete{display:flex;align-items:center;gap:10px;align-self:start}
+.cp-ic{width:32px;height:32px;border-radius:50%;background:var(--rose-pale);color:var(--brun);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cp-ic svg{width:17px;height:17px}
+.cp-t{font-family:var(--titre);font-weight:700;font-size:15.5px;color:var(--navy);line-height:1.25}
+.cp-prog{display:flex;align-items:center;gap:10px}
+.cp-suite{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--texte);min-width:0}
+.cp-suite .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cp-suite.ok{color:var(--vert);font-weight:600}
+.cp-suite svg{width:14px;height:14px;flex-shrink:0}
+
+.infos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.case{background:#fff;border:1px solid var(--bord);border-radius:14px;padding:18px 18px 18px}
+.case .lab{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--texte-clair);margin-bottom:8px}
+.case .val{font-size:15.5px;font-weight:600;color:var(--navy);line-height:1.35}
+.case .sec{font-size:14px;color:var(--texte);line-height:1.5;margin-top:2px}
+.case .act{margin-top:10px;font-size:14px}
+.case .envoye{display:inline-flex;align-items:center;gap:6px;color:var(--vert);font-weight:600}
+.case .envoye svg{width:15px;height:15px}
+.personne{display:flex;align-items:center;gap:10px}
+.personne .avatar{background:var(--rose);color:var(--brun)}
+
+/* ══════════ FRISE (DELIV'IA 1) ══════════ */
+.frise{list-style:none;margin:0;padding:0 0 0 32px;position:relative}
+.frise::before{content:"";position:absolute;left:10px;top:16px;bottom:16px;width:1px;background:var(--bord)}
+.noeud{position:relative;padding:5px 0}
+.point{position:absolute;left:-32px;top:12px;width:21px;height:21px;border-radius:50%;background:#fff;border:1.5px solid #cdd6e4;display:flex;align-items:center;justify-content:center;z-index:1;font:700 10.5px/1 var(--titre);color:var(--navy)}
+.point svg{width:11px;height:11px}
+.noeud.fait .point{background:var(--vert-bg);border-color:var(--vert-bg);color:var(--vert)}
+.noeud.ferme .point{background:var(--gris-pastille);border-color:#e1e7f0;color:#7d8499}
+.noeud.courant .point{background:var(--brun);border-color:var(--brun);color:#fff;top:22px}
+.noeud.courant .point:empty::after{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
+.ligne{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;min-height:36px;padding:4px 0}
+.ligne .t{flex:1 1 180px;min-width:0;font-size:15.5px;color:var(--navy);text-decoration:none;line-height:1.4}
+.ligne .t:hover{text-decoration:underline}
+.noeud.fait .ligne .t{color:var(--texte)}
+.noeud.ferme .ligne .t{color:var(--texte-clair)}
+.carte-courante{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px 18px;background:linear-gradient(100deg,var(--rose-1),var(--rose-2));border:1px solid #f1e3df;border-radius:12px;padding:14px 16px 14px 18px;margin:4px 0}
+.cc-t{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;min-width:0;flex:1 1 240px}
+.cc-titre{font-family:var(--titre);font-weight:700;font-size:16.5px;color:var(--navy);text-decoration:none;line-height:1.3}
+.cc-titre:hover{text-decoration:underline}
+.groupe-frise+.groupe-frise{margin-top:30px}
+.titre-groupe{display:flex;align-items:center;gap:12px;font-size:17px;margin-bottom:10px}
+.titre-groupe .t{flex:1}
+.discrete{display:flex;align-items:center;gap:10px;margin-top:26px;padding-top:18px;border-top:1px solid var(--bord-fin);font-size:14.5px;color:var(--texte)}
+.discrete svg{width:17px;height:17px;color:var(--texte-clair)}
+
+/* ══════════ LISTES DE SERVICE ══════════ */
+.rangees{border-top:1px solid var(--bord-fin)}
+.rangee{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;padding:15px 2px;border-bottom:1px solid var(--bord-fin)}
+.rangee .ic{width:20px;height:20px;color:var(--texte-clair);flex-shrink:0}
+.rangee .ic svg{width:20px;height:20px}
+.rangee .nom{flex:1 1 180px;min-width:0;font-size:15.5px;font-weight:600;color:var(--navy);line-height:1.4}
+.rangee .nom.ferme{color:var(--texte-clair);font-weight:500}
+.rangee .val{font-size:15px;color:var(--navy)}
+.rangee .actions{display:flex;gap:20px;font-size:14.5px}
+.donnees{display:grid;grid-template-columns:minmax(120px,190px) 1fr;border-top:1px solid var(--bord-fin)}
+.donnees dt,.donnees dd{margin:0;padding:13px 2px;border-bottom:1px solid var(--bord-fin);font-size:15px}
+.donnees dt{color:var(--texte-clair)}
+.donnees dd{color:var(--navy);font-weight:500;overflow-wrap:anywhere}
+.echeances{width:100%;border-collapse:collapse;font-size:15px}
+.echeances th{text-align:left;font-family:var(--mono);font-weight:400;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--texte-clair);padding:0 2px 10px;border-bottom:1px solid var(--bord-fin)}
+.echeances td{padding:13px 2px;border-bottom:1px solid var(--bord-fin);color:var(--navy)}
+.echeances .d{text-align:right}
+.echeances .ok{color:var(--vert);font-weight:600}
+.actions-page{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+
+/* ══════════ PRÉPARATION ══════════ */
+.checklist{list-style:none;margin:0;padding:0;border-top:1px solid var(--bord-fin)}
+.checklist li{display:flex;align-items:flex-start;flex-wrap:wrap;gap:6px 14px;padding:13px 2px;border-bottom:1px solid var(--bord-fin)}
+.checklist input{width:21px;height:21px;margin:2px 0 0;accent-color:var(--blue);flex-shrink:0;cursor:pointer}
+.checklist label{flex:1 1 260px;min-width:0;font-size:16px;font-weight:500;color:var(--navy);cursor:pointer;line-height:1.55}
+.checklist li.ok label{color:var(--texte-clair);font-weight:400;text-decoration:line-through}
+.checklist li.ok input{accent-color:var(--vert);opacity:.55}
+.checklist .act{flex-shrink:0;font-size:14.5px;padding-top:2px;margin-left:35px}
+.video{position:relative;aspect-ratio:16/9;max-width:560px;border-radius:14px;overflow:hidden;background:linear-gradient(130deg,#fdf1e4,#f7e9e3);display:flex;align-items:center;justify-content:center;color:var(--brun)}
+.video>svg{width:54px;height:54px}
+.video .duree{position:absolute;right:12px;bottom:12px;background:rgba(20,29,70,.8);color:#fff;font-family:var(--mono);font-size:12px;padding:3px 8px;border-radius:6px}
+.video-t{margin-top:10px;font-weight:600;color:var(--navy)}
+
+/* ══════════ LECTURE (ATELIERS) ══════════ */
+.barre-lecture{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.97);border-bottom:1px solid var(--bord)}
+.bl-int{max-width:1120px;margin:0 auto;padding:9px 32px;display:flex;align-items:center;gap:16px;min-height:56px}
+.bl-fil{font-size:14.5px;font-weight:600;color:var(--navy);white-space:nowrap}
+.bl-prog{display:flex;align-items:center;gap:10px;width:200px}
+.bl-esp{flex:1}
+.bl-nav{display:flex;gap:6px}
+.icone-btn{width:40px;height:40px;border-radius:10px;border:1px solid #d8e0ed;background:#fff;color:var(--navy);display:flex;align-items:center;justify-content:center;text-decoration:none}
+.icone-btn:hover{background:#fbfcfe}
+.icone-btn svg{width:17px;height:17px}
+.icone-btn.off{opacity:.4;pointer-events:none}
+.btn-agr{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 14px;border-radius:10px;border:1px solid #d8e0ed;background:#fff;font-size:14px;font-weight:600;color:var(--navy)}
+.btn-agr:hover{background:#fbfcfe}
+.btn-agr svg{width:16px;height:16px}
+.pied{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:12px;margin-top:40px;padding-top:22px;border-top:1px solid var(--bord-fin)}
+.nav-bas{display:none}
+.question-flottante{display:none}
+.nw{white-space:nowrap}
+
+.blocs{font-size:16.5px}
+.bloc{margin-top:20px}
+.bloc:first-child{margin-top:0}
+.bloc.m10{margin-top:10px}
+.bloc.m24{margin-top:24px}
+.bloc.m40{margin-top:40px}
+.bloc.suite{margin-left:54px}
+.callout{display:flex;gap:16px;align-items:flex-start;border-radius:14px;padding:22px 24px 22px 18px;background:linear-gradient(100deg,var(--rose-1),var(--rose-2))}
+.callout .ic{flex-shrink:0;width:20px;font-size:19px;line-height:1.45;text-align:center}
+.callout h3{font-size:18.5px;margin-bottom:6px}
+.callout p{color:var(--navy-2);line-height:1.72;max-width:76ch}
+.etape{display:flex;gap:16px;align-items:flex-start}
+.num{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--rose-pale);color:var(--navy);display:flex;align-items:center;justify-content:center;font:700 16px var(--titre)}
+.etape-corps{flex:1;min-width:0;padding-top:5px}
+.etape-corps h3{font-size:19.5px;line-height:1.35;margin-bottom:6px}
+.etape-corps>p{line-height:1.72;margin-bottom:12px;max-width:76ch}
+.prompt{display:flex;align-items:flex-start;gap:16px;background:var(--bloc);border-radius:11px;padding:16px 16px 16px 18px}
+.prompt .doc{flex-shrink:0;width:19px;height:19px;color:#8f98ae;margin-top:3px}
+.prompt .doc svg{width:19px;height:19px}
+.prompt .txt{flex:1;min-width:0;font-family:var(--mono);font-size:14px;line-height:1.85;color:var(--bloc-txt);white-space:pre-wrap;overflow-wrap:anywhere}
+.copier{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;background:#fff;border:1px solid #d8e0ed;border-radius:9px;padding:8px 15px;font-size:14.5px;font-weight:600;color:var(--navy)}
+.copier:hover{background:#fbfcfe}
+.copier svg{width:15px;height:15px}
+.copier.ok{background:var(--vert-bg);border-color:#bfe3cf;color:var(--vert)}
+.bloc h2{font-size:23px}
+.bloc h3.sous{font-size:18.5px}
+.paragraphe p{line-height:1.75;max-width:76ch}
+.citation{border-left:3px solid var(--brun);padding:2px 0 2px 20px}
+.citation p{font-size:16.5px;line-height:1.75;color:var(--navy-2);font-style:italic;max-width:76ch}
+.liste ul,.liste ol{padding-left:24px}
+.liste li{line-height:1.75;margin-bottom:5px;max-width:76ch}
+.liste li::marker{color:var(--brun)}
+.fichier{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;border:1px solid var(--bord);border-radius:11px;padding:13px 16px 13px 17px;background:#fff}
+.fichier .ic{width:19px;height:19px;color:var(--texte-clair);flex-shrink:0}
+.fichier .ic svg{width:19px;height:19px}
+.fichier .nom{flex:1 1 200px;min-width:0;font-size:15px;font-weight:600;color:var(--navy)}
+.fichier .lien-texte{font-size:14.5px}
+.fichier .taille{font-weight:400;color:var(--texte-clair);font-family:var(--mono);font-size:12.5px;margin-left:6px}
+.depliant{border:1px solid var(--bord);border-radius:12px;overflow:hidden;background:#fff}
+.depliant+.depliant{margin-top:10px}
+.depliant>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:13px 16px;background:#fbfcfe;min-height:52px}
+.depliant>summary::-webkit-details-marker{display:none}
+.depliant>summary:hover{background:#f4f7fc}
+.depliant>summary .chev-d{flex-shrink:0;width:18px;height:18px;color:var(--texte-clair);transition:transform .15s}
+.depliant>summary .chev-d svg{width:18px;height:18px}
+.depliant[open]>summary .chev-d{transform:rotate(90deg)}
+.depliant>summary .t{flex:1;min-width:0;font-size:15.5px;font-weight:600;color:var(--navy)}
+.depliant .corps{padding:12px 18px 18px 48px;border-top:1px solid var(--bord-fin);line-height:1.7}
+.depliant .corps>*+*{margin-top:10px}
+.depliant .corps ul,.depliant .corps ol{padding-left:20px}
+.depliant .corps li::marker{color:var(--brun)}
+.depliant.compact>summary{min-height:46px;padding:10px 14px 10px 16px}
+.depliant.compact>summary .t{font-size:14.5px;color:var(--texte)}
+.depliant.compact[open]>summary .t{color:var(--navy)}
+.depliant.compact .corps{padding:12px 14px 14px 16px}
+.depliant .corps .prompt+.prompt{margin-top:10px}
+.logos{display:inline-flex;align-items:center;gap:7px;flex-shrink:0}
+.logos svg{width:15px;height:15px}
+
+/* ══════════ FENÊTRES ══════════ */
+dialog{border:0;border-radius:16px;padding:0;width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 32px);box-shadow:0 30px 70px -20px rgba(20,29,70,.45);color:var(--texte)}
+dialog::backdrop{background:rgba(20,29,70,.38)}
+.dlg-tete{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px 14px;border-bottom:1px solid var(--bord-fin)}
+.dlg-tete h2{font-size:18px}
+.dlg-corps{padding:18px 20px 20px;overflow-y:auto}
+.fermer{width:38px;height:38px;border:0;background:none;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--texte-clair)}
+.fermer:hover{background:var(--survol);color:var(--navy)}
+.fermer svg{width:18px;height:18px}
+.recherche{display:flex;align-items:center;gap:10px;border:1px solid #d8e0ed;border-radius:10px;padding:0 12px;background:#fff}
+.recherche svg{width:17px;height:17px;color:var(--texte-clair);flex-shrink:0}
+.recherche input{flex:1;min-width:0;border:0;padding:11px 0;font-size:16px;background:none}
+.recherche input:focus{outline:none}
+.recherche:focus-within{outline:2px solid var(--blue);outline-offset:1px}
+.faq{margin-top:12px}
+.faq .depliant+.depliant{margin-top:8px}
+.faq-vide{font-size:14.5px;color:var(--texte-clair);padding:6px 2px}
+.champ-q{margin-top:18px;padding-top:16px;border-top:1px solid var(--bord-fin)}
+.champ-q label{display:block;font-weight:600;color:var(--navy);margin-bottom:8px;font-size:15px}
+.champ-q textarea{width:100%;min-height:96px;border:1px solid #d8e0ed;border-radius:10px;padding:10px 12px;font-size:16px;resize:vertical}
+.champ-q textarea:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.champ-q .actions-page{margin-top:12px;justify-content:flex-end}
+.envoye-q{display:flex;align-items:center;gap:8px;color:var(--vert);font-weight:600}
+.envoye-q svg{width:18px;height:18px}
+.papier{border:1px solid var(--bord);border-radius:10px;padding:26px 26px 30px;background:#fff;box-shadow:0 10px 30px -22px rgba(20,29,70,.5)}
+.papier img{height:22px;width:auto;margin-bottom:22px}
+.papier h3{font-size:19px;margin-bottom:16px}
+.papier .l{height:8px;border-radius:4px;background:#eceff5;margin-top:10px}
+.papier .l.c{width:62%}
+.papier .l.m{width:84%}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:var(--navy);color:#fff;padding:11px 18px;border-radius:99px;font-size:14.5px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:90;max-width:calc(100vw - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+.haut-mobile{display:none}
+.voile{display:none}
+
+/* ══════════ MODE AGRANDI ══════════ */
+@media (min-width:900px){
+  .app.grand{grid-template-columns:76px minmax(0,1fr);background:linear-gradient(90deg,#fff 0 75px,var(--bord) 75px 76px,transparent 76px)}
+  .app.grand .zone-nav{padding:16px 10px;display:flex;flex-direction:column}
+  .app.grand .rail{flex:1 0 auto}
+  .app.grand .scene,.app.grand .bl-int{max-width:1380px}
+  .app.grand .carte{padding:44px 60px 48px}
+  .app.grand .titre-page{font-size:46px}
+  .app.grand .blocs{font-size:18.5px}
+  .app.grand .prompt .txt{font-size:16px}
+  .app.grand .etape-corps h3{font-size:23px}
+  .app.grand .callout h3{font-size:21px}
+  .app.grand .bloc h2{font-size:27px}
+  .app.grand .paragraphe p,.app.grand .liste li,.app.grand .callout p,.app.grand .etape-corps>p,.app.grand .citation p{max-width:68ch}
+}
+
+/* ══════════ TABLETTE ══════════ */
+@media (max-width:1180px){
+  .bandeau .deco{display:none}
+}
+@media (max-width:1080px) and (min-width:900px){
+  .cp-ic{display:none}
+  .cp-t{font-size:14.5px}
+  .parcours-grille,.infos{gap:10px}
+  .carte-parcours{padding:16px 14px 14px}
+  .scene{padding:24px 24px 72px}
+  .bl-int{padding:9px 24px}
+  .bl-prog{width:140px}
+}
+
+/* ══════════ TÉLÉPHONE ══════════ */
+@media (max-width:899px){
+  .app{grid-template-columns:minmax(0,1fr);background:none}
+  .haut-mobile{display:flex;position:sticky;top:0;z-index:40;align-items:center;gap:12px;padding:9px 16px;background:#fff;border-bottom:1px solid var(--bord);min-height:58px}
+  .haut-mobile .logo{height:22px;flex-shrink:0}
+  .ou{flex:1;min-width:0;display:flex;align-items:center;gap:8px;min-height:40px;border:1px solid #d8e0ed;border-radius:10px;background:#fff;padding:7px 12px;font-size:14px;font-weight:600;color:var(--navy);text-align:left}
+  .ou .t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ou svg{width:16px;height:16px;flex-shrink:0;color:var(--texte-clair)}
+  .lateral{position:fixed;left:0;top:0;bottom:0;height:100dvh;width:min(340px,88vw);z-index:60;transform:translateX(-102%);visibility:hidden;transition:transform .22s ease,visibility 0s linear .22s;box-shadow:0 0 60px -10px rgba(20,29,70,.35);border-right:0}
+  .app.tiroir .lateral{transform:none;visibility:visible;transition:transform .22s ease}
+  .app.tiroir .voile{display:block;position:fixed;inset:0;z-index:55;background:rgba(20,29,70,.35)}
+  .fermer.fermer-tiroir{display:flex}
+  .scene{padding:16px 16px 96px}
+  .scene.lecture{padding-bottom:110px}
+  .question-flottante{display:flex;position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:35;width:56px;height:56px;border-radius:50%;border:0;background:var(--navy);color:#fff;align-items:center;justify-content:center;box-shadow:0 10px 26px -10px rgba(20,29,70,.55)}
+  .question-flottante svg{width:24px;height:24px}
+  .app.tiroir .question-flottante{display:none}
+  .carte{padding:22px 18px 26px;border-radius:14px}
+  .titre-page{font-size:27px}
+  .tete{margin-bottom:20px}
+  .tete-prog{width:100%}
+  .bandeau{padding:28px 20px 24px;min-height:0}
+  .bandeau h1{font-size:25px}
+  .a-faire{padding:20px 18px}
+  .a-faire h2{font-size:20px}
+  .a-faire .btn{width:100%}
+  .parcours-grille,.parcours-grille.deux,.infos{grid-template-columns:minmax(0,1fr);gap:10px}
+  .barre-lecture{top:58px}
+  .bl-int{padding:8px 16px;min-height:44px}
+  .bl-fil,.bl-nav,.btn-agr{display:none}
+  .bl-prog{width:100%}
+  .nav-bas{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);border-top:1px solid var(--bord)}
+  .nav-bas .btn{flex:1}
+  .nav-bas .nav-q{flex-shrink:0;width:44px;height:44px}
+  .nav-bas .btn.off{opacity:.4;pointer-events:none}
+  .bloc.suite{margin-left:0}
+  .etape{gap:12px}
+  .num{width:32px;height:32px;font-size:14px}
+  .etape-corps>.prompt{margin-left:-44px}
+  .prompt{flex-wrap:wrap;padding:14px}
+  .prompt .doc{display:none}
+  .prompt .txt{flex-basis:100%;font-size:13.5px}
+  .depliant .corps{padding-left:18px}
+  .callout{padding:18px 16px}
+  .pied{justify-content:stretch}
+  .pied .btn{flex:1}
+  .donnees{grid-template-columns:1fr}
+  .donnees dt{border-bottom:0;padding-bottom:0}
+  .checklist .act{margin-left:35px}
+  .toast{bottom:84px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<div id="app" class="app"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<dialog id="dlg-doc" aria-labelledby="dlg-doc-t"></dialog>
+<dialog id="dlg-question" aria-labelledby="dlg-q-t"></dialog>
+
+<script>
+"use strict";
+/* ============================================================
+   DONNÉES FICTIVES
+   ============================================================ */
+const D = {"jours":[{"id":"j1","ateliers":[{"n":1,"titre":"Personnaliser l’IA","bonus":false,"demi":"matin","blocs":[{"type":"etape","titre":"Prompt pour ChatGPT","texte":"","prompt":"Pose-moi des questions sur mon métier, ma façon de travailler et mes attentes, puis génère 2 prompts courts : un pour les instructions personnalisées et un pour la partie “Plus d’informations sur vous”"},{"type":"variante","compact":true,"ouvert":false,"outils":["claude","gemini","copilot","mistral"],"titre":"Prompt pour les autres IA","texte":"","prompts":["Pose-moi des questions sur mon métier, ma façon de travailler et mes attentes, puis génère-moi un prompt de personnalisation"]},{"type":"titre","texte":"Prompt d’exemple pour ChatGPT"},{"type":"etape","titre":"Instructions personnalisées","texte":"","prompt":"Réponds-moi en français, avec un ton humain, clair et direct. Utilise une syntaxe et une grammaire françaises rigoureuses, sans calque de l’anglais.\n\nN’utilise pas de tiret long pour structurer une phrase : préfère la virgule, le point, les deux-points, ou découpe en deux phrases.\n\nAgis comme mon bras droit : conseiller marketing, rédacteur, assistant opérationnel et contradicteur bienveillant.\n\nNe te contente pas d’exécuter : challenge mes idées, pointe les faiblesses, pose des questions ciblées quand le contexte manque, puis propose une version plus solide.\n\nAdapte le niveau de détail à ma demande. Évite les banalités, le ton corporate, le jargon et les phrases creuses.\n\nSi une information te manque ou si tu n’es pas certain, dis-le clairement. N’invente ni fait ni source."},{"type":"etape","titre":"Plus d’informations sur vous","texte":"","prompt":"Je suis responsable marketing dans une PME de 40 personnes qui fabrique du mobilier de bureau. J’encadre une équipe de trois personnes.\n\nMon temps se répartit ainsi : 40 % de contenus (site, réseaux sociaux, newsletters), 30 % de pilotage des campagnes, 30 % de réunions et de reporting.\n\nMes livrables principaux sont les plans de campagne, les comptes rendus, les posts LinkedIn et les tableaux de suivi. Ce qui me prend le plus de temps : la rédaction et la mise en forme du reporting mensuel.\n\nJ’utilise surtout ChatGPT, Excel et Canva. Mon objectif est de gagner du temps sur la production pour en consacrer davantage à la stratégie."},{"type":"variante","compact":true,"ouvert":false,"outils":["claude","copilot"],"titre":"Prompt de personnalisation pour Claude ou Copilot","texte":"","prompts":["Réponds en français, avec une syntaxe et une grammaire françaises rigoureuses, sans calque de l’anglais. N’utilise pas de tiret long pour structurer une phrase.\n\nTu es mon bras droit professionnel : conseiller marketing, rédacteur et assistant opérationnel. Je suis responsable marketing dans une PME qui fabrique du mobilier de bureau.\n\nNe te contente jamais d’exécuter sans réfléchir. Quand tu vois une faiblesse dans mon idée, dis-le franchement, argumente, puis propose une version plus solide. Si le contexte manque, pose une question ciblée avant de te lancer.\n\nBannis : banalités, ton corporate, anglicismes évitables, jargon inutile, phrases creuses.\n\nQuand tu écris à ma place, imite ma voix : directe, simple, humaine, crédible."]}]},{"n":2,"titre":"ChatGPT Challenge","bonus":false,"demi":"matin","blocs":[{"type":"callout","ic":"📝","titre":"Objectif de cet atelier","texte":"Découvrir plusieurs cas d’usage rapides pour comprendre le champ des possibles : document, image, web, Excel, email, vidéo, notes manuscrites, briefing client, etc."},{"type":"etape","titre":"Extraire des informations d’un document et les convertir en Excel","texte":"Vous disposez d’une liste de participants au format PDF. L’objectif est d’extraire automatiquement les coordonnées (noms, prénoms, numéros, emails) et de les structurer dans un fichier Excel exploitable. Ce fichier exemple est bien sûr un fichier avec des données fictives."},{"type":"fichier","nom":"Contacts participants.pdf","taille":"4,3 Ko","url":""},{"type":"paragraphe","texte":"<b>Étape 1 :</b> téléchargez le fichier ci-dessus."},{"type":"paragraphe","texte":"<b>Étape 2 :</b> saisissez cette requête dans ChatGPT."},{"type":"prompt","texte":"À partir de ce fichier, extrais les noms, prénoms, métier, numéros et adresses e-mail des participants, puis liste-les dans un fichier Excel. Assure-toi de conserver strictement les informations telles qu’elles apparaissent dans le document d’origine et de prendre en compte la présence de deux colonnes dans le PDF"},{"type":"paragraphe","texte":"<b>Étape 3 :</b> une fois le fichier Excel obtenu, enchaînez avec des demandes courtes pour l’enrichir progressivement, directement dans la même conversation."},{"type":"prompt","texte":"Ajoute une colonne avec le pays correspondant à l’indicatif de chaque numéro de téléphone. Assure-toi d’abord de faire une recherche pour être sûr d’avoir une matrice de correspondance entre l’indicatif et le pays"},{"type":"prompt","texte":"Ajoute une colonne avec le lien LinkedIn de chaque personne si tu le trouves. Assure-toi que les liens soient corrects. Si tu n’es pas sûr de ta réponse ou qu’il y a plusieurs personnes avec ce nom et prénom, dis-le-moi"},{"type":"prompt","texte":"Ajoute une colonne avec le site web officiel de chaque entreprise."},{"type":"etape","titre":"Extraire des informations d’un site web","texte":"À partir d’une page web, extraire automatiquement les données structurées pour identifier des éléments qui pourraient nous être utiles lors d’un entretien avec le dirigeant. Saisissez cette requête dans ChatGPT.","prompt":"Analyse ce site https://www.franceia.com/\nDonne-moi en 5 points : à quoi sert cette entreprise, son positionnement, ses clients cibles, ses 3 produits ou services phares, et un angle pour engager la conversation lors d’un entretien avec le dirigeant"},{"type":"etape","titre":"Faire une recherche d’informations","texte":"Utiliser ChatGPT pour effectuer une veille ou une recherche rapide sur un sujet précis, en obtenant une synthèse structurée et fiable plutôt qu’une liste de liens."},{"type":"paragraphe","texte":"<b>Étape 1 :</b> identifiez clairement votre besoin : sujet, angle, niveau de détail souhaité et usage final (présentation, prise de décision, rédaction, etc.). Par exemple une recherche sur l’actualité IA des 2 dernières semaines pour vous permettre de rester à jour dans votre domaine d’activité."},{"type":"paragraphe","texte":"<b>Étape 2 :</b> activez la fonctionnalité de « recherche sur le web » dans ChatGPT et lancez votre requête."},{"type":"etape","titre":"Extraire des informations depuis une image","texte":"Utiliser ChatGPT pour lire et extraire automatiquement des données présentes dans une image ou capture d’écran, sans ressaisie manuelle."},{"type":"paragraphe","texte":"<b>Étape 1 :</b> faites une capture d’écran contenant des données structurées (tableau, facture, fiche produit, email, etc.) et importez-la dans ChatGPT. Ou bien utilisez l’image fournie en séance."},{"type":"paragraphe","texte":"<b>Étape 2 :</b> créez une requête qui vous permette d’atteindre cet objectif."},{"type":"etape","titre":"Résoudre un problème informatique depuis une capture d’écran","texte":"Utiliser ChatGPT comme support technique visuel : lui montrer une capture d’écran d’une erreur (Word, Excel, navigateur, etc.) pour obtenir un diagnostic clair et une marche à suivre, sans avoir à décrire le problème par écrit."},{"type":"paragraphe","texte":"<b>Étape 1 :</b> faites une capture d’écran d’un message d’erreur ou d’un dysfonctionnement rencontré sur votre poste, et importez-la dans ChatGPT."},{"type":"paragraphe","texte":"<b>Étape 2 :</b> créez une requête qui vous permette d’atteindre cet objectif."},{"type":"prompt","texte":"Voici une capture d’écran de mon problème. Explique-moi en français simple ce qui ne va pas, donne-moi la marche à suivre étape par étape pour corriger, et précise comment éviter que ça se reproduise"},{"type":"etape","titre":"Corriger ou traduire un document entier","texte":"Corriger les fautes, améliorer le style ou traduire un document complet tout en respectant le ton et la mise en forme d’origine."},{"type":"paragraphe","texte":"<b>Étape 1 :</b> téléchargez votre document (Word, PDF ou texte brut) et importez-le dans ChatGPT. Voici un document avec des fautes, au besoin :"},{"type":"fichier","nom":"Analyse entreprise catelo à corriger.pdf","taille":"51,4 Ko","url":""},{"type":"paragraphe","texte":"<b>Étape 2 :</b> créez une requête qui vous permette de corriger le document puis, si vous le souhaitez, de le traduire."},{"type":"etape","titre":"Préparer une réunion client avant un premier rendez-vous","texte":"Demander à ChatGPT, avec de la réflexion approfondie et une recherche sur le web, de générer une fiche d’analyse complète sur un nouveau client avant un premier rendez-vous. Cette requête peut sembler impressionnante car elle est longue et très structurée. Pas d’inquiétude : à l’étape 10, vous verrez comment faire rédiger ce type de prompt par l’IA elle-même. C’est ce que l’on appelle du Meta Prompting."},{"type":"paragraphe","texte":"<b>Étape 1 :</b> identifiez le nom de l’entreprise cliente et sa ville et, si possible, son site web ou sa page LinkedIn (ou tout autre document disponible comme une plaquette)."},{"type":"paragraphe","texte":"<b>Étape 2 :</b> ouvrez une nouvelle conversation et choisissez le niveau de réflexion Élevé dans le sélecteur de modèle. La structure Markdown (titres avec #, listes à puces, sections numérotées) permet à ChatGPT de mieux comprendre l’organisation attendue de la réponse."},{"type":"prompt","texte":"# Rôle\nTu es un assistant d’analyse préalable à rendez-vous avec un nouveau client.\n\n# Objectif\nCollecter, analyser et structurer toutes les informations disponibles en ligne afin de comprendre le contexte global d’un client avant un premier rendez-vous.\n\n# Entrée\n- Nom de l’entreprise ou du client : [nom de l’entreprise]\n- Localisation : [ville, pays]\n- Ce que je propose à ce client : [votre offre en une phrase]\n\n# Tâche\nRechercher sur le web, analyser et synthétiser uniquement des informations accessibles publiquement.\n\n# Format de sortie et données à collecter (si disponibles)\n1. **Informations générales** : raison sociale, forme juridique, date de création, siège social, effectif estimé\n2. **Activité et positionnement** : secteur d’activité, offre principale, typologie de clients, zone géographique couverte\n3. **Situation économique visible** : taille estimée, signaux de croissance ou de difficulté, informations financières publiques\n4. **Dirigeants et gouvernance** : dirigeants identifiés, parcours professionnel, présence médiatique ou publique\n5. **Présence en ligne** : site web officiel, réseaux sociaux actifs, fréquence de publication, messages et positionnement clés\n6. **Actualités récentes** : annonces stratégiques, recrutements, levées de fonds, partenariats, difficultés ou événements notables\n7. **Enjeux observables** : signaux de structuration ou de transformation, besoins possibles en lien avec ce que je propose\n\n# Sources\n- Indiquer systématiquement les **sources utilisées** pour chaque information.\n- Mentionner explicitement lorsque l’information n’est pas trouvable en ligne.\n- Se limiter strictement aux données accessibles publiquement.\n- Ne pas formuler d’hypothèses non étayées par une source."},{"type":"citation","texte":"Point d’attention : ouvrez deux ou trois des sources citées pour vérifier qu’elles disent bien ce que la fiche leur attribue, surtout pour les chiffres et les noms de dirigeants."},{"type":"etape","titre":"Trouver des formules Excel","texte":"Utiliser ChatGPT comme assistant Excel pour générer des formules sur mesure, du conditionnel simple aux calculs croisés complexes, sans avoir à mémoriser la syntaxe exacte des fonctions. Saisissez l’une des requêtes suivantes dans ChatGPT, selon votre besoin."},{"type":"paragraphe","texte":"<b>Exemple 1 : Formule conditionnelle simple.</b> Objectif : afficher un statut selon une valeur numérique."},{"type":"prompt","texte":"Crée une formule Excel qui affiche 'Payé' si le montant en C2 est supérieur à 0, sinon 'Impayé'"},{"type":"paragraphe","texte":"<b>Exemple 2 : Calcul d’une remise selon plusieurs paliers.</b> Objectif : appliquer un taux de remise différent selon le montant de la commande."},{"type":"prompt","texte":"Crée une formule Excel qui applique une remise sur le montant en B2 :\n- 0% si le montant est inférieur à 100€\n- 5% entre 100€ et 500€\n- 10% entre 500€ et 1000€\n- 15% au-delà de 1000€\nLe résultat doit afficher le montant final après remise."},{"type":"paragraphe","texte":"<b>Exemple 3 : Recherche d’une valeur dans un autre tableau.</b> Objectif : retrouver automatiquement le prix d’un produit à partir de sa référence."},{"type":"prompt","texte":"J’ai deux feuilles dans mon classeur Excel :\n- \"Commandes\" avec en colonne A la référence produit\n- \"Catalogue\" avec en colonne A la référence et en colonne B le prix unitaire\n\nCrée une formule à mettre dans la cellule B2 de la feuille \"Commandes\" qui va chercher automatiquement le prix correspondant à la référence saisie en A2. Si la référence n’existe pas, affiche \"Référence inconnue\"."},{"type":"paragraphe","texte":"<b>Exemple 4 : Extraire une information d’une chaîne de texte.</b> Objectif : isoler le nom de domaine à partir d’une adresse email."},{"type":"prompt","texte":"Crée une formule Excel qui extrait le nom de domaine d’une adresse email située en cellule A2. Par exemple, pour \"contact@franceia.fr\", la formule doit renvoyer \"franceia.fr\"."},{"type":"paragraphe","texte":"<b>Exemple 5 : Compter selon plusieurs critères.</b> Objectif : compter le nombre de lignes répondant à plusieurs conditions simultanées."},{"type":"prompt","texte":"J’ai un tableau de ventes avec :\n- Colonne A : date de la vente\n- Colonne B : nom du commercial\n- Colonne C : montant\n\nCrée une formule Excel qui compte le nombre de ventes réalisées par \"Marie\" en novembre 2025 pour un montant supérieur à 500€."},{"type":"paragraphe","texte":"<b>Exemple 6 : Calcul de l’ancienneté en années et mois.</b> Objectif : afficher l’ancienneté d’un salarié dans un format lisible."},{"type":"prompt","texte":"La date d’embauche d’un salarié se trouve en cellule B2. Crée une formule Excel qui calcule son ancienneté à la date d’aujourd’hui et l’affiche sous la forme \"X ans et Y mois\"."},{"type":"etape","titre":"Créer un modèle Excel sur mesure","texte":"Utiliser ChatGPT pour générer un fichier Excel structuré et personnalisé (suivi de prospection, planning, budget, etc.) sans le construire manuellement. Ce scénario illustre la puissance du meta-prompting : plutôt que de rédiger directement une requête détaillée, on demande d’abord à ChatGPT de nous aider à concevoir la bonne requête, puis on l’utilise pour obtenir le résultat final."},{"type":"paragraphe","texte":"<b>Étape 1 :</b> ouvrez une conversation avec ChatGPT et expliquez-lui votre besoin de manière simple, sans chercher à être exhaustif."},{"type":"prompt","texte":"Je cherche à créer un fichier Excel pour suivre ma prospection commerciale. Aide-moi à concevoir une requête détaillée que je pourrai ensuite te renvoyer pour que tu génères le fichier. Pose-moi les bonnes questions si besoin pour clarifier mon besoin pour générer cet Excel"},{"type":"paragraphe","texte":"<b>Étape 2 :</b> répondez aux questions de ChatGPT (type de prospects suivis, indicateurs souhaités, niveau de détail attendu, etc.). À l’issue de cet échange, demandez-lui de formaliser une requête complète et structurée."},{"type":"paragraphe","texte":"<b>Étape 3 :</b> ouvrez une nouvelle conversation et collez la requête optimisée obtenue. Voici un exemple de résultat final pour un suivi de prospection commerciale :"},{"type":"prompt","texte":"Crée-moi un fichier Excel de suivi de prospection commerciale avec les spécifications suivantes :\n\nStructure :\n- Une feuille \"Pipeline\" avec le tableau de suivi principal\n- Une feuille \"Tableau de bord\" avec des indicateurs clés\n\nFeuille \"Pipeline\" :\n- Colonnes : Entreprise, Contact, Poste, Email, Téléphone, Source,\n  Date premier contact, Statut, Prochaine action, Date relance,\n  Montant estimé, Probabilité (%), Observations\n- Liste déroulante pour Statut : \"À contacter\", \"En cours\",\n  \"Proposition envoyée\", \"Gagné\", \"Perdu\"\n- Liste déroulante pour Source : \"LinkedIn\", \"Recommandation\",\n  \"Site web\", \"Événement\", \"Autre\"\n- Colonne \"Montant pondéré\" calculée automatiquement\n  (Montant estimé × Probabilité)\n- Mise en forme conditionnelle :\n  - Rouge si date de relance dépassée\n  - Orange si relance dans les 3 jours\n  - Vert pour les prospects \"Gagné\"\n- Alternance de couleurs sur les lignes\n- Filtres automatiques et volets figés sur les en-têtes\n\nFeuille \"Tableau de bord\" :\n- Nombre total de prospects par statut\n- Montant total du pipeline (pondéré et brut)\n- Taux de conversion (Gagné / total)\n- Nombre de relances à faire cette semaine\n\nMise en forme :\n- En-têtes avec fond bleu marine et texte blanc\n- Montants en euros avec séparateurs de milliers\n- Dates au format JJ/MM/AAAA\n- 10 lignes pré-remplies avec des données fictives réalistes"},{"type":"paragraphe","texte":"<b>Étape 4 :</b> téléchargez le fichier Excel généré par ChatGPT, ouvrez-le pour vérifier que tout correspond à vos attentes, et ajustez si besoin en demandant des modifications ciblées (ajout d’une colonne, modification d’une formule, etc.)."},{"type":"etape","titre":"Optimiser un prompt avec le meta-prompting","texte":"Apprendre à transformer une requête initiale trop vague en un prompt structuré et précis, en demandant à ChatGPT lui-même de l’optimiser. Cette technique, appelée meta-prompting, permet d’obtenir des résultats nettement plus pertinents sans avoir à maîtriser les techniques avancées de prompting."},{"type":"paragraphe","texte":"<b>Étape 1 :</b> choisissez un sujet professionnel ou personnel qui vous concerne réellement, et formulez votre demande comme vous l’auriez fait spontanément. Quelques idées de requêtes pour vous inspirer :"},{"type":"numerotee","items":["Je cherche à rédiger un email de relance à un client qui ne me répond plus depuis trois semaines.","Je cherche une trame d’entretien pour préparer mon entretien annuel d’évaluation avec mon manager.","J’aimerais rédiger une fiche de poste pour recruter un alternant en marketing dans mon équipe.","Je dois préparer une présentation de 15 minutes pour mon comité de direction sur l’avancement de mon projet.","Je voudrais écrire un post LinkedIn qui paraisse naturel pour annoncer le lancement de ma nouvelle offre de formation."]},{"type":"paragraphe","texte":"<b>Étape 2 :</b> dans ChatGPT, utilisez la requête suivante en remplaçant la partie entre crochets par votre demande initiale."},{"type":"prompt","texte":"Voici ma requête : \"[INSÉRER ICI VOTRE REQUÊTE SIMPLE]\"\n\nOptimise-la en un prompt clair et structuré. Pose-moi d’abord les questions nécessaires pour bien clarifier mon besoin."},{"type":"paragraphe","texte":"<b>Étape 3 :</b> répondez aux questions de ChatGPT pour préciser votre besoin, puis récupérez le prompt optimisé généré. Ouvrez une nouvelle conversation et collez ce prompt pour obtenir un résultat nettement plus pertinent qu’avec votre requête de départ."},{"type":"etape","titre":"Faire une recherche booléenne Google pour trouver un résultat spécifique","texte":"Une recherche booléenne consiste à combiner des mots-clés avec des opérateurs comme AND, OR et NOT pour obtenir des résultats plus ciblés et précis sur Google."},{"type":"paragraphe","texte":"<b>Appels d’offres et marchés publics</b>"},{"type":"prompt","texte":"Génère une recherche booléenne Google pour trouver des appels d’offres publics en cours pour des missions de conseil ou de formation professionnelle, publiés sur BOAMP ou des plateformes de marchés publics françaises."},{"type":"paragraphe","texte":"<b>Veille concurrentielle</b>"},{"type":"prompt","texte":"Génère une recherche booléenne Google pour trouver les références clients ou projets publiés en ligne par des cabinets de conseil ou organismes de formation concurrents en France."},{"type":"paragraphe","texte":"<b>Recherche de partenaires</b>"},{"type":"prompt","texte":"Génère une recherche booléenne Google pour identifier des consultants ou experts indépendants spécialisés en transformation digitale ou intelligence artificielle, référencés sur des projets en France."},{"type":"paragraphe","texte":"<b>Veille réglementaire</b>"},{"type":"prompt","texte":"Génère une recherche booléenne Google pour trouver des rapports ou guides officiels publiés par des organismes publics français sur l’usage de l’intelligence artificielle en entreprise, publiés après 2023."},{"type":"paragraphe","texte":"<b>Études de cas</b>"},{"type":"prompt","texte":"Génère une recherche booléenne Google pour identifier des études de cas ou retours d’expérience sur le déploiement de l’IA générative en entreprise, publiés par des cabinets ou organismes professionnels français."}]},{"n":3,"titre":"Rédiger et améliorer un document avec ChatGPT","bonus":false,"demi":"matin","blocs":[{"type":"callout","ic":"🔹","titre":"Objectif de cet atelier","texte":"Quand vous demandez un document, ChatGPT peut l’afficher dans un bloc de rédaction : une zone modifiable où vous corrigez le texte vous-même, sélectionnez un passage pour le faire retravailler, ouvrez le document en plein écran et le retrouvez ensuite dans la Bibliothèque. Vous ne repartez plus de zéro à chaque modification. C’est idéal pour produire des documents longs et structurés."},{"type":"etape","titre":"Créer une première version","texte":"Étape 1 : demandez une première version de votre document.","prompt":"Aide-moi à rédiger [type de document] sur [sujet]. Il s’adresse à [public] et doit servir à [objectif concret]. Style [ton souhaité], clair et structuré. Propose une première version complète et présente-la comme un document modifiable."}]},{"n":4,"titre":"La lecture de document","bonus":false,"demi":"aprem","blocs":[{"type":"etape","titre":"Résumer un document","texte":"Importez n’importe quel document depuis votre poste de travail et demandez à ChatGPT d’en produire une synthèse, un résumé ou un executive summary en quelques secondes."}]},{"n":5,"titre":"Créer un espace de travail intelligent avec Gemini Notebook","bonus":false,"demi":"aprem","blocs":[{"type":"callout","ic":"🔹","titre":"Objectif de cet atelier","texte":"Gemini Notebook est un outil de Google qui permet de centraliser des sources sur un sujet précis et d’interagir avec ces informations via une IA. Choisissez l’un des cas d’usages suivants et créez votre propre Notebook pour explorer ses possibilités."},{"type":"etape","titre":"Définir le bon Notebook sur ChatGPT","texte":"Prompt pour vous inspirer.","prompt":"Aide-moi à créer un Notebook utile pour mon activité. Je suis [métier / fonction] et je veux centraliser des connaissances sur [sujet]. Propose-moi le meilleur périmètre pour ce Notebook, les types de documents à y ajouter, les questions que je pourrai lui poser et les livrables que je pourrai générer régulièrement."}]},{"n":6,"titre":"Recherche et Veille avec la Planification","bonus":false,"demi":"aprem","blocs":[{"type":"callout","ic":"🎯","titre":"Objectif","texte":"Comparer recherche ponctuelle et veille structurée, puis configurer une tâche ChatGPT de veille récurrente."},{"type":"etape","titre":"Recherche ponctuelle avec ChatGPT","texte":"","prompt":"Fais une recherche à jour sur [sujet]. Croise plusieurs sources fiables, distingue les faits établis des tendances émergentes, cite les sources importantes et termine par une synthèse opérationnelle pour [mon métier / mon entreprise / mon projet]."}]},{"n":7,"titre":"Recherche approfondie avec ChatGPT","bonus":false,"demi":"aprem","blocs":[{"type":"callout","ic":"🔹","titre":"Objectif de cet atelier","texte":"La fonctionnalité Deep Research de ChatGPT permet de lancer des recherches approfondies sur un sujet précis. Elle n’est disponible que sur la version web de ChatGPT. Contrairement à une recherche classique, elle consulte de nombreuses sources, croise les informations et produit un rapport structuré et détaillé en quelques minutes. Choisissez le profil qui correspond à votre activité et testez les requêtes proposées."},{"type":"etape","titre":"Pour une étude de cas","texte":"","prompt":"Génère une étude de cas complète sur [marché] en [date] dans [pays / région / etc.]. Je veux connaître les acteurs, les éléments et chiffres clés à retenir, les tendances à venir, les opportunités, les risques. Affiche les sources à la fin"}]},{"n":8,"titre":"Excel & Analyse de données avec ChatGPT ou Claude","bonus":false,"demi":"aprem","blocs":[{"type":"callout","ic":"🎯","titre":"Objectif","texte":"Uploader un fichier Excel ou CSV, identifier tendances, incohérences, opportunités, puis générer graphiques et dashboards."},{"type":"etape","titre":"Analyse exploratoire","texte":"","prompt":"Agis comme un data analyst. Analyse ce fichier Excel ou CSV, identifie les tendances, anomalies, incohérences, segments intéressants, corrélations possibles et opportunités d’amélioration. Explique-moi les enseignements dans un langage simple, puis propose les visualisations les plus pertinentes."}]}]},{"id":"j2","ateliers":[{"n":1,"titre":"Générations d’images","bonus":false,"demi":"matin","blocs":[{"type":"callout","ic":"📷","titre":"Objectif de cet atelier","texte":"ChatGPT peut générer une grande variété d’images à partir d’une simple description : des photos réalistes, des illustrations dans différents styles, des infographies claires, des schémas ou cartes mentales, ainsi que des concepts produits ou des visualisations d’espaces et d’architectures. Il peut également modifier une image existante pour l’améliorer, l’adapter ou la transformer selon vos besoins."},{"type":"paragraphe","texte":"Créer des visuels professionnels, retoucher une image, faire du reverse prompting, puis participer à la compétition de la meilleure image IA."},{"type":"etape","titre":"Cas 1 : Retouche photo professionnelle","texte":"","prompt":"Voici une photo de moi. Génère une version photo professionnelle pour mon CV : fond uni gris clair, lumière douce de studio, cadrage portrait américain, tenue business sobre, regard vers l’objectif, expression confiante mais accessible. Garde mes traits, ma coiffure et ma morphologie à l’identique."},{"type":"etape","titre":"Cas 2 : Un portrait style Studio Harcourt","texte":"","prompt":"À partir de cette photo de moi, génère un portrait noir et blanc style Studio Harcourt : éclairage clair-obscur très contrasté façon cinéma classique, fond noir profond, lumière directionnelle qui sculpte le visage, regard légèrement de côté, expression intemporelle. Conserve mes traits exacts. Cadrage portrait serré, ambiance grain argentique."},{"type":"etape","titre":"Cas 3 : Imaginer des travaux chez soi","texte":"","prompt":"Voici une photo de mon salon. Imagine les transformations suivantes en gardant le même cadrage et les mêmes proportions : remplace le sol carrelé par un parquet chêne clair, repeins les murs en blanc cassé, ajoute une grande bibliothèque sur le mur de gauche, et mets un canapé d’angle en lin beige. Garde la luminosité naturelle réaliste."},{"type":"etape","titre":"Cas 4 : Transformer un rapport en infographie","texte":"","prompt":"À partir des résultats de la recherche approfondie ci-joint (chiffres clés, tendances, comparatifs), génère une infographie verticale : titre principal en haut, 4 KPI géants au centre avec icônes, un graphique d’évolution, et 3 takeaways en bas. Style moderne, palette bleue et blanche, typographie épurée, format LinkedIn (1080×1350 px)."},{"type":"etape","titre":"Cas 5 : Transformer une idée en schéma visuel","texte":"","prompt":"Transforme cette explication en mind map visuelle : le concept central au milieu (« [votre sujet] »), 5 branches principales qui rayonnent, et 2-3 sous-branches par axe. Style infographique moderne, icônes simples sur chaque nœud, palette bleue et blanche, typographie lisible. Format paysage."},{"type":"etape","titre":"Cas 6 : Mettre un produit en valeur","texte":"","prompt":"Modifie l’image du mannequin en lui faisant porter la veste bleu. Je veux pouvoir mettre la photo sur Vinted pour vendre ma veste, donc mets à bien en valeur sur l’image"},{"type":"etape","titre":"Cas 7 : Remplir des documents PDF","texte":"","prompt":"Complète ce document en remplaçant les éléments suivants : [...] avec une écriture manuscrite, avec un stylo à encre bleu. Génère une image de ce document avec les modifications"},{"type":"etape","titre":"Cas 8 : Soyez créatif","texte":"","prompt":"Génère une photo de moi avec un astronaute sur la Lune, façon photo souvenir. Génère un selfie de nous deux, puis change l’angle de la photo."},{"type":"etape","titre":"Bonus : Reverse Prompting","texte":"","prompt":"Quel prompt a été utilisé pour générer cette image ?"},{"type":"titre","texte":"Autres inspirations"},{"type":"paragraphe","texte":"<b>Menu de café</b> : Créer un menu professionnel pour un établissement avec une identité visuelle soignée."},{"type":"prompt","texte":"Crée un menu pour un café indépendant situé à Paris, près de Bonne Nouvelle. Format A4 portrait. Le menu présente une sélection de cafés : espresso, ristretto, americano, cappuccino, latte, flat white, café filtre du jour, cold brew, mocha. Pour chaque boisson, un nom, une courte description et un prix en euros. Style sobre et épuré, ambiance parisienne contemporaine. Typographie élégante mêlant un serif fin pour les titres et un sans-serif pour les descriptions. Palette restreinte : ivoire, noir profond, accent terracotta discret. Une fine illustration au trait d’une tasse ou d’un grain de café en haut de page. Hiérarchie claire, beaucoup d’espace blanc, aucun élément superflu. Rendu professionnel prêt à imprimer."},{"type":"paragraphe","texte":"<b>Schéma fonctionnel d’un processus</b> : Créer un schéma visuel explicatif d’un processus en flat design minimaliste."},{"type":"prompt","texte":"Crée un schéma visuel expliquant les 5 étapes d’un processus de validation budgétaire : collecte des données, analyse des écarts, rédaction du rapport, présentation en comité, décision finale. Style flat design minimaliste : formes géométriques simples, palette limitée à 3 couleurs (blanc, gris, bleu désaturé), typographie sans-serif fine, beaucoup d’espace vide, aucun dégradé ni ombre portée."},{"type":"paragraphe","texte":"<b>Création de logo professionnel</b> : Générer un logo stylisé pour votre entreprise ou projet."},{"type":"prompt","texte":"Crée un logo pour une agence de conseil en transformation digitale nommée \"Nexus Strategy\". Style minimaliste et géométrique. Palette couleur limitée à 3 couleurs : bleu profond, blanc et gris clair. Formes simples et épurées, évolutif à tous les formats, adapté pour site web et papeterie. Pas de texte ou texte minimal. Logo mémorable et professionnel."},{"type":"paragraphe","texte":"<b>Cartographie visuelle</b> : Générer une cartographie organisée d’usages, de concepts ou d’acteurs autour d’un thème central."},{"type":"prompt","texte":"Crée une cartographie visuelle des usages de l’IA générative dans une entreprise. Format paysage. Au centre, une icône représentant l’IA. Autour, 6 catégories principales (Marketing, RH, Finance, Juridique, Opérations, IT) sous forme de bulles colorées, chacune entourée de 3 ou 4 cas d’usage spécifiques reliés par des lignes fines. Style flat design moderne et organisé. Palette : bleu nuit, turquoise, blanc et gris clair. Typographie sans-serif lisible. Hiérarchie visuelle claire, espace respiré, aucun effet 3D."},{"type":"paragraphe","texte":"<b>Infographie de chiffres clés</b> : Présenter des données structurées et chiffrées sous forme visuelle hiérarchisée."},{"type":"prompt","texte":"Crée une infographie verticale présentant les chiffres clés de l’adoption de l’IA en entreprise en 2026. Format portrait A4. Structure en 4 sections distinctes : taux d’adoption global, secteurs les plus avancés, gains de productivité moyens, freins à l’adoption. Chaque section combine un chiffre fort en grand format, une courte explication et une icône simple. Style flat design éditorial. Palette restreinte : bleu profond, orange corail, blanc, gris clair. Typographie hiérarchisée, beaucoup d’espace blanc. Aucun graphique 3D ni effet visuel superflu."},{"type":"paragraphe","texte":"<b>Vignette de couverture (LinkedIn, article, newsletter)</b> : Créer une image de couverture pour un contenu éditorial."},{"type":"prompt","texte":"Crée une image de couverture horizontale (format 1584x396) pour un article LinkedIn intitulé \"Repenser le management à l’ère de l’IA\". Composition épurée, illustration vectorielle stylisée évoquant la collaboration humain-machine. Palette sobre : bleu nuit, beige sable, touches d’orange. Typographie minimaliste. Aucun visage humain photoréaliste, aucun cliché type \"robot qui serre la main d’un humain\"."},{"type":"paragraphe","texte":"<b>Slide d’ouverture de présentation</b> : Générer une slide de couverture professionnelle pour un pitch ou une formation."},{"type":"prompt","texte":"Crée une slide de couverture pour une présentation intitulée \"Transformer son organisation avec l’IA générative\". Format 16:9. Composition asymétrique : titre à gauche en typographie large et moderne, élément graphique abstrait à droite (formes géométriques fluides en dégradé). Palette : noir profond, blanc cassé, accent turquoise. Style éditorial premium, sobre et confiant. Aucun stock photo ni illustration générique d’IA."},{"type":"paragraphe","texte":"<b>Persona ou fiche d’identité visuelle</b> : Créer une fiche persona structurée pour le marketing, la formation ou l’UX."},{"type":"prompt","texte":"Crée une fiche persona au format A4 portrait pour \"Marc, directeur commercial, 45 ans, secteur industriel\". Mise en page structurée en 4 blocs : portrait stylisé en haut à gauche, identité (âge, poste, secteur) à droite, objectifs et frustrations au centre, outils utilisés en bas. Style flat design éditorial, palette bleu et gris, typographie claire et hiérarchisée. Icônes simples pour illustrer chaque bloc."},{"type":"paragraphe","texte":"<b>Frise chronologique</b> : Représenter une évolution, une histoire ou une roadmap sous forme de timeline."},{"type":"prompt","texte":"Crée une frise chronologique horizontale présentant l’évolution de l’IA générative de 2000 à 2026. 6 étapes clés réparties sur la ligne, chacune avec une date, un titre court et un pictogramme. Style flat design minimaliste, ligne centrale fine, alternance des étapes en haut et en bas. Palette : blanc, bleu nuit, accent jaune. Typographie sans-serif moderne, lisibilité optimale."},{"type":"callout","ic":"📷","titre":"À retenir","texte":"La seule limite est votre imagination."}]},{"n":2,"titre":"Génération de diapositives avec ChatGPT ou Claude","bonus":false,"demi":"matin","blocs":[{"type":"etape","titre":"Générer une présentation","texte":"","prompt":"Crée une présentation PowerPoint de X slides sur [sujet], destinée à [public]. L’objectif est de [objectif de la présentation]. Le style doit être clair, moderne, professionnel et directement exploitable. Génère un fichier PPTX."}]},{"n":3,"titre":"L’IA comme partenaire de réflexion","bonus":false,"demi":"matin","blocs":[{"type":"etape","titre":"Trouver 30 cas d’usage IA pour mon métier","texte":"","prompt":"Je suis [métier / fonction] chez [entreprise]. Trouve-moi 30 idées\nde cas d’usage où ChatGPT peut m’assister et me faire gagner du\ntemps au quotidien. Sois créatif, varie les domaines : rédaction,\nanalyse, communication, organisation, prise de décision."}]},{"n":4,"titre":"Créer un site internet en quelques minutes","bonus":false,"demi":"matin","blocs":[{"type":"callout","ic":"👩‍💻","titre":"Objectif de cet atelier","texte":"Lovable est un outil de Vibe Coding. En bref, vous décrivez votre projet en langage naturel, Lovable génère le site web ou l’application complète : interface, logique, données, hébergement. Vous itérez en parlant à l’IA, comme avec ChatGPT."},{"type":"etape","titre":"Générer le prompt sur ChatGPT","texte":"Vous demandez à ChatGPT de jouer un expert dev sur Lovable. Il vous pose les bonnes questions, puis génère le brief technique parfait à coller dans Lovable.","prompt":"Tu es expert dev sur Lovable. Je cherche à construire\n[décrivez votre produit / site web / application en 2-3 phrases : à quoi il sert, pour qui].\nAvant de générer le prompt à coller dans Lovable, pose-moi toutes les questions nécessaires pour que tu aies suffisamment de contexte : fonctionnalités attendues, parcours utilisateur, design, données à manipuler, contraintes techniques.\nUne fois que tu as toutes les réponses, génère le prompt final, structuré et prêt à coller dans Lovable"}]},{"n":5,"titre":"Connecter ChatGPT et Claude à vos outils","bonus":false,"demi":"aprem","blocs":[{"type":"callout","ic":"🔌","titre":"Objectif de cet atelier","texte":"Jusqu’ici, c’est vous qui apportiez les informations à l’IA. Avec les connecteurs, elle va les chercher elle-même dans vos outils : vos e-mails, votre agenda, vos documents. ChatGPT les appelle des applications (on les installe depuis Plugins), Claude les appelle des connecteurs. Le principe est le même."},{"type":"etape","titre":"Créer son premier agent pour trier ses emails","texte":"","prompt":"@Gmail Analyse mes emails reçus depuis hier. Classe-les par urgence et par type d’action, puis rédige ici, dans la conversation, un projet de réponse pour ceux qui demandent une action de ma part aujourd’hui. N’envoie rien et ne crée rien dans ma boîte."}]},{"n":6,"titre":"Créer son assistant dans un Projet ChatGPT","bonus":false,"demi":"aprem","blocs":[{"type":"callout","ic":"🔹","titre":"Objectif de cet atelier","texte":"Un Projet ChatGPT est un espace de travail dédié à une tâche précise : il a ses propres instructions, ses propres fichiers et ses propres conversations, isolés du reste de votre ChatGPT. Une fois configuré, il se comporte comme un assistant qui connaît votre contexte et vos règles, sans que vous ayez à tout réexpliquer. La même démarche existe dans Claude, avec ses Projets. Choisissez une tâche que vous faites souvent et construisez l’assistant qui la fera avec vous."},{"type":"etape","titre":"Laisser ChatGPT vous interviewer","texte":"Ouvrez une conversation dans ce projet et laissez ChatGPT cadrer votre besoin.","prompt":"Je veux créer un assistant dans un Projet ChatGPT pour [décrivez votre besoin en une phrase]. Avant de me proposer quoi que ce soit, pose-moi les questions nécessaires pour bien cerner : le contexte dans lequel cet assistant va m’aider, ce que je lui fournirai à chaque fois, le format de sortie que j’attends, le ton à adopter et ce qu’il doit refuser de faire. Pose une question à la fois."}]},{"n":7,"titre":"ChatGPT Work : votre agent réalise une mission complète","bonus":false,"demi":"aprem","blocs":[{"type":"callout","ic":"🔌","titre":"Objectif de cet atelier","texte":"Avec ChatGPT Work, vous lui confiez une mission entière : il consulte vos fichiers et vos outils, enchaîne les étapes et prépare un résultat prêt à l’emploi. Vous suivez son avancement et c’est vous qui validez les actions importantes."},{"type":"etape","titre":"Transformer une réunion en plan d’action","texte":"Joignez les notes ou le compte rendu d’une réunion sans données sensibles.","prompt":"Tu es mon assistant de suivi opérationnel.\n\nÀ partir des notes de réunion jointes, prépare un plan d’action. Utilise uniquement ces notes.\n\nCommence par me présenter ton plan de travail en quelques étapes. Ensuite, présente :\n1. un résumé de cinq lignes ;\n2. les décisions confirmées ;\n3. un tableau des actions : action, responsable, échéance, priorité. Écris « à confirmer » si le responsable ou l’échéance ne figurent pas dans les notes ;\n4. les questions encore ouvertes ;\n5. un brouillon d’e-mail de compte rendu pour les participants.\n\nNe crée rien et n’envoie rien : attends ma validation."}]},{"n":8,"titre":"Feuille de route personnelle 30 jours","bonus":false,"demi":"aprem","blocs":[{"type":"etape","titre":"Construire mon plan d’action 30 jours","texte":"","prompt":"Aide-moi à construire ma feuille de route IA pour les 30 prochains jours. Mon métier est [métier], mes outils principaux sont [outils], et les cas d’usage que je veux prioriser sont [cas d’usage]. Propose un plan semaine par semaine avec des objectifs concrets, des actions simples, des indicateurs de réussite et les risques à éviter."}]},{"n":9,"titre":"Créer son coach IA","bonus":true,"demi":"aprem","blocs":[{"type":"etape","titre":"Créer la tâche","texte":"Dans ChatGPT, ouvrez l’onglet Tâches dans la barre latérale, puis cliquez sur Créer une tâche."}]}]}],"compl":[{"id":"c1","titre":"Lexique et jargons dans le domaine de l’IA","blocs":[{"type":"liste","items":["<b>Prompt</b> : ce que vous tapez pour demander quelque chose à l’IA. C’est votre « instruction » ou votre « question ».","<b>Token</b> : la façon dont l’IA découpe le texte pour le traiter. En pratique, 1 token ≈ 1 mot. C’est ce qui détermine le coût et les limites d’utilisation.","<b>Fenêtre contextuelle</b> : la « mémoire de travail » de l’IA dans une conversation. Au-delà d’une certaine quantité de texte échangé, elle commence à oublier ce qui a été dit au début.","<b>Inférence</b> : le moment où l’IA génère sa réponse à partir de votre prompt. C’est la phase de calcul invisible entre votre question et la réponse."]}]},{"id":"c2","titre":"Les hallucinations de l’IA","blocs":[{"type":"paragraphe","texte":"Une hallucination survient quand l’IA génère une information fausse, inventée ou déformée, présentée avec la même assurance qu’une information vraie. Elle ne sait pas qu’elle se trompe, et c’est précisément ce qui la rend dangereuse."},{"type":"sous-titre","texte":"Pourquoi ça arrive ?"},{"type":"paragraphe","texte":"L’IA ne cherche pas la vérité. Elle cherche la suite de mots la plus probable statistiquement. Si aucune donnée fiable n’existe dans son entraînement sur un sujet, elle comble les trous avec ce qui lui semble plausible, sans jamais le signaler."},{"type":"sous-titre","texte":"Les formes les plus courantes"},{"type":"liste","items":["Fausses citations : attribuer des propos à quelqu’un qui ne les a jamais tenus","Fausses sources : inventer des articles, études ou livres avec des titres crédibles","Faux chiffres : donner des statistiques précises mais erronées","Fausse chronologie : mélanger les dates d’événements réels","Faux profils : inventer des détails biographiques sur une personne réelle"]},{"type":"sous-titre","texte":"Dans quels cas le risque est-il plus élevé ?"},{"type":"liste","items":["Sujets très récents, après la date de coupure du modèle, sans recherche web activée","Sujets très spécialisés ou techniques","Questions sur des personnes peu connues","Demandes de chiffres précis ou de sources peu connues"]},{"type":"sous-titre","texte":"Comment s’en protéger ?"},{"type":"liste","items":["Activer la recherche sur le web dès que la requête est factuelle","Partir d’un site ou d’un document en entrée, et demander à l’IA de s’y tenir strictement","Utiliser plusieurs LLM pour la même requête et comparer les résultats","Toujours vérifier les informations factuelles dans une source externe avant de les utiliser","Préférer Perplexity à ChatGPT pour les recherches factuelles : les sources sont citées et vérifiables","Ne jamais publier ou transmettre un contenu IA sans relecture critique"]},{"type":"callout","ic":"⚠️","titre":"À retenir","texte":"L’IA est un outil de génération, pas un moteur de vérité. Plus l’enjeu de l’information est important, plus votre vérification doit être rigoureuse."}]},{"id":"c3","titre":"Évaluer la qualité d’une réponse IA","blocs":[{"type":"paragraphe","texte":"L’IA produit des réponses fluides, bien structurées et confiantes, même quand elles sont fausses ou médiocres. Savoir évaluer un résultat est aussi important que savoir le générer."},{"type":"sous-titre","texte":"La grille d’évaluation en 6 critères"},{"type":"liste","items":["<b>Exactitude</b> : les faits et chiffres sont-ils vérifiables ? Signal d’alerte : chiffres précis sans source, affirmations absolues.","<b>Pertinence</b> : la réponse répond-elle vraiment à ma question ? Signal d’alerte : réponse générique applicable à n’importe quel contexte.","<b>Complétude</b> : manque-t-il des éléments importants ? Signal d’alerte : réponse courte sur un sujet complexe.","<b>Ton et style</b> : est-ce adapté à mon audience et à mon usage ? Signal d’alerte : trop formel, trop familier, jargon inadapté.","<b>Structure</b> : le format est-il exploitable tel quel ? Signal d’alerte : bullet points génériques, structure passe-partout.","<b>Originalité</b> : est-ce spécifique à ma situation ? Signal d’alerte : conseils valables pour tout le monde, aucun contexte pris en compte."]},{"type":"sous-titre","texte":"Les signaux d’alerte à repérer"},{"type":"liste","items":["Réponse longue qui tourne en rond sans apporter de substance","Formulations passe-partout : « il est important de noter que… », « il convient de… »","Chiffres précis sans aucune source mentionnée","Absence totale de nuance ou de mise en garde","Répétition des mots de votre question sans vraiment y répondre","Listes de 5 ou 10 points parfaitement équilibrés, qui ressemblent à un article de blog générique"]},{"type":"sous-titre","texte":"La technique du contre-prompt"},{"type":"paragraphe","texte":"Après une réponse, challengez l’IA :"},{"type":"liste","items":["« Quelles sont les limites de ce que tu viens de me proposer ? »","« Quel argument contraire pourrait-on opposer à cette analyse ? »","« Si tu devais critiquer ta propre réponse, que dirais-tu ? »"]},{"type":"callout","ic":"⏱️","titre":"Le test en 3 secondes","texte":"Avant d’utiliser ou de transmettre un résultat IA : « Est-ce que je pourrais défendre ce contenu si quelqu’un me posait des questions dessus ? » Si la réponse est non, relisez, vérifiez, reformulez. Une réponse IA n’est jamais un livrable final : la signature, c’est vous."}]},{"id":"c4","titre":"Sécurité et confidentialité avec l’IA","blocs":[{"type":"paragraphe","texte":"Quand vous écrivez quelque chose dans ChatGPT, ces données transitent sur les serveurs d’OpenAI, aux États-Unis. Par défaut, elles peuvent être utilisées pour améliorer les modèles. Ce que vous écrivez n’est pas confidentiel au sens juridique du terme."}]},{"id":"c5","titre":"Les modèles de raisonnement","blocs":[{"type":"sous-titre","texte":"La distinction fondamentale"},{"type":"liste","items":["<b>Réflexion légère</b> : répond immédiatement, rapide, bon pour la rédaction, la reformulation et les tâches courantes. L’extraverti qui répond d’instinct.","<b>Réflexion approfondie</b> : réfléchit en interne avant de répondre, plus lent (quelques secondes à plusieurs minutes), bon pour les problèmes complexes, la logique et le multi-étapes. L’introverti qui prend le temps de réfléchir."]}]},{"id":"c6","titre":"Le format Markdown et son intérêt en prompting","blocs":[{"type":"paragraphe","texte":"Le Markdown est un langage de balisage léger qui permet de structurer du texte avec des symboles simples : un dièse pour un titre, deux astérisques autour d’un mot pour le gras, un tiret devant une ligne pour une puce."}]},{"id":"c7","titre":"La méthode RTCF","blocs":[{"type":"liste","items":["<b>Rôle</b> : qui doit répondre ? « Tu es un consultant en cybersécurité spécialisé dans les PME industrielles »","<b>Tâche</b> : que doit-il faire ? Utilisez un verbe d’action précis.","<b>Contexte</b> : pourquoi cette demande, pour qui, dans quel cadre ? « Je prépare une note pour mon comité de direction qui n’est pas technique »","<b>Format</b> : sous quelle forme la réponse doit-elle arriver ? « Une note d’une page maximum, structurée en trois parties, avec un tableau de synthèse en conclusion »"]}]}]};
+const LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAACuCAMAAAD3ag+dAAAAWlBMVEVMaXEhJy8hJzAhJzAhJzAhJzAhJzA5LkohJzAgKDDrHCTu7/NDePHrGyVCePHrGSRCdfDw8PXu8PNdi/P19PTv9/oiKDFDevTx8vbsGyT8HSb5HSbwFR3x0ta/fE9aAAAAFnRSTlMAXH/T6rI0A/wZ+/z8Z2cyMjJo7O7uH85t8AAAAAlwSFlzAAALEwAACxMBAJqcGAAADalJREFUeNrtXYna3CYSHAkQ4CPHZiM79r7/c65ucdOgY/THVc4XH/MjGKqBomlarxcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwC0LWAN12MQmH+EN//tvNpaZI11aggTGdi8btYU1msPHp6dKmIF9Nr/picJB+7nBlbgdr6qBtPHJU3xJILwZIP3mG1m4HC+q0PZiLT4+4YKSD9LNJd0jIjtW9ZOvTp3pWWB9IfwfprUt6QyJ9UGRB8jKLA0h/BOnCIUFpIukizF5ayRmkY01/H+vc4m6Yn2XVskCcKKDenzDQO5c0oo4bVVyQ9JZIumqbAoD09+u4oIqjGI1Bukb3P0bHdQTSYyouL98t0uF7fxNcOcY1iXQRXZnTD8BIfwA0L9tnE9RYB9L/lTououII8h2kP1HHEVwzURVHUIIg/YGuGYKOG6YHnvKeCZD+cDBfxx1RcVnvDkh/whGbN0yPqbicHxekP0HHlbtmEiouv9MH6R/xiC2p4vKGA9I/oI5LqziQ/jFCpQqP2AJ2wltF9++A9Pcv6arQNeOruGFgS0U/B72K9Jx/fvu81pG/Fat7QHX9B+s95YjNVXFDfIN2juR7lVgjLiE91y/G5/Y/FFawP1/WNK+8/sMNP0PH+SpuLOLM+MmnXED62BGya1rBGONCJj9nTLRNJ8t6b35AK7YH6JLun0rrxihOrX/8kaVevhV8ybOP2DKhUtI9nxkXBCk90tsrSR8aMXWfYFM14yDQLVMxUTL2btdyR4V0yW7fK1ieoO0HKNFqIuvjT23NW4uzTP1rSdkIu14uBt4PjnbJS5xpwYC6Se63DuniWtK7sY61muGvQi0Rd4FvMFK+f77E5Y20ddExM7ms1OapWihXxgPGRa3VtGATo/qx4PyUZP1rSdmw3ql3ABuCiOSNR2whFSdGw2vcPcCVQm6Sn2uI/dAB7fi3mNmO00K/f741cfgHEWNtJn2uYETDvQdMsZotqa2ij9Wfob2ZbhX0fsWsOTDHl+s43xfHu7HjO3oY9EmkbybaWYw4pI/26DO2djuP6M3VOT1XMBhN7AFCZweraZF0s0tUS6q4zLeWiX/wVdxsJVqR4yjOJf3VqISjYeh0s+vWcOrtZ1VYcJqkvzrmRmyblWWChHSgekUyu8bYEAUq5l39WC86YgupuKWLPR9PcxPp7dapSnmkDw1m++dW+9YiwZnNJL1bOl8Fyk/b1ZR6MWYhs/y+GKmw2Unve3kFiTdSDodKhVTcXHWJfD+V9Gblev4/t7ZscmNs+lwNe552uGU76WGV6juD9MWarfLMMJuE8jWqn37jY3G7/snsZIpzqyBTWXs9W8d5J3L7OaxPuriB9KE7+D5RiqbTVtisyfm0Sds8JOMGTiXmSYN0sXLO9vvbQ3m1symiarBTu21NWy2r/v0BMrqKjmpfNDpUsHasl7pmAieqS4/5ezYmTwqBTjuP12HO/Sv102K0fy73tBnTPnxjXaSiDDbTaLzy22cxXWCYnJqbZ5RvuWk2sQ6aFb5ZUBoFVc26XnbEFlJxq5UHtnL6dcNIXxfGsU9dAxl/Sqld7Bofj39sVZw0I7RErYPRfPr450ZtIiL8NTTbqGOOJ2by14h9Brcm6v3bTdNQsOAuKA4fsWUujGkeDXD392xx8zFIFwTIHOlq2TWGKlKbRpexVoQmJTueaCJFRg+YY4urMZfI0Aoi28gKs1rLYqu+s6c1Zil5RqiULFFxxrf1JGGTJ510b1FnSE9sm5ZVNby72SauQFOtnokq/E7FlzJzim5fkUVqsUm7fVs/h43FXvL74gm+yDXjj2VnR8yo8r3oqnKW9ORWeRqO0R3tKsx9UzdJj36TlNW8dj2R7AgV4Lzr+yTnVs3sWh3nLQXWTxfI95KRrggjPROPF+d8a4dXh7Wms9jxhkxZzUZL5hTCt8llv5A2ZpGwt9LDk8RC3PapsNkC+X4q6fl70Tprx/4kaU3vBHHiN3JZ7dIuu8GaWodzY1lIaurt+eJ1WaiUDKg4q1VB+S4vJz0f3SXz2xHfcMwtW9JzwcNWk575rZ/UbkkRaVNsWS9b1UtCpUIqTrhLEXGpOJf05shxUxeZns2R3lVZDY9N/GmbXFd0gjEzinEc0XEhnmw2AhbUXk86NVNKevfiy6GN9HQF6zdxuaXN0Wkzamh52UqlXEk2goCKCxg3bdowuqTp8kjvltr6E0a5rllJ0tuMXzr0gH2OLt5Hzx1NMeZ1vVVFh6z0rFKh0Am/VYwYR3GiR65qdjdcc/O+ys9cZZCeHqqb1UjSWk89DKGEp26GVdYFmlPDXXwV51UlQwktCL73gwcuui5IWuopTFJFctQZQi4TMsgCVkNfmOOTdpcnvalY1OlHbEEVJ7UDSY3HOPNolcliurv1jDKRmHBf7XOJzFbSNWGpL5h8ef4oarMsUUQ6MRtBwK8+nml6UMR8FCdHztBD1sfBLbgyfIF50hktCMUhva2aeTfPDDEDDKf/bHmoVOaOaumFtrNj5Igx8Yybvt+eONJFFenrzFjuGV9WXE45ilI1awgtVKoywWNqtbiR9DnmnakQ3UqpS0jf/rX0+0k/1JDQzUxeECqled9Xkc7uiYbNcD5FILuhxE585Mmkr1Mjl9Wkk9LlFovZgI6LnCCKqoEeb82NpI/RqMonfG0fE/wa0iM7wWJOjnTzgSO2unYkNcJ9pHsx8Zt0m66F6fCO6zzS2Q2kF9VCDZWqU3Hp3cBNpBuRiTvhw/BuhwDKxDb7rOm9aqSr06QT7YiNy/NUXEq+30W6G4G8Dm9jH3cp6UeEnGIreA6K7pyhhkpVqrgUJfeNdGYGEq8R0GaI7UWk12/ZVreu2HwzOgt58hFbNqVQzWpzE+lmJJkZgew7oq/ap9c4Z1idGjhRx9WsMfkDnLtG+nYMNUUgB4IT487Wo6S3VWfdZhiUfuOLW1h/gPXIscE9pBshzkLGwlG7izxydWfdxxy4J7245YiKS8j3u0hf51iei9s6f03flFDF0ao6GCdw9IgtEBdH8hHl3D33rOk8N2gMuziZdFqgW8EB/W0vbjmk4hJddgvppNNXza8hPRUme01oxFmhUgEVN1iGToY2ccLW/zbSc2faxqp/OumaHM4lZST0TZLTlJ15xCb90AmmT4ijv4n0bGCJcWPg7Ol974lsZKR37ZJRh3o56dlQqYCKmxqSDOYguvMfQfr+RugrSO9oidQH62gjgbQ8+x5LIU/XcY5ZEHogQHr75JG+XyU+Xci99lkkHU7b9u79xk1oMJm+r5W47FYZKhVScbmpKnDhQbyP9C53qt/26qqRTruOIZcsIxZ3jn8hcUevL2Q9e8QWVnHZ2xqeP5+9zw2b3CtbS9EVI920qS7iG1p+xs0/IoVx9zGW6LZR4cwlR3RcKHSC8m4XT77r9ztnAj9jy49Lpvc9EUUwJ8Ka7cwXyOYkISJ+bLnkISpjXfPkch1TccW21Aez+NzshnWTAsi51/pLSbdv1k7JTJ1Ev82ekobpSD4D5mWQnYL+mJnk4rQXtwRUHKt4FWfQUm47T9+yeLRyPWBbjtkayzivGelm7oUpr+fLakJnpJxxHMVmcikl9L6vW0uqsLUcO2IL+uK6ilf0Rc5rbzpaNQaM+R5u3TAjLddlpFvL+tgEcwpvhJGJLrA5E8anwrzOJ3fKs/kqi7woQRUnSC/dbQjy/b7IGSMbG2vny5LNlLpvJbu9KIjCTwGophSAjduECHNyd4yNASBT4wdfaNOMeQtVFef5UKkqFRfc/rO3BkaK3hzR7m/DNHQp6WtSmXgTvA2bNSzt9KdKKbekLtqwJUOlgiqOeFzkaYHkYnd5YKS2cvnaAbHTd7qWdCccV9n0zQS2sQxSjR/UabVetUddMxandSqOLN/vDIGW8azdqnldTnos2fyeuD2R0KYLZXu3SsrTQqUCKo580EeS77dedginW1+7+3LSJz8K68NNmHKXylTbeR863M6VLA+VqlZxZPl+710278UK0x+XN2JcT/r8Ug4eyuDNM2+BWV4co8pLVoRKiWKne5l8H39ojtjm9aTPMd8Ea9xeoWK+dKfZLjuoqSH+a1/0ElSeJV1lv4mctmju5Dm1IWux4/6ypmRwnNjx8kbfbYyYH5ODfjY29lD8kBqQ5SHbsSeQGjV0nRhuDQxLIR8uuMyv11rkS+wx1ApI32RK+zzu1MYmDG1YX/FFarvcGj+2nlzSnzdS8fKHwulf8kjhizBfZtFj0I/W57zPru5dgXKKO9IyFDyRjrGQc+NLSh4Prjq9D6K53MueUJ5byO6zeEOIFZC/iVttVWKkQ4wnE+mT8uyTH/3+gW617AFNkPeWBAAAAAAAAAAAAAAAAAAAAAAAAAAA+EUhHw4wBMx2+sfD8efD8fvDEbqy89u3L9+eiy/f/vrv98/fH4vP3//+9L9/HoxPP78GQqA/BOmfvz/2v49L+pen/lpH+lP/w0jHSMdIP+HXN4z0X26kf8FIx0jHSD+P9CdjIP3zozGQ/unJiJD+bPz1/eH49OPnj+fi54+vgZtwf/z2cPzn4fj6cPwOtzPwIU6JxjQVj/6FUzYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAH/B96wztLEXk/zAAAAAElFTkSuQmCC";
+const DECO = `<svg viewBox="0 0 340 190" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <circle cx="232" cy="74" r="86" fill="#fbe8cf" opacity=".55"/>
+  <circle cx="300" cy="120" r="58" fill="#fadfc4" opacity=".45"/>
+  <rect x="24" y="158" width="316" height="32" fill="#c98b5e"/>
+  <rect x="24" y="158" width="316" height="7" fill="#e0a678"/>
+  <g>
+    <path d="M62 156 76 104h108l14 52z" fill="#e6ebf5"/>
+    <rect x="74" y="104" width="112" height="46" rx="3" fill="#2b3558"/>
+    <rect x="82" y="112" width="52" height="4.5" rx="2.2" fill="#8ea3d8"/>
+    <rect x="82" y="122" width="72" height="4.5" rx="2.2" fill="#65789f"/>
+    <rect x="82" y="132" width="40" height="4.5" rx="2.2" fill="#65789f"/>
+    <path d="M160 116.5l2.6 6.4 6.4 2.6-6.4 2.6-2.6 6.4-2.6-6.4-6.4-2.6 6.4-2.6z" fill="#ffd27a"/>
+    <rect x="52" y="152" width="156" height="8" rx="4" fill="#d5dcea"/>
+  </g>
+  <g>
+    <path d="M214 132h30v20a6 6 0 0 1-6 6h-18a6 6 0 0 1-6-6z" fill="#fff"/>
+    <path d="M244 137h6a5 5 0 0 1 0 10h-6z" stroke="#e3e8f2" stroke-width="3"/>
+  </g>
+  <g>
+    <path d="M272 122c-14-6-22-20-19-34 14 2 24 14 24 28" fill="#5f9e6c"/>
+    <path d="M286 120c10-10 12-26 6-38-12 6-18 20-15 33" fill="#6fb37c"/>
+    <path d="M281 124c8 2 18-2 24-10-8-6-20-5-27 3" fill="#57925f"/>
+    <path d="M279 118v40" stroke="#4d7f57" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M264 158h32l-4 22a5 5 0 0 1-5 4h-14a5 5 0 0 1-5-4z" fill="#f0f2f7"/>
+    <rect x="262" y="152" width="36" height="9" rx="4" fill="#e3e7f0"/>
+  </g>
+</svg>`;
+
+const SESSION = {
+  prenom:"Camille", nom:"Dupont", initiales:"CD",
+  email:"camille.dupont@exemple.fr", tel:"06 12 34 56 78", adresse:"12 rue des Lilas, 75011 Paris",
+  formation:"Formation IA · Niveau 1", dates:"13 et 14 octobre 2026", horaires:"9 h à 18 h",
+  lieu:"Station F", adresseLieu:"5 parvis Alan Turing, 75013 Paris",
+  formatrice:"Sophie Laurent", initialesF:"SL"
+};
+
+const JOURS = {
+  j1:{ base:0, label:"Jour 1", date:"lundi 13 octobre", court:"13 oct" },
+  j2:{ base:1440, label:"Jour 2", date:"mardi 14 octobre", court:"14 oct" }
+};
+const FIN_J2 = 1440 + 17*60;          // 17 h le dernier jour
+const FIN_QUIZ = 1440 + 16*60 + 30;   // quiz, questionnaire et inscription à la certification
+const MOMENTS = [
+  { id:"avant", lib:"Avant la formation · J-10", t:-10*1440 + 10*60 },
+  { id:"j1m",   lib:"Jour 1 · 9 h",              t:9*60 },
+  { id:"j1a",   lib:"Jour 1 · 15 h",             t:15*60 },
+  { id:"j2f",   lib:"Jour 2 · 16 h 30",          t:1440 + 16*60 + 30 },
+  { id:"apres", lib:"Après la formation",        t:2*1440 + 10*60 }
+];
+
+const CHECKLIST = [
+  { cle:"programme", texte:"Programme des deux journées parcouru", action:{ libelle:"Voir le programme", cible:"programme" } },
+  { cle:"compte-chatgpt", texte:"Compte ChatGPT créé", action:{ libelle:"Créer mon compte", href:"https://chatgpt.com" } },
+  { cle:"compte-claude", texte:"Compte Claude créé", action:{ libelle:"Créer mon compte", href:"https://claude.ai" } },
+  { cle:"compte-notebooklm", texte:"Compte NotebookLM créé", action:{ libelle:"Créer mon compte", href:"https://notebooklm.google.com" } },
+  { cle:"compte-lovable", texte:"Compte Lovable créé", action:{ libelle:"Créer mon compte", href:"https://lovable.dev" } },
+  { cle:"videos", texte:"Pour les débutants : regarder la vidéo de mise à niveau sur ChatGPT", action:{ libelle:"Voir la vidéo", cible:"video" } },
+  { cle:"pdf", texte:"5 à 10 PDF professionnels rassemblés sur mon ordinateur" },
+  { cle:"tableur", texte:"1 fichier Excel ou CSV avec des données professionnelles prêt" },
+  { cle:"taches", texte:"3 tâches répétitives identifiées" },
+  { cle:"probleme", texte:"1 problème professionnel à résoudre en tête" },
+  { cle:"gpt", texte:"1 idée de GPT utile pour mon métier" },
+  { cle:"app", texte:"1 idée de site ou d’application à développer sur Lovable" },
+  { cle:"ordinateur", texte:"Amener votre ordinateur portable" }
+];
+const PREP_AVANT = ["programme","compte-chatgpt","compte-claude","compte-notebooklm","videos","pdf","tableur","taches"];
+
+const PROGRAMME = [
+  { emoji:"☀️", titre:"Jour 1 · Matin", horaires:"9 h à 12 h 30", theme:"Maîtriser les fondamentaux",
+    ateliers:["Comprendre le fonctionnement, le potentiel et les limites de l’IA générative","Portrait IA et Mur des découvertes","Cours Prompting approfondi : techniques, mémoire, personnalisation, modèles","Prompt Battle","Challenge IA · démos rapides sur 13 cas d’usage professionnels","Atelier Rédaction avec Canvas"],
+    penser:"Les tâches de rédaction répétitives que vous aimeriez accélérer." },
+  { emoji:"🌙", titre:"Jour 1 · Après-midi", horaires:"14 h à 18 h", theme:"Construire vos premiers systèmes",
+    ateliers:["Atelier Analyse de documents et génération d’un livrable Word ou PDF","Atelier NotebookLM · second cerveau","Atelier Recherche et veille automatisée","Atelier Analyse de données avec Claude","Débrief du jour 1 et Kahoot"],
+    penser:"Vos types de documents, vos sujets de veille, vos données à analyser." },
+  { emoji:"☀️", titre:"Jour 2 · Matin", horaires:"9 h à 12 h 30", theme:"Créer et développer sans coder",
+    ateliers:["Atelier Génération d’images et compétition « Meilleure image IA »","Atelier Génération de slides avec Claude","Atelier Idéation · de l’idée au produit développé sans coder","Atelier Lovable · développez votre site ou application en direct"],
+    penser:"Une idée de site ou d’application à développer : outil interne, application client, projet personnel." },
+  { emoji:"🌙", titre:"Jour 2 · Après-midi", horaires:"14 h à 18 h", theme:"GPTs, connecteurs et agents IA",
+    ateliers:["Atelier Assistants IA · GPTs personnalisés et Projets","Atelier Connecteurs · ouvrir ChatGPT et Claude vers vos outils, et sécurité des données","Ouverture IA agentique · démonstration en direct d’un agent autonome","Feuille de route 30 jours","Clôture"],
+    penser:"Vos outils du quotidien (mail, agenda, CRM) et une idée d’assistant métier." }
+];
+
+const FAQ = [
+  { q:"À quelle heure commence la formation ?", r:"Accueil à 8 h 45, début à 9 h, fin à 18 h, les deux jours." },
+  { q:"Comment entrer à Station F ?", r:"Présentez votre QR d’accès à l’entrée du 5 parvis Alan Turing, 75013 Paris. Métro Chevaleret ou Bibliothèque François Mitterrand." },
+  { q:"Quand recevrai-je mon certificat de réalisation ?", r:() => S.fin === "cpf"
+      ? "Le dernier jour à 17 h, dans votre espace, une fois vos quatre émargements signés et votre inscription à la certification faite."
+      : "Le dernier jour à 17 h, dans votre espace, une fois vos quatre émargements signés." }
+];
+const reponse = f => typeof f.r === "function" ? f.r() : f.r;
+
+const OUTILS = {
+  claude:{ nom:"Claude", logo:'<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="#d97757" stroke-width="2.1" stroke-linecap="round"><path d="M12 3.4v5.1"/><path d="M12 15.5v5.1"/><path d="M3.4 12h5.1"/><path d="M15.5 12h5.1"/><path d="M5.9 5.9l3.6 3.6"/><path d="M14.5 14.5l3.6 3.6"/><path d="M18.1 5.9l-3.6 3.6"/><path d="M9.5 14.5l-3.6 3.6"/></g></svg>' },
+  gemini:{ nom:"Gemini", logo:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285f4" d="M12 2c.5 5 4.9 9.4 10 10-5.1.6-9.5 5-10 10-.5-5-4.9-9.4-10-10 5.1-.6 9.5-5 10-10z"/></svg>' },
+  copilot:{ nom:"Copilot", logo:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0a7b83" d="M7.2 5.5h6.4c2 0 3.3 1 3.9 2.9l1.4 4.6c.6 2.1-.6 3.5-2.6 3.5h-6.5c-2 0-3.3-1-3.9-2.9L4.5 9c-.6-2.1.6-3.5 2.7-3.5z" opacity=".92"/><path fill="#5bc6c9" d="M9.6 9.1h5.1c1 0 1.7.5 2 1.5l.6 2.1c.3 1-.3 1.7-1.3 1.7H10.9c-1 0-1.7-.5-2-1.5l-.6-2.1c-.3-1 .3-1.7 1.3-1.7z"/></svg>' },
+  mistral:{ nom:"Mistral", logo:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="3.6" fill="#ffd800"/><rect x="3" y="8.1" width="18" height="3.6" fill="#ffaf00"/><rect x="3" y="12.2" width="18" height="3.6" fill="#ff8205"/><rect x="3" y="16.3" width="18" height="3.6" fill="#fa500f"/></svg>' }
+};
+
+/* ============================================================
+   ICÔNES
+   ============================================================ */
+const sv = (d, w) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w||1.8}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const I = {
+  chev: sv('<path d="m9 5.5 6.5 6.5L9 18.5"/>',2),
+  gauche: sv('<path d="M15 5.5 8.5 12l6.5 6.5"/>',2),
+  chevBas: sv('<path d="m5.5 9 6.5 6.5L18.5 9"/>',2),
+  maison: sv('<path d="M4 11.2 12 4.5l8 6.7"/><path d="M6.5 9.6v9.9h11V9.6"/><path d="M10 19.5v-5h4v5"/>'),
+  inscription: sv('<rect x="5" y="4.5" width="14" height="16" rx="2"/><path d="M9 3.5h6v3H9z"/><path d="M8.5 11.5h7M8.5 15h5"/>'),
+  formation: sv('<path d="M2.5 9.5 12 5l9.5 4.5L12 14z"/><path d="M6.5 11.6v4.4c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-4.4"/><path d="M21.5 9.5v5"/>'),
+  facturation: sv('<path d="M6 3.5h12v17l-2.4-1.5-2.1 1.5-1.5-1.5-1.5 1.5-2.1-1.5L6 20.5z"/><path d="M9 8.5h6M9 12h6M9 15.5h3.5"/>'),
+  stylo: sv('<path d="M4 17.5s2.5-8 5-8 1.5 5.5 4 5.5 2-4 4-4 3 2.5 3 2.5"/><path d="M4 21h16"/>'),
+  quiz: sv('<circle cx="12" cy="12" r="8.5"/><path d="M9.8 9.6a2.3 2.3 0 0 1 4.4.9c0 1.5-2.2 2-2.2 3.2"/><path d="M12 16.6h.01"/>'),
+  avis: sv('<circle cx="12" cy="12" r="8.5"/><path d="M8.8 14.2c.8 1.1 1.9 1.7 3.2 1.7s2.4-.6 3.2-1.7"/><path d="M9.3 10h.01M14.7 10h.01"/>'),
+  livre: sv('<path d="M3.5 5.5A1.5 1.5 0 0 1 5 4h5v16H5a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M20.5 5.5A1.5 1.5 0 0 0 19 4h-5v16h5a1.5 1.5 0 0 0 1.5-1.5z"/>'),
+  doc: sv('<path d="M13.5 3.5H7A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V8.5z"/><path d="M13.5 3.5V8.5h5"/>',1.7),
+  copier: sv('<rect x="8.5" y="8.5" width="11" height="11" rx="2"/><path d="M15 8.5V6.5A2 2 0 0 0 13 4.5H6.5a2 2 0 0 0-2 2V13a2 2 0 0 0 2 2h2"/>',1.7),
+  check: sv('<path d="m5 12.5 4.5 4.5L19 7"/>',2.6),
+  cadenas: sv('<rect x="5.5" y="10.5" width="13" height="9.5" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',2),
+  play: sv('<circle cx="12" cy="12" r="9"/><path d="M10 8.5 16 12l-6 3.5z" fill="currentColor"/>',1.6),
+  certif: sv('<circle cx="12" cy="9" r="5.5"/><path d="m8.5 13.5-1.5 7 5-2.5 5 2.5-1.5-7"/>'),
+  slides: sv('<rect x="3.5" y="5" width="17" height="12" rx="2"/><path d="M9 20.5h6"/>'),
+  telecharger: sv('<path d="M12 4v11M7.5 11l4.5 4.5L16.5 11M4.5 19.5h15"/>'),
+  bulle: sv('<path d="M5 5.5h14a1.5 1.5 0 0 1 1.5 1.5v8.5A1.5 1.5 0 0 1 19 17h-8l-4.5 3.5V17H5a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 5 5.5z"/>'),
+  agrandir: sv('<path d="M4.5 9.5v-5h5M19.5 9.5v-5h-5M4.5 14.5v5h5M19.5 14.5v5h-5"/>'),
+  reduire: sv('<path d="M9.5 4.5v5h-5M14.5 4.5v5h5M9.5 19.5v-5h-5M14.5 19.5v-5h5"/>'),
+  fermer: sv('<path d="M6 6l12 12M18 6 6 18"/>',2),
+  menu: sv('<path d="M4.5 7h15M4.5 12h15M4.5 17h15"/>',2),
+  loupe: sv('<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/>'),
+  personne: sv('<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/>'),
+  euro: sv('<path d="M17.5 6.5A6.5 6.5 0 1 0 17.5 17.5"/><path d="M4.5 10.5h9M4.5 13.5h9"/>')
+};
+
+/* ============================================================
+   ÉTAT
+   ============================================================ */
+const S = {
+  init:false, page:"accueil", moment:"j1m", fin:"cpf", add:false, grand:false, tiroir:false, demoOuvert:false,
+  prep:new Set(), signes:{}, faits:new Set(), quiz:false, questionnaire:false, lus:new Set(),
+  certInscrit:false, certPrep:false, telecharges:new Set(), qr:false, ouverts:new Set(), depl:{}
+};
+const T = () => MOMENTS.find(m => m.id === S.moment).t;
+const heureDe = m => { const x = ((m % 1440) + 1440) % 1440, h = Math.floor(x / 60), mi = x % 60; return mi ? `${h} h ${String(mi).padStart(2, "0")}` : `${h} h`; };
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const mobile = () => window.matchMedia("(max-width:899px)").matches;
+
+function preset(){
+  const m = S.moment;
+  S.prep = new Set(m === "avant" ? PREP_AVANT : CHECKLIST.map(c => c.cle));
+  S.signes = {}; S.faits = new Set(); S.quiz = false; S.questionnaire = false; S.lus = new Set();
+  S.certInscrit = false; S.certPrep = false; S.telecharges = new Set(); S.qr = false; S.depl = {};
+  const at = (j, ns) => ns.forEach(n => S.faits.add(`${j}-a${n}`));
+  if (m === "j1a"){ S.signes = { "j1-em":"9 h 04", "j1-ea":"14 h 03" }; at("j1", [1,2,3]); }
+  if (m === "j2f" || m === "apres"){
+    S.signes = { "j1-em":"9 h 04", "j1-ea":"14 h 03", "j2-em":"9 h 02", "j2-ea":"14 h 05" };
+    at("j1", [1,2,3,4,5,6,7,8]); at("j2", m === "apres" ? [1,2,3,4,5,6,7,8] : [1,2,3,4,5,6,7]);
+  }
+  if (m === "apres"){ S.quiz = true; S.questionnaire = true; }
+}
+
+/* ============================================================
+   ARBRE : Ma session + trois parcours
+   ============================================================ */
+let N = {};
+function construire(){
+  N = {};
+  const cpf = S.fin === "cpf";
+  const nd = (id, o) => (N[id] = Object.assign({ id, enfants:[] }, o));
+  nd("accueil", { titre:"Ma session", genre:"accueil" });
+
+  nd("p-inscription", { titre:"Parcours d’inscription", genre:"parcours", icone:"inscription",
+    enfants: cpf ? ["infos","mcf-demande","mcf-accepter","contrat-cpf","documents"] : ["infos","contrat","documents"] });
+  nd("infos", { titre:"Mes informations", genre:"etape" });
+  nd("mcf-demande", { titre:"Demander ma session sur CPF", genre:"etape", date:"12 sept." });
+  nd("mcf-accepter", { titre:"Accepter la proposition et payer le reste à charge", genre:"etape", date:"19 sept." });
+  nd("contrat-cpf", { titre:"Mon contrat de formation", genre:"etape", date:"19 sept." });
+  nd("contrat", { titre:"Signer mon contrat", genre:"etape", date:"18 sept." });
+  nd("documents", { titre:"Mes documents d’inscription", genre:"etape" });
+
+  nd("p-formation", { titre:"Parcours de formation", genre:"parcours", icone:"formation",
+    enfants: ["preparer","pendant","additionnels"].concat(cpf ? ["certification"] : []).concat(["apres"]) });
+  nd("preparer", { titre:"Préparer ma formation", genre:"preparer" });
+  nd("pendant", { titre:"Pendant la formation", genre:"section", enfants:["jour-j1","jour-j2"] });
+  for (const j of D.jours){
+    const J = JOURS[j.id], seq = [`${j.id}-em`];
+    const ajoute = a => {
+      const id = `${j.id}-a${a.n}`;
+      nd(id, { titre:a.titre, genre:"atelier", jour:j.id, n:a.n, bonus:a.bonus, data:a,
+        label: a.bonus ? "Atelier bonus" : `Atelier ${a.n}`, pastille: a.bonus ? "★" : String(a.n) });
+      seq.push(id);
+    };
+    j.ateliers.filter(a => a.demi === "matin").forEach(ajoute);
+    seq.push(`${j.id}-ea`);
+    j.ateliers.filter(a => a.demi === "aprem").forEach(ajoute);
+    nd(`${j.id}-em`, { titre:"Émargement du matin", genre:"emarg", jour:j.id, demi:"matin", ouvre:J.base + 9*60, heure:"9 h" });
+    nd(`${j.id}-ea`, { titre:"Émargement de l’après-midi", genre:"emarg", jour:j.id, demi:"aprem", ouvre:J.base + 14*60, heure:"14 h" });
+    if (j.id === "j2"){
+      seq.push("quiz", "questionnaire");
+      nd("quiz", { titre:"Quiz de fin", genre:"quiz", jour:"j2", ouvre:FIN_QUIZ, heure:"16 h 30" });
+      nd("questionnaire", { titre:"Questionnaire de satisfaction", genre:"questionnaire", jour:"j2", ouvre:FIN_QUIZ, heure:"16 h 30" });
+    }
+    nd(`jour-${j.id}`, { titre:`${J.label} · ${J.date}`, genre:"jour", jour:j.id, enfants:seq });
+  }
+  nd("additionnels", { titre:"Contenus additionnels", genre:"section", enfants:D.compl.map(c => c.id) });
+  D.compl.forEach(c => nd(c.id, { titre:c.titre, genre:"compl", data:c }));
+  if (cpf){
+    nd("certification", { titre:"Préparer ma certification", genre:"section", enfants:["cert-inscription","cert-preparation"] });
+    nd("cert-inscription", { titre:"M’inscrire à la certification", genre:"cert-inscription" });
+    nd("cert-preparation", { titre:"Plateforme de préparation", genre:"cert-preparation" });
+  }
+  nd("apres", { titre:"Après la formation", genre:"section", enfants:["realisation","certificat-fia","diapositives","coaching"] });
+  nd("realisation", { titre:"Certificat de réalisation", genre:"realisation" });
+  nd("certificat-fia", { titre:"Certificat France IA", genre:"certificat-fia" });
+  nd("diapositives", { titre:"Diapositives de formation", genre:"diapositives" });
+  nd("coaching", { titre:"Coaching individuel", genre:"coaching" });
+
+  /* Pas de parcours de facturation pour un CPF, comme en V2 : le reste à charge se paie en acceptant la proposition. */
+  if (!cpf){
+    nd("p-facturation", { titre:"Parcours de facturation", genre:"parcours", icone:"facturation", enfants:["devis","facture","prelevements"] });
+    nd("devis", { titre:"Mon devis signé", genre:"etape", date:"18 sept." });
+    nd("facture", { titre:"Ma facture", genre:"etape" });
+    nd("prelevements", { titre:"Mes prélèvements", genre:"prelevements" });
+  }
+
+  for (const id in N) for (const e of N[id].enfants) N[e].parent = id;
+}
+const PARCOURS_TOUS = ["p-inscription","p-formation","p-facturation"];
+const parcoursVisibles = () => PARCOURS_TOUS.filter(p => N[p]);
+const ancetres = id => { const r = []; let p = N[id] && N[id].parent; while (p){ r.push(p); p = N[p].parent; } return r; };
+const tousSignes = () => ["j1-em","j1-ea","j2-em","j2-ea"].every(k => S.signes[k]);
+const complOuverts = () => (S.add && T() >= 0) || T() >= FIN_J2;
+const estLecture = id => !!N[id] && (N[id].genre === "atelier" || N[id].genre === "compl");
+const SEQ_ATELIERS = () => Object.values(N).filter(n => n.genre === "atelier").sort((a, b) => (a.jour === b.jour ? a.n - b.n : a.jour < b.jour ? -1 : 1)).map(n => n.id);
+
+function estOuvert(id){
+  const n = N[id]; if (!n) return false; const t = T();
+  switch (n.genre){
+    case "atelier": case "jour": return t >= JOURS[n.jour].base;
+    case "emarg": case "quiz": case "questionnaire": return t >= n.ouvre;
+    case "compl": return complOuverts();
+    case "cert-inscription": return t >= FIN_QUIZ;
+    case "certificat-fia": case "diapositives": return t >= FIN_J2;
+    case "cert-preparation": return S.certInscrit;
+    case "realisation": return t >= FIN_J2 && tousSignes() && (S.fin !== "cpf" || S.certInscrit);
+    case "section": return id === "additionnels" ? complOuverts() : n.enfants.some(e => N[e].genre !== "coaching" && estOuvert(e));
+    default: return true;
+  }
+}
+const compte = id => { const n = N[id]; return !(n.bonus || n.genre === "coaching" || n.genre === "compl"); };
+function feuilles(id){
+  const n = N[id];
+  if (!n.enfants.length) return compte(id) ? [id] : [];
+  if (id === "additionnels") return n.enfants.slice();
+  return n.enfants.flatMap(e => e === "additionnels" ? [] : feuilles(e));
+}
+function estFait(id){
+  const n = N[id];
+  switch (n.genre){
+    case "etape": return true;
+    case "prelevements": return false;
+    case "preparer": return S.prep.size === CHECKLIST.length;
+    case "emarg": return !!S.signes[id];
+    case "atelier": return S.faits.has(id);
+    case "quiz": return S.quiz;
+    case "questionnaire": return S.questionnaire;
+    case "compl": return S.lus.has(id);
+    case "cert-inscription": return S.certInscrit;
+    case "cert-preparation": return S.certPrep;
+    case "realisation": case "certificat-fia": case "diapositives": return S.telecharges.has(id);
+    case "coaching": case "accueil": return false;
+    default: { const f = feuilles(id); return f.length > 0 && f.every(estFait); }
+  }
+}
+/* Chaque préparatif pèse une tâche (décision de Côme du 19/09, compterParcours en V2). */
+const poids = id => id === "preparer" ? [S.prep.size, CHECKLIST.length] : [estFait(id) ? 1 : 0, 1];
+function compteur(id){
+  if (id === "preparer") return poids(id);
+  return feuilles(id).reduce((s, x) => { const [f, t] = poids(x); return [s[0] + f, s[1] + t]; }, [0, 0]);
+}
+/* Minute d'ouverture d'un élément fermé (0 = lundi 0 h). */
+function ouverture(id){
+  const n = N[id];
+  switch (n.genre){
+    case "atelier": case "jour": return JOURS[n.jour].base;
+    case "emarg": case "quiz": case "questionnaire": return n.ouvre;
+    case "cert-inscription": return FIN_QUIZ;
+    case "section": return id === "additionnels" ? FIN_J2 : Math.min(...n.enfants.filter(e => N[e].genre !== "coaching").map(ouverture));
+    default: return FIN_J2;
+  }
+}
+/* Date courte d'un verrou : l'heure seule le jour même, sinon la date (et l'heure si elle compte). */
+function quand(m, court, heureSeule){
+  const date = m < 1440 ? JOURS.j1.court : JOURS.j2.court, h = heureDe(m);
+  if (Math.floor(T() / 1440) === Math.floor(m / 1440)) return h;
+  if (m % 1440 === 0) return date;
+  if (court) return heureSeule ? h : date;
+  return `${date} · ${h}`;
+}
+function verrou(id, court){
+  const n = N[id];
+  switch (n.genre){
+    case "atelier": return court ? "" : quand(ouverture(id));
+    case "emarg": case "quiz": case "questionnaire": return quand(n.ouvre, court, true);
+    case "compl": return court ? "" : "Accessible après la formation";
+    case "cert-preparation": return "Après l’inscription";
+    case "realisation":
+      if (T() >= FIN_J2) return S.fin === "cpf" && !S.certInscrit ? "Après l’inscription à la certification" : "Quatre émargements";
+      return quand(FIN_J2, court);
+    case "section":
+      if (id === "additionnels" && court) return "";
+      return quand(ouverture(id), court);
+    default: return quand(ouverture(id), court);
+  }
+}
+
+/* L'action du moment : la seule chose qui parle fort */
+function action(){
+  const t = T(), cpf = S.fin === "cpf";
+  for (const id of ["j1-em","j1-ea","j2-em","j2-ea","quiz","questionnaire"]) if (estOuvert(id) && !estFait(id)) return A(id);
+  if (cpf && estOuvert("cert-inscription") && !estFait("cert-inscription")) return A("cert-inscription");
+  const jour = t >= 0 && t < 1440 ? "j1" : t >= 1440 && t < 2880 ? "j2" : null;
+  if (jour && (t % 1440) < 18*60){
+    const at = N[`jour-${jour}`].enfants.find(e => N[e].genre === "atelier" && !N[e].bonus && !estFait(e));
+    if (at) return A(at);
+  }
+  if (estOuvert("realisation") && !estFait("realisation")) return A("realisation");
+  if (t < 0 && !estFait("preparer")) return A("preparer");
+  if (cpf && estOuvert("cert-preparation") && !estFait("cert-preparation")) return A("cert-preparation");
+  for (const id of ["certificat-fia","diapositives"]) if (estOuvert(id) && !estFait(id)) return A(id);
+  return null;
+}
+function A(id){
+  const n = N[id], base = { id, obligatoire:false, style:"plein", faire:true };
+  switch (n.genre){
+    case "emarg": return Object.assign(base, { titre: n.demi === "matin" ? "Signer mon émargement du matin" : "Signer mon émargement de l’après-midi",
+      court:"Signer", long:"Signer mon émargement", style:"rouge", obligatoire:true, heure:n.heure });
+    case "quiz": return Object.assign(base, { titre:"Répondre au quiz de fin", court:"Répondre", long:"Répondre au quiz de fin", heure:n.heure });
+    case "questionnaire": return Object.assign(base, { titre:"Répondre au questionnaire de satisfaction", court:"Répondre", long:"Répondre au questionnaire", heure:n.heure });
+    case "atelier": {
+      const debut = !N[`jour-${n.jour}`].enfants.some(e => N[e].genre === "atelier" && estFait(e));
+      const verbe = debut ? "Commencer" : "Reprendre";
+      return Object.assign(base, { titre:`${verbe} : ${n.titre}`, court:verbe, accueil:"Ouvrir l’atelier", long:`${verbe} l’atelier ${n.n}`, faire:false });
+    }
+    case "cert-inscription": return Object.assign(base, { titre:"M’inscrire à la certification", court:"M’inscrire", long:"M’inscrire à la certification" });
+    case "realisation": return Object.assign(base, { titre:"Télécharger mon certificat de réalisation", court:"Télécharger", long:"Télécharger mon certificat" });
+    case "preparer": return Object.assign(base, { titre:"Préparer ma formation", court:"Continuer", long:"Continuer ma préparation", faire:false, progression:true });
+    case "cert-preparation": return Object.assign(base, { titre:"Ouvrir la plateforme de préparation", court:"Ouvrir la plateforme", long:"Ouvrir la plateforme" });
+    case "certificat-fia": return Object.assign(base, { titre:"Partager mon certificat France IA", court:"Partager sur LinkedIn", long:"Partager sur LinkedIn" });
+    case "diapositives": return Object.assign(base, { titre:"Consulter les diapositives de formation", court:"Consulter", long:"Consulter les diapositives" });
+  }
+  return null;
+}
+function faire(id){
+  const n = N[id], t = T();
+  switch (n.genre){
+    case "emarg": S.signes[id] = heureDe(Math.max(t, n.ouvre) + 4); toast(`Émargement signé à ${S.signes[id]}`); break;
+    case "quiz": S.quiz = true; toast("Quiz envoyé"); break;
+    case "questionnaire": S.questionnaire = true; toast("Questionnaire envoyé"); break;
+    case "cert-inscription": S.certInscrit = true; toast("Inscription à la certification enregistrée"); break;
+    case "cert-preparation": S.certPrep = true; toast("Plateforme de préparation ouverte"); break;
+    case "realisation": S.telecharges.add(id); toast("Certificat de réalisation téléchargé"); break;
+    case "certificat-fia": S.telecharges.add(id); toast("Partage LinkedIn ouvert"); break;
+    case "diapositives": S.telecharges.add(id); toast("Diapositives ouvertes"); break;
+  }
+}
+
+/* ============================================================
+   ADRESSE : #page=…&moment=…&fin=…
+   ============================================================ */
+function lien(page, o){
+  o = o || {};
+  const moment = o.moment || S.moment, fin = o.fin || S.fin, add = o.add !== undefined ? o.add : S.add;
+  const grand = o.grand !== undefined ? o.grand : (S.grand && estLecture(page));
+  let h = `#page=${page}&moment=${moment}&fin=${fin}`;
+  if (add) h += "&add=1";
+  if (grand) h += "&grand=1";
+  return h;
+}
+/* Arbre en accordéon : à chaque page, seules sa branche et celle de l'action du moment (si elle est
+   dans le même parcours) sont dépliées. Sur Ma session, la branche de l'action s'arrête avant le jour,
+   pour que les parcours tiennent dans l'écran. */
+const parcoursDe = id => [id].concat(ancetres(id)).find(x => PARCOURS_TOUS.includes(x)) || null;
+function ouverturesParDefaut(){
+  const o = new Set(), a = action(), page = S.page;
+  ancetres(page).forEach(x => o.add(x));
+  if (N[page].enfants.length) o.add(page);
+  if (a){
+    if (page === "accueil") ancetres(a.id).filter(x => N[x].genre !== "jour").forEach(x => o.add(x));
+    else if (parcoursDe(page) && parcoursDe(page) === parcoursDe(a.id)) ancetres(a.id).forEach(x => o.add(x));
+  }
+  return o;
+}
+function lireHash(){
+  const p = new URLSearchParams(location.hash.slice(1));
+  const moment = MOMENTS.some(m => m.id === p.get("moment")) ? p.get("moment") : "j1m";
+  const fin = p.get("fin") === "perso" ? "perso" : "cpf";
+  const changeMoment = !S.init || moment !== S.moment, changeFin = !S.init || fin !== S.fin;
+  S.moment = moment; S.fin = fin; S.add = p.get("add") === "1";
+  if (changeFin) construire();
+  if (changeMoment) preset();
+  let page = p.get("page") || "accueil";
+  const invalide = !N[page] || N[page].genre === "jour";
+  if (invalide) page = "accueil";
+  const changePage = page !== S.page;
+  S.page = page;
+  S.grand = p.get("grand") === "1" && estLecture(page);
+  if (invalide && p.get("page")) history.replaceState(null, "", lien("accueil"));
+  if (changePage || changeMoment || changeFin || !S.init) S.ouverts = ouverturesParDefaut();
+  else { ancetres(page).forEach(x => S.ouverts.add(x)); if (N[page].enfants.length) S.ouverts.add(page); }
+  if (changePage || !S.init){ S.tiroir = false; S.pageNeuve = true; }
+  S.init = true;
+}
+function naviguer(h){ history.replaceState(null, "", h); lireHash(); rendre(); }
+
+/* ============================================================
+   BARRE LATÉRALE
+   ============================================================ */
+function metaNoeud(id, court){
+  const n = N[id];
+  if (!estOuvert(id)){ const v = verrou(id, court); return `<span class="meta">${I.cadenas}${v ? `<span>${v}</span>` : `<span class="sr">Fermé</span>`}</span>`; }
+  const [f, t] = compteur(id);
+  return `<span class="cpt" aria-label="${f} sur ${t}">${f}/${t}</span>`;
+}
+function pastilleDe(id){
+  const n = N[id], fait = estFait(id), ouvert = estOuvert(id);
+  if (fait) return I.check;
+  if (!ouvert) return I.cadenas;
+  switch (n.genre){
+    case "atelier": return n.pastille;
+    case "emarg": return I.stylo;
+    case "quiz": return I.quiz;
+    case "questionnaire": return I.avis;
+    case "compl": return I.doc;
+    case "cert-inscription": case "cert-preparation": case "realisation": case "certificat-fia": return I.certif;
+    case "diapositives": return I.slides;
+    case "coaching": return I.personne;
+    case "prelevements": return I.euro;
+    default: return I.doc;
+  }
+}
+function itemFeuille(id, ind){
+  const n = N[id], actif = S.page === id, fait = estFait(id), ouvert = estOuvert(id), a = action();
+  const courant = !actif && a && a.id === id;
+  let meta = "";
+  if (n.genre === "emarg" && ouvert && !fait) meta = `<span class="etiq">Obligatoire</span>`;
+  else if (n.heure && !fait) meta = `<span class="meta">${n.heure}</span>`;
+  const cls = ["item", fait ? "fait" : "", !ouvert ? "ferme" : "", actif ? "actif" : "", courant ? "courant" : "", n.genre === "coaching" ? "discret" : ""].join(" ").trim();
+  const etatSr = fait ? "Fait" : !ouvert ? `Fermé${verrou(id) ? ", " + verrou(id) : ""}` : "";
+  return `<li><a class="${cls}" style="--ind:${ind}px" href="${lien(id, { grand:false })}" data-k="nav-${id}"${actif ? ' aria-current="page"' : ""}${!ouvert ? ' aria-disabled="true"' : ""}>
+    <span class="pastille" aria-hidden="true">${pastilleDe(id)}</span><span class="t">${n.titre}${etatSr ? `<span class="sr"> · ${etatSr}</span>` : ""}</span>${meta}</a></li>`;
+}
+function noeudArbre(id, niveau, ind){
+  const n = N[id];
+  if (n.genre === "preparer"){
+    const actif = S.page === id, [f, t] = compteur(id);
+    return `<li class="n2"><div class="rang${actif ? " actif" : ""}" style="--ind:${ind}px"><span class="chev-vide"></span>
+      <a class="lien" href="${lien(id, { grand:false })}" data-k="nav-${id}"${actif ? ' aria-current="page"' : ""}><span class="t">${n.titre}</span><span class="cpt" aria-label="${f} sur ${t}">${f}/${t}</span></a></div></li>`;
+  }
+  if (!n.enfants.length) return itemFeuille(id, ind);
+  const ouvert = S.ouverts.has(id), sous = `sous-${id}`;
+  const enfants = n.enfants.map(e => noeudArbre(e, niveau + 1, (N[e].enfants.length || N[e].genre === "preparer") ? ind + 10 : ind + 18)).join("");
+  if (n.genre === "jour"){
+    const a = action(), courant = !ouvert && a && ancetres(a.id).includes(id);
+    return `<li class="n3"><button class="rang-jour${courant ? " courant" : ""}" style="--ind:${ind}px" aria-expanded="${ouvert}" aria-controls="${sous}" data-bascule="${id}" data-k="bas-${id}">
+      <span class="chev-i">${I.chev}</span><span class="t">${n.titre}</span>${estOuvert(id) ? metaNoeud(id, true) : `<span class="meta">${I.cadenas}<span class="sr">Fermé</span></span>`}</button>
+      <ul id="${sous}"${ouvert ? "" : " hidden"}>${enfants}</ul></li>`;
+  }
+  const actif = S.page === id, ferme = !estOuvert(id);
+  return `<li class="n${niveau}"><div class="rang${actif ? " actif" : ""}" style="--ind:${ind}px">
+      <button class="chev" aria-expanded="${ouvert}" aria-controls="${sous}" data-bascule="${id}" data-k="bas-${id}"><span class="sr">${ouvert ? "Replier" : "Déplier"} ${n.titre}</span>${I.chev}</button>
+      <a class="lien" href="${lien(id, { grand:false })}" data-k="nav-${id}"${actif ? ' aria-current="page"' : ""}${ferme ? ' aria-disabled="true"' : ""}><span class="t">${n.titre}</span>${metaNoeud(id, true)}</a></div>
+    <ul id="${sous}"${ouvert ? "" : " hidden"}>${enfants}</ul></li>`;
+}
+function lateral(){
+  const accActif = S.page === "accueil";
+  let h = `<div class="zone-nav" id="zone-nav"><div class="tete-lat"><a href="${lien("accueil", { grand:false })}" aria-label="France IA, Ma session"><img class="logo" src="${LOGO}" alt="France IA"></a>
+    <button class="fermer fermer-tiroir" data-fermer-tiroir aria-label="Fermer le menu">${I.fermer}</button></div>
+    <nav aria-label="Espace apprenant"><ul class="arbre">
+      <li class="accueil"><a class="item${accActif ? " actif" : ""}" href="${lien("accueil", { grand:false })}" data-k="nav-accueil"${accActif ? ' aria-current="page"' : ""}><span class="pastille" aria-hidden="true">${I.maison}</span><span class="t" style="font-weight:600;font-size:14px">Ma session</span></a></li>`;
+  for (const p of parcoursVisibles()) h += noeudArbre(p, 1, 0);
+  h += `</ul></nav></div>
+    <div class="bas-lat">
+      <div class="profil"><span class="avatar" aria-hidden="true">${SESSION.initiales}</span><span class="nom">${SESSION.prenom} ${SESSION.nom}</span></div>
+      <button class="btn-question" data-question data-k="question">${I.bulle}Une question ?</button>
+      ${demo()}
+    </div>`;
+  return h;
+}
+function demo(){
+  return `<details class="demo" data-demo${S.demoOuvert ? " open" : ""}>
+    <summary data-k="demo-s">Commandes de démo ${I.chevBas}</summary>
+    <div class="corps-demo">
+      <label class="demo-l" for="sel-moment">Moment</label>
+      <select id="sel-moment" data-moment data-k="sel-moment">${MOMENTS.map(m => `<option value="${m.id}"${m.id === S.moment ? " selected" : ""}>${m.lib}</option>`).join("")}</select>
+      <span class="demo-l" id="lab-fin">Financement</span>
+      <div class="bascule" role="group" aria-labelledby="lab-fin">
+        <button data-fin="cpf" data-k="fin-cpf" aria-pressed="${S.fin === "cpf"}">CPF</button>
+        <button data-fin="perso" data-k="fin-perso" aria-pressed="${S.fin === "perso"}">Personnel</button>
+      </div>
+      <label class="demo-c"><input type="checkbox" data-add data-k="chk-add"${S.add ? " checked" : ""}>Contenus additionnels ouverts par le formateur</label>
+    </div></details>`;
+}
+/* Un seul compteur par journée : celui de la ligne « Jour N » de la barre latérale (émargements compris). */
+function progressionLecture(){
+  const n = N[S.page];
+  if (n.genre === "atelier"){
+    const [f, t] = compteur(`jour-${n.jour}`);
+    return { f, t, lib:JOURS[n.jour].label, groupe:`jour-${n.jour}`, court:n.jour.toUpperCase() };
+  }
+  const [f, t] = compteur("additionnels");
+  return { f, t, lib:"Contenus additionnels", groupe:"additionnels", court:null };
+}
+function rail(){
+  const p = progressionLecture(), a = action();
+  const act = parcoursDe(S.page);
+  const b = (id, ic) => `<a class="rail-btn${act === id ? " actif" : ""}" href="${lien(id, { grand:false })}" title="${N[id].titre}" aria-label="${N[id].titre}">${ic}</a>`;
+  const ids = N[p.groupe].enfants;
+  const liste = ids.map((id, i) => {
+    const n = N[id], fait = estFait(id), ouvert = estOuvert(id), actif = S.page === id;
+    const cls = [fait ? "fait" : "", !ouvert ? "ferme" : "", actif ? "actif" : "", !actif && a && a.id === id ? "courant" : ""].join(" ").trim();
+    const contenu = fait ? I.check : !ouvert ? I.cadenas : n.genre === "compl" ? String(i + 1) : pastilleDe(id);
+    const etat = fait ? ", fait" : !ouvert ? ", fermé" : "";
+    return `<li><a class="${cls}" href="${lien(id)}" title="${esc(n.titre)}" aria-label="${esc(n.titre + etat)}"${actif ? ' aria-current="page"' : ""}${!ouvert ? ' aria-disabled="true"' : ""}><span class="pastille" aria-hidden="true">${contenu}</span></a></li>`;
+  }).join("");
+  return `<div class="rail">
+    <a class="rail-btn" href="${lien("accueil", { grand:false })}" title="Ma session" aria-label="Ma session">${I.maison}</a>
+    ${parcoursVisibles().map(x => b(x, I[N[x].icone])).join("")}
+    <span class="rail-sep"></span>
+    <nav class="rail-prog" aria-label="${p.lib}">
+      <span class="j">${p.court || I.livre}</span><ol class="rail-liste">${liste}</ol><span class="cpt" aria-label="${p.f} sur ${p.t}">${p.f}/${p.t}</span>
+    </nav>
+    <div class="rail-bas"><button class="rail-btn" data-question title="Une question ?" aria-label="Une question ?" data-k="rail-question">${I.bulle}</button></div></div>`;
+}
+
+/* ============================================================
+   COMPOSANTS
+   ============================================================ */
+const barre = (f, t, lib) => `<span class="piste" role="progressbar" aria-label="${esc(lib)}" aria-valuemin="0" aria-valuemax="${t}" aria-valuenow="${f}"><i style="width:${t ? Math.round(f / t * 100) : 0}%"></i></span>`;
+function btnAction(a, libelle, cls){
+  cls = cls || "";
+  if (!a.faire) return `<a class="btn plein ${cls}" href="${lien(a.id)}" data-k="act-${a.id}">${libelle}</a>`;
+  return `<button class="btn ${a.style} ${cls}" data-faire="${a.id}" data-k="act-${a.id}">${libelle}</button>`;
+}
+function entete(id, avecCompteur){
+  const n = N[id], parent = n.parent ? N[n.parent].titre : "";
+  let h = parent ? `<p class="sur-titre">${parent}</p>` : "";
+  h += `<div class="tete"><h1 class="titre-page" tabindex="-1">${n.titre}</h1>`;
+  if (avecCompteur){ const [f, t] = compteur(id); h += `<div class="tete-prog">${barre(f, t, n.titre)}<span class="cpt">${f}/${t}</span></div>`; }
+  return h + `</div>`;
+}
+function metaFrise(id, fait, ouvert, court){
+  const n = N[id];
+  if (!ouvert){ const v = verrou(id, !!court); return v ? `<span class="heure">${I.cadenas}<span>${v}</span></span>` : ""; }
+  if (n.enfants.length || n.genre === "preparer"){ const [f, t] = compteur(id); return `<span class="cpt">${f}/${t}</span>`; }
+  if (n.genre === "prelevements") return `<span class="cpt">${echeancesPrelevees()}/3</span>`;
+  if (n.heure && !fait) return `<span class="heure">${n.heure}</span>`;
+  if (n.date && fait) return `<span class="cpt">${n.date}</span>`;
+  return "";
+}
+function frise(ids, court){
+  const a = action();
+  const courant = a ? ids.find(x => x === a.id || ancetres(a.id).includes(x)) : null;
+  return `<ol class="frise">${ids.map(id => noeudFrise(id, id === courant ? a : null, court)).join("")}</ol>`;
+}
+function noeudFrise(id, a, court){
+  const n = N[id], fait = estFait(id), ouvert = estOuvert(id);
+  const num = n.genre === "atelier" ? n.pastille : "";
+  const srNum = num ? `<span class="sr">${n.label} : </span>` : "";
+  const oblig = n.genre === "emarg" && !fait ? `<span class="etiq">Obligatoire</span>` : "";
+  if (a){
+    const feuille = a.id === id;
+    let tags = feuille ? oblig : "";
+    if (feuille && a.heure) tags += `<span class="heure">${a.heure}</span>`;
+    if (!feuille && n.enfants.length){ const [f, t] = compteur(id); tags += `<span class="cpt">${f}/${t}</span>`; }
+    return `<li class="noeud courant"><span class="point" aria-hidden="true">${num}</span><div class="carte-courante">
+      <div class="cc-t"><a class="cc-titre" href="${lien(id)}">${srNum}${n.titre}</a>${tags}</div>${btnAction(a, feuille ? a.court : a.long)}</div></li>`;
+  }
+  const cls = fait ? "fait" : !ouvert ? "ferme" : "ouvert";
+  const sr = fait ? "Fait" : !ouvert ? "Fermé" : "";
+  return `<li class="noeud ${cls}"><span class="point" aria-hidden="true">${fait ? I.check : !ouvert ? I.cadenas : num}</span>
+    <div class="ligne"><a class="t" href="${lien(id)}"${!ouvert ? ' aria-disabled="true"' : ""}>${srNum}${n.titre}${sr ? `<span class="sr"> · ${sr}</span>` : ""}</a>${oblig}${metaFrise(id, fait, ouvert, court)}</div></li>`;
+}
+function rangeeDoc(nom, opts){
+  opts = opts || {};
+  const ferme = !!opts.ferme;
+  return `<div class="rangee"><span class="ic">${opts.ic || I.doc}</span><span class="nom${ferme ? " ferme" : ""}">${nom}</span>
+    ${ferme ? `<span class="heure">${I.cadenas}<span>${opts.verrou || ""}</span></span>` :
+      `<span class="actions">${opts.consulter === false ? "" : `<button class="lien-texte" data-doc="${esc(nom)}"${opts.marque ? ` data-marque="${opts.marque}"` : ""}>Consulter</button>`}${opts.telecharger === false ? "" : `<button class="lien-texte" data-telecharger="${esc(nom)}"${opts.marque ? ` data-marque="${opts.marque}"` : ""}>Télécharger</button>`}</span>`}</div>`;
+}
+const statutFait = txt => `<p class="statut">${I.check}<span>${txt}</span></p>`;
+const verrouPage = txt => `<p class="verrou-page">${I.cadenas}<span>${txt}</span></p>`;
+const echeancesPrelevees = () => (T() >= 0 ? 1 : 0);
+
+/* ── Blocs de contenu (ateliers et contenus additionnels) ── */
+const SUITE = ["prompt","callout","liste","numerotee","fichier","signet","variante","toggle","paragraphe","citation"];
+function blocs(liste, ref){
+  let n = 0, dans = false, prec = null, h = "";
+  liste.forEach((b, i) => {
+    let suite = false;
+    if (b.type === "etape"){ n++; dans = true; }
+    else if (b.type === "titre" || b.type === "sous-titre") dans = false;
+    else if (dans && SUITE.includes(b.type)) suite = true;
+    let esp = "";
+    if (i > 0) esp = (b.type === "etape" || b.type === "titre") ? "m40" : suite ? "m10" : (prec && prec.suite) ? "m24" : "";
+    h += bloc(b, `${ref}-${i}`, n, suite, esp);
+    prec = { suite };
+  });
+  return `<div class="blocs">${h}</div>`;
+}
+function boitePrompt(texte){
+  return `<div class="prompt"><span class="doc">${I.doc}</span><p class="txt">${esc(texte)}</p><button class="copier" data-copier>${I.copier}<span>Copier</span></button></div>`;
+}
+function bloc(b, cle, n, suite, esp){
+  const c = `bloc${suite ? " suite" : ""}${esp ? " " + esp : ""}`;
+  const ouvert = S.depl[cle] ? " open" : "";
+  switch (b.type){
+    case "callout": return `<div class="${c}"><div class="callout"><span class="ic" aria-hidden="true">${b.ic || "💡"}</span><div style="min-width:0;flex:1"><h3>${b.titre}</h3><p>${b.texte}</p></div></div></div>`;
+    case "etape": return `<div class="${c}"><div class="etape"><span class="num" aria-hidden="true">${n}</span><div class="etape-corps"><h3><span class="sr">Étape ${n} : </span>${b.titre}</h3>${b.texte ? `<p>${b.texte}</p>` : ""}${b.prompt !== undefined ? boitePrompt(b.prompt) : ""}</div></div></div>`;
+    case "prompt": return `<div class="${c}">${boitePrompt(b.texte)}</div>`;
+    case "paragraphe": return `<div class="${c} paragraphe"><p>${b.texte}</p></div>`;
+    case "titre": return `<div class="${c}"><h2>${b.texte}</h2></div>`;
+    case "sous-titre": return `<div class="${c}"><h3 class="sous">${b.texte}</h3></div>`;
+    case "citation": return `<div class="${c} citation"><p>${b.texte}</p></div>`;
+    case "liste": return `<div class="${c} liste"><ul>${b.items.map(x => `<li>${x}</li>`).join("")}</ul></div>`;
+    case "numerotee": return `<div class="${c} liste"><ol>${b.items.map(x => `<li>${x}</li>`).join("")}</ol></div>`;
+    case "fichier": return `<div class="${c}"><div class="fichier"><span class="ic">${I.doc}</span><span class="nom">${b.nom}<span class="taille">${b.taille || ""}</span></span><button class="lien-texte" data-telecharger="${esc(b.nom)}">Télécharger</button></div></div>`;
+    case "toggle": return `<div class="${c}"><details class="depliant" data-cle="${cle}"${ouvert}><summary><span class="chev-d">${I.chev}</span><span class="t">${b.titre}</span></summary><div class="corps"><p>${b.texte}</p></div></details></div>`;
+    case "variante": {
+      const cles = b.outils && b.outils.length ? b.outils : [b.outil || "claude"];
+      const logos = `<span class="logos" aria-hidden="true">${cles.map(k => OUTILS[k] ? OUTILS[k].logo : "").join("")}</span>`;
+      return `<div class="${c}"><details class="depliant compact" data-cle="${cle}"${ouvert}><summary><span class="chev-d">${I.chev}</span><span class="t">${b.titre}</span>${logos}</summary>
+        <div class="corps">${b.texte ? `<p>${b.texte}</p>` : ""}${(b.prompts || []).map(boitePrompt).join("")}</div></details></div>`;
+    }
+    case "signet": return `<div class="${c}"><div class="fichier"><span class="ic">${I.livre}</span><span class="nom">${b.titre}</span><a class="lien-texte" href="${esc(b.url)}" target="_blank" rel="noopener">Ouvrir</a></div></div>`;
+  }
+  return "";
+}
+
+/* ============================================================
+   PAGES
+   ============================================================ */
+function pageAccueil(){
+  const m = S.moment, t = T();
+  const eyebrow = m === "avant" ? `${SESSION.formation} · 13 et 14 octobre` :
+    m === "apres" ? "Formation terminée · 13 et 14 octobre" :
+    t < 1440 ? "Jour 1 · lundi 13 octobre · Station F" : "Jour 2 · mardi 14 octobre · Station F";
+  const salut = m === "avant" ? "Bienvenue" : m === "apres" ? "Merci pour ces deux journées" : t < 1440 ? "Bonne première journée" : "Bonne seconde journée";
+  let h = `<section class="bandeau"><div class="drapeau" aria-hidden="true"><i></i><i></i><i></i></div>
+    <p class="eyebrow">${eyebrow}</p><h1 tabindex="-1">${salut}, <em>${SESSION.prenom}</em>.</h1>
+    <div class="deco" aria-hidden="true">${DECO}</div></section>`;
+
+  const a = action();
+  if (a){
+    let ligne = "";
+    if (a.obligatoire || a.heure) ligne = `<p class="af-ligne">${a.obligatoire ? `<span class="etiq">Obligatoire</span>` : ""}${a.heure ? `<span class="heure">${JOURS[N[a.id].jour].label} · ${a.heure}</span>` : ""}</p>`;
+    if (a.progression){ const [f, tt] = compteur("preparer"); ligne = `<p class="af-ligne">${barre(f, tt, "Préparation")}<span class="cpt">${f}/${tt}</span></p>`; }
+    h += `<section class="a-faire" aria-labelledby="af-t"><div class="af-txt"><p class="af-sur">À faire maintenant</p><h2 id="af-t">${a.titre}</h2>${ligne}</div>${btnAction(a, a.accueil || a.court, "grand")}</section>`;
+  }
+
+  const visibles = parcoursVisibles();
+  h += `<div class="parcours-grille${visibles.length === 2 ? " deux" : ""}">`;
+  for (const p of visibles){
+    const n = N[p], [f, tt] = compteur(p);
+    let suite;
+    const act = a && ancetres(a.id).includes(p) ? a.id : null;
+    const prochain = act || feuilles(p).find(x => !estFait(x));
+    if (!prochain) suite = `<span class="cp-suite ok">${I.check}<span class="t">Terminé</span></span>`;
+    else suite = `<span class="cp-suite"><span class="t">${N[prochain].titre}</span>${estOuvert(prochain) ? "" : `<span class="meta">${I.cadenas}<span>${verrou(prochain, false)}</span></span>`}</span>`;
+    h += `<a class="carte-parcours" href="${lien(p)}"><span class="cp-tete"><span class="cp-ic" aria-hidden="true">${I[n.icone]}</span><span class="cp-t">${n.titre}</span></span>
+      <span class="cp-prog">${barre(f, tt, n.titre)}<span class="cpt">${f}/${tt}</span></span>${suite}</a>`;
+  }
+  h += `</div>`;
+
+  const qr = t < 1440 + 18*60 ? `<p class="act">${S.qr ? `<span class="envoye">${I.check}QR d’accès envoyé</span>` : `<button class="lien-texte" data-qr data-k="qr">Recevoir mon QR d’accès</button>`}</p>` : "";
+  h += `<div class="infos">
+    <div class="case"><p class="lab">Dates et horaires</p><p class="val">${SESSION.dates}</p><p class="sec">${SESSION.horaires}</p></div>
+    <div class="case"><p class="lab">Lieu</p><p class="val">${SESSION.lieu}</p><p class="sec">${SESSION.adresseLieu}</p>${qr}</div>
+    <div class="case"><p class="lab">Formatrice</p><div class="personne"><span class="avatar" aria-hidden="true">${SESSION.initialesF}</span><p class="val">${SESSION.formatrice}</p></div></div>
+  </div>`;
+  return `<div class="scene">${h}</div>`;
+}
+
+function pageParcours(id){
+  return `<div class="scene"><article class="carte">${entete(id, true)}${frise(N[id].enfants)}</article></div>`;
+}
+function pagePendant(){
+  let h = entete("pendant", true);
+  for (const jid of ["jour-j1","jour-j2"]){
+    const j = N[jid], ouvert = estOuvert(jid), [f, t] = compteur(jid);
+    h += `<section class="groupe-frise"><h2 class="titre-groupe"><span class="t">${j.titre}</span>${ouvert ? `<span class="cpt">${f}/${t}</span>` : `<span class="heure">${I.cadenas}<span>${verrou(jid)}</span></span>`}</h2>${frise(j.enfants, true)}</section>`;
+  }
+  return `<div class="scene"><article class="carte">${h}</article></div>`;
+}
+function pageSection(id){
+  const n = N[id];
+  if (id === "additionnels"){
+    const ouvert = complOuverts();
+    let h = entete(id, ouvert);
+    if (!ouvert) h += verrouPage("Accessible après la formation") + `<div style="height:22px"></div>`;
+    h += `<div class="rangees">` + n.enfants.map(c => `<div class="rangee"><span class="ic">${estFait(c) ? `<span style="color:var(--vert)">${I.check}</span>` : I.livre}</span>
+      <span class="nom${ouvert ? "" : " ferme"}">${N[c].titre}</span>${ouvert ? `<a class="lien-texte" href="${lien(c)}">Lire</a>` : ""}</div>`).join("") + `</div>`;
+    return `<div class="scene"><article class="carte">${h}</article></div>`;
+  }
+  const ids = n.enfants.filter(e => N[e].genre !== "coaching");
+  let h = entete(id, estOuvert(id)) + frise(ids);
+  if (id === "apres") h += `<p class="discrete">${I.personne}<a class="lien-texte" href="${lien("coaching")}">Coaching individuel</a></p>`;
+  return `<div class="scene"><article class="carte">${h}</article></div>`;
+}
+function pagePreparer(){
+  const [f, t] = compteur("preparer");
+  let h = entete("preparer", true);
+  h += `<ul class="checklist">` + CHECKLIST.map(c => {
+    const ok = S.prep.has(c.cle);
+    const act = c.action && !ok ? (c.action.href ? `<a class="lien-texte act" href="${c.action.href}" target="_blank" rel="noopener">${c.action.libelle}</a>` : `<button class="lien-texte act" data-ancre="${c.action.cible}">${c.action.libelle}</button>`) : "";
+    return `<li class="${ok ? "ok" : ""}"><input type="checkbox" id="chk-${c.cle}" data-chk="${c.cle}" data-k="chk-${c.cle}"${ok ? " checked" : ""}><label for="chk-${c.cle}">${c.texte}</label>${act}</li>`;
+  }).join("") + `</ul>`;
+  h += `<h2 class="titre-section" id="video" tabindex="-1">Vidéo de mise à niveau</h2>
+    <div class="video" role="img" aria-label="Vidéo : Mise à niveau sur ChatGPT, 15 minutes">${I.play}<span class="duree">15 min</span></div>
+    <p class="video-t">Mise à niveau sur ChatGPT</p>`;
+  h += `<h2 class="titre-section" id="programme" tabindex="-1">Programme</h2>` + PROGRAMME.map((p, i) => {
+    const cle = `prog-${i}`;
+    return `<details class="depliant" data-cle="${cle}"${S.depl[cle] ? " open" : ""}><summary><span class="chev-d">${I.chev}</span><span class="t">${p.emoji} ${p.titre.replace("Après-midi", '<span class="nw">Après-midi</span>')}</span><span class="heure">${p.horaires}</span></summary>
+      <div class="corps"><p><b>${p.theme}</b></p><ul>${p.ateliers.map(x => `<li>${x}</li>`).join("")}</ul><p>Pensez à : ${p.penser}</p></div></details>`;
+  }).join("");
+  return `<div class="scene"><article class="carte">${h}</article></div>`;
+}
+/* « Suivant » ne mène jamais à une page encore fermée. */
+const suivantOuvert = (seq, id) => { const x = seq[seq.indexOf(id) + 1]; return x && estOuvert(x) ? x : null; };
+const precedentOuvert = (seq, id) => { const x = seq[seq.indexOf(id) - 1]; return x && estOuvert(x) ? x : null; };
+function barreLecture(id){
+  const n = N[id], p = progressionLecture(), ouvert = estOuvert(id);
+  const seq = n.genre === "atelier" ? SEQ_ATELIERS() : D.compl.map(c => c.id);
+  const prec = precedentOuvert(seq, id), suiv = suivantOuvert(seq, id);
+  const quoi = n.genre === "atelier" ? "Atelier" : "Page";
+  const fil = n.genre === "atelier" ? `${JOURS[n.jour].label} · ${n.label}` : "Contenus additionnels";
+  const nav = (x, sens) => x ? `<a class="icone-btn" href="${lien(x)}" aria-label="${quoi} ${sens === "p" ? "précédent" : "suivant"}" data-k="bl-${sens}">${sens === "p" ? I.gauche : I.chev}</a>`
+    : `<span class="icone-btn off" aria-hidden="true">${sens === "p" ? I.gauche : I.chev}</span>`;
+  return `<div class="barre-lecture"><div class="bl-int">
+    <span class="bl-fil">${fil}</span>
+    ${ouvert ? `<span class="bl-prog">${barre(p.f, p.t, "Progression " + p.lib)}<span class="cpt">${p.f}/${p.t}</span></span>` : ""}
+    <span class="bl-esp"></span>
+    <span class="bl-nav">${nav(prec, "p")}${nav(suiv, "s")}</span>
+    ${ouvert ? `<button class="btn-agr" data-agrandir data-k="agrandir" aria-pressed="${S.grand}">${S.grand ? I.reduire + "Réduire" : I.agrandir + "Agrandir"}</button>` : ""}
+  </div></div>`;
+}
+function navBas(){
+  if (!N[S.page] || !estLecture(S.page)) return "";
+  const n = N[S.page], seq = n.genre === "atelier" ? SEQ_ATELIERS() : D.compl.map(c => c.id);
+  const prec = precedentOuvert(seq, S.page), suiv = suivantOuvert(seq, S.page);
+  const b = (x, lib, ic, droite) => x ? `<a class="btn" href="${lien(x)}">${droite ? "" : ic}${lib}${droite ? ic : ""}</a>` : `<span class="btn off" aria-hidden="true">${droite ? "" : ic}${lib}${droite ? ic : ""}</span>`;
+  return `<nav class="nav-bas" aria-label="Navigation entre les pages">${b(prec, "Précédent", I.gauche, false)}${b(suiv, "Suivant", I.chev, true)}<button class="icone-btn nav-q" data-question data-k="question-bas" aria-label="Une question ?" title="Une question ?">${I.bulle}</button></nav>`;
+}
+function pageLecture(id){
+  const n = N[id], d = n.data, ouvert = estOuvert(id);
+  const sur = n.genre === "atelier" ? `${JOURS[n.jour].label} · ${n.label}` : "Contenu additionnel";
+  let h = `<p class="sur-titre">${sur}</p><h1 class="titre-page" tabindex="-1">${d.titre}</h1>`;
+  if (!ouvert){
+    h += verrouPage(verrou(id));
+    return barreLecture(id) + `<div class="scene lecture"><article class="carte">${h}</article></div>`;
+  }
+  h += `<div class="filet"></div>${blocs(d.blocs, id)}`;
+  const seq = n.genre === "atelier" ? SEQ_ATELIERS() : D.compl.map(c => c.id);
+  const suiv = suivantOuvert(seq, id);
+  if (n.genre === "atelier"){
+    const fini = estFait(id);
+    h += `<div class="pied"><button class="btn ${fini ? "ok" : "plein"}" data-fini="${id}" data-k="fini" aria-pressed="${fini}">${fini ? I.check : ""}Terminé</button>
+      ${suiv ? `<a class="btn${fini ? " plein" : ""}" href="${lien(suiv)}" data-k="suivant">Atelier suivant</a>` : ""}</div>`;
+  } else if (suiv){
+    h += `<div class="pied"><a class="btn plein" href="${lien(suiv)}" data-k="suivant">Page suivante</a></div>`;
+  }
+  return barreLecture(id) + `<div class="scene lecture"><article class="carte">${h}</article></div>`;
+}
+function pageEmarg(id){
+  const n = N[id], J = JOURS[n.jour], ouvert = estOuvert(id), fait = estFait(id);
+  let h = `<p class="sur-titre">Pendant la formation</p><div class="tete" style="align-items:center;justify-content:flex-start"><h1 class="titre-page" tabindex="-1" style="flex:0 1 auto">Émargement · ${J.label} · ${n.demi === "matin" ? "Matin" : "Après-midi"}</h1>${fait ? "" : `<span class="etiq">Obligatoire</span>`}</div>`;
+  if (fait) h += statutFait(`Signé à ${S.signes[id]}`);
+  else if (!ouvert) h += verrouPage(verrou(id));
+  else h += `<div class="actions-page"><button class="btn rouge grand" data-faire="${id}" data-k="act-${id}">Signer</button></div>`;
+  return `<div class="scene"><article class="carte">${h}</article></div>`;
+}
+function pageQuestion(id){
+  const n = N[id], ouvert = estOuvert(id), fait = estFait(id);
+  let h = `<p class="sur-titre">Jour 2 · ${n.heure}</p><h1 class="titre-page" tabindex="-1">${n.titre}</h1>`;
+  if (fait) h += `<div style="height:18px"></div>` + statutFait("Envoyé");
+  else if (!ouvert) h += verrouPage(verrou(id));
+  else h += `<div class="actions-page"><button class="btn plein grand" data-faire="${id}" data-k="act-${id}">Répondre</button></div>`;
+  return `<div class="scene"><article class="carte">${h}</article></div>`;
+}
+function pageEtape(id){
+  const n = N[id], ouvert = estOuvert(id), fait = estFait(id);
+  let h = entete(id, false), c = "";
+  switch (id){
+    case "infos":
+      c = `<dl class="donnees"><dt>Nom</dt><dd>${SESSION.prenom} ${SESSION.nom}</dd><dt>E-mail</dt><dd>${SESSION.email}</dd><dt>Téléphone</dt><dd>${SESSION.tel}</dd><dt>Adresse</dt><dd>${SESSION.adresse}</dd><dt>Financement</dt><dd>${S.fin === "cpf" ? "Compte personnel de formation" : "Financement personnel"}</dd></dl>`; break;
+    case "mcf-demande": c = statutFait("Demande envoyée le 12 septembre") + `<a class="lien-texte" href="https://www.moncompteformation.gouv.fr" target="_blank" rel="noopener">Ouvrir Mon Compte Formation</a>`; break;
+    case "mcf-accepter": c = statutFait("Proposition acceptée le 19 septembre") + `<div class="rangees"><div class="rangee"><span class="ic">${I.euro}</span><span class="nom">Reste à charge</span><span class="val mono">100,00 €</span><span class="val" style="color:var(--vert);font-weight:600">Réglé</span></div></div>`; break;
+    case "contrat-cpf": c = statutFait("Dossier CPF accepté le 19 septembre"); break;
+    case "contrat": c = statutFait("Signé le 18 septembre") + `<div class="rangees">${rangeeDoc("Contrat de formation")}</div>`; break;
+    case "documents": c = `<div class="rangees">${["Convocation","Conditions générales de vente","Livret d’accueil","Règlement intérieur"].map(x => rangeeDoc(x)).join("")}</div>`; break;
+    case "devis": c = statutFait("Signé le 18 septembre") + `<div class="rangees">${rangeeDoc("Devis signé")}</div>`; break;
+    case "facture": c = `<div class="rangees">${rangeeDoc("Facture F-2026-0412")}</div>`; break;
+    case "prelevements": {
+      const nb = echeancesPrelevees();
+      const lignes = [["13 octobre 2026"],["13 novembre 2026"],["13 décembre 2026"]].map((l, i) =>
+        `<tr><td><span class="mono" style="color:var(--texte-clair)">${i + 1}</span> · ${l[0]}</td><td class="d mono">663,33 €</td><td class="d ${i < nb ? "ok" : ""}">${i < nb ? "Prélevé" : "À venir"}</td></tr>`).join("");
+      c = `<table class="echeances"><thead><tr><th>Échéance</th><th class="d">Montant</th><th class="d">État</th></tr></thead><tbody>${lignes}</tbody></table>`; break;
+    }
+    case "cert-inscription":
+      if (!ouvert) c = verrouPage(verrou(id));
+      else if (fait) c = statutFait("Inscription confirmée");
+      else c = `<div class="actions-page" style="margin:0 0 22px"><button class="btn plein grand" data-faire="${id}" data-k="act-${id}">M’inscrire</button></div>
+        <details class="depliant" data-cle="cert-comment"${S.depl["cert-comment"] ? " open" : ""}><summary><span class="chev-d">${I.chev}</span><span class="t">Comment vous inscrire</span></summary>
+        <div class="corps"><ol><li>Ouvrez la plateforme de certification.</li><li>Connectez-vous avec l’adresse e-mail de votre compte CPF.</li><li>Choisissez votre date de passage.</li></ol></div></details>`;
+      break;
+    case "cert-preparation":
+      if (!ouvert) c = verrouPage(verrou(id));
+      else c = (fait ? statutFait("Plateforme ouverte") : "") + `<div class="actions-page" style="margin-top:0"><button class="btn ${fait ? "" : "plein"} grand" data-faire="${id}" data-k="act-${id}">Ouvrir la plateforme de préparation</button></div>`;
+      break;
+    case "realisation":
+      c = ouvert ? `<div class="rangees">${rangeeDoc("Certificat de réalisation", { ic:I.certif, marque:"realisation" })}</div>` : `<div class="rangees">${rangeeDoc("Certificat de réalisation", { ic:I.certif, ferme:true, verrou:verrou(id) })}</div>`;
+      break;
+    case "certificat-fia":
+      c = ouvert ? `<div class="rangees">${rangeeDoc("Certificat France IA", { ic:I.certif })}</div><div class="actions-page"><button class="btn ${fait ? "" : "plein"} grand" data-faire="${id}" data-k="act-${id}">Partager sur LinkedIn</button></div>`
+        : `<div class="rangees">${rangeeDoc("Certificat France IA", { ic:I.certif, ferme:true, verrou:verrou(id) })}</div>`;
+      break;
+    case "diapositives":
+      c = ouvert ? `<div class="rangees">${rangeeDoc("Diapositives en ligne", { ic:I.slides, telecharger:false, marque:"diapositives" })}${rangeeDoc("Diapositives au format PDF", { ic:I.slides, consulter:false, marque:"diapositives" })}</div>`
+        : `<div class="rangees">${rangeeDoc("Diapositives de formation", { ic:I.slides, ferme:true, verrou:verrou(id) })}</div>`;
+      break;
+    case "coaching":
+      c = `<div class="actions-page" style="margin-top:0"><a class="btn" href="https://franceia.com/apres-formation" target="_blank" rel="noopener">Découvrir le coaching</a></div>`;
+      break;
+  }
+  return `<div class="scene"><article class="carte">${h}${c}</article></div>`;
+}
+function principal(){
+  const n = N[S.page];
+  switch (n.genre){
+    case "accueil": return pageAccueil();
+    case "parcours": return pageParcours(S.page);
+    case "preparer": return pagePreparer();
+    case "section": return S.page === "pendant" ? pagePendant() : pageSection(S.page);
+    case "atelier": case "compl": return pageLecture(S.page);
+    case "emarg": return pageEmarg(S.page);
+    case "quiz": case "questionnaire": return pageQuestion(S.page);
+    default: return pageEtape(S.page);
+  }
+}
+function ouSuisJe(){
+  const n = N[S.page];
+  if (n.genre === "atelier") return `${JOURS[n.jour].label} · ${n.label}`;
+  if (n.genre === "emarg") return `${JOURS[n.jour].label} · ${n.titre}`;
+  return n.titre;
+}
+
+/* ============================================================
+   RENDU
+   ============================================================ */
+function rendre(){
+  const latAvant = document.getElementById("zone-nav"), sc = latAvant ? latAvant.scrollTop : 0;
+  const actif = document.activeElement, k = actif && actif.dataset ? actif.dataset.k : null;
+  if (N[S.page].genre === "compl" && estOuvert(S.page)) S.lus.add(S.page);
+  const grand = S.grand && !mobile();
+  const app = document.getElementById("app");
+  app.className = "app" + (grand ? " grand" : "") + (S.tiroir ? " tiroir" : "");
+  app.innerHTML = `<header class="haut-mobile"><img class="logo" src="${LOGO}" alt="France IA">
+      <button class="ou" data-tiroir aria-expanded="${S.tiroir}" aria-controls="lateral" data-k="ou">${I.menu}<span class="t">${ouSuisJe()}</span>${I.chevBas}</button></header>
+    <aside class="lateral" id="lateral" aria-label="Menu de l’espace">${grand ? `<div class="zone-nav" id="zone-nav">${rail()}</div>` : lateral()}</aside>
+    <div class="voile" data-fermer-tiroir></div>
+    <main class="principal" id="principal">${principal()}</main>${navBas()}
+    ${estLecture(S.page) ? "" : `<button class="question-flottante" data-question data-k="question-m" aria-label="Une question ?" title="Une question ?">${I.bulle}</button>`}`;
+  const lat = document.getElementById("zone-nav");
+  const main = document.getElementById("principal");
+  main.inert = S.tiroir && mobile();
+  document.title = (S.page === "accueil" ? "Ma session" : ouSuisJe()) + " · Espace apprenant France IA";
+  const nouvelle = S.pageNeuve;
+  if (S.pageNeuve){
+    S.pageNeuve = false;
+    window.scrollTo(0, 0);
+    /* La barre ne défile que si l'élément de la page (ou, sur Ma session, l'étape du moment) est hors de vue. */
+    const cible = S.page === "accueil" ? lat.querySelector(".item.courant, .rang-jour.courant") : lat.querySelector('.arbre [aria-current="page"], .rail-liste [aria-current="page"]');
+    lat.scrollTop = 0;
+    if (cible){ const r = cible.getBoundingClientRect(), rl = lat.getBoundingClientRect(); if (r.bottom > rl.bottom - 24 || r.top < rl.top) lat.scrollTop = Math.max(0, r.top - rl.top - lat.clientHeight / 3); }
+  } else lat.scrollTop = sc;
+  const depuisNav = k && /^(nav-|bas-|rail|ou|sel-|fin-|chk-add|demo|question)/.test(k);
+  if (nouvelle && !depuisNav && k){ const h1 = document.querySelector("#principal h1"); if (h1) h1.focus({ preventScroll:true }); }
+  else if (k){ const el = document.querySelector(`[data-k="${k}"]`); if (el) el.focus({ preventScroll:true }); }
+}
+
+let minuterieToast = null;
+function toast(txt){
+  const el = document.getElementById("toast");
+  el.textContent = txt; el.classList.add("on");
+  clearTimeout(minuterieToast); minuterieToast = setTimeout(() => el.classList.remove("on"), 2600);
+}
+
+/* ── Fenêtres ── */
+function ouvrirDoc(nom){
+  const d = document.getElementById("dlg-doc");
+  d.innerHTML = `<div class="dlg-tete"><h2 id="dlg-doc-t">${esc(nom)}</h2><button class="fermer" data-fermer-dlg aria-label="Fermer">${I.fermer}</button></div>
+    <div class="dlg-corps"><div class="papier"><img src="${LOGO}" alt="France IA"><h3>${esc(nom)}</h3>
+      <div class="l"></div><div class="l m"></div><div class="l"></div><div class="l c"></div><div class="l"></div><div class="l m"></div><div class="l c"></div></div>
+      <div class="actions-page" style="justify-content:flex-end"><button class="btn" data-fermer-dlg>Fermer</button><button class="btn plein" data-telecharger="${esc(nom)}">${I.telecharger}Télécharger</button></div></div>`;
+  d.showModal();
+}
+const sansAccents = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+function ouvrirQuestion(){
+  const d = document.getElementById("dlg-question");
+  d.innerHTML = `<div class="dlg-tete"><h2 id="dlg-q-t">Une question ?</h2><button class="fermer" data-fermer-dlg aria-label="Fermer">${I.fermer}</button></div>
+    <div class="dlg-corps">
+      <label class="recherche">${I.loupe}<span class="sr">Rechercher dans les questions fréquentes</span><input type="search" id="faq-q" placeholder="Rechercher" autocomplete="off"></label>
+      <div class="faq" id="faq">${FAQ.map((f, i) => `<details class="depliant compact" data-q="${esc(sansAccents(f.q + " " + reponse(f)))}"><summary><span class="chev-d">${I.chev}</span><span class="t">${f.q}</span></summary><div class="corps"><p>${reponse(f)}</p></div></details>`).join("")}
+        <p class="faq-vide" id="faq-vide" hidden>Aucune réponse trouvée</p></div>
+      <div class="champ-q" id="champ-q"><label for="q-libre">Votre question</label><textarea id="q-libre"></textarea>
+        <div class="actions-page"><button class="btn plein" data-envoyer-q>Envoyer</button></div></div>
+    </div>`;
+  d.showModal();
+  d.querySelector("#faq-q").focus();
+}
+
+/* ============================================================
+   ÉVÉNEMENTS
+   ============================================================ */
+document.addEventListener("click", e => {
+  const x = e.target.closest("[data-bascule],[data-faire],[data-copier],[data-agrandir],[data-tiroir],[data-fermer-tiroir],[data-question],[data-doc],[data-telecharger],[data-qr],[data-fini],[data-ancre],[data-fin],[data-fermer-dlg],[data-envoyer-q]");
+  if (!x) return;
+  if (x.hasAttribute("data-bascule")){ const id = x.dataset.bascule; S.ouverts.has(id) ? S.ouverts.delete(id) : S.ouverts.add(id); rendre(); return; }
+  if (x.hasAttribute("data-faire")){ faire(x.dataset.faire); rendre(); const f = document.querySelector(".a-faire .btn, .carte-courante .btn, .titre-page"); if (f && !x.isConnected) f.focus({ preventScroll:true }); return; }
+  if (x.hasAttribute("data-copier")){
+    const txt = x.closest(".prompt").querySelector(".txt").textContent;
+    const ok = () => { x.classList.add("ok"); x.querySelector("span").textContent = "Copié"; setTimeout(() => { x.classList.remove("ok"); x.querySelector("span").textContent = "Copier"; }, 1500); };
+    const secours = () => { const t = document.createElement("textarea"); t.value = txt; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0"; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch (err) {} t.remove(); ok(); };
+    try { navigator.clipboard.writeText(txt).then(ok, secours); } catch (err) { secours(); }
+    return;
+  }
+  if (x.hasAttribute("data-agrandir")){ naviguer(lien(S.page, { grand: !S.grand })); return; }
+  if (x.hasAttribute("data-tiroir")){ S.tiroir = !S.tiroir; rendre(); if (S.tiroir){ const f = document.querySelector(".lateral .fermer-tiroir"); if (f) f.focus(); } return; }
+  if (x.hasAttribute("data-fermer-tiroir")){ S.tiroir = false; rendre(); const o = document.querySelector(".ou"); if (o) o.focus(); return; }
+  if (x.hasAttribute("data-question")){ ouvrirQuestion(); return; }
+  if (x.hasAttribute("data-doc")){ if (x.dataset.marque){ S.telecharges.add(x.dataset.marque); rendre(); } ouvrirDoc(x.dataset.doc); return; }
+  if (x.hasAttribute("data-telecharger")){ if (x.dataset.marque){ S.telecharges.add(x.dataset.marque); rendre(); } toast(`${x.dataset.telecharger} téléchargé`); return; }
+  if (x.hasAttribute("data-qr")){ S.qr = true; rendre(); toast("QR d’accès envoyé à " + SESSION.email); return; }
+  if (x.hasAttribute("data-fini")){ const id = x.dataset.fini; S.faits.has(id) ? S.faits.delete(id) : S.faits.add(id); rendre(); return; }
+  if (x.hasAttribute("data-ancre")){ const c = x.dataset.ancre; if (c === "programme"){ S.depl["prog-0"] = true; rendre(); } const el = document.getElementById(c); if (el){ el.scrollIntoView({ block:"start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); el.focus({ preventScroll:true }); } return; }
+  if (x.hasAttribute("data-fin")){ naviguer(lien(S.page, { fin:x.dataset.fin })); return; }
+  if (x.hasAttribute("data-fermer-dlg")){ x.closest("dialog").close(); return; }
+  if (x.hasAttribute("data-envoyer-q")){
+    const zone = document.getElementById("champ-q"), txt = document.getElementById("q-libre").value.trim();
+    if (!txt){ document.getElementById("q-libre").focus(); return; }
+    zone.innerHTML = `<p class="envoye-q" tabindex="-1">${I.check}Question envoyée</p>`; zone.firstChild.focus(); return;
+  }
+});
+document.addEventListener("change", e => {
+  const x = e.target;
+  if (x.matches("[data-chk]")){ x.checked ? S.prep.add(x.dataset.chk) : S.prep.delete(x.dataset.chk); rendre(); return; }
+  if (x.matches("[data-moment]")){ naviguer(lien(S.page, { moment:x.value })); return; }
+  if (x.matches("[data-add]")){ naviguer(lien(S.page, { add:x.checked })); return; }
+});
+document.addEventListener("toggle", e => {
+  const x = e.target;
+  if (x.matches && x.matches("details[data-cle]")) S.depl[x.dataset.cle] = x.open;
+  if (x.matches && x.matches("details[data-demo]")) S.demoOuvert = x.open;
+}, true);
+document.addEventListener("input", e => {
+  if (e.target.id !== "faq-q") return;
+  const q = sansAccents(e.target.value.trim());
+  let n = 0;
+  document.querySelectorAll("#faq details").forEach(d => { const ok = !q || d.dataset.q.includes(q); d.hidden = !ok; if (ok) n++; });
+  document.getElementById("faq-vide").hidden = n > 0;
+});
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape" || document.querySelector("dialog[open]")) return;
+  if (S.tiroir){ S.tiroir = false; rendre(); const o = document.querySelector(".ou"); if (o) o.focus(); return; }
+  if (S.grand){ naviguer(lien(S.page, { grand:false })); const b = document.querySelector("[data-k=agrandir]"); if (b) b.focus(); }
+});
+document.querySelectorAll("dialog").forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close(); }));
+window.addEventListener("hashchange", () => { lireHash(); rendre(); });
+window.matchMedia("(max-width:899px)").addEventListener("change", () => { S.tiroir = false; rendre(); });
+
+lireHash();
+rendre();
+</script>
+</body>
+</html>
