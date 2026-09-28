@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Console SÉCURITÉ · maquette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .kpi { padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; }
+  .kpi .v { font-size: 22px; font-weight: 700; }
+  .app-tile { padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .app-tile .row strong { flex: 1; }
+  .matrix td:first-child { white-space: nowrap; }
+  .matrix .cell-level { cursor: pointer; }
+  .reg { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 16px; }
+  .ev .body { min-width: 0; }
+  .ev .body .faint { display: block; }
+  .ev time { font: 12px "IBM Plex Mono", monospace; color: var(--ink-faint); padding-top: 2px; }
+  .drawer-head { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+  .drawer-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 18px; }
+  .kv { display: grid; grid-template-columns: 150px 1fr; gap: 6px 12px; font-size: 13px; }
+  .kv span:nth-child(odd) { color: var(--ink-faint); }
+  @media (max-width: 860px) {
+    .reg { grid-template-columns: 1fr; }
+    .kv { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body class="secu">
+<div class="demo">Maquette console SÉCURITÉ · données fictives <a href="atlas.html">ATLAS</a><a href="../">Toutes les maquettes</a></div>
+
+<div class="app">
+  <nav class="rail">
+    <div class="brand"><div class="logo">S</div><span>SÉCURITÉ</span></div>
+    <div class="nav">
+      <button data-view="surveillance" class="on">Surveillance</button>
+      <button data-view="equipe">Équipe</button>
+      <button data-view="registre">Registre</button>
+      <button data-view="cles">Clés <span class="count">2</span></button>
+      <button data-view="skills">Skills <span class="count">2</span></button>
+      <button data-view="publications">Publications</button>
+    </div>
+    <div class="rail-foot">
+      <a href="#" onclick="toast('Ouvre le Coolify de SÉCURITÉ, accessible seulement depuis le réseau privé');return false">Coolify de SÉCURITÉ</a>
+      <div class="me"><span class="avatar">CM</span>Camille Martin</div>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <!-- ============ SURVEILLANCE ============ -->
+    <section class="view on" id="v-surveillance">
+      <div class="page stack">
+        <div class="page-head" style="margin:0"><h1>Surveillance</h1><span class="spacer"></span><span class="faint">Mis à jour il y a 40 s</span></div>
+
+        <div class="grid4">
+          <div class="card kpi"><span class="label" style="margin:0">Applications</span><span class="v num">7 / 7</span><span class="chip green" style="align-self:flex-start"><span class="dot green"></span>En ligne</span></div>
+          <div class="card kpi"><span class="label" style="margin:0">Porte des outils</span><span class="v num">1 284</span><span class="faint">appels aujourd'hui · 3 refusés</span></div>
+          <div class="card kpi"><span class="label" style="margin:0">Relais IA</span><span class="v num">46</span><span class="faint">sessions ouvertes aujourd'hui</span></div>
+          <div class="card kpi clickable" onclick="go('cles')"><span class="label" style="margin:0">Clés</span><span class="v num">2</span><span class="row" style="gap:6px"><span class="chip rose">1 en échec</span><span class="chip amber">1 à renouveler</span></span></div>
+        </div>
+
+        <div>
+          <h2>Applications</h2>
+          <div class="grid4">
+            <div class="card app-tile"><div class="row"><strong>DELIV'IA</strong><span class="dot green"></span></div><span class="faint">Prod · 99,98 % sur 30 jours</span><div class="bar"><span style="width:18%"></span></div><span class="faint">Temps de réponse 180 ms</span></div>
+            <div class="card app-tile"><div class="row"><strong>DELIV'IA V2</strong><span class="dot green"></span></div><span class="faint">Pilote · 99,90 %</span><div class="bar"><span style="width:26%"></span></div><span class="faint">Temps de réponse 260 ms</span></div>
+            <div class="card app-tile"><div class="row"><strong>ARD</strong><span class="dot green"></span></div><span class="faint">Prod · 100 %</span><div class="bar"><span style="width:12%"></span></div><span class="faint">Temps de réponse 120 ms</span></div>
+            <div class="card app-tile"><div class="row"><strong>Espace apprenants</strong><span class="dot green"></span></div><span class="faint">Prod · 99,95 %</span><div class="bar"><span style="width:20%"></span></div><span class="faint">Temps de réponse 210 ms</span></div>
+            <div class="card app-tile"><div class="row"><strong>Trésorerie</strong><span class="dot green"></span></div><span class="faint">Prod · 100 %</span><div class="bar"><span style="width:15%"></span></div><span class="faint">Temps de réponse 150 ms</span></div>
+            <div class="card app-tile"><div class="row"><strong>Data Dashboard</strong><span class="dot green"></span></div><span class="faint">Prod · 99,99 %</span><div class="bar"><span style="width:22%"></span></div><span class="faint">Temps de réponse 230 ms</span></div>
+            <div class="card app-tile"><div class="row"><strong>ATLAS</strong><span class="dot green"></span></div><span class="faint">Bureaux · 99,97 %</span><div class="bar amber"><span style="width:64%"></span></div><span class="faint">Processeur 64 %</span></div>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="row" style="padding:14px 16px 0"><h2 style="margin:0;flex:1">Sentinelles de la nuit</h2><span class="faint">Passage de 3 h</span></div>
+            <div class="list" style="margin-top:8px">
+              <div class="item"><span class="dot green"></span><div class="grow">Une seule facture par dossier</div><span class="faint">0 écart</span></div>
+              <div class="item"><span class="dot green"></span><div class="grow">Chaque inscription a son espace apprenant</div><span class="faint">0 écart</span></div>
+              <div class="item"><span class="dot amber"></span><div class="grow">Chaque session à J-7 a son formateur</div><a href="#" onclick="toast('Ouvre la session fictive de Lille du 05/10 dans DELIV\'IA');return false">1 session</a></div>
+              <div class="item"><span class="dot green"></span><div class="grow">Base de données identique au code publié</div><span class="faint">0 écart</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="row" style="padding:14px 16px 0"><h2 style="margin:0;flex:1">Mises en ligne</h2><a href="#" onclick="go('publications');return false">Journal</a></div>
+            <div class="list" style="margin-top:8px">
+              <div class="item"><span class="dot green"></span><div class="grow"><div class="title">DELIV'IA · prod</div><div class="faint">Train du 28/09 · version servie vérifiée</div></div><span class="faint">09:42</span></div>
+              <div class="item"><span class="dot green"></span><div class="grow"><div class="title">Trésorerie · prod</div><div class="faint">Train du 28/09 · version servie vérifiée</div></div><span class="faint">09:15</span></div>
+              <div class="item"><span class="dot rose"></span><div class="grow"><div class="title">Espace apprenants · prod</div><div class="faint">Train du 27/09 · retour à la version précédente en 2 min</div></div><span class="faint">hier</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ÉQUIPE ============ -->
+    <section class="view" id="v-equipe">
+      <div class="page stack">
+        <div class="page-head" style="margin:0">
+          <h1>Équipe</h1>
+          <div class="seg pick" id="eq-seg"><button class="on" data-t="eq-pers">Personnes</button><button data-t="eq-auto">Automatisations</button></div>
+          <span class="spacer"></span>
+          <button class="btn primary" onclick="toast('Invitation envoyée · la personne se connecte avec son compte Google France IA')">Inviter</button>
+        </div>
+
+        <div class="card scroll-x" id="eq-pers">
+          <table class="t matrix">
+            <thead><tr><th>Personne</th><th>Profil</th><th>Vault</th><th>DELIV'IA</th><th>Qonto</th><th>GHL</th><th>Notion</th><th>Stripe</th><th>Code</th></tr></thead>
+            <tbody>
+              <tr><td><span class="row"><span class="avatar">CM</span>Camille Martin</span></td><td>Admin</td><td><button class="cell-level lvl-2">Écriture</button></td><td><button class="cell-level lvl-2">Écriture</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-2">Écriture</button></td><td><button class="cell-level lvl-2">Écriture</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-2">Écriture</button></td></tr>
+              <tr><td><span class="row"><span class="avatar">HB</span>Hugo Bernard</span></td><td>Delivery</td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-2">Écriture</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-2">Écriture</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-0">Aucun</button></td></tr>
+              <tr><td><span class="row"><span class="avatar">LP</span>Léa Petit</span></td><td>Closeur</td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-2">Écriture</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-0">Aucun</button></td></tr>
+              <tr><td><span class="row"><span class="avatar">ND</span>Nicolas Durand</span></td><td>Finance</td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-2">Écriture</button><div class="faint">jusqu'au 30/09</div></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-0">Aucun</button></td></tr>
+              <tr><td><span class="row"><span class="avatar">SM</span>Sarah Moreau</span></td><td>Stagiaire cyber</td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-1">Lecture</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card scroll-x" id="eq-auto" style="display:none">
+          <table class="t matrix">
+            <thead><tr><th>Automatisation</th><th>Rythme</th><th>Vault</th><th>DELIV'IA</th><th>Qonto</th><th>GHL</th><th>Notion</th><th>Slack</th></tr></thead>
+            <tbody>
+              <tr><td>Point du matin</td><td>Chaque jour 7 h</td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-2">Écriture</button></td></tr>
+              <tr><td>Veille de la semaine</td><td>Dimanche</td><td><button class="cell-level lvl-2">Écriture</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-2">Écriture</button></td><td><button class="cell-level lvl-2">Écriture</button></td></tr>
+              <tr><td>Tâches confiées à ATLAS</td><td>Toutes les 15 min</td><td><button class="cell-level lvl-2">Écriture</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-0">Aucun</button></td><td><button class="cell-level lvl-1">Lecture</button></td><td><button class="cell-level lvl-2">Écriture</button></td><td><button class="cell-level lvl-2">Écriture</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ REGISTRE ============ -->
+    <section class="view" id="v-registre">
+      <div class="page stack">
+        <div class="page-head" style="margin:0">
+          <h1>Registre</h1>
+          <span class="spacer"></span>
+          <div class="rel">
+            <button class="btn" onclick="toggleMenu('reg-menu')">Aujourd'hui · Tout le monde · Tous les outils <span class="faint">▾</span></button>
+            <div class="menu" id="reg-menu" style="width:280px">
+              <div class="field" style="padding:6px"><div class="label">Période</div><div class="seg pick"><button class="on">Aujourd'hui</button><button>7 jours</button><button>30 jours</button></div></div>
+              <div class="field" style="padding:6px"><div class="label">Personne</div><input class="input" placeholder="Tout le monde"></div>
+              <div class="field" style="padding:6px"><div class="label">Outil</div><input class="input" placeholder="Tous les outils"></div>
+              <label class="row small" style="padding:6px"><input type="checkbox"> Refus seulement</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="reg">
+          <div class="card list">
+            <div class="item clickable sel"><span class="avatar">CM</span><div class="grow"><div class="title">Rapprochement Qonto de septembre</div><div class="faint">Camille · Claude Code · 14 appels · 1 refus</div></div></div>
+            <div class="item clickable"><span class="avatar">HB</span><div class="grow"><div class="title">Écran des conventions intra</div><div class="faint">Hugo · Claude Code · 62 appels</div></div></div>
+            <div class="item clickable"><span class="avatar">LP</span><div class="grow"><div class="title">Relance des prospects de la semaine</div><div class="faint">Léa · Codex · 9 appels</div></div></div>
+            <div class="item clickable"><span class="kind k-tool" style="border-radius:50%;width:28px;height:28px;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700">A</span><div class="grow"><div class="title">Point du matin</div><div class="faint">Automatisation · 31 appels</div></div></div>
+          </div>
+
+          <div class="card pad">
+            <div class="row" style="margin-bottom:6px"><strong style="flex:1">Rapprochement Qonto de septembre</strong><span class="chip">Claude Code</span><span class="chip">camille@franceia.com</span></div>
+            <div class="tl">
+              <div class="ev"><time>10:02</time><span class="kind k-user">D</span><div class="body">Demande de Camille<span class="faint">« Rapproche les virements Qonto de septembre avec les factures… »</span></div></div>
+              <div class="ev"><time>10:02</time><span class="kind k-model">M</span><div class="body">Modèle Claude via le relais<span class="faint">compte Team de Camille · 12 400 jetons</span></div></div>
+              <div class="ev"><time>10:02</time><span class="kind k-vault">V</span><div class="body">vault.lire · context/process-facturation<span class="faint">droit Lecture ✓</span></div></div>
+              <div class="ev"><time>10:03</time><span class="kind k-tool">O</span><div class="body">qonto.lister_transactions<span class="faint">droit Lecture ✓ · clé ATLAS Qonto · réponse 200</span></div></div>
+              <div class="ev"><time>10:03</time><span class="kind k-tool">O</span><div class="body">delivia.lister_factures<span class="faint">droit Lecture ✓ · clé ATLAS DELIV'IA · réponse 200</span></div></div>
+              <div class="ev"><time>10:05</time><span class="kind k-ko">✕</span><div class="body"><span style="color:var(--rose);font-weight:500">qonto.creer_virement refusé</span><span class="faint">Camille a Lecture sur Qonto, pas Écriture · 403 · la clé n'a pas été utilisée</span></div></div>
+              <div class="ev"><time>10:06</time><span class="kind k-vault">V</span><div class="body">vault.proposer · context/process-facturation<span class="faint">proposition déposée, en attente de validation</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CLÉS ============ -->
+    <section class="view" id="v-cles">
+      <div class="page stack">
+        <div class="page-head" style="margin:0">
+          <h1>Clés</h1>
+          <div class="seg pick" id="cles-seg"><button class="on" data-t="cles-atlas">Clés ATLAS</button><button data-t="cles-apps">Clés des applications</button></div>
+          <span class="spacer"></span>
+          <span class="faint">Coffre 1Password · testées toutes les heures</span>
+        </div>
+
+        <div class="card scroll-x" id="cles-atlas">
+          <table class="t">
+            <thead><tr><th>Service</th><th>Utilisée par</th><th>État</th><th class="hide-sm">Dernier test</th><th>Prochain renouvellement</th><th class="hide-sm">Mode</th><th></th></tr></thead>
+            <tbody>
+              <tr class="clickable" onclick="openKey('Qualiobee','atlas','rose')"><td><strong>Qualiobee</strong></td><td>La porte</td><td><span class="chip rose"><span class="dot rose"></span>Refusée (401)</span></td><td class="hide-sm">il y a 12 min</td><td>Maintenant</td><td class="hide-sm">Guidé</td><td><button class="btn sm primary">Renouveler</button></td></tr>
+              <tr class="clickable" onclick="openKey('Stripe','atlas','amber')"><td><strong>Stripe</strong></td><td>La porte</td><td><span class="chip amber"><span class="dot amber"></span>Dans 6 jours</span></td><td class="hide-sm">il y a 12 min</td><td>04/10/2026</td><td class="hide-sm">Guidé</td><td><button class="btn sm">Renouveler</button></td></tr>
+              <tr class="clickable" onclick="openKey('Qonto','atlas','green')"><td><strong>Qonto</strong></td><td>La porte</td><td><span class="chip green"><span class="dot green"></span>Valide</span></td><td class="hide-sm">il y a 12 min</td><td>12/12/2026</td><td class="hide-sm">Guidé</td><td><button class="btn sm">Renouveler</button></td></tr>
+              <tr class="clickable" onclick="openKey('Notion','atlas','green')"><td><strong>Notion</strong></td><td>La porte</td><td><span class="chip green"><span class="dot green"></span>Valide</span></td><td class="hide-sm">il y a 12 min</td><td>20/12/2026</td><td class="hide-sm">Guidé</td><td><button class="btn sm">Renouveler</button></td></tr>
+              <tr class="clickable" onclick="openKey('Google','atlas','green')"><td><strong>Google</strong></td><td>La porte</td><td><span class="chip green"><span class="dot green"></span>Valide</span></td><td class="hide-sm">il y a 12 min</td><td>Automatique · 25/10</td><td class="hide-sm">Automatique</td><td></td></tr>
+              <tr class="clickable" onclick="openKey('Slack','atlas','green')"><td><strong>Slack</strong></td><td>La porte</td><td><span class="chip green"><span class="dot green"></span>Valide</span></td><td class="hide-sm">il y a 12 min</td><td>Automatique · 25/10</td><td class="hide-sm">Automatique</td><td></td></tr>
+              <tr class="clickable" onclick="openKey('GitHub','atlas','green')"><td><strong>GitHub</strong></td><td>La porte</td><td><span class="chip green"><span class="dot green"></span>Valide</span></td><td class="hide-sm">il y a 12 min</td><td>Automatique · 08/10</td><td class="hide-sm">Automatique</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card scroll-x" id="cles-apps" style="display:none">
+          <table class="t">
+            <thead><tr><th>Service</th><th>Utilisée par</th><th>État</th><th class="hide-sm">Dernier test</th><th>Prochain renouvellement</th><th class="hide-sm">Mode</th><th></th></tr></thead>
+            <tbody>
+              <tr class="clickable" onclick="openKey('Qonto','app','green','DELIV\'IA')"><td><strong>Qonto</strong></td><td>DELIV'IA · prod</td><td><span class="chip green"><span class="dot green"></span>Valide</span></td><td class="hide-sm">il y a 12 min</td><td>12/12/2026</td><td class="hide-sm">Guidé</td><td><button class="btn sm">Renouveler</button></td></tr>
+              <tr class="clickable" onclick="openKey('Qonto','app','green','DELIV\'IA recette')"><td><strong>Qonto (bac à sable)</strong></td><td>DELIV'IA · recette</td><td><span class="chip green"><span class="dot green"></span>Valide</span></td><td class="hide-sm">il y a 12 min</td><td>12/12/2026</td><td class="hide-sm">Guidé</td><td><button class="btn sm">Renouveler</button></td></tr>
+              <tr class="clickable" onclick="openKey('Stripe','app','green','ARD')"><td><strong>Stripe</strong></td><td>ARD · prod</td><td><span class="chip green"><span class="dot green"></span>Valide</span></td><td class="hide-sm">il y a 12 min</td><td>30/11/2026</td><td class="hide-sm">Guidé</td><td><button class="btn sm">Renouveler</button></td></tr>
+              <tr class="clickable" onclick="openKey('Base de données','app','green','Trésorerie')"><td><strong>Base de données</strong></td><td>Trésorerie · prod</td><td><span class="chip green"><span class="dot green"></span>Valide</span></td><td class="hide-sm">il y a 12 min</td><td>15/01/2027</td><td class="hide-sm">Guidé</td><td><button class="btn sm">Renouveler</button></td></tr>
+              <tr class="clickable" onclick="openKey('GHL','app','green','Data Dashboard')"><td><strong>GHL</strong></td><td>Data Dashboard · prod</td><td><span class="chip green"><span class="dot green"></span>Valide</span></td><td class="hide-sm">il y a 12 min</td><td>02/02/2027</td><td class="hide-sm">Guidé</td><td><button class="btn sm">Renouveler</button></td></tr>
+              <tr class="clickable" onclick="openKey('Slack','app','green','Espace apprenants')"><td><strong>Slack</strong></td><td>Espace apprenants · prod</td><td><span class="chip green"><span class="dot green"></span>Valide</span></td><td class="hide-sm">il y a 12 min</td><td>Automatique · 25/10</td><td class="hide-sm">Automatique</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SKILLS ============ -->
+    <section class="view" id="v-skills">
+      <div class="page stack">
+        <div class="page-head" style="margin:0"><h1>Skills</h1></div>
+        <div class="card">
+          <div class="row" style="padding:14px 16px 0"><h2 style="margin:0;flex:1">Proposées par l'équipe</h2></div>
+          <div class="list" style="margin-top:8px">
+            <div class="item"><span class="avatar">CM</span><div class="grow"><div class="title">Relecture de convention intra</div><div class="faint">Camille · utilisée 6 fois · lit DELIV'IA</div></div><button class="btn sm" onclick="done(this,'Refusée')">Refuser</button><button class="btn sm primary" onclick="done(this,'Ajoutée au catalogue')">Valider</button></div>
+            <div class="item"><span class="avatar">LP</span><div class="grow"><div class="title">Préparer un rendez-vous de closing</div><div class="faint">Léa · utilisée 11 fois · lit GHL</div></div><button class="btn sm" onclick="done(this,'Refusée')">Refuser</button><button class="btn sm primary" onclick="done(this,'Ajoutée au catalogue')">Valider</button></div>
+          </div>
+        </div>
+        <div class="card scroll-x">
+          <table class="t">
+            <thead><tr><th>Skill</th><th>Auteur</th><th>Utilisée</th><th class="hide-sm">Outils</th><th>Version</th></tr></thead>
+            <tbody>
+              <tr><td>Cadrer un projet</td><td>Camille</td><td class="num">48 fois</td><td class="hide-sm">Notion</td><td>v4</td></tr>
+              <tr><td>Rapprochement bancaire</td><td>Nicolas</td><td class="num">31 fois</td><td class="hide-sm">Qonto, DELIV'IA</td><td>v2</td></tr>
+              <tr><td>Chercher une salle de formation</td><td>Hugo</td><td class="num">17 fois</td><td class="hide-sm">Web</td><td>v3</td></tr>
+              <tr><td>Compte rendu de rendez-vous client</td><td>Léa</td><td class="num">14 fois</td><td class="hide-sm">GHL</td><td>v1</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PUBLICATIONS ============ -->
+    <section class="view" id="v-publications">
+      <div class="page stack">
+        <div class="page-head" style="margin:0"><h1>Publications</h1></div>
+        <div class="card scroll-x">
+          <table class="t">
+            <thead><tr><th>Date</th><th>Application</th><th>Étage</th><th class="hide-sm">Train</th><th>Publié par</th><th>Résultat</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="num">28/09 09:42</td><td>DELIV'IA</td><td>Prod</td><td class="hide-sm">4 PR · 1 changement de base</td><td>Camille</td><td><span class="chip green">Version servie vérifiée</span></td><td><button class="btn sm" onclick="toast('Retour à la version du 27/09 lancé')">Revenir en arrière</button></td></tr>
+              <tr><td class="num">28/09 09:15</td><td>Trésorerie</td><td>Prod</td><td class="hide-sm">1 PR</td><td>Nicolas</td><td><span class="chip green">Version servie vérifiée</span></td><td></td></tr>
+              <tr><td class="num">28/09 08:30</td><td>DELIV'IA V2</td><td>Pilote</td><td class="hide-sm">6 PR · 2 changements de base</td><td>Camille</td><td><span class="chip green">Version servie vérifiée</span></td><td></td></tr>
+              <tr><td class="num">27/09 17:05</td><td>Espace apprenants</td><td>Prod</td><td class="hide-sm">3 PR</td><td>Hugo</td><td><span class="chip rose">Retour arrière en 2 min</span></td><td></td></tr>
+              <tr><td class="num">27/09 11:20</td><td>ARD</td><td>Prod</td><td class="hide-sm">2 PR</td><td>Camille</td><td><span class="chip green">Version servie vérifiée</span></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ TIROIR D'UNE CLÉ ============ -->
+<aside class="drawer" id="key-drawer">
+  <div class="drawer-head"><strong id="kd-title">Qualiobee</strong><span class="chip" id="kd-fam">Clé ATLAS</span><button class="x" onclick="closeKey()">×</button></div>
+  <div class="drawer-body">
+    <div class="kv" id="kd-kv"></div>
+    <div>
+      <div class="label">Renouvellement guidé</div>
+      <div class="steps" id="kd-steps"></div>
+    </div>
+    <div>
+      <div class="label">Historique</div>
+      <div class="small muted" id="kd-hist"></div>
+    </div>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  function go(view) {
+    document.querySelectorAll('.nav button').forEach(x => x.classList.toggle('on', x.dataset.view === view));
+    document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.id === 'v-' + view));
+    closeKey();
+  }
+  document.querySelectorAll('.nav button').forEach(b => b.onclick = () => go(b.dataset.view));
+
+  // Sélecteurs segmentés : bascule de tableau quand data-t est présent
+  document.querySelectorAll('.seg.pick').forEach(seg => seg.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    seg.querySelectorAll('button[data-t]').forEach(x => { document.getElementById(x.dataset.t).style.display = x === b ? '' : 'none'; });
+  })));
+
+  // Niveaux d'accès : un clic fait défiler Aucun, Lecture, Écriture
+  const niveaux = ['Aucun', 'Lecture', 'Écriture'];
+  document.querySelectorAll('.matrix .cell-level').forEach(c => c.onclick = () => {
+    const i = (niveaux.indexOf(c.textContent) + 1) % 3;
+    c.textContent = niveaux[i];
+    c.className = 'cell-level lvl-' + i;
+    toast('Droit modifié · appliqué par la porte dès le prochain appel');
+  });
+
+  document.querySelectorAll('#v-registre .list .item').forEach(it => it.onclick = () => {
+    it.parentElement.querySelectorAll('.item').forEach(x => x.classList.toggle('sel', x === it));
+  });
+
+  function toggleMenu(id) { document.getElementById(id).classList.toggle('on'); }
+  document.addEventListener('click', e => { if (!e.target.closest('.rel')) document.querySelectorAll('.menu').forEach(m => m.classList.remove('on')); });
+  function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 2600); }
+  function done(btn, label) { const item = btn.closest('.item'); item.querySelectorAll('button').forEach(b => b.remove()); item.insertAdjacentHTML('beforeend', '<span class="chip ' + (label === 'Refusée' ? '' : 'green') + '">' + label + '</span>'); }
+
+  // Tiroir d'une clé : seule l'étape en cours se déploie
+  let etape = 0, etapes = [];
+  function openKey(service, famille, etat, app) {
+    event && event.stopPropagation();
+    const atlas = famille === 'atlas';
+    document.getElementById('kd-title').textContent = service + (app ? ' · ' + app : '');
+    document.getElementById('kd-fam').textContent = atlas ? 'Clé ATLAS' : 'Clé d\'application';
+    const etatTxt = { rose: 'Refusée par ' + service + ' au dernier test (401)', amber: 'Expire dans 6 jours', green: 'Valide' }[etat];
+    document.getElementById('kd-kv').innerHTML =
+      '<span>État</span><span>' + etatTxt + '</span>' +
+      '<span>Rangée dans</span><span>1Password · coffre « ' + (atlas ? 'ATLAS' : 'Applications') + ' » · ' + service + '</span>' +
+      '<span>Lue par</span><span>' + (atlas ? 'La porte des outils, jamais par un agent' : app + ', via ses variables Coolify') + '</span>' +
+      '<span>Droits de la clé</span><span>' + (atlas ? 'Lecture et écriture, filtrées par personne à la porte' : 'Limités à ce dont ' + app + ' a besoin') + '</span>' +
+      '<span>Créée le</span><span>14/06/2026 par Camille</span>';
+    etapes = [
+      ['Créer une nouvelle clé chez ' + service, 'Ouvre la page des clés de ' + service + ' et crée une clé avec les mêmes droits que l\'ancienne. Ne la colle nulle part ailleurs que dans 1Password.', 'Page des clés de ' + service],
+      ['La coller dans 1Password', 'Remplace la valeur de l\'élément « ' + service + ' » dans le coffre ' + (atlas ? 'ATLAS' : 'Applications') + '. La console ne voit jamais la clé.', 'Ouvrir 1Password'],
+      ['Tester la nouvelle clé', 'Le service « clés » fait un appel en lecture chez ' + service + '.', null],
+      atlas ? ['La porte relit la clé', 'Rien à redémarrer : la porte la relit au prochain appel.', null]
+            : ['Déposer dans ' + app + ' et redémarrer', 'Le service « clés » met à jour la variable dans le Coolify d\'APPLICATIONS et redémarre ' + app + '.', null],
+      ['Révoquer l\'ancienne clé', 'Supprime l\'ancienne clé chez ' + service + ' pour qu\'elle ne serve plus à personne.', 'Page des clés de ' + service]
+    ];
+    etape = 0; renderSteps();
+    document.getElementById('kd-hist').innerHTML = atlas
+      ? '14/06/2026 · créée par Camille<br>Chaque heure · test en lecture' + (etat === 'rose' ? '<br><span style="color:var(--rose)">28/09 09:48 · refusée par ' + service + ' (401)</span>' : ' · réussi')
+      : '14/06/2026 · créée par Camille<br>Chaque heure · test en lecture · réussi';
+    document.getElementById('key-drawer').classList.add('on');
+  }
+  function renderSteps() {
+    document.getElementById('kd-steps').innerHTML = etapes.map((e, i) => {
+      const cls = i < etape ? 'done' : i === etape ? 'now' : '';
+      let html = '<div class="step ' + cls + '">' + e[0];
+      if (i === etape) {
+        html += '<div class="now-card"><span class="small">' + e[1] + '</span><div class="row">';
+        if (e[2]) html += '<a href="#" onclick="toast(\'Ouvre ' + e[2].replace(/'/g, '\\\'') + '\');return false">' + e[2] + '</a>';
+        html += '<span class="spacer"></span><button class="btn sm primary" onclick="suivant()">' + (i === 2 ? 'Tester' : 'C\'est fait') + '</button></div></div>';
+      }
+      return html + '</div>';
+    }).join('') + (etape >= etapes.length ? '<div class="chip green" style="margin-top:10px">Clé renouvelée · inscrit au journal</div>' : '');
+  }
+  function suivant() { etape++; renderSteps(); if (etape === 3) toast('Test réussi · réponse 200'); }
+  function closeKey() { document.getElementById('key-drawer').classList.remove('on'); }
+</script>
+</body>
+</html>
