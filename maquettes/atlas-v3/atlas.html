@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ATLAS V3 · maquette</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .split { display: flex; height: calc(100vh - 32px); }
+  .sessions { width: 290px; flex: none; background: var(--surface); border-right: 1px solid var(--line); display: flex; flex-direction: column; }
+  .sessions > div:last-child { min-height: 0; }
+  .sessions .top { padding: 10px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--line); }
+  .group { padding: 8px 8px 0; }
+  .group-name { display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); }
+  .group-name::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .sess { display: flex; flex-direction: column; gap: 1px; width: 100%; padding: 7px 8px; border: 0; border-radius: 9px; background: none; text-align: left; color: var(--ink); }
+  .sess:hover { background: var(--surface-2); }
+  .sess.on { background: var(--blue-soft); color: var(--blue); }
+  .sess .t1 { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .sess .t2 { font-size: 11px; color: var(--ink-faint); padding-left: 12px; }
+  .term-zone { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 16px 20px; gap: 12px; overflow: auto; }
+  .term-zone .term { flex: 1; }
+  .sessions .btn.primary { justify-content: center; }
+  .term-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .acct-btn { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border: 1px solid var(--line-2); border-radius: 9px; background: var(--surface); font-size: 12px; }
+  .acct-btn .bar { width: 54px; }
+  .acct { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; padding: 10px; border-radius: 10px; }
+  .acct:hover { background: var(--surface-2); }
+  .acct .bar { grid-column: 1 / -1; }
+  .train-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; flex-wrap: wrap; }
+  .feu { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pr-row .grow .title { font-size: 13px; }
+  .prog { display: flex; flex-direction: column; gap: 8px; }
+  @media (max-width: 860px) {
+    .split { flex-direction: column; height: auto; }
+    .sessions { width: 100%; max-height: 300px; overflow: hidden; }
+  }
+</style>
+</head>
+<body class="atlas">
+<div class="demo">Maquette ATLAS V3 · données fictives <a href="securite.html">Console SÉCURITÉ</a><a href="../">Toutes les maquettes</a></div>
+
+<div class="app">
+  <nav class="rail">
+    <div class="brand"><div class="logo">A</div><span>ATLAS</span></div>
+    <div class="nav">
+      <button data-view="terminaux" class="on">Terminaux</button>
+      <button data-view="propositions">Propositions <span class="count">5</span></button>
+      <button data-view="compte">Mon compte</button>
+    </div>
+    <div class="rail-foot">
+      <span class="chip green"><span class="dot green"></span>Porte SÉCURITÉ</span>
+      <div class="me"><span class="avatar">CM</span>Camille Martin</div>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <!-- ============ TERMINAUX ============ -->
+    <section class="view on" id="v-terminaux">
+      <div class="split">
+        <aside class="sessions">
+          <div class="top">
+            <div class="seg" style="width:100%;grid-template-columns:1fr 1fr">
+              <button class="on">Sessions</button><button>Projets</button>
+            </div>
+            <input class="input" placeholder="Rechercher une session">
+            <button class="btn primary" onclick="openM('m-new')">Nouvelle session</button>
+          </div>
+          <div style="overflow:auto">
+            <div class="group">
+              <div class="group-name">Finance · 2</div>
+              <button class="sess on"><span class="t1"><span class="dot green"></span>Rapprochement Qonto de septembre</span><span class="t2">Claude Code · il y a 4 min</span></button>
+              <button class="sess"><span class="t1"><span class="dot"></span>Relances des factures OPCO</span><span class="t2">Codex · hier</span></button>
+            </div>
+            <div class="group">
+              <div class="group-name">DELIV'IA · 3</div>
+              <button class="sess"><span class="t1"><span class="dot green"></span>Écran des conventions intra</span><span class="t2">Claude Code · il y a 1 h</span></button>
+              <button class="sess"><span class="t1"><span class="dot"></span>Changement de date CPF</span><span class="t2">Claude Code · jeudi</span></button>
+              <button class="sess"><span class="t1"><span class="dot"></span>Export des émargements</span><span class="t2">OpenCode · lundi</span></button>
+            </div>
+            <div class="group">
+              <div class="group-name">Sans projet · 1</div>
+              <button class="sess"><span class="t1"><span class="dot"></span>Brouillon de post LinkedIn</span><span class="t2">Claude Code · 22/09</span></button>
+            </div>
+          </div>
+        </aside>
+
+        <div class="term-zone">
+          <div class="term-head">
+            <strong>Rapprochement Qonto de septembre</strong>
+            <span class="chip">Claude Code</span>
+            <span class="chip green"><span class="dot green"></span>Cœur du README chargé</span>
+            <span class="spacer"></span>
+            <div class="rel">
+              <button class="acct-btn" onclick="toggleMenu('acct-menu')">
+                <span>camille@franceia.com</span>
+                <span class="bar"><span style="width:62%"></span></span>
+                <span class="num muted">62 %</span>
+              </button>
+              <div class="menu" id="acct-menu">
+                <div class="label" style="padding:4px 10px">Comptes IA</div>
+                <div class="acct"><span><strong>camille@franceia.com</strong> <span class="faint">Claude Team</span></span><span class="chip accent">En cours</span><div class="bar"><span style="width:62%"></span></div><span class="faint">62 % utilisés · remis à zéro dans 2 h 10</span></div>
+                <div class="acct"><span><strong>camille.b@franceia.com</strong> <span class="faint">Claude Team</span></span><button class="btn sm" onclick="switchAcct(this)">Passer</button><div class="bar"><span style="width:8%"></span></div><span class="faint">8 % utilisés</span></div>
+                <div class="acct"><span><strong>camille@franceia.com</strong> <span class="faint">ChatGPT Business</span></span><span class="faint">Codex</span><div class="bar"><span style="width:35%"></span></div><span class="faint">35 % utilisés</span></div>
+                <div class="row" style="padding:8px 10px;border-top:1px solid var(--line);margin-top:4px"><span class="small grow" style="flex:1">Bascule automatique</span><button class="switch on" onclick="this.classList.toggle('on')"></button></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="term">
+            <div class="u">› Rapproche les virements Qonto de septembre avec les factures DELIV'IA et signale les écarts.</div>
+            <br>
+            <div class="a">● Je lis d'abord la fiche du process de facturation.</div>
+            <div class="ln dim">⎿ <span class="tool">vault.lire</span> context/process-facturation · <span class="ok">porte ✓</span></div>
+            <br>
+            <div class="a">● <span class="tool">qonto.lister_transactions</span> (septembre)</div>
+            <div class="ln dim">⎿ <span class="ok">porte ✓</span> lecture Qonto accordée · 214 transactions</div>
+            <div class="a">● <span class="tool">delivia.lister_factures</span> (septembre)</div>
+            <div class="ln dim">⎿ <span class="ok">porte ✓</span> · 187 factures</div>
+            <br>
+            <div class="a">● 3 virements n'ont pas de facture. Je prépare le virement de régularisation.</div>
+            <div class="a">● <span class="tool">qonto.creer_virement</span> (…)</div>
+            <div class="ln"><span class="ko">⎿ porte ✗ refusé : l'écriture sur Qonto n'est pas accordée à Camille</span></div>
+            <br>
+            <div class="a">● Pas de droit d'écriture sur Qonto, je m'arrête là. Voici les 3 écarts, et je dépose la règle de rapprochement dans le vault, en proposition.</div>
+            <div class="ln dim">⎿ <span class="tool">vault.proposer</span> context/process-facturation · <span class="ok">proposition déposée</span></div>
+            <div class="term-input">› <span>Écris ta demande</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROPOSITIONS ============ -->
+    <section class="view" id="v-propositions">
+      <div class="page">
+        <div class="page-head">
+          <h1>Propositions</h1>
+          <div class="seg" id="prop-seg">
+            <button class="on" data-tab="p-vault">Vault · 2</button>
+            <button data-tab="p-code">Code · 3</button>
+          </div>
+        </div>
+
+        <div id="p-vault" class="tab on">
+          <div class="grid2" style="grid-template-columns:minmax(0,5fr) minmax(0,7fr)">
+            <div class="card list">
+              <div class="item clickable sel">
+                <span class="dot amber"></span>
+                <div class="grow"><div class="title">Règle de rapprochement des virements Qonto</div><div class="faint">Agent de Camille · Rapprochement Qonto de septembre · il y a 3 min</div></div>
+              </div>
+              <div class="item clickable">
+                <span class="dot amber"></span>
+                <div class="grow"><div class="title">Nouvelle salle à Lyon Part-Dieu</div><div class="faint">Agent d'Hugo · Ouverture de Lyon · hier</div></div>
+              </div>
+            </div>
+            <div class="card pad stack">
+              <div class="row"><strong class="grow" style="flex:1">Règle de rapprochement des virements Qonto</strong><span class="chip mono">context/process-facturation.md</span></div>
+              <div class="diff">
+                <div class="ctx">## Rapprochement bancaire</div>
+                <div class="ctx">Chaque mois, les virements reçus sont rapprochés des factures.</div>
+                <div class="del">- Le rapprochement se fait à la main dans Qonto.</div>
+                <div class="add">+ Un virement se rapproche par la référence de la facture, puis par</div>
+                <div class="add">+ le montant et le nom du client sur 7 jours.</div>
+                <div class="add">+ Un virement sans facture est signalé, jamais régularisé par un agent.</div>
+              </div>
+              <div class="row"><span class="faint grow" style="flex:1">Impact : 2 fiches citent cette règle</span><button class="btn" onclick="toast('Proposition refusée')">Refuser</button><button class="btn primary" onclick="toast('Proposition validée et versée au vault')">Valider</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="p-code" class="tab" style="display:none">
+          <div class="stack">
+            <div class="card">
+              <div class="train-head">
+                <strong>DELIV'IA</strong><span class="chip">Prod</span>
+                <span class="faint">Train du 28/09 · 4 PR</span>
+                <span class="spacer"></span>
+                <div class="feu">
+                  <span class="chip green"><span class="dot green"></span>Vérifications 4/4</span>
+                  <span class="chip green"><span class="dot green"></span>0 test retiré</span>
+                  <span class="chip amber"><span class="dot amber"></span>Relecture : 1 point</span>
+                  <span class="chip accent">1 changement de base</span>
+                </div>
+                <button class="btn primary" onclick="openM('m-publier')">Publier</button>
+              </div>
+              <div class="list" style="border-top:1px solid var(--line)">
+                <div class="item pr-row"><span class="dot green"></span><div class="grow"><div class="title">Relances des factures OPCO à J+30</div><div class="faint">#1412 · Claude Code · session de Camille</div></div><span class="tag">Zone rouge</span></div>
+                <div class="item pr-row"><span class="dot green"></span><div class="grow"><div class="title">Filtre par ville sur la liste des sessions</div><div class="faint">#1413 · Codex · session d'Hugo</div></div></div>
+                <div class="item pr-row"><span class="dot green"></span><div class="grow"><div class="title">Colonne « relancé le » sur les factures</div><div class="faint">#1414 · Claude Code · migration en deux temps, étape 1</div></div></div>
+                <div class="item pr-row"><span class="dot green"></span><div class="grow"><div class="title">Libellé du bouton de convocation</div><div class="faint">#1415 · Claude Code · session de Léa</div></div></div>
+                <div class="item pr-row" style="background:var(--rose-soft)"><span class="dot rose"></span><div class="grow"><div class="title">Export des émargements en PDF</div><div class="faint">#1416 · reste à quai · un test échoue, l'agent corrige, essai 2 sur 3</div></div></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="train-head">
+                <strong>Trésorerie</strong><span class="chip">Prod</span>
+                <span class="faint">Train du 28/09 · 1 PR</span>
+                <span class="spacer"></span>
+                <div class="feu"><span class="chip green"><span class="dot green"></span>Vérifications 1/1</span><span class="chip green"><span class="dot green"></span>0 test retiré</span></div>
+                <button class="btn primary" onclick="toast('Train Trésorerie publié · version servie vérifiée')">Publier</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="train-head">
+                <strong>ARD</strong><span class="chip">Prod</span>
+                <span class="faint">Rien à publier</span>
+                <span class="spacer"></span>
+                <button class="btn" disabled>Publier</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MON COMPTE ============ -->
+    <section class="view" id="v-compte">
+      <div class="page">
+        <div class="page-head"><h1>Mon compte</h1></div>
+        <div class="grid2">
+          <div class="card pad stack">
+            <div class="row"><h2 style="margin:0;flex:1">Mes comptes IA</h2><button class="btn sm" onclick="openM('m-brancher-ia')">Brancher un compte</button></div>
+            <div class="stack" style="gap:12px">
+              <div><div class="row"><strong>camille@franceia.com</strong><span class="faint">Claude Team</span><span class="spacer"></span><span class="chip accent">En cours</span></div><div class="bar" style="margin:8px 0 4px"><span style="width:62%"></span></div><div class="faint">62 % utilisés · remis à zéro dans 2 h 10</div></div>
+              <div><div class="row"><strong>camille.b@franceia.com</strong><span class="faint">Claude Team</span><span class="spacer"></span><span class="faint">En réserve</span></div><div class="bar" style="margin:8px 0 4px"><span style="width:8%"></span></div><div class="faint">8 % utilisés</div></div>
+              <div><div class="row"><strong>camille@franceia.com</strong><span class="faint">ChatGPT Business</span><span class="spacer"></span><span class="faint">Codex</span></div><div class="bar" style="margin:8px 0 4px"><span style="width:35%"></span></div><div class="faint">35 % utilisés</div></div>
+            </div>
+            <div class="row" style="border-top:1px solid var(--line);padding-top:12px"><span style="flex:1">Bascule automatique quand un compte est épuisé</span><button class="switch on" onclick="this.classList.toggle('on')"></button></div>
+          </div>
+
+          <div class="card pad stack">
+            <div class="row"><h2 style="margin:0;flex:1">Mes skills</h2><a href="#" onclick="toast('Catalogue : 42 skills de la boîte');return false">Skills de la boîte · 42</a></div>
+            <div class="list" style="margin:0 -18px">
+              <div class="item"><div class="grow"><div class="title">Compte rendu de rendez-vous client</div><div class="faint">Utilisée 14 fois</div></div><button class="btn sm" onclick="propose(this)">Proposer à l'équipe</button></div>
+              <div class="item"><div class="grow"><div class="title">Relecture de convention intra</div><div class="faint">Utilisée 6 fois</div></div><span class="chip amber">Proposée, en attente</span></div>
+              <div class="item"><div class="grow"><div class="title">Tri de ma boîte mail du lundi</div><div class="faint">Utilisée 3 fois</div></div><button class="btn sm" onclick="propose(this)">Proposer à l'équipe</button></div>
+            </div>
+          </div>
+
+          <div class="card pad stack">
+            <div class="row"><h2 style="margin:0;flex:1">Mes connexions</h2><button class="btn sm" onclick="openM('m-connexion')">Brancher un outil</button></div>
+            <div class="list" style="margin:0 -18px">
+              <div class="item"><span class="dot green"></span><div class="grow"><div class="title">Mon agenda Google</div><div class="faint">Réservé à Camille · clé dans son coffre</div></div><button class="btn sm" onclick="toast('Connexion débranchée')">Débrancher</button></div>
+              <div class="item"><span class="dot green"></span><div class="grow"><div class="title">Todoist</div><div class="faint">Réservé à Camille · clé dans son coffre</div></div><button class="btn sm" onclick="toast('Connexion débranchée')">Débrancher</button></div>
+            </div>
+          </div>
+
+          <div class="card pad stack">
+            <div class="row"><h2 style="margin:0;flex:1">Mes droits</h2><button class="btn sm" onclick="toast('Demande envoyée aux administrateurs')">Demander un accès</button></div>
+            <table class="t">
+              <tbody>
+                <tr><td>Vault</td><td><span class="cell-level lvl-2">Proposer</span></td></tr>
+                <tr><td>DELIV'IA</td><td><span class="cell-level lvl-2">Écriture</span></td></tr>
+                <tr><td>Qonto</td><td><span class="cell-level lvl-1">Lecture</span></td></tr>
+                <tr><td>GHL</td><td><span class="cell-level lvl-2">Écriture</span></td></tr>
+                <tr><td>Notion</td><td><span class="cell-level lvl-2">Écriture</span></td></tr>
+                <tr><td>Stripe</td><td><span class="cell-level lvl-0">Aucun</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ FENÊTRES ============ -->
+<div class="overlay" id="m-new" onclick="if(event.target===this)closeM(this)">
+  <div class="modal">
+    <div class="modal-head"><strong>Nouvelle session</strong><button class="x" onclick="closeM(this)">×</button></div>
+    <div class="modal-body">
+      <div class="field"><div class="label">Moteur</div><div class="seg pick"><button class="on">Claude Code</button><button>Codex</button><button>OpenCode</button></div></div>
+      <div class="field"><div class="label">Compte IA</div>
+        <label class="option on pickopt"><span class="dot green"></span><span style="flex:1">camille@franceia.com · Claude Team</span><span class="faint">62 %</span></label>
+        <label class="option pickopt"><span class="dot green"></span><span style="flex:1">camille.b@franceia.com · Claude Team</span><span class="faint">8 %</span></label>
+      </div>
+      <div class="field"><div class="label">Projet</div><button class="btn" style="justify-content:space-between;width:100%">Finance · Rapprochement bancaire <span class="faint">▾</span></button></div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="closeM(this)">Annuler</button><button class="btn primary" onclick="closeM(this);toast('Session ouverte · cœur du README chargé')">Ouvrir</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="m-publier" onclick="if(event.target===this)closeM(this)">
+  <div class="modal">
+    <div class="modal-head"><strong>Publier le train DELIV'IA sur la prod</strong><button class="x" onclick="closeM(this)">×</button></div>
+    <div class="modal-body" id="pub-body">
+      <div><div class="label">Ce qui part · 4 PR</div>
+        <div class="small">Relances des factures OPCO à J+30 <span class="tag">Zone rouge</span><br>Filtre par ville sur la liste des sessions<br>Colonne « relancé le » sur les factures<br>Libellé du bouton de convocation</div>
+      </div>
+      <div><div class="label">Base de données</div><div class="small">1 changement, ajout d'une colonne : recette d'abord, puis prod</div></div>
+      <div><div class="label">Relecture par Codex · 1 point</div>
+        <div class="card pad small" style="box-shadow:none">Les relances partent-elles aussi pour une facture déjà payée en partie ?<br><span class="muted">Réponse de l'agent : non, la relance filtre sur le reste à payer, test ajouté.</span></div>
+      </div>
+      <label class="row small"><input type="checkbox" id="pub-ok" onchange="document.getElementById('pub-go').disabled=!this.checked"> J'ai lu le point de relecture</label>
+    </div>
+    <div class="modal-foot" id="pub-foot"><button class="btn" onclick="closeM(this)">Annuler</button><button class="btn primary" id="pub-go" disabled onclick="publier()">Publier sur la prod</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="m-brancher-ia" onclick="if(event.target===this)closeM(this)">
+  <div class="modal">
+    <div class="modal-head"><strong>Brancher un compte IA</strong><button class="x" onclick="closeM(this)">×</button></div>
+    <div class="modal-body">
+      <label class="option on pickopt"><span style="flex:1">Claude · compte d'équipe France IA</span></label>
+      <label class="option pickopt"><span style="flex:1">ChatGPT · compte d'équipe France IA</span></label>
+      <div class="faint">Seuls les comptes de l'espace France IA sont acceptés.</div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="closeM(this)">Annuler</button><button class="btn primary" onclick="closeM(this);toast('Connexion ouverte dans un nouvel onglet')">Se connecter</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="m-connexion" onclick="if(event.target===this)closeM(this)">
+  <div class="modal">
+    <div class="modal-head"><strong>Brancher un outil</strong><button class="x" onclick="closeM(this)">×</button></div>
+    <div class="modal-body">
+      <input class="input" placeholder="Rechercher un outil">
+      <label class="option pickopt"><span style="flex:1">Google Agenda</span><span class="faint">Branché</span></label>
+      <label class="option on pickopt"><span style="flex:1">Trello</span></label>
+      <label class="option pickopt"><span style="flex:1">Linear</span></label>
+      <div class="faint">La clé va dans ton coffre personnel. Personne d'autre ne peut s'en servir.</div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="closeM(this)">Annuler</button><button class="btn primary" onclick="closeM(this);toast('Trello branché · réservé à Camille')">Brancher</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // Navigation
+  document.querySelectorAll('.nav button').forEach(b => b.onclick = () => {
+    document.querySelectorAll('.nav button').forEach(x => x.classList.toggle('on', x === b));
+    document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.id === 'v-' + b.dataset.view));
+  });
+  // Onglets des propositions
+  document.querySelectorAll('#prop-seg button').forEach(b => b.onclick = () => {
+    document.querySelectorAll('#prop-seg button').forEach(x => x.classList.toggle('on', x === b));
+    document.querySelectorAll('#v-propositions .tab').forEach(t => t.style.display = t.id === b.dataset.tab ? '' : 'none');
+  });
+  // Sélecteurs segmentés et options
+  document.querySelectorAll('.seg.pick button, .sessions .seg button').forEach(b => b.addEventListener('click', () => {
+    b.parentElement.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  }));
+  document.querySelectorAll('.pickopt').forEach(o => o.onclick = () => {
+    o.parentElement.querySelectorAll('.pickopt').forEach(x => x.classList.toggle('on', x === o));
+  });
+  document.querySelectorAll('.sess').forEach(s => s.onclick = () => {
+    document.querySelectorAll('.sess').forEach(x => x.classList.toggle('on', x === s));
+  });
+  function openM(id) { document.getElementById(id).classList.add('on'); }
+  function closeM(el) { (el.closest ? el.closest('.overlay') : el).classList.remove('on'); }
+  function toggleMenu(id) { document.getElementById(id).classList.toggle('on'); }
+  document.addEventListener('click', e => { if (!e.target.closest('.rel')) document.querySelectorAll('.menu').forEach(m => m.classList.remove('on')); });
+  function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 2600); }
+  function switchAcct(btn) { toast('Session suivante sur camille.b@franceia.com'); document.getElementById('acct-menu').classList.remove('on'); }
+  function propose(btn) { btn.outerHTML = '<span class="chip amber">Proposée, en attente</span>'; toast('Skill proposée · un administrateur la validera'); }
+  function publier() {
+    const etapes = ['Changement de base appliqué sur la recette', 'Changement de base appliqué sur la prod', 'Mise en ligne de la nouvelle version', 'Version servie vérifiée'];
+    const body = document.getElementById('pub-body');
+    body.innerHTML = '<div class="steps" id="pub-steps">' + etapes.map(e => '<div class="step">' + e + '</div>').join('') + '</div>';
+    document.getElementById('pub-foot').innerHTML = '<span class="faint" style="margin-right:auto">Publication en cours</span>';
+    const s = document.querySelectorAll('#pub-steps .step');
+    s[0].classList.add('now');
+    s.forEach((el, i) => setTimeout(() => { el.classList.remove('now'); el.classList.add('done'); if (s[i + 1]) s[i + 1].classList.add('now'); }, 700 * (i + 1)));
+    setTimeout(() => {
+      const b = document.querySelector('#p-code .btn.primary'); b.disabled = true; b.classList.remove('primary'); b.textContent = 'Publié';
+      document.getElementById('pub-foot').innerHTML = '<span class="faint" style="margin-right:auto">Publié par Camille · inscrit au journal</span><button class="btn primary" onclick="closeM(this)">Fermer</button>';
+    }, 700 * etapes.length + 300);
+  }
+</script>
+</body>
+</html>
