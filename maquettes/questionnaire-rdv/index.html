@@ -102,7 +102,7 @@
   function renderAvant() {
     var nb = situation() === "self" ? 3 : 1;
     var b = blocage();
-    var h = '<form id="question-form" novalidate><h1 id="question-title">' + (nb === 1 ? "Une dernière réponse pour confirmer votre rendez-vous" : "3 réponses pour confirmer votre rendez-vous") + "</h1>";
+    var h = '<form id="question-form" novalidate><h1 id="question-title">' + (nb === 1 ? "On parle d'IA, mais c'est bien un humain qui se libère pour vous :)" : "3 réponses pour confirmer votre rendez-vous") + "</h1>";
     if (situation() === "self") {
       h += '<div class="bloc"><p class="field-label">Notre formation se déroule sur 2 jours en présentiel, en petit groupe.</p><fieldset class="choices duo">' +
         option("format", "presentiel", "Je souhaite me former en présentiel") +
@@ -124,7 +124,7 @@
       }
       h += "</div>";
     }
-    h += '<div class="bloc"><p class="field-label">On parle d\'IA, mais c\'est bien un humain qui se libère pour vous :)</p><fieldset class="choices">' +
+    h += '<div class="bloc">' + (nb === 1 ? "" : '<p class="field-label">On parle d\'IA, mais c\'est bien un humain qui se libère pour vous :)</p>') + '<fieldset class="choices">' +
       option("presence", "1", "Je m'engage à être présent" + (equipe() ? "" : "(e)") + " à la visio", true) + "</fieldset></div></form>";
     panel.innerHTML = h;
     actions.innerHTML = '<button type="button" class="back-button" id="retour">Retour</button>' + (b
