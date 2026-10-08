@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Votre rendez-vous · France IA</title>
+<link rel="stylesheet" href="./styles.css">
+<style>
+  .devbar { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; padding: 8px 16px; background: #f4f4f4; font: 13px system-ui, sans-serif; color: #555; }
+  .devbar select, .devbar button { font: inherit; padding: 5px 10px; border: 1px solid #ccc; border-radius: 6px; background: #fff; color: #222; cursor: pointer; }
+  .bloc { display: grid; gap: 10px; margin-top: 26px; }
+  .bloc .field-label { margin: 0; font-weight: 700; font-size: 16px; color: #162544; }
+  .bloc .question-helper { margin: 0; }
+  .sous-bloc { display: grid; gap: 10px; margin-top: 4px; padding-left: 14px; border-left: 2px solid #dce5ff; }
+  .bloquant { display: grid; gap: 8px; padding: 12px 14px; border-radius: 12px; background: #fff6e6; border: 1px solid #f3d9a4; color: #4a3510; font-size: 14px; line-height: 1.5; }
+  .bloquant .liens { display: flex; flex-wrap: wrap; gap: 16px; }
+  .lien { font: inherit; font-weight: 600; color: #2450f5; background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .lien-discret { justify-self: start; font-size: 14px; color: #67748c; font-weight: 500; }
+  .creneau-retenu .lien { margin-left: auto; white-space: nowrap; }
+  .creneau-retenu.confirme { background: #eaf7f0; border-color: #bfe6cf; color: #14532d; }
+  .apres { margin-top: 34px; padding-top: 26px; border-top: 1px solid #e0e6f0; display: grid; gap: 8px; }
+  .apres h2 { margin: 0; font-size: 20px; color: #162544; }
+  .apres p { margin: 0; color: #67748c; }
+  textarea.text-input { min-height: 120px; resize: vertical; font: inherit; }
+  #question-form .choices { margin-top: 0; }
+  .choices.duo { grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .choices.duo { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="devbar">Maquette · rien n'est enregistré
+  <label for="situation">Situation :</label>
+  <select id="situation">
+    <option value="self">Me former</option>
+    <option value="team">Former mes collaborateurs</option>
+    <option value="integrate">Intégrer l'IA</option>
+  </select>
+  <button type="button" id="recommencer">Recommencer</button>
+</div>
+<div class="app-shell">
+  <div class="workspace">
+    <main id="main" class="main-area booking-mode">
+      <div id="form-progress" class="journey-progress" hidden>
+        <div class="journey-caption"><span class="journey-message"></span><span class="journey-percent" aria-hidden="true"></span></div>
+        <div class="journey-rail" role="progressbar" aria-label="Progression" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="journey-fill"></div></div>
+      </div>
+      <p id="creneau-retenu" class="creneau-retenu" hidden></p>
+      <section id="question" class="question-panel" tabindex="-1" aria-labelledby="question-title"></section>
+      <div class="form-actions" id="form-actions"></div>
+    </main>
+  </div>
+</div>
+<template id="calendrier">
+<div class="booking-card">
+    <div class="booking-picker"><div class="booking-entete"><p class="booking-brand">France <em>IA</em></p><div class="booking-tags"><span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M3 20v-2a7 5 0 0 1 14 0v2M17 4a3 3 0 0 1 0 6M19 14a4 4 0 0 1 3 4v2"></path></svg> Visioconférence</span><span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M12 7v5l3 2"></path></svg> 40 minutes</span></div></div><h1 id="question-title">Choisissez une date et un horaire</h1><div class="booking-columns"><div class="booking-calendar"><div class="calendar-heading"><span aria-live="polite">octobre 2026</span><div><button type="button" class="calendar-nav" id="previous-month" aria-label="Mois précédent" disabled=""><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H4m6-6-6 6 6 6"></path></svg></button><button type="button" class="calendar-nav" id="next-month" aria-label="Mois suivant"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"></path></svg></button></div></div><div class="calendar-week" aria-hidden="true"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div><div class="calendar-days" role="group" aria-label="Dates proposées"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><button type="button" class="calendar-day" data-booking-date="2026-10-01" disabled="" aria-label="jeudi 1 octobre 2026" aria-pressed="false">1</button><button type="button" class="calendar-day" data-booking-date="2026-10-02" disabled="" aria-label="vendredi 2 octobre 2026" aria-pressed="false">2</button><button type="button" class="calendar-day" data-booking-date="2026-10-03" disabled="" aria-label="samedi 3 octobre 2026" aria-pressed="false">3</button><button type="button" class="calendar-day" data-booking-date="2026-10-04" disabled="" aria-label="dimanche 4 octobre 2026" aria-pressed="false">4</button><button type="button" class="calendar-day" data-booking-date="2026-10-05" disabled="" aria-label="lundi 5 octobre 2026" aria-pressed="false">5</button><button type="button" class="calendar-day" data-booking-date="2026-10-06" disabled="" aria-label="mardi 6 octobre 2026" aria-pressed="false">6</button><button type="button" class="calendar-day" data-booking-date="2026-10-07" disabled="" aria-label="mercredi 7 octobre 2026" aria-pressed="false">7</button><button type="button" class="calendar-day" data-booking-date="2026-10-08" disabled="" aria-label="jeudi 8 octobre 2026" aria-pressed="false">8</button><button type="button" class="calendar-day" data-booking-date="2026-10-09" aria-label="vendredi 9 octobre 2026" aria-pressed="true">9</button><button type="button" class="calendar-day" data-booking-date="2026-10-10" disabled="" aria-label="samedi 10 octobre 2026" aria-pressed="false">10</button><button type="button" class="calendar-day" data-booking-date="2026-10-11" disabled="" aria-label="dimanche 11 octobre 2026" aria-pressed="false">11</button><button type="button" class="calendar-day" data-booking-date="2026-10-12" aria-label="lundi 12 octobre 2026" aria-pressed="false">12</button><button type="button" class="calendar-day" data-booking-date="2026-10-13" aria-label="mardi 13 octobre 2026" aria-pressed="false">13</button><button type="button" class="calendar-day" data-booking-date="2026-10-14" aria-label="mercredi 14 octobre 2026" aria-pressed="false">14</button><button type="button" class="calendar-day" data-booking-date="2026-10-15" aria-label="jeudi 15 octobre 2026" aria-pressed="false">15</button><button type="button" class="calendar-day" data-booking-date="2026-10-16" aria-label="vendredi 16 octobre 2026" aria-pressed="false">16</button><button type="button" class="calendar-day" data-booking-date="2026-10-17" disabled="" aria-label="samedi 17 octobre 2026" aria-pressed="false">17</button><button type="button" class="calendar-day" data-booking-date="2026-10-18" disabled="" aria-label="dimanche 18 octobre 2026" aria-pressed="false">18</button><button type="button" class="calendar-day" data-booking-date="2026-10-19" aria-label="lundi 19 octobre 2026" aria-pressed="false">19</button><button type="button" class="calendar-day" data-booking-date="2026-10-20" aria-label="mardi 20 octobre 2026" aria-pressed="false">20</button><button type="button" class="calendar-day" data-booking-date="2026-10-21" aria-label="mercredi 21 octobre 2026" aria-pressed="false">21</button><button type="button" class="calendar-day" data-booking-date="2026-10-22" aria-label="jeudi 22 octobre 2026" aria-pressed="false">22</button><button type="button" class="calendar-day" data-booking-date="2026-10-23" aria-label="vendredi 23 octobre 2026" aria-pressed="false">23</button><button type="button" class="calendar-day" data-booking-date="2026-10-24" disabled="" aria-label="samedi 24 octobre 2026" aria-pressed="false">24</button><button type="button" class="calendar-day" data-booking-date="2026-10-25" disabled="" aria-label="dimanche 25 octobre 2026" aria-pressed="false">25</button><button type="button" class="calendar-day" data-booking-date="2026-10-26" aria-label="lundi 26 octobre 2026" aria-pressed="false">26</button><button type="button" class="calendar-day" data-booking-date="2026-10-27" aria-label="mardi 27 octobre 2026" aria-pressed="false">27</button><button type="button" class="calendar-day" data-booking-date="2026-10-28" aria-label="mercredi 28 octobre 2026" aria-pressed="false">28</button><button type="button" class="calendar-day" data-booking-date="2026-10-29" aria-label="jeudi 29 octobre 2026" aria-pressed="false">29</button><button type="button" class="calendar-day" data-booking-date="2026-10-30" aria-label="vendredi 30 octobre 2026" aria-pressed="false">30</button><button type="button" class="calendar-day" data-booking-date="2026-10-31" disabled="" aria-label="samedi 31 octobre 2026" aria-pressed="false">31</button></div><p class="booking-timezone"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M12 7v5l3 2"></path></svg> Heure de Paris</p></div>
+    <div class="booking-times" role="group" aria-label="Créneaux proposés"><p class="booking-date-heading" aria-live="polite">vendredi 9 oct.</p><div class="booking-slots"><button type="button" class="booking-slot" data-booking-time="09:00" aria-pressed="false">09:00</button><button type="button" class="booking-slot" data-booking-time="10:30" aria-pressed="false">10:30</button><button type="button" class="booking-slot" data-booking-time="11:30" aria-pressed="false">11:30</button><button type="button" class="booking-slot" data-booking-time="14:00" aria-pressed="false">14:00</button><button type="button" class="booking-slot" data-booking-time="15:30" aria-pressed="false">15:30</button><button type="button" class="booking-slot" data-booking-time="17:00" aria-pressed="false">17:00</button></div></div></div></div></div></template>
+<script>
+(function () {
+  var ICONS = {
+    check: "m5 12 4 4L19 6",
+    calendar: "M4 5h16v16H4zM8 3v4m8-4v4M4 10h16M8 14h1m6 0h1M8 17h1"
+  };
+  function icon(n) { return '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICONS[n] + '"/></svg>'; }
+  function esc(v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+
+  var panel = document.getElementById("question");
+  var actions = document.getElementById("form-actions");
+  var bandeau = document.getElementById("creneau-retenu");
+  var progress = document.getElementById("form-progress");
+  var main = document.querySelector(".main-area");
+  var tpl = document.getElementById("calendrier").innerHTML;
+
+  var S;
+  function reset() { S = { vue: "calendrier", jour: "vendredi 9 octobre", heure: "10:30", a: {}, etape: 0, apres: {} }; }
+  reset();
+  function situation() { return document.getElementById("situation").value; }
+  function equipe() { return situation() === "team"; }
+
+  /* ---------- Écran 2 : les réponses obligatoires ---------- */
+  function option(cle, val, label, multi) {
+    var on = multi ? !!S.a[cle] : S.a[cle] === val;
+    return '<label class="option ' + (on ? "selected" : "") + '"><input type="' + (multi ? "checkbox" : "radio") + '" name="' + cle + '" value="' + val + '" data-cle="' + cle + '"' + (on ? " checked" : "") + '><span class="option-copy">' + label + '</span><span class="option-selector ' + (multi ? "multi " : "") + (on ? "checked" : "") + '" aria-hidden="true">' + icon("check") + "</span></label>";
+  }
+  function bloquant(texte, cle) {
+    return '<div class="bloquant"><span>' + texte + '</span><div class="liens"><button type="button" class="lien" data-annuler="' + cle + '">Changer ma réponse</button><button type="button" class="lien" data-rappel="1">Être rappelé par un conseiller</button></div></div>';
+  }
+  function blocage() {
+    if (situation() !== "self") return null;
+    if (S.a.format === "distanciel") return "format";
+    if (S.a.financement === "impossible") return "financement";
+    if (S.a.financement === "cpf" && S.a.diplome === "moins") return "diplome";
+    return null;
+  }
+  function complet() {
+    if (situation() !== "self") return !!S.a.presence;
+    if (S.a.format !== "presentiel") return false;
+    if (S.a.financement !== "propre" && S.a.financement !== "cpf") return false;
+    if (S.a.financement === "cpf" && (S.a.diplome !== "plus" || !S.a.identite)) return false;
+    return !!S.a.presence;
+  }
+  function renderAvant() {
+    var nb = situation() === "self" ? 3 : 1;
+    var b = blocage();
+    var h = '<form id="question-form" novalidate><h1 id="question-title">' + (nb === 1 ? "Une dernière réponse pour confirmer votre rendez-vous" : "3 réponses pour confirmer votre rendez-vous") + "</h1>";
+    if (situation() === "self") {
+      h += '<div class="bloc"><p class="field-label">Notre formation se déroule sur 2 jours en présentiel, en petit groupe.</p><fieldset class="choices duo">' +
+        option("format", "presentiel", "Je souhaite me former en présentiel") +
+        option("format", "distanciel", "Je cherche une formation à distance") + "</fieldset>";
+      if (b === "format") h += bloquant("Nos formations sont uniquement en présentiel : on apprend en pratiquant ensemble, en petit groupe avec un formateur. Si c'est un frein, notre équipe peut vous rappeler pour en parler.", "format");
+      h += "</div>";
+      h += '<div class="bloc"><p class="field-label">La formation coûte 1 650 €. Je peux la financer…</p><fieldset class="choices duo">' +
+        option("financement", "propre", "En fonds propres") +
+        option("financement", "cpf", "Avec mon CPF") + "</fieldset>";
+      if (S.a.financement !== "impossible") h += '<button type="button" class="lien lien-discret" data-cle="financement" data-val="impossible">Je ne peux pas financer cette formation</button>';
+      if (b === "financement") h += bloquant("Nous ne pouvons accorder aucune réduction. Notre formation est éligible au CPF, sous réserve de remplir les conditions d'accès. Notre équipe peut vous rappeler pour étudier les possibilités.", "financement");
+      if (S.a.financement === "cpf") {
+        h += '<div class="sous-bloc"><p class="field-label">Mon diplôme le plus élevé est…</p><fieldset class="choices duo">' +
+          option("diplome", "moins", "Inférieur au bac+2") +
+          option("diplome", "plus", "Égal ou supérieur au bac+2") + "</fieldset>";
+        if (b === "diplome") h += bloquant("Pour un financement CPF, notre certificateur demande un diplôme de niveau bac+2 ou supérieur. Vous pouvez financer la formation en fonds propres, ou en parler avec notre équipe.", "diplome");
+        if (S.a.diplome === "plus") h += '<fieldset class="choices">' + option("identite", "1", "Je m'engage à télécharger et activer l'application Identité Numérique La Poste avant le rendez-vous", true) + '</fieldset><p class="question-helper">Elle est indispensable pour utiliser votre CPF. Le téléchargement seul ne suffit pas : allez au bout de l\'activation.</p>';
+        h += "</div>";
+      }
+      h += "</div>";
+    }
+    h += '<div class="bloc"><p class="field-label">On parle d\'IA, mais c\'est bien un humain qui se libère pour vous :)</p><fieldset class="choices">' +
+      option("presence", "1", "Je m'engage à être présent" + (equipe() ? "" : "(e)") + " à la visio", true) + "</fieldset></div></form>";
+    panel.innerHTML = h;
+    actions.innerHTML = '<button type="button" class="back-button" id="retour">Retour</button>' + (b
+      ? '<button type="button" class="primary-button" id="rappel">Être rappelé</button>'
+      : '<button type="button" class="primary-button" id="confirmer"' + (complet() ? "" : " disabled") + ">Confirmer mon rendez-vous</button>");
+  }
+
+  /* ---------- Écran 3 : confirmé, puis questions facultatives ---------- */
+  var APRES = [
+    { cle: "metier", type: "text", titre: function () { return "Quel est votre métier ?"; }, ph: "Ex. : commercial, comptable, consultant…" },
+    { cle: "entreprise", type: "text", titre: function () { return "Quel est le nom de votre entreprise ?"; }, ph: "Nom de l'entreprise" },
+    { cle: "niveau", type: "single", titre: function () { return equipe() ? "Où en est votre équipe avec l'IA ?" : "Où en êtes-vous avec l'IA ?"; }, options: ["Je débute", "J'utilise ChatGPT ou Claude de temps en temps", "Je m'en sers tous les jours", "Je crée déjà des assistants, des agents ou des automatisations"] },
+    { cle: "besoin", type: "area", titre: function () { return "De quoi avez-vous vraiment besoin ?"; }, ph: "Par exemple : un agent qui trie automatiquement mes mails…", aide: "Notre expert IA s'en sert pour préparer le rendez-vous." },
+    { cle: "quand", type: "single", titre: function () { return equipe() ? "Je souhaite que mon équipe commence…" : "Je veux commencer…"; }, options: ["Le plus rapidement possible", "D'ici 1 à 4 mois", "Dans plus de 4 mois"] }
+  ];
+  function champ(q) {
+    var v = S.apres[q.cle] || "";
+    if (q.type === "text") return '<input id="champ-' + q.cle + '" class="text-input" data-apres="' + q.cle + '" maxlength="160" placeholder="' + esc(q.ph) + '" value="' + esc(v) + '">';
+    if (q.type === "area") return '<textarea id="champ-' + q.cle + '" class="text-input" data-apres="' + q.cle + '" maxlength="1200" placeholder="' + esc(q.ph) + '">' + esc(v) + "</textarea>" + (q.aide ? '<p class="question-helper">' + q.aide + "</p>" : "");
+    return '<fieldset class="choices">' + q.options.map(function (o, i) {
+      var on = v === o;
+      return '<label class="option ' + (on ? "selected" : "") + '"><input type="radio" name="' + q.cle + '" value="' + esc(o) + '" data-apres-choix="' + q.cle + '"' + (on ? " checked" : "") + '><span class="option-copy">' + esc(o) + '</span><span class="option-selector ' + (on ? "checked" : "") + '" aria-hidden="true">' + icon("check") + "</span></label>";
+    }).join("") + "</fieldset>";
+  }
+  function creneauLong() { return S.jour.charAt(0).toUpperCase() + S.jour.slice(1) + " 2026"; }
+  function renderConfirme() {
+    var q = APRES[0];
+    panel.innerHTML = '<div class="confirmation-slide"><h1 id="question-title">Votre rendez-vous est confirmé !</h1><div class="confirmation-booking"><div class="confirmation-slot">' + icon("calendar") + "<div><strong>" + creneauLong() + "</strong><span>" + S.heure + ' · 40 min · heure de Paris</span></div></div><button type="button" class="calendar-button">Ajouter à mon agenda</button></div>' +
+      '<div class="apres"><h2>Quelques questions pour que l\'on prépare au mieux notre rencontre</h2><p>Facultatif · 5 questions courtes</p></div>' +
+      '<form id="question-form" novalidate><div class="bloc"><p class="field-label">' + q.titre() + "</p>" + champ(q) + "</div></form></div>";
+    actionsApres();
+  }
+  function renderApres() {
+    if (S.etape >= APRES.length) {
+      progress.hidden = true;
+      bandeau.hidden = true;
+      panel.innerHTML = '<div class="confirmation-slide"><h1 id="question-title">Merci, c\'est noté !</h1><p class="question-helper">Votre expert IA a tout ce qu\'il faut pour préparer votre rendez-vous du ' + S.jour + " à " + S.heure + ".</p></div>";
+      actions.innerHTML = "";
+      return;
+    }
+    var q = APRES[S.etape];
+    var pct = Math.round(S.etape / APRES.length * 100);
+    progress.hidden = false;
+    progress.querySelector(".journey-message").textContent = "Préparer notre rencontre · facultatif";
+    progress.querySelector(".journey-percent").textContent = pct + " %";
+    progress.querySelector(".journey-fill").style.width = pct + "%";
+    bandeau.hidden = false;
+    bandeau.className = "creneau-retenu confirme";
+    bandeau.innerHTML = icon("calendar") + "<span>Rendez-vous confirmé : " + S.jour + " à " + S.heure + ".</span>";
+    panel.innerHTML = '<form id="question-form" novalidate><h1 id="question-title">' + q.titre() + "</h1>" + champ(q) + "</form>";
+    actionsApres();
+  }
+  function actionsApres() {
+    var q = APRES[S.etape];
+    var rempli = (S.apres[q.cle] || "").trim() !== "";
+    actions.innerHTML = '<button type="button" class="back-button" id="passer">Passer</button><button type="button" class="primary-button" id="suivant"' + (rempli ? "" : " disabled") + ">" + (S.etape === APRES.length - 1 ? "Terminer" : "Continuer") + "</button>";
+  }
+
+  function renderRappel() {
+    panel.innerHTML = '<div class="confirmation-slide"><h1 id="question-title">Votre demande de rappel est enregistrée.</h1><p class="question-helper">Notre équipe pourra échanger avec vous sur votre projet. Aucun rendez-vous n\'est confirmé.</p></div>';
+    actions.innerHTML = "";
+  }
+
+  function render() {
+    main.classList.toggle("booking-mode", S.vue === "calendrier");
+    if (S.vue !== "apres") { progress.hidden = true; }
+    if (S.vue === "calendrier") { bandeau.hidden = true; panel.innerHTML = tpl; actions.innerHTML = ""; return; }
+    if (S.vue === "avant") {
+      bandeau.hidden = false;
+      bandeau.className = "creneau-retenu";
+      bandeau.innerHTML = icon("calendar") + "<span>Créneau retenu : " + S.jour + " à " + S.heure + '.</span><button type="button" class="lien" id="changer">Changer</button>';
+      renderAvant(); return;
+    }
+    bandeau.hidden = true;
+    if (S.vue === "confirme") return renderConfirme();
+    if (S.vue === "apres") return renderApres();
+    if (S.vue === "rappel") return renderRappel();
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("button");
+    if (!t) return;
+    if (t.classList.contains("calendar-day") && !t.disabled) {
+      panel.querySelectorAll(".calendar-day").forEach(function (d) { d.setAttribute("aria-pressed", String(d === t)); });
+      S.jour = t.getAttribute("aria-label").replace(/ 2026$/, "");
+      var titre = panel.querySelector(".booking-date-heading"); if (titre) titre.textContent = S.jour.charAt(0).toUpperCase() + S.jour.slice(1);
+      tpl = panel.innerHTML; return;
+    }
+    if (t.classList.contains("booking-slot")) { S.heure = t.textContent.trim(); S.vue = "avant"; render(); window.scrollTo(0, 0); return; }
+    if (t.id === "changer" || (t.id === "retour")) { S.vue = "calendrier"; render(); return; }
+    if (t.dataset.annuler) { var c = t.dataset.annuler; delete S.a[c]; if (c === "financement") { delete S.a.diplome; delete S.a.identite; } render(); return; }
+    if (t.dataset.cle) { S.a[t.dataset.cle] = t.dataset.val; delete S.a.diplome; delete S.a.identite; render(); return; }
+    if (t.dataset.rappel || t.id === "rappel") { S.vue = "rappel"; render(); return; }
+    if (t.id === "confirmer" && complet()) { S.vue = "confirme"; S.etape = 0; render(); window.scrollTo(0, 0); return; }
+    if (t.id === "passer" || t.id === "suivant") {
+      S.etape++; S.vue = "apres"; render(); window.scrollTo(0, 0); return;
+    }
+  });
+  document.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.dataset.cle) {
+      var c = t.dataset.cle;
+      if (t.type === "checkbox") S.a[c] = t.checked; else S.a[c] = t.value;
+      if (c === "financement") { delete S.a.diplome; delete S.a.identite; }
+      if (c === "diplome") delete S.a.identite;
+      render(); return;
+    }
+    if (t.dataset.apresChoix) { S.apres[t.dataset.apresChoix] = t.value; S.vue === "confirme" ? renderConfirme() : renderApres(); }
+  });
+  document.addEventListener("input", function (e) {
+    var t = e.target;
+    if (t.dataset.apres) {
+      S.apres[t.dataset.apres] = t.value;
+      var b = document.getElementById("suivant"); if (b) b.disabled = t.value.trim() === "";
+    }
+  });
+  document.getElementById("situation").addEventListener("change", function () { S.a = {}; if (S.vue === "avant") render(); });
+  document.getElementById("recommencer").addEventListener("click", function () { tpl = document.getElementById("calendrier").innerHTML; reset(); render(); window.scrollTo(0, 0); });
+  render();
+})();
+</script>
+</body>
+</html>
