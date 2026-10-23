@@ -509,7 +509,7 @@ const ROX = {
   mailAnnul: {type:"mail", de:"La setteuse", objet:"Annulation de votre rendez-vous France IA", corps:"Bonjour [Prénom],\n\nN'ayant pas reçu votre confirmation dans le délai indiqué (18 h la veille), nous avons procédé à l'annulation de votre rendez-vous du [JJ/MM] à [HH:MM]. Si vous souhaitez échanger avec notre équipe, vous pouvez répondre à ce mail ou réserver un nouveau créneau via ce lien : [Lien de prise de RDV].\n\nBelle continuation,\n[Prénom du setter] — France IA"},
 };
 
-/* Messages du parcours proposé. Revus le 23/10 au soir : un message, une seule chose. */
+/* Messages du parcours proposé. Revus le 23/10 : un message, une seule chose ; le RDV n'est confirmé qu'après l'appel, ou par le lead. */
 const PRO = {
   programme: {type:"mail", de:"{prénom setteuse}, depuis sa boîte Gmail", objet:"Votre programme France IA",
     corps:"Bonjour {prénom},\n\nMerci pour votre intérêt pour les formations France IA. Voici le programme : [[retrouver le programme ici]]\n\nPrenez le temps de le lire : je vous appelle {aujourd'hui ou demain matin} pour en parler avec vous.\n\nÀ bientôt,\n{prénom setteuse}\nFrance IA",
@@ -517,30 +517,33 @@ const PRO = {
     more:"Le mail actuel, plus une phrase. Il part au formulaire, avant même la réservation : c'est le même mail, que le lead prenne RDV ou non. La phrase « vous pouvez répondre à cet email » tombe : il vient de la boîte Gmail de la setteuse, on peut y répondre de toute façon. Pas de « répondez non » (écarté par Nizar et Tanguy le 23/10) ; un « non » reçu arrête tout. {aujourd'hui ou demain matin} dépend de l'heure d'arrivée (avant ou après 19 h)."},
   confirm: {type:"mail", de:"{prénom closer}, depuis sa boîte Gmail", objet:"Votre rendez-vous France IA du {jour} à {heure}",
     corps:"Bonjour {prénom},\n\nJe vous confirme notre rendez-vous du {jour} à {heure}, en visio, pour faire le point sur votre projet : {lien Meet}\n\n((financement CPF|Pour utiliser votre CPF, installez et activez avant le rendez-vous l'application Identité Numérique de La Poste. C'est un prérequis.\nApp Store : {lien App Store}\nPlay Store : {lien Play Store}))\n\nUn empêchement ? Décalez votre rendez-vous ici : {lien Décaler}\n\nÀ très vite,\n{prénom closer}\nFrance IA",
-    why:"Il confirme : la date, le lien et, pour le CPF, l'Identité Numérique à préparer. Rien d'autre.",
-    more:"Le mail actuel, raccourci. Le programme et l'appel de la setteuse sont dans le mail qui part une minute avant : inutile de les répéter. La consigne Identité Numérique est celle d'aujourd'hui, avec « avant le rendez-vous ». L'objet donne la date ; l'ancien, « Rappel pour votre rendez-vous », annonçait un rappel alors que c'est la confirmation."},
+    why:"Il confirme un RDV qui vient d'être confirmé de vive voix : la date, le lien et, pour le CPF, l'Identité Numérique à préparer. Rien d'autre.",
+    more:"Le mail actuel, raccourci, et envoyé au bon moment : quand la setteuse passe la fiche en « Setté », après l'appel. Aujourd'hui, il part à la réservation : le lead lit « je vous confirme notre rendez-vous » avant que quiconque lui ait parlé, puis la setteuse l'appelle « pour confirmer ». La consigne Identité Numérique est celle d'aujourd'hui, avec « avant le rendez-vous ». L'objet donne la date ; l'ancien, « Rappel pour votre rendez-vous », annonçait un rappel alors que c'est la confirmation."},
   qualif: {type:"script", label:"Pendant l'appel : la grille de qualification de CRMIA", corps:"Métier, besoins, niveau en IA, pour quand. « Les deux jours en présentiel vous conviennent ? »\n\n« Vous avez pu regarder le programme ? » Sinon, le renvoyer pendant l'appel.\n\nFinancement souhaité.\n\n((financement CPF|Bac+2 ?\n\n« Votre application Identité Numérique La Poste est-elle installée et activée ? » Sinon : envoyer le lien de l'application pendant l'appel, et obtenir l'engagement de la préparer avant le RDV. Refus : lead disqualifié, « Identité numérique non préparée ».))",
     why:"Les cases que CRMIA fait déjà remplir, dans l'ordre. Deux gestes en plus : renvoyer le programme s'il n'est pas lu, envoyer le lien de l'application pendant l'appel.",
     more:"Leads CPF, RDV pris du 01 au 19/10 : quand la case « Identité numérique » est remplie à la qualification, 64 ventes pour 187 RDV honorés (34 %) ; quand elle est vide, 1 vente pour 22. La case vide signale surtout un lead jamais qualifié : c'est une corrélation. Ceux qui n'avaient pas encore l'application mais se sont engagés à la préparer ont fait 17 ventes pour 43 RDV honorés, autant que ceux qui l'avaient déjà (44 pour 130)."},
-  scriptRdv: {type:"script", label:"Pour finir l'appel : confirmer", corps:"« Vous avez bien reçu l'invitation pour {jour} à {heure} ? Vous pouvez l'accepter maintenant : elle s'ajoute à votre agenda. »",
-    why:"Le lead confirme de vive voix et met le RDV dans son agenda. C'est la confirmation : aucun message de plus n'est nécessaire.",
+  scriptRdv: {type:"script", label:"Pour finir l'appel : confirmer", corps:"« C'est confirmé pour {jour} à {heure}. Vous recevez la confirmation par mail, avec le lien. L'invitation est aussi dans votre agenda : vous pouvez l'accepter maintenant. »",
+    why:"Le RDV est confirmé de vive voix, et le lead le met dans son agenda. Le mail de confirmation part juste après.",
     more:`Faire noter son RDV au patient : 18 % d'absences en moins ${R("martin")}. Faire écrire la date et l'heure prévues : +4,2 points de vaccination, alors que la date seule ne change rien ${R("milkman11")}.`},
-  vocalRdv: {type:"script", label:"Message vocal, au 1er appel manqué seulement", corps:"Bonjour {prénom}, c'est {prénom setteuse}, de France IA, au sujet de votre rendez-vous du {jour}. Je vous rappelle un peu plus tard. Bonne journée.",
-    why:"Qui appelle, et pourquoi : le 2e appel ne vient plus d'un numéro inconnu. Un seul vocal, pas un à chaque appel.",
-    more:`Dans une étude observationnelle, un rappel laissé sur messagerie donne 24 % d'absences, contre 39 % quand personne n'est joint ${R("teo")}. Le vocal 1 de Roxane dure environ une minute à l'oral ; celui-ci, une dizaine de secondes.`},
-  ouiNon: {type:"sms", de:"Ligne Allô de la setteuse · réponse possible", corps:"Bonjour {prénom}, c'est {prénom setteuse} de France IA. Je n'ai pas réussi à vous joindre. Votre rendez-vous du {jour} à {heure} tient toujours ? Répondez OUI ou NON. Sans réponse avant 18 h la veille, je l'annulerai.",
-    why:"Une seule question, une seule fois, après 3 appels sans réponse. OUI : le RDV est gardé. NON : il est annulé, sans autre message. Dans les deux cas, les appels s'arrêtent.",
-    more:`Il remplace la trame de Roxane : un SMS de plus de 300 caractères, et un mail qui répète la même chose. Il part de la ligne Allô de la setteuse, pour que la réponse lui arrive : un SMS « FranceIA » ne peut pas en recevoir ${R("twilio")}. Dans un pilote, 58 % des patients qui n'avaient pas confirmé sont venus quand même ${R("stephenson")} : d'où le test avant de généraliser l'annulation.`},
+  smsAppel: {type:"sms", de:"Ligne Allô de la setteuse · réponse possible", corps:"Bonjour {prénom}, c'est {prénom setteuse} de France IA. Je n'ai pas réussi à vous joindre au sujet de votre rendez-vous du {jour} à {heure}. Pouvons-nous nous appeler ? Dites-moi quand. Si vous préférez éviter l'appel, répondez OUI pour confirmer le rendez-vous, ou NON pour l'annuler.",
+    why:"Le schéma de Tanguy : qui appelle et pourquoi, puis une question simple. Le lead choisit : un appel au moment qui l'arrange, ou une confirmation sans appel. Sa réponse décide de la suite.",
+    more:`Il part de la ligne Allô de la setteuse, pour que la réponse lui arrive : un SMS « FranceIA » ne peut pas en recevoir ${R("twilio")}. Il remplace le message vocal de la version précédente et, chez Roxane, un vocal et un SMS de plus de 400 caractères. Un seul SMS de ce type par RDV : sans réponse, les appels suivants partent sans nouveau message.`},
+  smsInfos: {type:"sms", de:"Ligne Allô de la setteuse", corps:"Merci {prénom}, votre rendez-vous du {jour} à {heure} avec {prénom closer} est confirmé, en visio : {lien Meet}\n((financement CPF|Pour utiliser votre CPF, installez et activez avant le rendez-vous l'application Identité Numérique de La Poste. C'est un prérequis. Tuto : {lien du tuto}))\nPensez à lire le programme reçu par mail.\n{prénom setteuse}, France IA",
+    why:"Ce que l'appel aurait apporté, en un SMS : la date, le lien et, pour le CPF, l'Identité Numérique à préparer.",
+    more:"Demandé par Tanguy le 23/10, pour le lead qui confirme sans vouloir d'appel. Il remplace, pour ce lead, le mail de confirmation. Pas de lien « Décaler » : Tanguy l'a écarté des SMS le 22/10. Le lien du tuto Identité Numérique est celui du SMS de la veille."},
+  smsNon: {type:"sms", de:"Ligne Allô de la setteuse", corps:"C'est noté, j'ai annulé votre rendez-vous. Bonne journée,\n{prénom setteuse}",
+    why:"Une ligne pour dire que c'est fait. Ensuite, plus rien.",
+    more:"Si le lead dit ne plus être intéressé, la setteuse pose aussi « Ne pas contacter » sur sa fiche."},
   mailAnnul: {type:"mail", de:"{prénom setteuse}, depuis sa boîte Gmail", objet:"Votre rendez-vous France IA est annulé",
-    corps:"Bonjour {prénom},\n\nSans réponse de votre part, j'ai annulé votre rendez-vous du {jour} à {heure}.\n\nSi votre projet tient toujours, choisissez un nouveau créneau ici : [[choisir un créneau]]\n\nBelle journée,\n{prénom setteuse}\nFrance IA",
+    corps:"Bonjour {prénom},\n\nJe n'ai pas réussi à vous joindre pour confirmer votre rendez-vous du {jour} à {heure} : je l'ai donc annulé.\n\nSi votre projet tient toujours, choisissez un nouveau créneau ici : [[choisir un créneau]]\n\nBelle journée,\n{prénom setteuse}\nFrance IA",
     why:"Un seul message : ce qui s'est passé, et la porte ouverte. Ensuite, on ne rappelle pas (règle de Roxane).",
-    more:"Roxane envoie un SMS et un mail d'annulation ; un des deux suffit. Le mail garde le lien, et se lit quand le lead le veut."},
+    more:"Ce RDV n'avait jamais été confirmé : la page et le mail programme annonçaient l'appel pour le confirmer, et le SMS demandait une réponse. Roxane envoie un SMS et un mail d'annulation ; un des deux suffit. Le mail garde le lien, et se lit quand le lead le veut."},
   smsH1: {type:"sms", de:"Expéditeur « FranceIA » · aucune réponse attendue", corps:"Bonjour {prénom}, je vous attends à {heure} pour notre échange en visio : {lien Meet}\nÀ tout à l'heure,\n{prénom closer}, France IA",
     why:"Le lien, au moment où le lead le cherche. Rien d'autre à lire.",
     more:`Penn Medicine envoie le lien seul 10 minutes avant chaque téléconsultation ${R("penn")} ; les éditeurs de prise de RDV conseillent 1 h, 15 min ou 1 min avant ${R("editeurs")}. Aucun essai ne compare ces moments entre eux : d'où le test proposé plus bas.`},
-  vocalMql: {type:"script", label:"Message vocal, au 1er appel manqué seulement", corps:"Bonjour {prénom}, c'est {prénom setteuse}, de France IA, au sujet du programme que vous avez demandé. Je vous rappelle un peu plus tard. Bonne journée.",
-    why:"Qui appelle, et pourquoi. Un seul vocal, pas un à chaque appel.",
-    more:`Un message vocal fait déjà mieux que pas de contact du tout (24 % d'absences contre 39 % sans réponse, étude observationnelle) ${R("teo")}.`},
+  smsAppelMql: {type:"sms", de:"Ligne Allô de la setteuse · réponse possible", corps:"Bonjour {prénom}, c'est {prénom setteuse} de France IA. Je n'ai pas réussi à vous joindre au sujet du programme que vous avez demandé. Pouvons-nous nous appeler ? Dites-moi quand.",
+    why:"Le même SMS que pour un RDV, sans la confirmation : qui appelle, pourquoi, et le lead choisit le moment.",
+    more:`Il remplace le message vocal de la version précédente. Il part de la ligne Allô de la setteuse, pour que la réponse lui arrive ${R("twilio")}.`},
   scriptMql: {type:"script", label:"Pour finir l'appel : poser le RDV", corps:"« Je vous propose {jour} à {heure} avec {prénom closer}. Je vous envoie l'invitation : vous pouvez l'accepter pendant qu'on est en ligne. »",
     why:"Le RDV se pose pendant l'appel, au plus proche, et le lead le confirme lui-même.",
     more:`Les RDV posés par l'équipe le jour même ont été honorés 9 fois sur 10 en octobre. Faire noter date et heure au lead réduit les absences ${R("milkman11", "martin")}.`},
@@ -720,48 +723,51 @@ roxane: {
 /* ===================== 3. PARCOURS PROPOSÉ ===================== */
 propose: {
   num:"3", nom:"Parcours proposé", titre:"Le parcours que je propose",
-  intro:"Simple : un mail qui explique, un mail qui confirme, l'appel de la setteuse et, pour le lead qu'on ne joint pas, une seule question : oui ou non. L'effort va aux appels, parce que c'est le décroché qui fait venir, mais 3 tentatives au plus, puis on arrête. Le programme et, pour le CPF, l'Identité Numérique sont demandés par écrit et vérifiés pendant l'appel. Revu le 23/10 au soir, après la plainte d'un client qui s'est dit harcelé : un lead joint ne reçoit rien de plus qu'aujourd'hui.",
+  intro:"Simple et cohérent, sur le schéma de Tanguy du 23/10 : un RDV n'est confirmé qu'après avoir parlé au lead, ou quand il le confirme lui-même. À la réservation, la page et le mail programme annoncent l'appel. Joint, le lead est qualifié, le RDV confirmé, et le mail de confirmation part. Pas joint : un seul SMS, « pouvons-nous nous appeler ? Sinon, confirmez-vous le rendez-vous ? ». OUI : un SMS avec le lien et l'Identité Numérique. NON, ou rien à 18 h la veille : annulé. 3 tentatives d'appel au plus. Un lead joint ne reçoit rien de plus qu'aujourd'hui.",
   detailLabel:"Pourquoi",
   paths:{
     rdv:{
       resume:[
         {n:"1 h", l:"objectif pour le 1er appel en journée (aujourd'hui : 2 h 40)"},
         {n:"3", l:"tentatives d'appel au plus, 2 par jour au plus, puis on arrête"},
-        {n:"4", l:"messages automatiques, comme aujourd'hui, plus courts : programme, confirmation, veille, 1 h avant"},
-        {n:"+2", l:"pour le lead jamais joint seulement : un vocal au 1er appel manqué, puis « oui ou non » après le 3e"},
+        {n:"4", l:"messages pour un lead joint, comme aujourd'hui : programme, confirmation après l'appel, veille, 1 h avant"},
+        {n:"1", l:"SMS au lead pas joint : « on peut s'appeler ? Sinon, vous confirmez ? » Sa réponse décide de la suite"},
       ],
       moments:[
         {t:"T0", sub:"le lead choisit son créneau", steps:[
-          {canal:"page", qui:"Formulaire", tag:"same", n:"Page « on va vous appeler »", titre:"Page « Restez disponible, nous allons vous appeler »", court:"Déjà en place. Elle prépare le lead à décrocher.", msg:MSG_PAGE_AUJ},
+          {canal:"page", qui:"Formulaire", tag:"same", n:"Page « on va vous appeler »", titre:"Page « Restez disponible, nous allons vous appeler »", court:"Déjà en place : « nous allons vous appeler pour confirmer le rendez-vous ». Elle prépare le lead à décrocher.", msg:MSG_PAGE_AUJ},
           {canal:"mail", qui:"Gmail de la setteuse, automatique", tag:"mod", n:"Mail qui explique", titre:"Mail programme : le programme à lire, l'appel qui arrive", court:"Le mail actuel, plus une phrase : « Prenez le temps de le lire : je vous appelle aujourd'hui pour en parler avec vous. »", msg:PRO.programme,
             detail:`<p>Il part au formulaire, avant la réservation : c'est le même mail que pour une demande sans RDV.</p><p>Aujourd'hui, il donne le lien du programme sans dire qu'il faut le lire, ni qu'un appel arrive. L'ancien mail GHL « Rendez-vous IA à préparer » le disait : « Pour que le rendez-vous soit efficace, je vous invite à consulter notre programme. »</p>`},
-          {canal:"agenda", qui:"Agenda Google du closer", tag:"same", n:"Invitation Google Meet", titre:"Invitation Google avec le lien Meet", court:"Le RDV entre dans l'agenda du lead s'il l'accepte ; la setteuse le lui fera faire pendant l'appel.",
+          {canal:"agenda", qui:"Agenda Google du closer", tag:"same", n:"Invitation Google Meet", titre:"Invitation Google avec le lien Meet", court:"Elle réserve le créneau dans l'agenda du lead, sans valoir confirmation ; la setteuse la lui fait accepter pendant l'appel. Retirée si le RDV est annulé.",
             detail:`<p>Aucun essai ne mesure l'invitation seule. Elle fait partie du dispositif de Penn Medicine (absences de 4,5 % à 3,9 % sur 1,36 million de visites) ${R("penn")}. Elle ne coûte rien et elle porte le lien Meet.</p>`},
-          {canal:"mail", qui:"Gmail du closer, automatique", tag:"mod", n:"Mail qui confirme", titre:"Mail de confirmation, plus court", court:"La date, le lien Meet, la consigne Identité Numérique pour le CPF (déjà là aujourd'hui) et le lien « Décaler ». Rien d'autre.", msg:PRO.confirm,
-            detail:`<p>Le lead reçoit trois mails dans la même minute : le programme, l'invitation Google et cette confirmation. Chacun fait une seule chose : le premier explique, les deux autres confirment.</p><p>La consigne Identité Numérique est celle du mail actuel, pour les leads qui ont choisi le CPF au formulaire.</p>`},
         ]},
         {t:"Dans l'heure", sub:"objectif, aux heures d'appel en semaine", note:["Hors de ces plages : file du matin à 10 h, par ordre d'arrivée", "Ordre fixé par la colonne « Priorités » de CRMIA"], steps:[
           {canal:"appel", qui:"Setteuse", tag:"mod", n:"1er appel dans l'heure", titre:"1er appel dans l'heure, le plus tôt possible", court:"Un objectif, pas une règle : les setteuses sont en freelance, environ 4 h par jour. Aujourd'hui 2 h 40 en médiane ; appelé dans l'heure, un lead décroche à 60 %, contre 45 %.",
             detail:`<p>En octobre, dans les 15 minutes : 70 % de décroché (20 cas seulement). Dans la vente, contacter en moins d'une heure rend la qualification environ 7 fois plus probable ${R("hbr")} ; entre 5 et 30 minutes, les chances sont divisées par 21 ${R("lrm")}.</p><p>Pour s'en approcher sans règle impossible à tenir (proposition de Nizar) : CRMIA attribue le lead à une setteuse en service, et fait remonter en tête de la colonne « Priorités » un lead toujours pas appelé au bout d'une heure.</p><p>Les plages horaires sont celles du démarchage téléphonique (voir « Point conformité »). Elles ne coûtent presque rien : en semaine, le décroché ne change presque pas selon l'heure (32 % à 35 % d'une tranche à l'autre). Du 01 au 22/10, 454 appels de setteuse sur 3 646 sont partis en semaine avant 10 h ou entre 13 h et 14 h : ceux-là seraient à déplacer.</p><p>35 % des leads arrivent la nuit et 23 % le week-end : la file du matin compte autant que la vitesse en journée.</p>`},
-          {pour:"joint", canal:"appel", qui:"Setteuse", tag:"mod", n:"Qualifier et confirmer", titre:"Il décroche : qualifier (programme, Identité Numérique), puis confirmer le RDV", court:"La grille de CRMIA : programme lu, et pour le CPF, bac+2 et Identité Numérique prête ou promise avant le RDV. Puis le lead accepte l'invitation : le RDV est confirmé de vive voix.", msgs:[PRO.qualif, PRO.scriptRdv],
+          {pour:"joint", canal:"appel", qui:"Setteuse", tag:"mod", n:"Qualifier et confirmer", titre:"Il décroche : qualifier (programme, Identité Numérique), puis confirmer le RDV", court:"La grille de CRMIA : programme lu, et pour le CPF, bac+2 et Identité Numérique prête ou promise avant le RDV. Puis le RDV est confirmé de vive voix, et le lead accepte l'invitation.", msgs:[PRO.qualif, PRO.scriptRdv],
             detail:`<p>Leads CPF, RDV pris du 01 au 19/10 : qui n'avait pas encore l'Identité Numérique mais a promis de la préparer a fait 17 ventes pour 43 RDV honorés, autant que qui l'avait déjà (44 pour 130). La préparer entre l'appel et le RDV marche, à condition de le demander pendant l'appel.</p><p>C'est le levier le plus fort : un lead joint vient à 81 %, un lead jamais joint à 45 %. Une partie de l'écart tient à la motivation (ceux qui décrochent sont aussi les plus intéressés), mais les essais confirment l'effet du contact humain : 13,6 % d'absences avec un appel du personnel, 17,3 % avec un automate, 23,1 % sans rien ${R("parikh")}.</p>`},
-          {pour:"joint", canal:"crm", qui:"Setteuse", tag:"same", n:"Setté - RDV pris quali", titre:"« Setté - RDV pris quali »", court:"Plus aucun appel ensuite : le lead joint ne reçoit que les deux rappels, comme aujourd'hui."},
-          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"Vocal, une seule fois", titre:"Pas de réponse : un message vocal de dix secondes, une seule fois", court:"Qui appelle, et pourquoi. Pas de SMS, et pas de vocal aux appels suivants.", msg:PRO.vocalRdv,
-            detail:`<p>Aujourd'hui, rien ne part après un appel manqué : le lead voit un numéro inconnu rappeler, sans savoir qui c'est. Le vocal le lui dit une fois ; le 2e appel n'est plus celui d'un inconnu.</p><p>Ma version précédente ajoutait un SMS après ce vocal : retiré, il répétait le même message.</p>`},
+          {pour:"joint", canal:"crm", qui:"Setteuse", tag:"same", n:"Setté - RDV pris quali", titre:"« Setté - RDV pris quali »", court:"La fiche passe en « Setté » : le mail de confirmation part. Plus aucun appel ensuite."},
+          {pour:"joint", canal:"mail", qui:"Gmail du closer, automatique", tag:"mod", n:"Mail qui confirme", titre:"Mail de confirmation, après l'appel", court:"Il part quand le RDV est confirmé, plus à la réservation. La date, le lien Meet, l'Identité Numérique pour le CPF, le lien « Décaler ». Ensuite, les deux rappels, comme aujourd'hui.", msg:PRO.confirm, chips:["Part au passage en « Setté » (à développer)"],
+            detail:`<p>Aujourd'hui, il part à la réservation : le lead lit « je vous confirme notre rendez-vous », puis la setteuse l'appelle « pour confirmer ». C'est la contradiction relevée par Tanguy le 23/10.</p><p>Joint au 2e ou au 3e appel : même chose, qualifier, confirmer, et ce mail part.</p>`},
+          {pour:"non", canal:"sms", qui:"Setteuse, depuis sa ligne Allô", tag:"new", n:"SMS « on peut s'appeler ? »", titre:"Pas de réponse : un SMS, « pouvons-nous nous appeler ? Sinon, confirmez-vous ? »", court:"Juste après le 1er appel manqué. Le lead choisit : un appel au moment qui l'arrange, OUI pour confirmer sans appel, NON pour annuler. Pas de message vocal.", msg:PRO.smsAppel,
+            detail:`<p>Aujourd'hui, rien ne part après un appel manqué : le lead voit un numéro inconnu rappeler, sans savoir qui c'est. Le SMS le lui dit, et lui laisse la main.</p><p>Il remplace le message vocal de la version précédente : un vocal et un SMS pour le même appel manqué, c'était deux messages pour dire la même chose.</p>`},
         ]},
-        {t:"1 à 2 h après", sub:"si l'heure le permet", steps:[
-          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"2e appel le jour même", titre:"2e appel le jour même, une à deux heures après, jamais dans la foulée", court:"Pas systématique : un lead appelé la 1re fois après 16 h passe au lendemain. 15 min à 2 h après un appel manqué : 46 % de leads joints ; le lendemain : 19 %.", chips:["CRMIA garde la fiche dans la liste du jour (à développer)"],
+        {t:"Sa réponse", sub:"à la setteuse, par SMS", steps:[
+          {pour:"non", canal:"sms", qui:"Setteuse", tag:"new", fin:"RDV annulé", si:"NON", sinon:"OUI, ou autre", n:"NON : annulé", titre:"NON : la setteuse annule, et le lui dit en une ligne", court:"Le RDV est annulé dans CRMIA, avec le motif. Plus d'appel ni de message.", msg:PRO.smsNon},
+          {pour:"non", canal:"sms", qui:"Setteuse", tag:"new", fin:"Confirmé par SMS", si:"OUI, sans appel", sinon:"« Appelez-moi à… », ou rien", n:"OUI : SMS d'infos", titre:"OUI, sans appel : un SMS avec le lien et l'Identité Numérique", court:"La date, le lien Meet et, pour le CPF, l'Identité Numérique à préparer. Plus d'appel. Ensuite, les deux rappels, comme tout RDV confirmé.", msg:PRO.smsInfos,
+            detail:`<p>Demandé par Tanguy le 23/10 : le lead qui ne veut pas être appelé reçoit par SMS ce que l'appel lui aurait donné.</p><p>Il arrive au RDV sans avoir été qualifié. Du 01 au 19/10, les New RDV préqualifiés ont fait 24,5 % de ventes par RDV pris, les autres 2,8 % ; une partie de l'écart tient à la motivation, mais ces RDV resteront plus fragiles.</p>`},
+        ]},
+        {t:"1 à 2 h après", sub:"ou à l'heure qu'il a donnée", steps:[
+          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"2e appel", titre:"2e appel : à l'heure qu'il a donnée, sinon une à deux heures après", court:"S'il a proposé un moment, la setteuse rappelle à ce moment-là. Sinon, une à deux heures après, jamais dans la foulée : 46 % de leads joints, contre 19 % le lendemain. Un lead appelé la 1re fois après 16 h passe au lendemain.", chips:["CRMIA garde la fiche dans la liste du jour (à développer)"],
             detail:`<p>Mesuré en octobre sur 660 deuxièmes appels. Velocify, sur 3,5 millions de leads, conseille la même fenêtre de 30 à 60 minutes ${R("velocify")}.</p><p>Rappeler tout de suite joint moins (37 % dans le quart d'heure) et peut se vivre comme de l'insistance. C'est pourtant fréquent : du 01 au 22/10, une setteuse a recomposé 245 fois dans les 10 minutes après un appel sans réponse.</p><p>Aujourd'hui, CRMIA reporte la fiche au lendemain dès le 1er appel manqué, et elle sort de la liste du jour : c'est le point soulevé par Roxane.</p>`},
         ]},
         {t:"Jours suivants", sub:"avant 18 h la veille", steps:[
-          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"3e et dernier appel", titre:"3e et dernier appel, à un autre moment de la journée", court:"3 tentatives au plus, le plafond de CRMIA, gardé par l'équipe. Après, on n'appelle plus. Aujourd'hui, 64 leads ont reçu 4 tentatives sans réponse ou plus.", chips:["Après 3 tentatives, CRMIA retire la fiche des listes d'appel (à développer)"],
+          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"3e et dernier appel", titre:"3e et dernier appel, à un autre moment de la journée", court:"Toujours sans réponse au SMS. 3 tentatives au plus, le plafond de CRMIA, gardé par l'équipe. Après, on n'appelle plus. Aujourd'hui, 64 leads ont reçu 4 tentatives sans réponse ou plus.", chips:["Après 3 tentatives, CRMIA retire la fiche des listes d'appel (à développer)"],
             detail:`<p>Les leads joints au 3e appel viennent à 94 %. Changer d'heure d'un jour à l'autre : le lead qui ne décroche pas à 11 h décroche peut-être à 18 h.</p><p>Du 01 au 22/10, en comptant comme une seule tentative les appels recomposés à moins de 10 minutes : 45 leads ont reçu 4 tentatives sans réponse, 19 en ont reçu 5 ou plus, jusqu'à 8, et 35 en ont reçu 3 le même jour. Le plafond de 3 est dans les cases de CRMIA, pas dans les appels.</p><p>Avec 3 appels, on reste aussi sous la limite du démarchage téléphonique (4 sur 30 jours) ${R("demarchage")}.</p>`},
-          {pour:"non", canal:"sms", qui:"Setteuse, depuis sa ligne Allô", tag:"new", n:"SMS « oui ou non »", titre:"Toujours pas joint : une seule question, oui ou non", court:"« Votre rendez-vous tient toujours ? Répondez OUI ou NON. » OUI : gardé. NON : annulé, sans autre message. Pas de réponse : annulé à 18 h la veille, en test.", msg:PRO.ouiNon,
-            detail:`<p>C'est la règle de Roxane, en plus simple : un SMS au lieu d'un SMS et d'un mail, et une question fermée.</p><p>Appliquée à tous les leads pas joints à 18 h la veille, l'annulation aurait touché 197 New RDV sur 458 du 01 au 22/10, dont 147 n'avaient reçu qu'un appel, ou aucun : 7 des 48 ventes des New RDV en jeu. Après 3 appels sans réponse, elle ne touchait que 14 RDV (1 vente) ; elle comptera davantage quand les 3 appels seront faits pour tout le monde.</p><p>Un RDV pris trop tard pour 3 appels avant 18 h la veille reste maintenu, sans ce SMS.</p>`},
         ]},
         {t:"J-1 · 18:00", sub:"la veille", steps:[
-          {pour:"non", canal:"mail", qui:"Setteuse", tag:"new", fin:"RDV annulé", si:"NON, ou pas de réponse", sinon:"OUI", n:"RDV annulé, un seul mail", titre:"NON, ou pas de réponse à 18 h : RDV annulé, en test", court:"Après un NON, rien de plus. Sans réponse : un seul mail, avec le lien pour reprendre RDV. Ensuite, on ne rappelle pas.", msg:PRO.mailAnnul,
-            detail:`<p>Test de 3 semaines : reprises de RDV dans les 7 jours, créneaux replacés par une setteuse, ventes. Le détail est dans l'onglet « À trancher ».</p>`},
+          {pour:"non", canal:"mail", qui:"Setteuse", tag:"new", fin:"RDV annulé", si:"Ni réponse, ni décroché", sinon:"Confirmé", n:"RDV annulé, un seul mail", titre:"Ni réponse au SMS, ni appel décroché à 18 h la veille : RDV annulé", court:"Ce RDV n'a jamais été confirmé. Un seul mail, avec le lien pour reprendre RDV. Ensuite, on ne rappelle pas.", msg:PRO.mailAnnul, chips:["RDV pris trop tard pour un appel et une réponse avant 18 h la veille : maintenu"],
+            detail:`<p>Combien de RDV cela touchera : au plus les New RDV pas joints à 18 h la veille, 197 sur 458 du 01 au 22/10 (7 des 48 ventes des New RDV en jeu), moins ceux qui répondent au SMS. Combien répondront, on ne le sait pas : c'est le premier chiffre à suivre.</p><p>Ailleurs, 58 % des patients qui n'avaient pas confirmé sont venus quand même ${R("stephenson")}. À suivre 3 semaines : réponses au SMS, RDV repris dans les 7 jours, créneaux replacés, ventes.</p>`},
           {canal:"sms", qui:"Allô, expéditeur « FranceIA »", tag:"same", n:"SMS de la veille", titre:"SMS de la veille, inchangé", court:"Le texte de Tanguy du 07/10 : l'heure, le closer et, pour le CPF, la consigne Identité Numérique. Pour tous les RDV maintenus.", msg:MSG_SMS_VEILLE_AUJ, chips:["Pas envoyé si le RDV a été pris la veille (inchangé)", "Pas envoyé à un RDV annulé"],
             detail:`<p>C'est le seul SMS qui rappelle l'Identité Numérique, au dernier moment où un lead CPF peut encore la préparer. Des 295 leads CPF qui ont pris un RDV du 01 au 19/10, 80 n'avaient pas encore l'application à l'appel, ou ne savaient pas, et ont promis de la préparer.</p><p>Deux rappels font mieux qu'un ${R("steiner", "robotham")}. Les SMS automatiques restent deux par RDV, comme aujourd'hui : celui-ci et celui d'une heure avant, qui remplace celui de 8 h.</p>`},
         ]},
@@ -798,7 +804,7 @@ propose: {
       resume:[
         {n:"1 h", l:"objectif pour le 1er appel en journée (aujourd'hui : 3 h 20)"},
         {n:"3", l:"tentatives d'appel au plus, sur 2 jours, puis on arrête"},
-        {n:"3", l:"messages pour un lead jamais joint : le programme, un vocal, un mail de clôture (Roxane : 7)"},
+        {n:"3", l:"messages pour un lead jamais joint : le programme, un SMS, un mail de clôture (Roxane : 7)"},
         {n:"1", l:"lien pour reprendre seul, dans le mail de clôture"},
       ],
       moments:[
@@ -814,10 +820,10 @@ propose: {
           {canal:"appel", qui:"Setteuse", tag:"mod", n:"1er appel dans l'heure", titre:"1er appel dans l'heure, le plus tôt possible", court:"Un objectif, pas une règle. Aujourd'hui 3 h 20 en médiane. En semaine, appelées dans l'heure : 6 ventes sur 52 demandes, contre 2 à 3 % au-delà.",
             detail:`<p>Demandes du 01 au 19/10, en semaine de 9 h à 18 h : 6 ventes sur 52 appelées dans l'heure, 2 sur 108 entre 1 et 4 h, 3 sur 90 entre 4 et 24 h ; 54 sur 326 jamais appelées. Contacter en moins d'une heure rend la qualification environ 7 fois plus probable ${R("hbr")}, et le délai entre 5 et 30 minutes compte déjà ${R("lrm")}.</p><p>Les chances chutent pendant la 1re heure, puis bougent peu : en journée, la demande la plus récente passe d'abord.</p>`},
           {pour:"joint", canal:"appel", qui:"Setteuse", tag:"mod", n:"Qualifier, poser le RDV", titre:"Il décroche : qualifier (programme, Identité Numérique), poser le RDV au plus proche", court:"La même grille que pour un RDV : programme lu, et pour le CPF, Identité Numérique prête ou promise avant le RDV. Le RDV se pose pendant l'appel ; le lead reçoit la confirmation et suit le parcours « RDV pris », côté lead joint.", msgs:[PRO.qualif, PRO.scriptMql], goto:"rdv"},
-          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"Vocal, une seule fois", titre:"Pas de réponse : un message vocal de dix secondes, une seule fois", court:"Qui appelle, et pourquoi. Pas de SMS. Aujourd'hui, rien ne part après un appel manqué.", msg:PRO.vocalMql},
+          {pour:"non", canal:"sms", qui:"Setteuse, depuis sa ligne Allô", tag:"new", n:"SMS « on peut s'appeler ? »", titre:"Pas de réponse : un SMS, « pouvons-nous nous appeler ? »", court:"Qui appelle, pourquoi, et le lead choisit le moment. Pas de message vocal. Aujourd'hui, rien ne part après un appel manqué.", msg:PRO.smsAppelMql},
         ]},
         {t:"1 à 2 h après", sub:"si l'heure le permet", steps:[
-          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"2e appel le jour même", titre:"2e appel le jour même, une à deux heures après, jamais dans la foulée", court:"46 % de leads joints de 15 min à 2 h après le 1er appel, contre 19 % le lendemain. Roxane et Nizar sont d'accord, tant que ce n'est pas systématique.", chips:["CRMIA garde la fiche dans la liste du jour (à développer)"],
+          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"2e appel", titre:"2e appel : à l'heure qu'il a donnée, sinon une à deux heures après", court:"S'il a répondu au SMS, au moment qu'il a donné. Sinon : 46 % de leads joints de 15 min à 2 h après le 1er appel, contre 19 % le lendemain. Roxane et Nizar sont d'accord, tant que ce n'est pas systématique.", chips:["CRMIA garde la fiche dans la liste du jour (à développer)"],
             detail:`<p>Mesuré en octobre ; Velocify conseille la même fenêtre ${R("velocify")}. Une demande arrivée en fin d'après-midi passe au lendemain : le 2e appel se fait alors le matin.</p>`},
         ]},
         {t:"J+1", sub:"autre moment de la journée", steps:[
@@ -825,7 +831,7 @@ propose: {
         ]},
         {t:"Après le 3e", sub:"clôture", steps:[
           {pour:"non", canal:"mail", qui:"Setteuse", tag:"mod", fin:"Injoignable", n:"Un mail de clôture", titre:"Un seul mail de clôture, avec le lien pour revenir", court:"Puis « Injoignable », et plus aucun appel. Roxane envoyait un SMS et un mail.", msg:PRO.mailCloture,
-            detail:`<p>Aujourd'hui, 74 % des leads jamais joints n'ont eu qu'1 ou 2 appels : faire vraiment les 3 compte plus que d'en ajouter un 4e. Velocify trouve 93 % des leads convertis joints au plus tard au 6e appel ${R("velocify")} ; l'équipe garde 3 appels, à revoir fin novembre avec les chiffres.</p><p>Ma version précédente envoyait aussi un SMS après le 1er appel manqué et un mail le lendemain : retirés.</p>`},
+            detail:`<p>Aujourd'hui, 74 % des leads jamais joints n'ont eu qu'1 ou 2 appels : faire vraiment les 3 compte plus que d'en ajouter un 4e. Velocify trouve 93 % des leads convertis joints au plus tard au 6e appel ${R("velocify")} ; l'équipe garde 3 appels, à revoir fin novembre avec les chiffres.</p><p>Une version précédente envoyait aussi un mail le lendemain : retiré.</p>`},
         ]},
       ]},
   }},
@@ -838,15 +844,15 @@ const COMPARE = [
   {m:"Messages reçus", s:"lead jamais joint",
     auj:"4 avant un RDV, rien après un appel manqué ; 1 sans RDV. Mais le plafond de 3 appels n'est pas tenu : jusqu'à 8 tentatives sans réponse.",
     rox:"9 avant un RDV, 7 sans RDV.",
-    pro:"6 avant un RDV : les 4 d'aujourd'hui, un vocal et un SMS « oui ou non ». 3 sans RDV. Et 3 tentatives d'appel au plus. Un lead joint en reçoit 4, comme aujourd'hui."},
+    pro:"3 à 5 avant un RDV : le programme, un SMS « pouvons-nous nous appeler ? », puis soit les infos et les deux rappels (OUI), soit un message d'annulation. 3 sans RDV. Et 3 tentatives d'appel au plus. Un lead joint en reçoit 4, comme aujourd'hui."},
   {m:"Le lead remplit le formulaire", s:"T0",
     auj:"Mail programme de la setteuse. Avec un RDV : invitation Google et mail du closer en plus.",
     rox:"Mail A (appel annoncé, « répondez non »). Avec un RDV : mail E, sans lien Meet.",
-    pro:"Les mêmes mails, plus courts. L'un explique : le programme à lire, l'appel qui arrive. L'autre confirme : la date, le lien, l'Identité Numérique pour le CPF. Pas de « répondez non »."},
+    pro:"La page et le mail programme annoncent l'appel ; le programme est à lire. L'invitation Google réserve le créneau. Le mail de confirmation ne part plus à la réservation, mais après l'appel. Pas de « répondez non »."},
   {m:"Préparer le RDV", s:"programme, CPF",
     auj:"Programme envoyé au formulaire, sans demander de le lire. Identité Numérique (CPF) : dans le mail de confirmation et le SMS de la veille, et vérifiée à l'appel quand la setteuse joint le lead.",
     rox:"Brochure dans le mail A, plaquette jointe au mail E, sans demander de les lire. L'Identité Numérique n'apparaît pas dans les trames.",
-    pro:"Programme : à lire, dit le mail programme ; vérifié pendant l'appel, renvoyé s'il n'est pas lu. Identité Numérique (CPF) : comme aujourd'hui, plus le lien de l'application envoyé pendant l'appel et l'engagement de la préparer noté par la setteuse."},
+    pro:"Programme : à lire, dit le mail programme ; vérifié pendant l'appel, renvoyé s'il n'est pas lu. Identité Numérique (CPF) : vérifiée pendant l'appel (lien de l'application envoyé, engagement noté), écrite dans la confirmation, ou dans le SMS d'infos pour qui confirme sans appel. Rappelée la veille."},
   {m:"1er appel", s:"délai",
     auj:"Aucun délai : 2 h 40 en médiane avec RDV, 3 h 20 sans.",
     rox:"J1 sans RDV, « dès que possible » avec RDV. Case « MQL prioritaire ».",
@@ -858,11 +864,11 @@ const COMPARE = [
   {m:"Appel manqué", s:"message",
     auj:"<span class='nil'>Rien.</span>",
     rox:"Vocal 1 + SMS 1 (même texte, plus de 400 caractères).",
-    pro:"Un vocal de dix secondes, au 1er appel manqué seulement. Pas de SMS."},
+    pro:"Un SMS depuis la ligne de la setteuse : « Pouvons-nous nous appeler ? Sinon, répondez OUI pour confirmer, NON pour annuler. » Pas de vocal."},
   {m:"Appels suivants", s:"rythme",
     auj:"Le lendemain, sans nombre fixé. 74 % des injoignables : 1 ou 2 appels ; 64 leads : 4 tentatives sans réponse ou plus.",
     rox:"1 par jour sur 3 jours sans RDV ; 3 avant un RDV.",
-    pro:"3 tentatives au plus, 2 par jour au plus, jamais dans la foulée. Puis on arrête."},
+    pro:"Seulement sans réponse au SMS, ou à l'heure que le lead a donnée. 3 tentatives au plus, 2 par jour au plus, jamais dans la foulée. Puis on arrête."},
   {m:"Injoignable sans RDV", s:"MQL",
     auj:"« Injoignable » après 3 appels, sans message.",
     rox:"J3 : SMS + mail de clôture.",
@@ -870,7 +876,7 @@ const COMPARE = [
   {m:"Injoignable avec RDV", s:"NEW RDV",
     auj:"RDV maintenu, rien de plus.",
     rox:"SMS + mail « répondez OUI avant 18 h la veille », sinon annulation, SMS + mail.",
-    pro:"Après le 3e appel : « Votre rendez-vous tient toujours ? Répondez OUI ou NON », depuis la ligne de la setteuse. NON ou pas de réponse : annulé, un seul mail. En test 3 semaines."},
+    pro:"La réponse au SMS décide. OUI : SMS d'infos, RDV confirmé. NON : annulé. Ni réponse ni appel décroché à 18 h la veille : annulé, un seul mail avec le lien pour reprendre RDV."},
   {m:"La veille", s:"18:00",
     auj:"SMS « FranceIA » sans lien, avec la consigne Identité Numérique pour le CPF.",
     rox:"SMS avec lien Meet, « répondez LIEN ».",
@@ -897,8 +903,8 @@ const COMPARE = [
 /* Blocs du parcours proposé                                            */
 /* ------------------------------------------------------------------ */
 const PRINCIPES = [
-  {k:"64", ks:"leads ont reçu 4 tentatives d'appel sans réponse ou plus, du 01 au 22/10, jusqu'à 8", h:"Simple, jamais insistant", p:"Un mail qui explique, un qui confirme. 3 tentatives d'appel au plus et un seul vocal, puis une seule question : oui ou non. Un « non » arrête tout.",
-    d:`<p>Messages reçus avant son RDV par un lead qu'on ne joint jamais (mails, SMS, vocaux) : 4 aujourd'hui, 9 chez Roxane, 7 dans ma version précédente (10 en comptant le retard et le no show), 6 ici. Un lead joint en reçoit 4, comme aujourd'hui. Pour une demande de programme jamais jointe : 1 aujourd'hui, 7 chez Roxane, 3 ici.</p><p>Sur les appels, du 01 au 22/10 : 45 leads ont eu 4 tentatives sans réponse, 19 en ont eu 5 ou plus, et 35 en ont eu 3 le même jour. Recomposer tout de suite joint moins de leads : 37 % dans le quart d'heure, contre 46 % entre 15 minutes et 2 heures après.</p><p>On n'annule qu'après avoir vraiment cherché : 3 leads sur 4 que viserait la règle de 18 h n'avaient eu qu'un appel, ou aucun.</p>`},
+  {k:"64", ks:"leads ont reçu 4 tentatives d'appel sans réponse ou plus, du 01 au 22/10, jusqu'à 8", h:"Simple, cohérent, jamais insistant", p:"On annonce l'appel, on appelle, puis on confirme. Pas joint : un seul SMS, qui laisse le lead choisir. 3 tentatives d'appel au plus. Un « non » arrête tout.",
+    d:`<p>Messages reçus avant son RDV par un lead qu'on ne joint jamais (mails, SMS, vocaux) : 4 aujourd'hui, 9 chez Roxane, 3 à 5 ici selon sa réponse au SMS. Un lead joint en reçoit 4, comme aujourd'hui. Pour une demande de programme jamais jointe : 1 aujourd'hui, 7 chez Roxane, 3 ici.</p><p>Sur les appels, du 01 au 22/10 : 45 leads ont eu 4 tentatives sans réponse, 19 en ont eu 5 ou plus, et 35 en ont eu 3 le même jour. Recomposer tout de suite joint moins de leads : 37 % dans le quart d'heure, contre 46 % entre 15 minutes et 2 heures après.</p><p>On ne confirme plus un RDV à la réservation pour l'annuler ensuite : il est confirmé après l'appel, ou par le lead lui-même. On n'annule qu'un RDV jamais confirmé, après un SMS et jusqu'à 3 appels.</p>`},
   {k:"81 % / 45 %", ks:`de venue, lead ${JOINT} ou jamais joint`, h:"Joindre le lead avant tout", p:"Le levier, c'est l'appel. Les messages automatiques ne font que le soutenir.",
     d:`<p>Ailleurs aussi, le contact de vive voix sépare ceux qui viennent des autres : 3 % d'absences quand le rappel est donné de vive voix, 39 % quand personne ne répond ${R("teo")}. Un appel du personnel fait mieux qu'un automate, qui fait mieux que rien ${R("parikh")}.</p><p>Une part de l'écart tient à la motivation : un lead joint de plus ne passera pas forcément de 45 % à 81 %. Mais même à moitié, c'est environ un RDV honoré de plus pour six leads joints en plus.</p>`},
   {k:"46 % / 19 %", ks:"de leads joints au 2e appel : le jour même ou le lendemain", h:"Vite, puis une 2e fois le même jour", p:"1er appel dans l'heure en objectif ; 2e le jour même, une à deux heures après, jamais dans la foulée. C'est le plus gros gain mesuré.",
@@ -908,20 +914,21 @@ const PRINCIPES = [
 ];
 
 const CHANGEMENTS = [
-  {h:"3 tentatives d'appel au plus, 2 par jour, jamais dans la foulée ; 1er appel dans l'heure en objectif", p:"Règle d'équipe, avec une file du matin à 10 h pour la nuit et le week-end. Un seul message vocal, au 1er appel manqué.", e:"Sans développement", c:"e0"},
+  {h:"3 tentatives d'appel au plus, 2 par jour, jamais dans la foulée ; 1er appel dans l'heure en objectif", p:"Règle d'équipe, avec une file du matin à 10 h pour la nuit et le week-end. Pas de message vocal : après le 1er appel manqué, c'est le SMS qui dit qui appelle.", e:"Sans développement", c:"e0"},
   {h:"« Ne pas contacter » dès qu'un lead dit non", p:"Le bouton existe sur la fiche Contact depuis le 02/10 : ni appel, ni email, ni SMS. Le poser à chaque refus, par n'importe quel canal.", e:"Sans développement", c:"e0"},
   {h:"Script d'appel : programme lu, Identité Numérique pour le CPF", p:"Les cases existent déjà dans la grille de CRMIA. Deux gestes en plus : renvoyer le programme s'il n'est pas lu, envoyer le lien de l'application pendant l'appel.", e:"Sans développement", c:"e0"},
-  {h:"Mails plus courts : l'un explique, l'autre confirme", p:"Mail programme : le programme à lire et l'appel qui arrive. Confirmation : la date, le lien, l'Identité Numérique pour le CPF, le lien « Décaler ».", e:"Texte", c:"e0"},
+  {h:"Mails plus courts : l'un annonce l'appel, l'autre confirme", p:"Mail programme : le programme à lire et l'appel qui arrive. Confirmation : la date, le lien, l'Identité Numérique pour le CPF, le lien « Décaler ».", e:"Texte", c:"e0"},
   {h:"Rappel du jour : « 60 minutes avant » à la place de « 8 h »", p:"Le mode « délai » existe déjà dans les réglages des calendriers.", e:"Réglage", c:"e0"},
   {h:"Brancher Fathom sur CRMIA", p:"Le point d'arrivée existe déjà dans CRMIA : il manque les clés et le go. Donne la durée des R1 et la matière de la note A/B/C.", e:"Réglage", c:"e0"},
   {h:"Après 3 tentatives sans réponse, la fiche sort des listes d'appel", p:"Aujourd'hui, le plafond est dans les cases « Appelé 1x, 2x, 3x », pas dans les appels : 64 leads ont reçu 4 tentatives ou plus.", e:"Petit développement", c:"e1"},
+  {h:"Le mail de confirmation part au passage en « Setté », plus à la réservation", p:"Un RDV n'est confirmé qu'après l'appel. Le lead qui confirme par SMS reçoit les mêmes informations par SMS.", e:"Petit développement", c:"e1"},
   {h:"La fiche reste dans la liste du jour après un 1er appel manqué", p:"Pour le 2e appel, une à deux heures après. Aujourd'hui, CRMIA la reporte au lendemain et elle disparaît de la liste.", e:"Petit développement", c:"e1"},
   {h:"Variable « lien Meet » dans les SMS", p:"Pour le SMS d'une heure avant.", e:"Petit développement", c:"e1"},
   {h:"Motif obligatoire pour annuler un New RDV", p:"Toute l'équipe peut déjà annuler ; le motif manque.", e:"Petit développement", c:"e1"},
   {h:"Règles de réservation : jour même, week-end, horizon", p:"Selon les décisions de l'onglet « À trancher ». La règle actuelle (08/10) est écrite dans le code, pas dans un réglage.", e:"Petit développement", c:"e1"},
   {h:"Lien de réservation dans le mail de clôture et le mail d'annulation", p:"Réutilise le lien personnel de la relance « créneau choisi sans RDV ».", e:"Petit développement", c:"e1"},
   {h:"Colonne « Priorités » et attribution aux setteuses en service", p:"Rappels convenus, New RDV à qualifier, MQL du jour, relances ; un lead pas appelé au bout d'une heure remonte en tête.", e:"Développement moyen", c:"e2"},
-  {h:"Question « oui ou non » après 3 appels, puis annulation, en test", p:"Un SMS depuis la ligne de la setteuse ; NON ou pas de réponse à 18 h la veille : annulation, et un seul mail avec le lien pour reprendre RDV.", e:"Développement moyen", c:"e2"},
+  {h:"SMS de la setteuse en un clic, puis annulation à 18 h la veille sans réponse", p:"Depuis sa ligne Allô, textes prêts, date et lien remplis : « pouvons-nous nous appeler ? », puis les infos sur OUI. Ni réponse ni appel décroché à 18 h la veille : annulation, et un seul mail avec le lien pour reprendre RDV.", e:"Développement moyen", c:"e2"},
   {h:"Note A, B ou C à trois moments", p:"Proposée par l'IA à partir du formulaire, de l'appel et du motif du closer ; validée par la personne.", e:"Développement moyen", c:"e2"},
 ];
 
@@ -931,6 +938,7 @@ const KPIS = [
   {h:"Délai du 1er appel en journée", now:"Aujourd'hui : 2 h 40 avec RDV, 3 h 20 sans", p:"Cible proposée : la moitié des leads appelés dans l'heure."},
   {h:"Part des RDV dont le lead est joint avant", now:"Aujourd'hui : 2 sur 3", p:"Le chiffre que tout le parcours doit faire monter."},
   {h:"Venue des leads jamais joints", now:"Aujourd'hui : 45 %", p:"Celle que le SMS d'une heure avant et les appels du closer à 2 minutes doivent faire monter, surtout le soir (37 %)."},
+  {h:"Réponses au SMS de la setteuse", now:"Aujourd'hui : rien ne part après un appel manqué", p:"Part des « appelez-moi à… », des OUI, des NON et des silences. Le premier chiffre à suivre : il dit combien de RDV l'annulation touchera."},
   {h:"RDV annulés faute de réponse, et repris dans les 7 jours", now:"Aujourd'hui : pas d'annulation de ce type", p:"Avec les créneaux replacés par une setteuse : ce qui dira, à la fin du test, si l'annulation rapporte plus qu'elle ne coûte."},
 ];
 
@@ -944,12 +952,16 @@ const EFFORTS = {
 };
 
 const QUESTIONS = [
+  {qui:"Tanguy", q:"Pourquoi confirmer le rendez-vous si on l'annule quand la personne ne répond pas au téléphone ?", k:"1 SMS",
+    r:"Pour le lead qu'on ne joint pas, à la place des relances : « Pouvons-nous nous appeler ? Sinon, répondez OUI pour confirmer, NON pour annuler. » C'était une vraie contradiction : le mail du closer disait « je vous confirme notre rendez-vous » dès la réservation. Désormais, la page et le mail programme annoncent l'appel ; le RDV est confirmé pendant l'appel, ou par le lead lui-même. On n'annule plus qu'un RDV qui n'a jamais été confirmé."},
+  {qui:"Tanguy", q:"Quelles bonnes pratiques pour les SMS, et quand les envoyer : la veille, le matin même, une heure avant ?", k:"2",
+    r:`Rappels font mieux qu'un seul : c'est le résultat le plus solide ${R("steiner", "robotham")}. Aucune étude ne compare la veille, le matin et une heure avant. D'où la proposition : garder la veille, qui laisse le temps de préparer l'Identité Numérique, et remplacer 8 h par une heure avant, qui porte le lien Meet. Chez nous, le SMS de 8 h n'a pas d'effet mesuré, et les leads jamais joints viennent à 37 % aux RDV de 17 h et plus. Un test de 4 semaines tranchera (voir « Ce qu'on mesurera »).`},
   {qui:"Tanguy", q:"Un client s'est plaint d'être harcelé : il faut faire simple, pas trop d'infos, pas trop de relances.", k:"64",
-    r:"Leads ont reçu 4 tentatives d'appel sans réponse ou plus du 01 au 22/10, jusqu'à 8, alors que la règle est de 3. Et ma version précédente ajoutait jusqu'à 7 messages avant le RDV à un lead jamais joint. Le parcours est refait : un mail qui explique, un qui confirme, 3 tentatives d'appel au plus avec un seul vocal, puis une seule question, oui ou non. Un lead joint ne reçoit rien de plus qu'aujourd'hui, et un « non » arrête tout."},
+    r:"Leads ont reçu 4 tentatives d'appel sans réponse ou plus du 01 au 22/10, jusqu'à 8, alors que la règle est de 3. Et ma version précédente ajoutait jusqu'à 7 messages avant le RDV à un lead jamais joint. Le parcours est refait sur le schéma de Tanguy : on annonce l'appel, on appelle, on confirme ; pas joint, un seul SMS, « pouvons-nous nous appeler ? Sinon, confirmez-vous ? ». 3 tentatives d'appel au plus. Un lead joint ne reçoit rien de plus qu'aujourd'hui, et un « non » arrête tout."},
   {qui:"Tanguy", q:"Où est passé le programme envoyé ? Il faut qu'elle le consulte en amont.", k:"2 fois",
     r:"Demandé dans le mail programme (« prenez le temps de le lire »), puis vérifié pendant l'appel de la setteuse, qui le renvoie s'il n'est pas lu. Il était resté dans le parcours, mais jamais présenté comme à lire. Pas plus : la confirmation et le SMS de la veille restent courts."},
   {qui:"Tanguy", q:"Où est passée l'identité numérique, absolument à créer pour le CPF ?", k:"17 sur 43",
-    r:"Elle n'apparaissait que sous forme de variable dans deux messages, et pas dans le script d'appel. Elle est écrite en toutes lettres dans la confirmation, vérifiée pendant l'appel (lien de l'application envoyé, engagement noté) et rappelée par le SMS de la veille. Les leads CPF qui ne l'avaient pas encore à l'appel mais ont promis de la préparer ont fait 17 ventes pour 43 RDV honorés, autant que ceux qui l'avaient déjà (44 pour 130)."},
+    r:"Elle n'apparaissait que sous forme de variable dans deux messages, et pas dans le script d'appel. Elle est écrite en toutes lettres dans la confirmation (dans le SMS d'infos pour qui confirme sans appel), vérifiée pendant l'appel (lien de l'application envoyé, engagement noté) et rappelée par le SMS de la veille. Les leads CPF qui ne l'avaient pas encore à l'appel mais ont promis de la préparer ont fait 17 ventes pour 43 RDV honorés, autant que ceux qui l'avaient déjà (44 pour 130)."},
   {qui:"Tanguy", q:"Pourquoi un SMS la veille, alors qu'il y a déjà d'autres SMS ?", k:"2",
     r:"SMS automatiques par RDV, comme aujourd'hui. Celui de la veille existe déjà (texte du 07/10) et reste tel quel : c'est le seul qui rappelle l'Identité Numérique, au dernier moment où on peut la préparer. Celui d'une heure avant remplace celui de 8 h. J'y avais ajouté un lien « confirmer ou décaler », alors que le lien « Décaler » avait été écarté des SMS le 22/10 : retiré."},
   {qui:"Nizar", q:"Combien de ventes font les New RDV préqualifiés, et les autres ?", k:"45 sur 48",
@@ -1086,7 +1098,7 @@ const ARB_THEMES = [
         <p><b>Ce que la case changerait.</b> Elle ne crée pas de demande : elle dit, parmi les leads qui ont vu le calendrier, lesquels attendent un appel aujourd'hui. Cochée, c'est une promesse : la traiter comme un rappel convenu, en tête de la colonne « Priorités », et plus seulement comme un départage. Combien la cocheront, seul le test le dira.</p>
         <p><b>Quand l'afficher.</b> 59 % des MQL arrivent le soir ou le week-end (575 sur 969) : la case ne s'affiche pas pour eux, comme le prévoit Roxane, pour ne pas promettre un rappel qu'on ne tiendra pas.</p>
         <p>CRMIA a déjà un champ « rappel demandé », mais il ne sert qu'aux leads que le formulaire disqualifie (23 du 30/09 au 14/10, aucune vente) : ce n'est pas la même chose.</p>`,
-      reco:"Pas dans un premier temps (revu le 23/10 au soir, pour faire simple) : c'est une case de plus sur le formulaire, pour un effet que personne ne connaît, et l'objectif « appelé dans l'heure » répond au même besoin. À reprendre fin novembre si cet objectif n'est pas tenu.", e:"dev1"},
+      reco:"Pas dans un premier temps (revu le 23/10, pour faire simple) : c'est une case de plus sur le formulaire, pour un effet que personne ne connaît, et l'objectif « appelé dans l'heure » répond au même besoin. À reprendre fin novembre si cet objectif n'est pas tenu.", e:"dev1"},
   ]},
   {id:"note", h:"Notation A/B/C des leads", src:"Point 4 de Nizar, point 4 de Roxane", items:[
     {id:"abc", s:"accord", h:"Noter chaque lead A, B ou C, à trois moments",
@@ -1123,8 +1135,8 @@ const ARB_THEMES = [
       reco:"Donner le go pour l'allumer. Nizar peut garder son temps pour la grille A/B/C.", e:"reglage"},
   ]},
   {id:"annul", h:"Annulation des New RDV", src:"Point 5 de Nizar, point 5 de Roxane", items:[
-    {id:"auto", s:"trancher", h:"Annuler le New RDV d'un lead injoignable à 18 h la veille",
-      pos:[{qui:"Roxane", t:"Je vous invite fort à y repenser et à regarder simplement le tableau des NS. Avec un mail et un SMS « on a dû annuler, faute de retour de votre part ; n'hésitez pas à reprendre RDV si vous avez eu un empêchement », on filtre les non-intéressés, et ceux qui ont eu un empêchement reviennent. Et dans ce cas-là, on ne les rappelle pas."}, {qui:"Nizar", t:"Pas encore tranché. Il faut la data : arbitrer sur la base des ventes générées."}],
+    {id:"auto", s:"tranche", h:"Annuler le New RDV d'un lead injoignable à 18 h la veille",
+      pos:[{qui:"Roxane", t:"Je vous invite fort à y repenser et à regarder simplement le tableau des NS. Avec un mail et un SMS « on a dû annuler, faute de retour de votre part ; n'hésitez pas à reprendre RDV si vous avez eu un empêchement », on filtre les non-intéressés, et ceux qui ont eu un empêchement reviennent. Et dans ce cas-là, on ne les rappelle pas."}, {qui:"Nizar", t:"Pas encore tranché. Il faut la data : arbitrer sur la base des ventes générées."}, {qui:"Tanguy", t:"Annoncer l'appel, envoyer le programme en disant qu'on va appeler, puis un SMS : « Je n'ai pas réussi à vous joindre. Est-ce qu'on peut s'appeler ? Sinon, est-ce que vous nous confirmez le rendez-vous ? » Selon la réponse, on annule ou pas. S'il veut venir sans être appelé : les informations par SMS, Identité Numérique comprise."}],
       k:"56 %", kl:"des no show des New RDV viennent de leads pas joints à 18 h la veille (68 sur 122)",
       data:"Roxane a raison sur les no show. Tout dépend ensuite de qui la règle vise. Tous les leads pas joints : 43 % des New RDV annulés, 7 ventes sur 48 en jeu, et 3 de ces leads sur 4 n'avaient eu qu'un appel ou aucun. Seulement ceux appelés 3 fois sans réponse, comme l'écrit sa trame : 14 RDV en 3 semaines, 1 vente.",
       detail:`<div class="tbl"><table class="mini"><caption>New RDV pris avant 18 h la veille, selon les appels reçus avant cette heure</caption>
@@ -1138,8 +1150,9 @@ const ARB_THEMES = [
         <p><b>Ce que la version large coûte.</b> Sur 86 créneaux libérés, elle met 7 ventes en jeu. Un RDV posé par une setteuse rapporte 0,18 vente : il faut donc replacer un lead qualifié sur près de la moitié des créneaux libérés (46 %) pour retomber sur ses pieds, avant même de compter les leads qui reprennent RDV après le message.</p>
         <p><b>Ce qu'on ne sait pas encore.</b> Combien de leads reprennent RDV après le SMS et le mail d'annulation, et combien de créneaux libérés une setteuse arrive à remplir. Le test doit le mesurer.</p>
         <p><b>Pourquoi la version à 3 appels ne touche que 14 RDV.</b> Parce que les leads sont peu appelés : 40 New RDV jamais joints n'ont reçu aucun appel. Une fois les 3 appels faits pour tout le monde, elle en touchera davantage, et ce seront de vrais injoignables. Les RDV pris trop tard pour 3 appels avant 18 h la veille restent maintenus.</p>
-        <p><b>Le SMS « oui ou non ».</b> Un seul, envoyé depuis la ligne Allô de la setteuse, pour que la réponse lui arrive : depuis l'expéditeur automatique « FranceIA », elle se perdrait. La trame de Roxane doublait chaque SMS d'un mail ; un message suffit à chaque étape.</p>`,
-      reco:"Oui, en plus simple que la trame : après le 3e appel manqué, un seul SMS « Votre rendez-vous tient toujours ? Répondez OUI ou NON », depuis la ligne de la setteuse. NON ou pas de réponse à 18 h la veille : annulation, un seul mail avec le lien pour reprendre RDV, et on ne rappelle pas. À condition que les 3 appels soient vraiment faits avant (colonne Priorités). En test 3 semaines : reprises de RDV dans les 7 jours, créneaux replacés, ventes.", e:"dev2"},
+        <p><b>Avec le schéma de Tanguy.</b> L'annulation vise les leads ni joints ni répondants au SMS : au plus la ligne « pas joint à 18 h la veille » (197 RDV, 7 ventes en jeu), moins ceux qui répondent. Combien répondront, on ne le sait pas : c'est le premier chiffre à suivre.</p>
+        <p><b>Le SMS.</b> Un seul, envoyé juste après le 1er appel manqué depuis la ligne Allô de la setteuse, pour que la réponse lui arrive : depuis l'expéditeur automatique « FranceIA », elle se perdrait. La trame de Roxane doublait chaque SMS d'un mail ; un message suffit à chaque étape.</p>`,
+      reco:"Tranché par Tanguy le 23/10, en plus cohérent : un RDV n'est confirmé qu'après l'appel, ou par le lead lui-même. Juste après le 1er appel manqué, un SMS de la setteuse : « Pouvons-nous nous appeler ? Sinon, répondez OUI pour confirmer, NON pour annuler. » OUI : un SMS d'infos (lien Meet, Identité Numérique). NON : annulé. Ni réponse ni appel décroché à 18 h la veille : annulé, un seul mail avec le lien pour reprendre RDV, et on ne rappelle pas. À suivre 3 semaines : réponses au SMS, reprises de RDV dans les 7 jours, créneaux replacés, ventes.", e:"dev2"},
     {id:"motif", s:"accord", h:"Une setteuse peut annuler un New RDV, avec un motif",
       pos:[{qui:"Nizar", t:"Un setter peut annuler un New RDV après qualification, avec un motif tracé."}],
       k:"0", kl:"motif demandé aujourd'hui quand on annule un RDV dans CRMIA",
@@ -1156,8 +1169,8 @@ const ARB_THEMES = [
 ];
 
 /* Ce que Tanguy tranche : l'ordre de la feuille de décision */
-const DECISIONS = ["auto", "j0", "we18", "wemardi", "horizon", "j1", "ordre", "demande", "fathom"];
-const GO_DEV = ["trois", "colonne", "motif", "abc", "heure"];
+const DECISIONS = ["j0", "we18", "wemardi", "horizon", "j1", "ordre", "demande", "fathom"];
+const GO_DEV = ["trois", "auto", "colonne", "motif", "abc", "heure"];
 
 </script>
 <script>
@@ -1336,6 +1349,10 @@ function edgePath(a, b, na, nb){
   const x2 = b.x + G.colW / 2 - h - 4, y2 = b.y + h;
   if (y1 === y2) return {d:`M${x1} ${y1}H${x2}`, lx:(x1 + x2) / 2, ly:y1};
   const span = x2 - x1, bend = Math.min(span, 84), droit = span - bend;
+  if ((nb.row === 3 || nb.row === -1) && na.kind === "step" && na.row !== 1){
+    /* Sortie de branche : on file sur la branche, et l'on descend près de la sortie, pour que deux sorties voisines ne se croisent pas. */
+    return {d:`M${x1} ${y1}H${x2 - bend}C${x2 - bend / 2} ${y1} ${x2 - bend / 2} ${y2} ${x2} ${y2}`, lx:x2 - bend / 2, ly:(y1 + y2) / 2};
+  }
   if (na.row === 1 || na.kind === "si" || nb.row === 3 || nb.row === -1){
     /* Embranchement : la courbe part de la source, puis file sur la rangée. */
     const g = {d:`M${x1} ${y1}C${x1 + bend / 2} ${y1} ${x1 + bend / 2} ${y2} ${x1 + bend} ${y2}H${x2}`};
@@ -1518,7 +1535,7 @@ function extras(){
       <li><b>Démarchage téléphonique.</b> Depuis le 11/08/2026, il faut le consentement préalable de la personne. Les appels restent limités du lundi au vendredi, de 10 h à 13 h et de 14 h à 20 h, et à 4 par personne sur 30 jours ${R("demarchage")}. Le parcours reste en dessous, avec 3 tentatives, et en suit les plages. Aujourd'hui, 19 leads ont reçu 5 tentatives sans réponse ou plus (01 au 22/10).</li>
       <li><b>La question à trancher :</b> un lead qui vient de demander le programme, ou de prendre RDV, et que l'on rappelle à ce sujet, est-il « démarché » ? Si la réponse est non, plafond et plages ne s'appliquent pas à ces appels : un 4e appel resterait possible si les chiffres de fin novembre le justifient ${R("velocify")}.</li>
       <li><b>CPF.</b> Le Code du travail interdit à part le démarchage des titulaires d'un compte CPF (<a href="https://code.travail.gouv.fr/code-du-travail/l6323-8-1" target="_blank" rel="noopener">article L6323-8-1</a>). À relire pour les leads qui financent par le CPF, surtout pour les messages qui en parlent.</li>
-      <li><b>SMS.</b> Les rappels d'un RDV que la personne a pris sont des messages de service : la charte des opérateurs, qui limite les SMS publicitaires à 8 h-21 h 30 du lundi au samedi, ne les vise pas ${R("af2m")}. Le SMS « oui ou non » envoyé après trois appels manqués est à classer avec la conformité.</li>
+      <li><b>SMS.</b> Les rappels d'un RDV que la personne a pris sont des messages de service : la charte des opérateurs, qui limite les SMS publicitaires à 8 h-21 h 30 du lundi au samedi, ne les vise pas ${R("af2m")}. Les SMS de la setteuse (« pouvons-nous nous appeler ? », puis les infos) répondent à une demande de RDV : à classer avec la conformité.</li>
     </ul><p class="muted">Ces points viennent de sources secondaires (presse juridique, documentation d'opérateur) : le site de la DGCCRF n'a pas pu être consulté. À faire confirmer avant de changer le rythme des appels.</p></div>
   </section>`;
 }
@@ -1560,12 +1577,12 @@ function renderArbitrages(){
   const all = ARB_THEMES.flatMap(t => t.items);
   const n = k => all.filter(it => it.s === k).length;
   const compte = Object.keys(STATUTS).map(k => `<span class="statut st-${k}">${n(k)} · ${STATUTS[k]}</span>`).join("");
-  const head = `<div class="v-head"><h2>Ce qu'il reste à trancher</h2><p>Nizar et Roxane ont répondu le 23/10 sur les six points du setting, puis Roxane a précisé la case « MQL prioritaire » après les questions de Tanguy. Les questions de Tanguy (le programme, l'Identité Numérique, le SMS de la veille, puis la plainte d'un client qui s'est dit harcelé) ont leur réponse plus bas ; le parcours proposé a été simplifié en conséquence. Pour chacun : leurs positions, ce que répondent les données de CRMIA, et ma recommandation. Les parcours des onglets Roxane et Proposé sont mis à jour en conséquence.</p><div class="legend">${compte}</div></div>`;
+  const head = `<div class="v-head"><h2>Ce qu'il reste à trancher</h2><p>Nizar et Roxane ont répondu le 23/10 sur les six points du setting, puis Roxane a précisé la case « MQL prioritaire » après les questions de Tanguy. Les questions de Tanguy (le programme, l'Identité Numérique, le SMS de la veille, la plainte d'un client qui s'est dit harcelé, un RDV confirmé puis annulé, le moment des SMS) ont leur réponse plus bas ; le parcours proposé a été simplifié en conséquence. Pour chacun : leurs positions, ce que répondent les données de CRMIA, et ma recommandation. Les parcours des onglets Roxane et Proposé sont mis à jour en conséquence.</p><div class="legend">${compte}</div></div>`;
   const decs = DECISIONS.map(k => ARB_ITEMS[k]).map(it => `<li class="dec"><div><h4>${it.h}</h4><p>${it.reco}</p></div><div class="dec-a">${effortChip(it.e)}<button type="button" class="lien" data-arb="${it.id}">Le détail</button></div></li>`).join("");
   const go = GO_DEV.map(k => ARB_ITEMS[k]).map(it => `<li><button type="button" class="lien" data-arb="${it.id}">${it.h}</button>${effortChip(it.e)}</li>`).join("");
   const feuille = `<section class="block first"><h3>La feuille de décision</h3><p class="lead">Les ${DECISIONS.length} points qui attendent Tanguy, dans l'ordre où je les trancherais. Chaque ligne renvoie à son détail, plus bas.</p>
     <ol class="decs">${decs}</ol>
-    <div class="card go"><h4>D'accord tous les deux : il ne manque que le go pour CRMIA</h4><ul>${go}</ul></div></section>`;
+    <div class="card go"><h4>Décidé ou d'accord : il ne manque que le go pour CRMIA</h4><ul>${go}</ul></div></section>`;
   const qa = QUESTIONS.map(q => `<div class="card qa"><p class="q">${avatar(q.qui)}<span><b>${q.qui}</b> « ${q.q} »</span></p><div class="k">${q.k}</div><p>${q.r}</p></div>`).join("");
   const questions = `<section class="block"><h3>Les questions posées, et ce que répondent les données</h3><p class="lead">New RDV : les RDV pris par les leads eux-mêmes, du 01 au 22/10. Les ventes ne comptent que les RDV jusqu'au 19/10, pour leur laisser le temps d'arriver. Préqualifié : lead setté par la setteuse dans CRMIA.</p><div class="grid2">${qa}</div></section>`;
   const themes = ARB_THEMES.map(t => `<section class="block"><h3>${t.h}</h3><p class="lead src">${t.src}</p><div class="arbs">${t.items.map(renderArb).join("")}</div></section>`).join("");
