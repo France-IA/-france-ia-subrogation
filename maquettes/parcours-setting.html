@@ -223,6 +223,8 @@ button.node[aria-pressed="true"] .tile svg{stroke:var(--blue)}
 .mail dd{margin:0; font-weight:500}
 .mail-b{padding:14px; font-size:14.5px; line-height:1.6}
 .script{border-left:2px solid var(--ink); padding:4px 0 4px 14px; font-size:14.5px; font-style:italic; color:var(--ink2)}
+.cond{display:block; margin:8px 0; padding:8px 10px; border-left:2px solid var(--blue); background:var(--blue-50); border-radius:0 6px 6px 0; font-style:normal}
+.cond-l{display:block; font:500 11px/1.4 var(--f-mono); color:var(--muted); margin-bottom:3px}
 .pagemsg{border:1px solid var(--line); border-radius:var(--r-s); padding:16px; font-size:14.5px}
 .pagemsg strong{display:block; font:700 17px/1.3 var(--f-display); margin-bottom:6px}
 .var{font:400 .84em/1 var(--f-mono); background:var(--blue-50); box-shadow:inset 0 0 0 1px var(--blue-line); color:var(--ink); padding:2px 5px; border-radius:5px; white-space:nowrap; font-style:normal}
@@ -474,7 +476,7 @@ const MSG_PROGRAMME_AUJ = {type:"mail", de:"{prénom setteuse}, depuis sa boîte
   corps:"Bonjour {prénom},\n\nMerci pour votre intérêt pour les formations France IA. Vous pourrez [[retrouver le programme ici]].\n\nVous pouvez répondre directement à cet email si vous avez une question.\n\nÀ bientôt,\n{prénom setteuse}\nFrance IA"};
 
 const MSG_CONFIRM_AUJ = {type:"mail", de:"{prénom closer}, depuis sa boîte Gmail", objet:"Rappel pour votre rendez-vous avec France IA",
-  corps:"Bonjour {prénom},\n\nJe vous écris pour vous confirmer notre rendez-vous le {date} à {heure}. Nous ferons le point en visio sur vos objectifs et votre usage actuel de l'IA pour comprendre quel accompagnement serait le plus adapté.\n\nVoilà à nouveau le lien Google Meet : {lien Meet}{consigne CPF si financement CPF}\n\nUn empêchement ? Décalez votre rendez-vous ici : {lien Décaler}\n\nÀ très vite,\n{prénom closer} - France IA"};
+  corps:"Bonjour {prénom},\n\nJe vous écris pour vous confirmer notre rendez-vous le {date} à {heure}. Nous ferons le point en visio sur vos objectifs et votre usage actuel de l'IA pour comprendre quel accompagnement serait le plus adapté.\n\nVoilà à nouveau le lien Google Meet : {lien Meet}\n\n((financement CPF|Si vous envisagez d'utiliser votre CPF, vous devez installer et paramétrer l'application mobile Identité Numérique de La Poste. C'est un prérequis. Voilà le lien de téléchargement :\nApp Store : {lien App Store}\nPlay Store : {lien Play Store}))\n\nUn empêchement ? Décalez votre rendez-vous ici : {lien Décaler}\n\nÀ très vite,\n{prénom closer} - France IA"};
 
 const MSG_PAGE_AUJ = {type:"page", titre:"Restez disponible. Nous allons vous appeler pour confirmer le rendez-vous.",
   corps:"Cet appel sert à préparer votre visioconférence : nous faisons le point sur votre projet, pour que l'échange vous soit vraiment utile.\n\nVotre invitation vous est envoyée par e-mail, avec le lien de la visioconférence. Pensez à vérifier vos courriers indésirables.\n\n(au-dessus du titre : la date du RDV ; en dessous : la vidéo de présentation)"};
@@ -483,7 +485,7 @@ const MSG_NOSHOW_AUJ = {type:"mail", de:"{prénom closer}, depuis sa boîte Gmai
   corps:"Bonjour {prénom},\n\nNous avions rendez-vous {aujourd'hui ou date} pour échanger sur votre projet de formation en IA, mais nous n'avons pas réussi à vous avoir.\n\nSi vous souhaitez toujours avancer sur votre projet, vous pouvez choisir directement un nouveau créneau ici : {lien de reprise}\n\nSi votre projet ou vos disponibilités ont changé, aucun souci : vous pouvez simplement nous répondre à cet email pour nous le signaler.\n\nÀ bientôt,\n{prénom closer} - France IA"};
 
 const MSG_SMS_VEILLE_AUJ = {type:"sms", de:"Expéditeur « FranceIA » · réponse impossible",
-  corps:"Bonjour {{prenom}},\n\nPetit rappel pour votre échange avec {{prenom_closer}} de France IA prévu demain à {{heure}} en visio.\n\nTout le nécessaire vous a été envoyé par mail.\n\n{{consigne_cpf}}A demain,\nL'équipe France IA"};
+  corps:"Bonjour {{prenom}},\n\nPetit rappel pour votre échange avec {{prenom_closer}} de France IA prévu demain à {{heure}} en visio.\n\nTout le nécessaire vous a été envoyé par mail.\n\n((financement CPF|Si vous envisagez un financement CPF, préparez votre Identité Numérique La Poste avant le RDV : elle sera nécessaire à votre demande.\n\nTuto : {{lien_tuto}}))\n\nA demain,\nL'équipe France IA"};
 
 const MSG_SMS_8H_AUJ = {type:"sms", de:"Expéditeur « FranceIA » · signé par la setteuse",
   corps:"Bonjour {{prenom}},\n\nC'est {{prenom_setter}} de France IA, j'espère que vous allez bien !\n\nJe tenais à vous souhaiter un excellent rendez-vous en visio avec {{prenom_closer}} à {{heure}}.\n\nVous avez reçu tous les éléments par mail : pensez à bien vérifier vos spams si vous ne les trouvez pas. Si vous avez la moindre question, n'hésitez pas à me contacter directement à ce numéro : {{numero_setter_allo}}\n\nBelle journée,\n\n{{prenom_setter}} France IA"};
@@ -510,21 +512,24 @@ const ROX = {
 /* Messages du parcours proposé */
 const PRO = {
   confirm: {type:"mail", de:"{prénom closer}, depuis sa boîte Gmail", objet:"Votre rendez-vous France IA du {jour} à {heure}",
-    corps:"Bonjour {prénom},\n\nJe vous confirme notre rendez-vous du {jour} à {heure}, en visio. Nous ferons le point sur vos objectifs et votre usage actuel de l'IA, pour voir quel accompagnement vous correspond.\n\nAvant ce rendez-vous, {prénom setteuse} va vous appeler pour le préparer avec vous.\n\nLe lien Google Meet : {lien Meet}{consigne CPF si financement CPF}\n\nCe créneau vous est réservé. Si vous ne pouvez plus venir, décalez-le ici, il pourra servir à quelqu'un d'autre : {lien Décaler}\n\nÀ très vite,\n{prénom closer}\nFrance IA",
-    why:"Deux phrases de plus que le mail actuel : l'appel qui arrive, et le créneau « réservé » qu'on décale plutôt que de le laisser vide. La date passe dans l'objet.",
-    more:`« Je vous ai réservé une place » a fait passer la présence de 10,5 % à 26,8 % dans un essai sur des convocations ${R("sanders")} ; « d'autres attendent ce créneau » a fait baisser les absences de 21,1 % à 14,2 % ${R("berliner")}. L'ancien objet, « Rappel pour votre rendez-vous », annonçait un rappel alors que c'est la confirmation.`},
+    corps:"Bonjour {prénom},\n\nJe vous confirme notre rendez-vous du {jour} à {heure}, en visio. Nous ferons le point sur vos objectifs et votre usage actuel de l'IA, pour voir quel accompagnement vous correspond.\n\nAvant ce rendez-vous, {prénom setteuse} va vous appeler pour le préparer avec vous.\n\nPour que notre échange soit vraiment utile, prenez le temps de lire le programme d'ici là : [[retrouver le programme ici]]\n\n((financement CPF|Si vous envisagez d'utiliser votre CPF, vous devez installer et paramétrer l'application mobile Identité Numérique de La Poste avant le rendez-vous. C'est un prérequis : elle sera nécessaire à votre demande. Voilà le lien de téléchargement :\nApp Store : {lien App Store}\nPlay Store : {lien Play Store}))\n\nLe lien Google Meet : {lien Meet}\n\nCe créneau vous est réservé. Si vous ne pouvez plus venir, décalez-le ici, il pourra servir à quelqu'un d'autre : {lien Décaler}\n\nÀ très vite,\n{prénom closer}\nFrance IA",
+    why:"Le mail actuel, avec trois ajouts : l'appel qui arrive, le programme à lire avant le RDV, et le créneau « réservé » qu'on décale plutôt que de le laisser vide. La consigne Identité Numérique reste, pour le CPF. La date passe dans l'objet.",
+    more:`La phrase sur le programme reprend celle de l'ancien mail GHL « Rendez-vous IA à préparer », qui joignait le programme à la confirmation. « Je vous ai réservé une place » a fait passer la présence de 10,5 % à 26,8 % dans un essai sur des convocations ${R("sanders")} ; « d'autres attendent ce créneau » a fait baisser les absences de 21,1 % à 14,2 % ${R("berliner")}. L'ancien objet, « Rappel pour votre rendez-vous », annonçait un rappel alors que c'est la confirmation.`},
   vocalRdv: {type:"script", label:"Message vocal (15 secondes)", corps:"Bonjour {prénom}, c'est {prénom setteuse}, de France IA. Je vous appelle au sujet de votre rendez-vous du {jour} avec {prénom closer}, pour le préparer avec vous. Je vous envoie un SMS avec mon numéro et je vous rappelle un peu plus tard. Bonne journée.",
     why:"Il dit qui appelle, pourquoi, et ce qui va suivre. Rien de plus.",
     more:`Dans une étude observationnelle, un rappel laissé sur messagerie donne 24 % d'absences, contre 39 % quand personne n'est joint ${R("teo")}. Le vocal 1 de Roxane dure environ une minute à l'oral : on le garde pour l'appel décroché.`},
   smsRdv: {type:"sms", de:"Ligne Allô de la setteuse · réponse possible", corps:"Bonjour {prénom}, c'est {prénom setteuse} de France IA. Je viens de vous appeler pour préparer votre rendez-vous du {jour} à {heure}. Je réessaie un peu plus tard, ou rappelez-moi à ce numéro quand vous pouvez.",
     why:"Court, avec la date du RDV : le lead sait tout de suite pourquoi ce numéro l'appelle, et il peut répondre.",
     more:`Les SMS automatiques partent sous le nom « FranceIA », qui ne peut recevoir aucune réponse ${R("twilio")}. Depuis la ligne de la setteuse, la réponse arrive dans CRMIA. Le SMS 1 de Roxane fait plus de 400 caractères (3 SMS) et ne donne pas la date.`},
+  qualif: {type:"script", label:"Pendant l'appel : la grille de qualification de CRMIA", corps:"Métier, besoins, niveau en IA, pour quand.\n\n« Les deux jours en présentiel vous conviennent ? »\n\n« Vous avez pu regarder le programme ? Qu'est-ce qui vous parle le plus dedans ? » Pas reçu ou pas lu : le renvoyer pendant l'appel, et le noter.\n\nFinancement souhaité.\n\n((financement CPF|Diplôme bac+2 ?\n\n« Votre application Identité Numérique La Poste est-elle déjà installée et activée ? » Pas encore : lui envoyer le lien de l'application pendant l'appel, et obtenir son engagement à la préparer avant le RDV. S'il refuse : lead disqualifié, « Identité numérique non préparée ».))",
+    why:"Ce sont les cases que CRMIA fait déjà remplir. Le script les met dans l'ordre, et ajoute deux gestes : renvoyer le programme s'il n'est pas lu, envoyer le lien de l'application pendant l'appel.",
+    more:"Leads CPF, RDV pris du 01 au 19/10 : quand la case « Identité numérique » est remplie à la qualification, 64 ventes pour 187 RDV honorés (34 %) ; quand elle est vide, 1 vente pour 22. La case vide signale surtout un lead jamais qualifié : c'est une corrélation. Ceux qui n'avaient pas encore l'application mais se sont engagés à la préparer ont fait 17 ventes pour 43 RDV honorés, autant que ceux qui l'avaient déjà (44 pour 130)."},
   scriptRdv: {type:"script", label:"Pendant l'appel, une fois le lead qualifié", corps:"« Vous avez bien reçu l'invitation de {prénom closer} pour {jour} à {heure} ? Vous pouvez l'accepter maintenant, elle s'ajoute à votre agenda. »\n\n« Vous serez plutôt sur ordinateur ou sur téléphone ? D'où vous connecterez-vous ? »",
     why:"Le lead dit lui-même quand et comment il se connectera. C'est le geste d'engagement le mieux mesuré.",
     more:`Faire écrire la date et l'heure prévues : +4,2 points de vaccination, alors que la date seule ne change rien ${R("milkman11")}. Faire noter son RDV au patient : 18 % d'absences en moins ${R("martin")}. Le faire seulement répéter au téléphone fait beaucoup moins (−3,5 %) : d'où l'invitation à accepter et la question sur l'appareil.`},
-  smsVeille: {type:"sms", de:"Expéditeur « FranceIA » · aucune réponse attendue", corps:"Bonjour {prénom}, c'est {prénom closer} de France IA. Je vous ai réservé le créneau de demain, {heure}, pour notre échange en visio. Confirmez votre présence ou décalez en un clic : {lien du RDV}\n{consigne CPF si financement CPF}À demain,\n{prénom closer}",
-    why:"Signé du closer, il dit que le créneau est réservé et propose un seul geste : confirmer ou décaler. Pas de « répondez OUI » : personne ne pourrait lire la réponse.",
-    more:`Un lien « confirmer ou annuler » a fait baisser les absences de 21,1 % à 14,2 % et monter les annulations anticipées de 17,2 % à 26,3 % ${R("berliner")} : les créneaux libérés tôt se replacent. La page du lien montre « Je serai là », « Décaler » et le lien Meet.`},
+  smsVeille: {type:"sms", de:"Expéditeur « FranceIA » · réponse impossible", corps:"Bonjour {{prenom}},\n\nPetit rappel pour votre échange avec {{prenom_closer}} de France IA prévu demain à {{heure}} en visio.\n\nPrenez le temps de relire le programme d'ici là : il est dans votre mail, avec le lien de la visio.\n\n((financement CPF|Si vous envisagez un financement CPF, préparez votre Identité Numérique La Poste avant le RDV : elle sera nécessaire à votre demande.\n\nTuto : {{lien_tuto}}))\n\nA demain,\nL'équipe France IA",
+    why:"Le SMS de la veille d'aujourd'hui (texte de Tanguy du 07/10), avec une seule phrase changée : « Tout le nécessaire vous a été envoyé par mail » devient le programme à relire. Il reste le seul SMS qui porte la consigne Identité Numérique.",
+    more:`La veille est le dernier moment où un lead CPF peut encore installer et activer l'application : une heure avant, c'est trop tard. Des 295 leads CPF qui ont pris un RDV du 01 au 19/10, 80 n'avaient pas encore l'application à l'appel, ou ne savaient pas, et ont promis de la préparer avant le RDV. Deux rappels font aussi mieux qu'un ${R("steiner", "robotham")}. Pas de lien « Décaler » : Tanguy l'a écarté des SMS le 22/10, il reste dans les mails.`},
   smsH1: {type:"sms", de:"Expéditeur « FranceIA » · aucune réponse attendue", corps:"Bonjour {prénom}, je vous attends à {heure} pour notre échange en visio : {lien Meet}\nÀ tout à l'heure,\n{prénom closer}, France IA",
     why:"Le lien, au moment où le lead le cherche. Rien d'autre à lire.",
     more:`Penn Medicine envoie le lien seul 10 minutes avant chaque téléconsultation ${R("penn")} ; les éditeurs de prise de RDV conseillent 1 h, 15 min ou 1 min avant ${R("editeurs")}. Aucun essai ne compare ces moments entre eux : d'où le test proposé plus bas.`},
@@ -535,16 +540,16 @@ const PRO = {
     why:"Sans reproche, avec le lien de reprise et une porte de sortie par SMS. Il part seulement si l'appel de la setteuse ne décroche pas.",
     more:"En octobre, 13 des 15 leads qui ont repris un RDV dans les 48 h après un no show avaient été joints au téléphone. Le mail seul en a fait revenir 2. Le SMS sert de filet, l'appel fait le travail."},
   programme: {type:"mail", de:"{prénom setteuse}, depuis sa boîte Gmail", objet:"Votre programme France IA",
-    corps:"Bonjour {prénom},\n\nMerci pour votre intérêt pour les formations France IA. Vous pourrez [[retrouver le programme ici]].\n\nJe vais vous appeler {aujourd'hui ou demain matin} pour en parler avec vous et voir quelle formation vous correspond.\n\nVous pouvez répondre directement à cet email si vous avez une question.\n\nÀ bientôt,\n{prénom setteuse}\nFrance IA",
-    why:"Le mail actuel, plus l'annonce de l'appel (mail A de Roxane). Sans la phrase « répondez non » : écartée par Nizar et Tanguy le 23/10.",
-    more:"Un lead qui attend l'appel décroche plus volontiers à un numéro inconnu. Un « non » reçu par mail reste respecté : la setteuse lit ses réponses avant d'appeler. {aujourd'hui ou demain matin} dépend de l'heure d'arrivée (avant ou après 19 h)."},
+    corps:"Bonjour {prénom},\n\nMerci pour votre intérêt pour les formations France IA. Vous pourrez [[retrouver le programme ici]].\n\nPour que notre échange soit vraiment utile, prenez le temps de le lire avant.\n\nJe vais vous appeler {aujourd'hui ou demain matin} pour en parler avec vous et voir quelle formation vous correspond.\n\nVous pouvez répondre directement à cet email si vous avez une question.\n\nÀ bientôt,\n{prénom setteuse}\nFrance IA",
+    why:"Le mail actuel, plus deux phrases : lire le programme avant d'en parler, et l'appel qui arrive (mail A de Roxane). Sans la phrase « répondez non » : écartée par Nizar et Tanguy le 23/10.",
+    more:"Il part au formulaire, avant même la réservation : c'est le même mail, que le lead prenne RDV ou non. Un lead qui attend l'appel décroche plus volontiers à un numéro inconnu. Un « non » reçu par mail reste respecté : la setteuse lit ses réponses avant d'appeler. {aujourd'hui ou demain matin} dépend de l'heure d'arrivée (avant ou après 19 h)."},
   vocalMql: {type:"script", label:"Message vocal (15 secondes)", corps:"Bonjour {prénom}, c'est {prénom setteuse}, de France IA. Je vous appelle au sujet du programme que vous avez demandé, pour voir avec vous quelle formation vous correspond. Je vous envoie un SMS avec mon numéro et je vous rappelle un peu plus tard. Bonne journée.",
     why:"Qui, pourquoi, et ce qui va suivre.",
     more:`Un message vocal fait déjà mieux que pas de contact du tout (24 % d'absences contre 39 % sans réponse, étude observationnelle) ${R("teo")}.`},
   smsMql: {type:"sms", de:"Ligne Allô de la setteuse · réponse possible", corps:"Bonjour {prénom}, c'est {prénom setteuse} de France IA. Je viens de vous appeler au sujet de votre demande de programme. Je réessaie un peu plus tard, ou rappelez-moi à ce numéro quand vous pouvez.",
     why:"Le numéro de la setteuse devient reconnaissable pour le 2e appel, et le lead peut répondre par écrit.",
     more:`Envoyé depuis la ligne Allô de la setteuse, il peut recevoir une réponse, enregistrée dans CRMIA. Un SMS « FranceIA » ne le peut pas ${R("twilio")}.`},
-  scriptMql: {type:"script", label:"Pendant l'appel, une fois le lead qualifié", corps:"« Je vous propose {jour} à {heure} avec {prénom closer}. Je vous envoie l'invitation tout de suite : vous pouvez l'accepter pendant qu'on est en ligne. »\n\n« Vous serez plutôt sur ordinateur ou sur téléphone ? »",
+  scriptMql: {type:"script", label:"Pendant l'appel, une fois le lead qualifié (même grille que pour un RDV)", corps:"« Je vous propose {jour} à {heure} avec {prénom closer}. Je vous envoie l'invitation tout de suite : vous pouvez l'accepter pendant qu'on est en ligne. »\n\n« Vous serez plutôt sur ordinateur ou sur téléphone ? »",
     why:"Le RDV se pose pendant l'appel, au plus proche, et le lead le note lui-même.",
     more:`Les RDV posés par l'équipe le jour même ont été honorés 9 fois sur 10 en octobre. Faire noter date et heure au lead réduit les absences ${R("milkman11", "martin")}.`},
   mailJ1: {type:"mail", de:"{prénom setteuse}, depuis sa boîte Gmail", objet:"Votre demande de programme France IA",
@@ -730,30 +735,31 @@ roxane: {
 /* ===================== 3. PARCOURS PROPOSÉ ===================== */
 propose: {
   num:"3", nom:"Parcours proposé", titre:"Le parcours que je propose",
-  intro:"L'effort va aux appels, parce que c'est le décroché qui fait venir. Trois messages automatiques, chacun au moment où il sert. Et on n'annule qu'après avoir vraiment cherché à joindre le lead. Mis à jour le 23/10 avec les retours de Nizar et de Roxane (onglet « À trancher »).",
+  intro:"L'effort va aux appels, parce que c'est le décroché qui fait venir. Le lead arrive préparé : le programme lu et, s'il finance par le CPF, son Identité Numérique prête. C'est demandé dans les mails, vérifié pendant l'appel, rappelé la veille. Quatre messages automatiques, comme aujourd'hui, chacun au moment où il sert. Et on n'annule qu'après avoir vraiment cherché à joindre le lead. Mis à jour le 23/10 avec les retours de Nizar, de Roxane et de Tanguy.",
   detailLabel:"Pourquoi",
   paths:{
     rdv:{
       resume:[
         {n:"1 h", l:"objectif pour le 1er appel en journée (aujourd'hui : 2 h 40)"},
         {n:"3", l:"appels avant 18 h la veille, dont 2 le jour de la prise si l'heure le permet"},
-        {n:"3", l:"messages automatiques : confirmation, veille, 1 h avant"},
-        {n:"Test", l:"annulation après 3 appels sans réponse, avec un message pour reprendre RDV"},
+        {n:"2", l:"choses à préparer avant le RDV : lire le programme et, pour le CPF, activer l'Identité Numérique"},
+        {n:"4", l:"messages automatiques, comme aujourd'hui : programme, confirmation, veille, 1 h avant"},
       ],
       moments:[
         {t:"T0", sub:"le lead choisit son créneau", steps:[
           {canal:"page", qui:"Formulaire", tag:"same", n:"Page « on va vous appeler »", titre:"Page « Restez disponible, nous allons vous appeler »", court:"Déjà en place. Elle prépare le lead à décrocher.", msg:MSG_PAGE_AUJ},
+          {canal:"mail", qui:"Gmail de la setteuse, automatique", tag:"mod", n:"Mail programme, à lire avant", titre:"Mail programme : à lire avant d'en parler, appel annoncé", court:"Il part au formulaire, avant la réservation : c'est le même mail que pour une demande sans RDV. Il demande de lire le programme avant l'échange et annonce l'appel.", msg:PRO.programme,
+            detail:`<p>Aujourd'hui, il donne le lien du programme sans dire qu'il faut le lire. L'ancien mail GHL « Rendez-vous IA à préparer » le disait : « Pour que le rendez-vous soit efficace, je vous invite à consulter notre programme. »</p><p>Le programme est ensuite redemandé dans la confirmation, vérifié pendant l'appel et rappelé la veille.</p>`},
           {canal:"agenda", qui:"Agenda Google du closer", tag:"same", n:"Invitation Google Meet", titre:"Invitation Google avec le lien Meet", court:"Le RDV entre dans l'agenda du lead s'il l'accepte ; la setteuse le lui fera faire pendant l'appel.",
             detail:`<p>Aucun essai ne mesure l'invitation seule. Elle fait partie du dispositif de Penn Medicine (absences de 4,5 % à 3,9 % sur 1,36 million de visites) ${R("penn")}. Elle ne coûte rien et elle porte le lien Meet.</p>`},
-          {canal:"mail", qui:"Gmail du closer, automatique", tag:"mod", n:"Mail de confirmation", titre:"Mail de confirmation : l'appel annoncé, le créneau réservé", court:"Le même mail, avec l'appel de la setteuse et un « Décaler » présenté comme un service rendu à d'autres.", msg:PRO.confirm,
-            detail:`<p>Annoncer l'appel aide à décrocher, et c'est le décroché qui fait venir (81 % contre 45 %). Roxane le demande aussi ; le mettre dans ce mail évite un 3e mail en une minute.</p><p>Les deux tournures « réservé pour vous » et « d'autres attendent ce créneau » sont celles qui ont le mieux marché dans les essais ${R("sanders", "berliner", "milkman21")}.</p>`},
-          {canal:"mail", qui:"Gmail de la setteuse, automatique", tag:"same", n:"Mail programme", titre:"Mail « Votre programme France IA »", court:"Part déjà au formulaire, avant la réservation. Rien à changer pour un RDV."},
+          {canal:"mail", qui:"Gmail du closer, automatique", tag:"mod", n:"Mail de confirmation, à préparer", titre:"Mail de confirmation : l'appel annoncé, ce qu'il faut préparer, le créneau réservé", court:"Le même mail, avec l'appel de la setteuse, le programme à lire, la consigne Identité Numérique pour le CPF (déjà là aujourd'hui) et un « Décaler » présenté comme un service rendu à d'autres.", msg:PRO.confirm,
+            detail:`<p>Annoncer l'appel aide à décrocher, et c'est le décroché qui fait venir (81 % contre 45 %). Roxane le demande aussi ; le mettre dans ce mail évite un 3e mail en une minute.</p><p>La consigne Identité Numérique est celle du mail actuel, pour les leads qui ont choisi le CPF au formulaire : elle ajoute seulement « avant le rendez-vous ».</p><p>Les deux tournures « réservé pour vous » et « d'autres attendent ce créneau » sont celles qui ont le mieux marché dans les essais ${R("sanders", "berliner", "milkman21")}.</p>`},
         ]},
         {t:"Dans l'heure", sub:"objectif, aux heures d'appel en semaine", note:["Hors de ces plages : file du matin à 10 h, par ordre d'arrivée", "Ordre fixé par la colonne « Priorités » de CRMIA"], steps:[
           {canal:"appel", qui:"Setteuse", tag:"mod", n:"1er appel dans l'heure", titre:"1er appel dans l'heure, le plus tôt possible", court:"Un objectif, pas une règle : les setteuses sont en freelance, environ 4 h par jour. Aujourd'hui 2 h 40 en médiane ; appelé dans l'heure, un lead décroche à 60 %, contre 45 %.",
             detail:`<p>En octobre, dans les 15 minutes : 70 % de décroché (20 cas seulement). Dans la vente, contacter en moins d'une heure rend la qualification environ 7 fois plus probable ${R("hbr")} ; entre 5 et 30 minutes, les chances sont divisées par 21 ${R("lrm")}.</p><p>Pour s'en approcher sans règle impossible à tenir (proposition de Nizar) : CRMIA attribue le lead à une setteuse en service, et fait remonter en tête de la colonne « Priorités » un lead toujours pas appelé au bout d'une heure.</p><p>Les plages horaires sont celles du démarchage téléphonique (voir « Point conformité »). Elles ne coûtent presque rien : en semaine, le décroché ne change presque pas selon l'heure (32 % à 35 % d'une tranche à l'autre). Du 01 au 22/10, 454 appels de setteuse sur 3 646 sont partis en semaine avant 10 h ou entre 13 h et 14 h : ceux-là seraient à déplacer.</p><p>35 % des leads arrivent la nuit et 23 % le week-end : la file du matin compte autant que la vitesse en journée.</p>`},
-          {pour:"joint", canal:"appel", qui:"Setteuse", tag:"mod", n:"Qualifier, faire noter le RDV", titre:"Il décroche : qualifier, puis faire noter le RDV", court:"Le lead accepte l'invitation pendant l'appel et dit d'où il se connectera.", msg:PRO.scriptRdv,
-            detail:`<p>C'est le levier le plus fort : un lead joint vient à 81 %, un lead jamais joint à 45 %. Une partie de l'écart tient à la motivation (ceux qui décrochent sont aussi les plus intéressés), mais les essais confirment l'effet du contact humain : 13,6 % d'absences avec un appel du personnel, 17,3 % avec un automate, 23,1 % sans rien ${R("parikh")}.</p>`},
+          {pour:"joint", canal:"appel", qui:"Setteuse", tag:"mod", n:"Qualifier : programme, Identité Num.", titre:"Il décroche : qualifier (programme, Identité Numérique), puis faire noter le RDV", court:"La grille de CRMIA : programme lu, et pour le CPF, bac+2 et Identité Numérique prête ou promise avant le RDV. Puis le lead accepte l'invitation et dit d'où il se connectera.", msgs:[PRO.qualif, PRO.scriptRdv],
+            detail:`<p>Leads CPF, RDV pris du 01 au 19/10 : qui n'avait pas encore l'Identité Numérique mais a promis de la préparer a fait 17 ventes pour 43 RDV honorés, autant que qui l'avait déjà (44 pour 130). La préparer entre l'appel et le RDV marche, à condition de le demander pendant l'appel.</p><p>C'est le levier le plus fort : un lead joint vient à 81 %, un lead jamais joint à 45 %. Une partie de l'écart tient à la motivation (ceux qui décrochent sont aussi les plus intéressés), mais les essais confirment l'effet du contact humain : 13,6 % d'absences avec un appel du personnel, 17,3 % avec un automate, 23,1 % sans rien ${R("parikh")}.</p>`},
           {pour:"joint", canal:"crm", qui:"Setteuse", tag:"same", n:"Setté - RDV pris quali", titre:"« Setté - RDV pris quali »", court:"Plus d'appel de préparation ensuite : le lead setté reçoit seulement les deux rappels."},
           {pour:"non", canal:"sms", qui:"Setteuse", tag:"new", n:"Vocal + SMS de la setteuse", titre:"Pas de réponse : vocal court et SMS depuis sa ligne", court:"Le lead voit qui l'appelle et peut répondre. Aujourd'hui, rien ne part après un appel manqué.", msgs:[PRO.vocalRdv, PRO.smsRdv],
             detail:`<p>Un vocal fait déjà mieux que pas de contact du tout ${R("teo")}. Le SMS depuis la ligne Allô de la setteuse rend son numéro reconnaissable pour le 2e appel, et la réponse arrive dans CRMIA.</p><p>Ce SMS part une seule fois, après le 1er appel manqué : la suite passe par les appels et par les deux rappels automatiques.</p>`},
@@ -767,14 +773,14 @@ propose: {
             detail:`<p>Les leads joints au 3e appel viennent à 94 %. Changer d'heure d'un jour à l'autre : le lead qui ne décroche pas à 11 h décroche peut-être à 18 h.</p><p>Aujourd'hui, 3 New RDV sur 4 que la règle de 18 h viserait n'ont reçu qu'un appel, ou aucun. Avec 3 appels, on reste aussi sous la limite du démarchage téléphonique (4 sur 30 jours) ${R("demarchage")}.</p>`},
         ]},
         {t:"J-1 · 18:00", sub:"la veille", steps:[
-          {canal:"sms", qui:"Automatique, signé du closer", tag:"mod", n:"SMS veille, confirmer ou décaler", titre:"SMS de la veille : confirmer ou décaler en un clic", court:"Un seul lien, vers une page « Je serai là / Décaler » qui montre aussi le lien Meet. Pas de réponse à lire à la main.", msg:PRO.smsVeille, chips:["Pas envoyé si le RDV a été pris la veille (inchangé)"],
-            detail:`<p>Deux rappels font mieux qu'un ${R("steiner", "robotham")}, et en recevoir souvent n'en use pas l'effet ${R("altmann")}.</p><p>Le clic « Je serai là » dit à la setteuse qui appeler en priorité le matin. Dans un pilote, 58 % des patients qui n'avaient pas confirmé sont venus quand même ${R("stephenson")} : ne pas avoir cliqué ne suffit pas pour annuler.</p><p>Le clic « Décaler » libère le créneau assez tôt pour qu'une setteuse y place un lead déjà qualifié.</p>`},
+          {canal:"sms", qui:"Allô, expéditeur « FranceIA »", tag:"mod", n:"SMS veille : ce qu'il reste à préparer", titre:"SMS de la veille : relire le programme, préparer l'Identité Numérique", court:"Le SMS d'aujourd'hui, une phrase changée : le programme à relire. Pour le CPF, la consigne Identité Numérique, au dernier moment où on peut encore la préparer. Sans lien.", msg:PRO.smsVeille, chips:["Pas envoyé si le RDV a été pris la veille (inchangé)", "Pas envoyé à un RDV annulé à 18 h : l'annulation passe avant"],
+            detail:`<p>Ce SMS existe déjà. Aujourd'hui, il est le seul SMS à porter la consigne Identité Numérique ; l'autre endroit est le mail de confirmation. Le supprimer, ce serait la retirer des SMS.</p><p>Deux rappels font mieux qu'un ${R("steiner", "robotham")}, et en recevoir souvent n'en use pas l'effet ${R("altmann")}. Les SMS automatiques restent deux par RDV, comme aujourd'hui : celui-ci et celui d'une heure avant, qui remplace celui de 8 h.</p><p>Un lead jamais joint en reçoit en plus deux de sa setteuse : après le 1er appel manqué, et « répondez OUI » s'il reste injoignable après 3 appels.</p>`},
           {pour:"non", canal:"sms", qui:"Setteuse, depuis sa ligne Allô", tag:"new", n:"« Répondez OUI », sinon annulé", titre:"Pas joint après 3 appels : « répondez OUI », puis annulation à 18 h, en test", court:"La règle de Roxane, telle que l'écrit sa trame : seulement après 3 appels sans réponse. Le message d'annulation invite à reprendre RDV ; on ne rappelle pas ensuite.", msgs:[ROX.smsOui, ROX.smsAnnul, ROX.mailAnnul],
             detail:`<p>Appliquée à tous les leads pas joints à 18 h la veille, la règle aurait annulé 197 New RDV sur 458 du 01 au 22/10, dont 147 n'avaient reçu qu'un appel, ou aucun : 7 des 48 ventes des New RDV en jeu. Après 3 appels sans réponse, elle ne touchait que 14 RDV (1 vente) ; elle comptera davantage quand les 3 appels seront faits pour tout le monde.</p><p>Le SMS part de la ligne Allô de la setteuse, pour que la réponse « OUI » lui arrive. Le test dure 3 semaines et mesure les reprises de RDV dans les 7 jours, les créneaux replacés par une setteuse et les ventes. Le détail est dans l'onglet « À trancher ».</p>`},
         ]},
         {t:"J · 08:00", sub:"le matin du RDV", steps:[
-          {canal:"sms", qui:"Automatique", tag:"del", n:"SMS de 8 h", titre:"SMS de 8 h", court:"Supprimé : aucun effet mesuré, et trop loin des RDV de l'après-midi et du soir. Remplacé par le SMS d'une heure avant.", ghost:true,
-            detail:"<p>Depuis le 08/10, settés : 81 % de venue avec ce SMS, 89 % sans ; non settés : 34 % avec, 47 % sans. Aucun écart n'est significatif.</p>"},
+          {canal:"sms", qui:"Automatique", tag:"del", n:"SMS de 8 h", titre:"SMS de 8 h", court:"Remplacé par le SMS d'une heure avant : aucun effet mesuré, et trop loin des RDV de l'après-midi et du soir. Le nombre de SMS ne change pas.", ghost:true, msg:MSG_SMS_8H_AUJ,
+            detail:"<p>Depuis le 08/10, settés : 81 % de venue avec ce SMS, 89 % sans ; non settés : 34 % avec, 47 % sans. Aucun écart n'est significatif.</p><p>Il portait deux choses à ne pas perdre : le numéro de la setteuse, que le lead a déjà par son appel ou son SMS, et le rappel de vérifier les indésirables (14/10), moins utile quand le SMS d'une heure avant donne le lien lui-même. C'est le texte de Tanguy du 07/10 : sa suppression est à valider par lui.</p>"},
         ]},
         {t:"T-1 h", sub:"une heure avant", steps:[
           {canal:"sms", qui:"Automatique, signé du closer", tag:"new", n:"SMS 1 h avant, lien Meet", titre:"SMS avec le lien Meet", court:"Le lien, là où le lead le cherche. Pour tous les RDV, joints ou non.", msg:PRO.smsH1,
@@ -803,20 +809,24 @@ propose: {
       resume:[
         {n:"1 h", l:"objectif pour le 1er appel en journée (aujourd'hui : 3 h 20)"},
         {n:"3", l:"appels sur 2 à 3 jours, dont 2 le premier jour si l'heure le permet"},
-        {n:"4", l:"messages : SMS après le 1er appel manqué, mail J+1, clôture SMS et mail"},
+        {n:"4", l:"messages de plus pour un lead jamais joint : SMS après le 1er appel manqué, mail J+1, clôture SMS et mail"},
         {n:"1", l:"lien pour réserver seul, dès le lendemain"},
       ],
       moments:[
         {t:"T0", sub:"demande de programme", steps:[
           {canal:"crm", qui:"CRMIA et Slack", tag:"same", n:"Attribution à une setteuse", titre:"Attribution par rotation", court:"Inchangée : la setteuse est connue dès le formulaire, son prénom signe tout ce qui suit."},
-          {canal:"mail", qui:"Gmail de la setteuse, automatique", tag:"mod", n:"Mail programme, appel annoncé", titre:"Mail programme : l'appel annoncé", court:"Le mail actuel, plus l'annonce de l'appel du mail A de Roxane. Sans la phrase « répondez non », écartée le 23/10.", msg:PRO.programme},
+          {canal:"mail", qui:"Gmail de la setteuse, automatique", tag:"mod", n:"Mail programme, à lire avant", titre:"Mail programme : à lire avant d'en parler, appel annoncé", court:"Le mail actuel, plus deux phrases : lire le programme avant l'appel, et l'appel qui arrive (mail A de Roxane). Sans la phrase « répondez non », écartée le 23/10.", msg:PRO.programme},
           {canal:"page", qui:"Écran du calendrier", tag:"new", n:"Case « rappelé aujourd'hui »", titre:"Case « Je veux être rappelé aujourd'hui », en test", court:"Pour le lead qui ne trouve pas son créneau ou veut une réponse tout de suite (Roxane). Du lundi au vendredi, de 8 h à 19 h ; cochée, la demande passe en tête de la colonne « Priorités ».",
             detail:"<p>94 % des MQL du 01 au 19/10 sont passés par cet écran sans réserver. En semaine, 64 % de ceux-là sont appelés le jour même, 18 % jamais : la case dit lesquels ne doivent pas attendre. Le détail est dans l'onglet « À trancher ».</p>"},
+        ]},
+        {t:"T+1 h", sub:"créneau choisi sans RDV confirmé", cote:true, cond:"Créneau sans RDV", steps:[
+          {canal:"sms", qui:"Mail de la setteuse + SMS « FranceIA »", tag:"same", n:"Relance « RDV non confirmé »", titre:"Relance « votre RDV n'est pas encore confirmé »", court:"Gardée telle quelle. Prévue depuis le 09/10, aucun envoi réel n'a été vu en octobre : à vérifier avant tout le reste.", ghost:true,
+            detail:"<p>82 leads ont choisi un créneau sans aller au bout du 01 au 19/10 (onglet « À trancher »). C'est la relance la plus ciblée qui existe : si elle ne part pas, ces leads n'ont que l'appel.</p>"},
         ]},
         {t:"Dans l'heure", sub:"objectif, aux heures d'appel en semaine", note:["Hors de ces plages : file du matin à 10 h, par ordre d'arrivée", "En journée, la demande la plus récente d'abord"], steps:[
           {canal:"appel", qui:"Setteuse", tag:"mod", n:"1er appel dans l'heure", titre:"1er appel dans l'heure, le plus tôt possible", court:"Un objectif, pas une règle. Aujourd'hui 3 h 20 en médiane. En semaine, appelées dans l'heure : 6 ventes sur 52 demandes, contre 2 à 3 % au-delà.",
             detail:`<p>Demandes du 01 au 19/10, en semaine de 9 h à 18 h : 6 ventes sur 52 appelées dans l'heure, 2 sur 108 entre 1 et 4 h, 3 sur 90 entre 4 et 24 h ; 54 sur 326 jamais appelées. Contacter en moins d'une heure rend la qualification environ 7 fois plus probable ${R("hbr")}, et le délai entre 5 et 30 minutes compte déjà ${R("lrm")}.</p><p>Les chances chutent pendant la 1re heure, puis bougent peu : en journée, la demande la plus récente passe d'abord. Une demande « rappelé aujourd'hui » (case du calendrier, en test) passe devant, comme un rappel convenu.</p>`},
-          {pour:"joint", canal:"appel", qui:"Setteuse", tag:"mod", n:"Qualifier, poser le RDV", titre:"Il décroche : qualifier, poser le RDV au plus proche", court:"Le RDV se pose pendant l'appel ; le lead accepte l'invitation en ligne. Il suit ensuite le parcours « RDV pris », côté lead joint.", msg:PRO.scriptMql, goto:"rdv"},
+          {pour:"joint", canal:"appel", qui:"Setteuse", tag:"mod", n:"Qualifier, poser le RDV", titre:"Il décroche : qualifier (programme, Identité Numérique), poser le RDV au plus proche", court:"La même grille que pour un RDV : programme lu, et pour le CPF, Identité Numérique prête ou promise avant le RDV. Le RDV se pose pendant l'appel ; le lead reçoit la confirmation et suit le parcours « RDV pris », côté lead joint.", msgs:[PRO.qualif, PRO.scriptMql], goto:"rdv"},
           {pour:"non", canal:"sms", qui:"Setteuse", tag:"new", n:"Vocal + SMS de la setteuse", titre:"Pas de réponse : vocal court et SMS depuis sa ligne", court:"Aujourd'hui, rien ne part après un appel manqué.", msgs:[PRO.vocalMql, PRO.smsMql]},
         ]},
         {t:"1 à 2 h après", sub:"si l'heure le permet", steps:[
@@ -842,7 +852,11 @@ const COMPARE = [
   {m:"Le lead remplit le formulaire", s:"T0",
     auj:"Mail programme de la setteuse. Avec un RDV : invitation Google et mail du closer en plus.",
     rox:"Mail A (appel annoncé, « répondez non »). Avec un RDV : mail E, sans lien Meet.",
-    pro:"Les mêmes mails, qui annoncent l'appel. Le mail de confirmation présente le créneau comme « réservé pour vous ». Pas de « répondez non »."},
+    pro:"Les mêmes mails, qui annoncent l'appel et demandent de lire le programme avant. Le mail de confirmation présente le créneau comme « réservé pour vous ». Pas de « répondez non »."},
+  {m:"Préparer le RDV", s:"programme, CPF",
+    auj:"Programme envoyé au formulaire, sans demander de le lire. Identité Numérique (CPF) : dans le mail de confirmation et le SMS de la veille, et vérifiée à l'appel quand la setteuse joint le lead.",
+    rox:"Brochure dans le mail A, plaquette jointe au mail E, sans demander de les lire. L'Identité Numérique n'apparaît pas dans les trames.",
+    pro:"Programme à lire avant le RDV : dans les deux mails, vérifié à l'appel, rappelé la veille. Identité Numérique (CPF) : même chemin, avec le lien de l'application envoyé pendant l'appel et l'engagement de la préparer noté par la setteuse."},
   {m:"1er appel", s:"délai",
     auj:"Aucun délai : 2 h 40 en médiane avec RDV, 3 h 20 sans.",
     rox:"J1 sans RDV, « dès que possible » avec RDV. Case « MQL prioritaire ».",
@@ -868,9 +882,9 @@ const COMPARE = [
     rox:"« Répondez OUI avant 18 h la veille », sinon annulation.",
     pro:"Après 3 appels sans réponse : « répondez OUI » depuis la ligne de la setteuse, puis annulation à 18 h avec un lien pour reprendre RDV. En test 3 semaines."},
   {m:"La veille", s:"18:00",
-    auj:"SMS « FranceIA » sans lien.",
+    auj:"SMS « FranceIA » sans lien, avec la consigne Identité Numérique pour le CPF.",
     rox:"SMS avec lien Meet, « répondez LIEN ».",
-    pro:"SMS signé du closer, un lien « confirmer ou décaler »."},
+    pro:"Le même SMS, recentré sur ce qu'il reste à préparer : relire le programme, et l'Identité Numérique pour le CPF. Sans lien « Décaler », écarté des SMS le 22/10."},
   {m:"Le jour du RDV", s:"rappel",
     auj:"SMS de 8 h de la setteuse, pour tous.",
     rox:"SMS de 8 h, settés seulement.",
@@ -897,15 +911,17 @@ const PRINCIPES = [
     d:`<p>Ailleurs aussi, le contact de vive voix sépare ceux qui viennent des autres : 3 % d'absences quand le rappel est donné de vive voix, 39 % quand personne ne répond ${R("teo")}. Un appel du personnel fait mieux qu'un automate, qui fait mieux que rien ${R("parikh")}.</p><p>Une part de l'écart tient à la motivation : un lead joint de plus ne passera pas forcément de 45 % à 81 %. Mais même à moitié, c'est environ un RDV honoré de plus pour six leads joints en plus.</p>`},
   {k:"46 % / 19 %", ks:"de leads joints au 2e appel : le jour même ou le lendemain", h:"Vite, puis une 2e fois le même jour", p:"1er appel dans l'heure en objectif, 2e le jour même quand l'heure le permet. C'est le plus gros gain mesuré.",
     d:`<p>Dans l'heure, le 1er appel décroche à 60 % contre 45 %. Les études de vente vont dans le même sens, avec des écarts bien plus forts ${R("hbr", "lrm", "velocify")}.</p>`},
-  {k:"37 %", ks:"de venue d'un lead jamais joint, RDV à partir de 17 h", h:"Le lien au moment où il sert", p:"Deux rappels : la veille pour confirmer ou décaler, une heure avant avec le lien Meet.",
-    d:`<p>Deux rappels font mieux qu'un ${R("steiner", "robotham")}. Le SMS de 8 h n'a aucun effet mesuré et arrive des heures avant les RDV du soir, où les leads jamais joints viennent le moins.</p>`},
+  {k:"17 sur 43", ks:"ventes des leads CPF qui ont promis à l'appel de préparer leur Identité Numérique (RDV honorés)", h:"Arriver préparé, avec le lien", p:"Le programme lu et, pour le CPF, l'Identité Numérique prête : demandés dans les mails, vérifiés à l'appel, rappelés la veille. Une heure avant, le lien Meet.",
+    d:`<p>Promettre de préparer l'Identité Numérique vend autant que l'avoir déjà (44 ventes pour 130 RDV honorés) : la préparation se fait entre l'appel et le RDV, d'où le rappel de la veille.</p><p>Deux rappels font mieux qu'un ${R("steiner", "robotham")}. Le SMS de 8 h n'a aucun effet mesuré et arrive des heures avant les RDV du soir, où les leads jamais joints viennent le moins (37 % à partir de 17 h) : celui d'une heure avant le remplace et porte le lien.</p>`},
   {k:"3 sur 4", ks:"des leads que viserait la règle de 18 h n'avaient eu qu'un appel, ou aucun", h:"N'annuler qu'après avoir vraiment cherché", p:"3 appels à des moments différents avant 18 h la veille. Ensuite seulement, « répondez OUI », puis l'annulation, en test.",
     d:`<p>Appliquée à tous les leads pas joints à 18 h la veille, la règle aurait annulé 43 % des New RDV et mis en jeu 7 des 48 ventes. Ailleurs, 58 % des non-confirmants sont venus quand même ${R("stephenson")}. Un lien « confirmer ou décaler » libère aussi des créneaux tôt, sans rien annuler ${R("berliner")}.</p>`},
 ];
 
 const CHANGEMENTS = [
   {h:"1er appel dans l'heure en objectif, 3 appels avant 18 h la veille", p:"Règle d'équipe, avec une file du matin à 10 h pour les demandes de la nuit et du week-end.", e:"Sans développement", c:"e0"},
-  {h:"Textes des mails : appel annoncé, créneau réservé", p:"Mail programme et mail de confirmation, dans les contenus de CRMIA. Sans « répondez non ».", e:"Texte", c:"e0"},
+  {h:"Script d'appel : programme lu, Identité Numérique pour le CPF", p:"Les cases existent déjà dans la grille de CRMIA. Deux gestes en plus : renvoyer le programme s'il n'est pas lu, envoyer le lien de l'application pendant l'appel.", e:"Sans développement", c:"e0"},
+  {h:"Textes des mails : appel annoncé, programme à lire avant, créneau réservé", p:"Mail programme et mail de confirmation, dans les contenus de CRMIA. La consigne Identité Numérique reste dans la confirmation. Sans « répondez non ».", e:"Texte", c:"e0"},
+  {h:"SMS de la veille : le programme à relire", p:"Une phrase du texte du 07/10 change. La consigne Identité Numérique reste. Pas de lien.", e:"Texte", c:"e0"},
   {h:"Rappel du jour : « 60 minutes avant » à la place de « 8 h »", p:"Le mode « délai » existe déjà dans les réglages des calendriers.", e:"Réglage", c:"e0"},
   {h:"Brancher Fathom sur CRMIA", p:"Le point d'arrivée existe déjà dans CRMIA : il manque les clés et le go. Donne la durée des R1 et la matière de la note A/B/C.", e:"Réglage", c:"e0"},
   {h:"Variable « lien Meet » dans les SMS", p:"Pour le SMS d'une heure avant et le SMS « je vous attends ».", e:"Petit développement", c:"e1"},
@@ -919,7 +935,6 @@ const CHANGEMENTS = [
   {h:"Colonne « Priorités » et attribution aux setteuses en service", p:"Rappels convenus, New RDV à qualifier, MQL du jour, relances ; un lead pas appelé au bout d'une heure remonte en tête.", e:"Développement moyen", c:"e2"},
   {h:"Annulation après 3 appels sans réponse, en test", p:"SMS « répondez OUI » depuis la ligne de la setteuse, puis SMS et mail d'annulation avec le lien pour reprendre RDV.", e:"Développement moyen", c:"e2"},
   {h:"Note A, B ou C à trois moments", p:"Proposée par l'IA à partir du formulaire, de l'appel et du motif du closer ; validée par la personne.", e:"Développement moyen", c:"e2"},
-  {h:"Page « Je serai là / Décaler » et liste des RDV non confirmés", p:"Prolonge le lien « Décaler » du 22/10 ; la setteuse voit le matin qui n'a pas cliqué.", e:"Développement moyen", c:"e2"},
 ];
 
 const KPIS = [
@@ -941,6 +956,12 @@ const EFFORTS = {
 };
 
 const QUESTIONS = [
+  {qui:"Tanguy", q:"Où est passé le programme envoyé ? Il faut qu'elle le consulte en amont.", k:"4 fois",
+    r:"Il était resté dans le parcours, mais noté « rien à changer » et jamais présenté comme à lire. Il est maintenant demandé quatre fois : le mail programme (« prenez le temps de le lire avant »), la confirmation (avec le lien), l'appel de la setteuse (« vous avez pu regarder le programme ? », renvoyé sinon), et le SMS de la veille."},
+  {qui:"Tanguy", q:"Où est passée l'identité numérique, absolument à créer pour le CPF ?", k:"17 sur 43",
+    r:"Elle n'apparaissait que sous forme de variable dans deux messages, et pas dans le script d'appel. Elle est maintenant écrite en toutes lettres dans la confirmation, l'appel et le SMS de la veille. Les leads CPF qui ne l'avaient pas encore à l'appel mais ont promis de la préparer ont fait 17 ventes pour 43 RDV honorés, autant que ceux qui l'avaient déjà (44 pour 130)."},
+  {qui:"Tanguy", q:"Pourquoi un SMS la veille, alors qu'il y a déjà d'autres SMS ?", k:"2",
+    r:"SMS automatiques par RDV, comme aujourd'hui : celui de la veille existe déjà (votre texte du 07/10), et celui d'une heure avant remplace celui de 8 h. La veille est le dernier moment pour préparer l'Identité Numérique : ce SMS est le seul à la rappeler. J'y avais mis un lien « confirmer ou décaler », alors que vous aviez écarté le lien « Décaler » des SMS le 22/10 : retiré, avec la page qui allait avec."},
   {qui:"Nizar", q:"Combien de ventes font les New RDV préqualifiés, et les autres ?", k:"45 sur 48",
     r:"Les leads préqualifiés par la setteuse font presque toutes les ventes des New RDV : 24,5 % de ventes par RDV pris, contre 2,8 % pour les autres. Ils viennent à 84 %, les autres à 33 %."},
   {qui:"Nizar", q:"Quel est le taux de présence des leads qu'on n'a pas joints ?", k:"53 %",
@@ -1191,17 +1212,23 @@ const id = p => `${p}-${++uid}`;
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 
 /* Texte d'un message : liens [[...]], variables {{...}}, {...} et [...] mises en évidence. */
+/* ((condition|texte)) : passage envoyé seulement dans ce cas, montré en encadré. */
+const COND = /\(\(([^|()]+)\|([\s\S]*?)\)\)/g;
 function fmt(txt){
   return esc(txt)
+    .replace(COND, (m, c, t) => `\u0001${c}\u0002${t}\u0003`)
     .replace(/\[\[([^\]]+)\]\]|\{\{([^}]+)\}\}|\{([^}]+)\}|\[([^\]]+)\]/g, (m, lnk, v2, v1, v0) =>
       lnk ? `<span class="lnk">${lnk}</span>` : `<span class="var">${v2 || v1 || v0}</span>`)
-    .replace(/\n/g, "<br>");
+    .replace(/\n/g, "<br>")
+    .replace(/(<br>)*\u0001([^\u0002]*)\u0002(<br>)*/g, (m, a, c) => `<span class="cond"><span class="cond-l">Seulement si ${c}</span>`)
+    .replace(/(<br>)*\u0003(<br>)*/g, "</span>");
 }
+const sansCond = t => t.replace(COND, "$2");
 
 function renderMsg(m){
   let h = "";
   if (m.type === "sms"){
-    h = `<p class="msg-h">SMS · ${esc(m.de || "")}</p><div class="sms">${fmt(m.corps)}</div><p class="msg-meta">≈ ${m.corps.length} caractères, variables non remplies</p>`;
+    h = `<p class="msg-h">SMS · ${esc(m.de || "")}</p><div class="sms">${fmt(m.corps)}</div><p class="msg-meta">≈ ${sansCond(m.corps).length} caractères avec les passages conditionnels, variables non remplies</p>`;
   } else if (m.type === "mail"){
     h = `<div class="mail"><dl><dt>De</dt><dd>${esc(m.de || "")}</dd><dt>Objet</dt><dd>${esc(m.objet || "")}</dd></dl><div class="mail-b">${fmt(m.corps)}</div></div>`;
   } else if (m.type === "script"){
@@ -1490,7 +1517,7 @@ function extras(){
   const ch = CHANGEMENTS.map(c => `<li class="row"><div><h4>${c.h}</h4><p>${c.p}</p></div>${effortPill(c.c, c.e)}</li>`).join("");
   const kp = KPIS.map(k => `<div class="card kpi"><h4>${k.h}</h4><p class="now">${k.now}</p><p>${k.p}</p></div>`).join("");
   return `
-  <section class="block"><h3>Ce qui change dans CRMIA</h3><p class="lead">Dans l'ordre où je le ferais. Les quatre premiers ne demandent aucun développement ; Fathom attend seulement le go.</p><ul class="rows">${ch}</ul></section>
+  <section class="block"><h3>Ce qui change dans CRMIA</h3><p class="lead">Dans l'ordre où je le ferais. Les ${CHANGEMENTS.filter(c => c.c === "e0").length} premiers ne demandent aucun développement ; Fathom attend seulement le go.</p><ul class="rows">${ch}</ul></section>
   <section class="block"><h3>Les chiffres à suivre chaque semaine</h3><p class="lead">Pour savoir si le parcours marche, sans attendre la fin du mois.</p><div class="grid3">${kp}</div>
     <div class="card note-box"><h4>Un test à lancer : SMS d'une heure avant contre SMS de 8 h</h4>
       <p>Aucune étude ne compare un rappel une heure avant et un rappel le matin. On peut le mesurer chez nous : pendant 4 semaines, une semaine avec le SMS de 8 h, une semaine avec celui d'une heure avant, en alternant (environ 800 RDV). C'est un réglage à changer le lundi, rien de plus.</p>
@@ -1543,7 +1570,7 @@ function renderArbitrages(){
   const all = ARB_THEMES.flatMap(t => t.items);
   const n = k => all.filter(it => it.s === k).length;
   const compte = Object.keys(STATUTS).map(k => `<span class="statut st-${k}">${n(k)} · ${STATUTS[k]}</span>`).join("");
-  const head = `<div class="v-head"><h2>Ce qu'il reste à trancher</h2><p>Nizar et Roxane ont répondu le 23/10 sur les six points du setting, puis Roxane a précisé la case « MQL prioritaire » après les questions de Tanguy. Pour chacun : leurs positions, ce que répondent les données de CRMIA, et ma recommandation. Les parcours des onglets Roxane et Proposé sont mis à jour en conséquence.</p><div class="legend">${compte}</div></div>`;
+  const head = `<div class="v-head"><h2>Ce qu'il reste à trancher</h2><p>Nizar et Roxane ont répondu le 23/10 sur les six points du setting, puis Roxane a précisé la case « MQL prioritaire » après les questions de Tanguy. Les trois questions de Tanguy sur le programme, l'Identité Numérique et le SMS de la veille ont leur réponse plus bas. Pour chacun : leurs positions, ce que répondent les données de CRMIA, et ma recommandation. Les parcours des onglets Roxane et Proposé sont mis à jour en conséquence.</p><div class="legend">${compte}</div></div>`;
   const decs = DECISIONS.map(k => ARB_ITEMS[k]).map(it => `<li class="dec"><div><h4>${it.h}</h4><p>${it.reco}</p></div><div class="dec-a">${effortChip(it.e)}<button type="button" class="lien" data-arb="${it.id}">Le détail</button></div></li>`).join("");
   const go = GO_DEV.map(k => ARB_ITEMS[k]).map(it => `<li><button type="button" class="lien" data-arb="${it.id}">${it.h}</button>${effortChip(it.e)}</li>`).join("");
   const feuille = `<section class="block first"><h3>La feuille de décision</h3><p class="lead">Les ${DECISIONS.length} points qui attendent Tanguy, dans l'ordre où je les trancherais. Chaque ligne renvoie à son détail, plus bas.</p>
