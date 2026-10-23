@@ -8,381 +8,386 @@
 <meta name="description" content="Le parcours d'un lead, du formulaire au rendez-vous : ce qui existe aujourd'hui dans CRMIA, la proposition de Roxane, et le parcours proposé, avec les messages et leurs justifications.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&family=IBM+Plex+Mono:wght@500;600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fragment+Mono&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
+/* Design system France IA : blanc, encre, bleu du logo en seul accent. */
 :root{
-  --paper:#F3F5F9; --card:#FFFFFF; --ink:#13203A; --ink2:#2B3754; --muted:#5B6680; --rail:#CBD3E2; --line:#E1E6EF; --soft:#E9EDF4;
-  --tile:#13203A; --tile-ink:#F3F5F9;
-  --c-appel:#0E8A6A; --c-sms:#3756C8; --c-mail:#A86412; --c-crm:#6B4FD8; --c-web:#4E6E8E;
-  --ok:#1F8A4C; --adj:#B7791F; --no:#C2410C;
-  --new:#3756C8; --mod:#B7791F; --same:#5B6680; --del:#C2410C;
-  --joint:#0E8A6A; --non:#C2410C;
-  --bubble:#E9EDF4; --bubble-me:#DCE5FB;
-  --focus:#3756C8;
-  --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
-  --f-body:"Public Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
-  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --ink:#16161a; --ink2:#2e2e36; --muted:#54545e; --faint:#8a8a96;
+  --line:#e6e6ee; --line2:#d6d6e0; --bg:#ffffff; --soft:#f7f7fa; --soft2:#f1f1f5;
+  --blue:#4379f2; --blue-50:#EFF6FF; --blue-line:#cddbfb; --red:#DC2626;
+  --f-display:"Manrope", system-ui, sans-serif;
+  --f-body:"DM Sans", system-ui, sans-serif;
+  --f-mono:"Fragment Mono", ui-monospace, monospace;
+  --r:18px; --r-s:12px;
+  --shadow:0 1px 2px rgba(22,22,26,.05), 0 4px 14px rgba(22,22,26,.04);
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --paper:#0F1626; --card:#172036; --ink:#E7ECF5; --ink2:#C9D2E3; --muted:#97A3BC; --rail:#33415E; --line:#27334D; --soft:#1E2942;
-    --tile:#E7ECF5; --tile-ink:#0F1626;
-    --c-appel:#3CC59E; --c-sms:#8EA6FF; --c-mail:#E0A35A; --c-crm:#A994FF; --c-web:#8FB0CF;
-    --ok:#4CC27F; --adj:#E2B04F; --no:#F27A4A;
-    --new:#8EA6FF; --mod:#E2B04F; --same:#97A3BC; --del:#F27A4A;
-    --joint:#3CC59E; --non:#F27A4A;
-    --bubble:#22304D; --bubble-me:#2A3A66; --focus:#8EA6FF;
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --paper:#0F1626; --card:#172036; --ink:#E7ECF5; --ink2:#C9D2E3; --muted:#97A3BC; --rail:#33415E; --line:#27334D; --soft:#1E2942;
-  --tile:#E7ECF5; --tile-ink:#0F1626;
-  --c-appel:#3CC59E; --c-sms:#8EA6FF; --c-mail:#E0A35A; --c-crm:#A994FF; --c-web:#8FB0CF;
-  --ok:#4CC27F; --adj:#E2B04F; --no:#F27A4A;
-  --new:#8EA6FF; --mod:#E2B04F; --same:#97A3BC; --del:#F27A4A;
-  --joint:#3CC59E; --non:#F27A4A;
-  --bubble:#22304D; --bubble-me:#2A3A66; --focus:#8EA6FF;
-  color-scheme:dark;
-}
-
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0; background:var(--paper); color:var(--ink); font:16px/1.55 var(--f-body); overflow-x:hidden}
-a{color:inherit}
+html{-webkit-text-size-adjust:100%; scroll-padding-top:64px}
+body{margin:0; background:var(--bg); color:var(--ink); font:400 15.5px/1.6 var(--f-body); -webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--f-display); color:var(--ink); margin:0; letter-spacing:-.01em}
+p{margin:0 0 10px}
+a{color:var(--blue)}
+b,strong{font-weight:600}
 button{font:inherit; color:inherit}
-:focus-visible{outline:2px solid var(--focus); outline-offset:2px; border-radius:6px}
-.wrap{max-width:1080px; margin:0 auto; padding:0 24px}
-@media (max-width:640px){ .wrap{padding:0 16px} }
+:focus-visible{outline:2px solid var(--blue); outline-offset:2px; border-radius:6px}
+.wrap{max-width:1180px; margin:0 auto; padding:0 24px}
+.muted{color:var(--muted)}
 
-/* ---------- En-tête ---------- */
-.top{padding-top:44px; padding-bottom:8px}
-.eyebrow{font:600 12.5px/1.2 var(--f-mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 14px}
-h1{font:800 clamp(34px,5.4vw,58px)/1.02 var(--f-display); letter-spacing:-.025em; margin:0 0 26px; font-variation-settings:"wdth" 92}
-.thesis{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:36px; align-items:end; padding-bottom:30px; border-bottom:1px solid var(--line)}
-.thesis p.big{font:600 clamp(21px,2.5vw,27px)/1.3 var(--f-display); letter-spacing:-.01em; margin:0 0 12px}
-.thesis p.small{margin:0; color:var(--muted); font-size:15px}
-.bars{display:grid; gap:14px}
-.bar{display:grid; grid-template-columns:1fr auto; gap:4px 12px; align-items:baseline}
+/* En-tête */
+.top{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:56px; align-items:end; padding-top:56px; padding-bottom:40px}
+.eyebrow{font:400 11.5px/1.4 var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:18px; display:flex; align-items:center; gap:10px}
+.eyebrow::before{content:""; width:8px; height:8px; border-radius:2px; background:var(--blue)}
+.nw{white-space:nowrap}
+h1{font-weight:800; font-size:clamp(34px,5vw,54px); line-height:1.04; letter-spacing:-.025em; margin-bottom:18px}
+.top .lead{font-size:17px; color:var(--muted); max-width:58ch; margin:0}
+.thesis{border:1px solid var(--line); border-radius:var(--r); padding:22px 22px 18px; background:var(--bg)}
+.thesis-h{font:400 11px/1.4 var(--f-mono); letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-bottom:14px}
+.bar{display:grid; grid-template-columns:1fr auto; align-items:baseline; gap:4px 12px; margin-bottom:14px}
 .bar .lbl{font-size:14px; color:var(--ink2)}
-.bar .val{font:700 30px/1 var(--f-display); letter-spacing:-.02em}
-.bar .track{grid-column:1 / -1; height:12px; border-radius:6px; background:var(--soft); overflow:hidden}
-.bar .fill{height:100%; border-radius:6px; width:0; transition:width .9s cubic-bezier(.2,.7,.2,1)}
-.bar.j .fill{background:var(--joint)} .bar.j .val{color:var(--joint)}
-.bar.n .fill{background:var(--non)} .bar.n .val{color:var(--non)}
-.bars .note{font-size:12.5px; color:var(--muted); margin:2px 0 0}
-@media (max-width:760px){ .thesis{grid-template-columns:1fr; gap:22px} }
+.bar .val{font:800 26px/1 var(--f-display); letter-spacing:-.02em}
+.bar.n .val{color:var(--muted)}
+.track{grid-column:1/-1; height:8px; border-radius:99px; background:var(--soft2); overflow:hidden}
+.fill{height:100%; width:0; border-radius:99px; background:var(--blue); transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.bar.n .fill{background:#a3a3ae}
+.thesis .note{font-size:12.5px; color:var(--muted); margin:2px 0 0}
 
-/* ---------- Onglets ---------- */
-.tabs-bar{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-bottom:1px solid var(--line)}
-.tabs{display:flex; gap:4px; padding:10px 0; overflow-x:auto; scrollbar-width:none}
+/* Onglets */
+.tabs-bar{position:sticky; top:0; z-index:40; background:rgba(255,255,255,.94); backdrop-filter:saturate(1.4) blur(10px); -webkit-backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--line)}
+.tabs{display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; margin:0 -8px}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:0 0 auto; border:1px solid transparent; background:none; padding:9px 14px; border-radius:999px; cursor:pointer; font-weight:600; font-size:15px; color:var(--muted); display:flex; gap:8px; align-items:center; white-space:nowrap}
-.tab .n{font:600 12px/1 var(--f-mono); display:inline-grid; place-items:center; width:22px; height:22px; border-radius:6px; background:var(--soft); color:var(--ink2)}
+.tab{border:0; background:none; padding:15px 10px 13px; font-size:14.5px; font-weight:500; color:var(--muted); border-bottom:2px solid transparent; cursor:pointer; white-space:nowrap}
 .tab:hover{color:var(--ink)}
-.tab[aria-selected="true"]{background:var(--card); border-color:var(--line); color:var(--ink); box-shadow:0 1px 2px rgba(19,32,58,.06)}
-.tab[aria-selected="true"] .n{background:var(--tile); color:var(--tile-ink)}
-
-/* ---------- Version ---------- */
-.version{padding-top:30px; padding-bottom:70px}
-.v-head{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:18px; align-items:start; margin-bottom:20px}
-.v-head h2{font:700 clamp(26px,3.2vw,34px)/1.1 var(--f-display); letter-spacing:-.02em; margin:0 0 8px}
-.v-head p{margin:0; color:var(--ink2); max-width:62ch}
-.legend{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:13px; color:var(--muted); margin-top:12px}
-.legend span{display:inline-flex; gap:6px; align-items:center}
-.legend i{width:9px; height:9px; border-radius:50%; display:inline-block}
-
-.controls{display:flex; flex-wrap:wrap; gap:12px 18px; align-items:center; margin:18px 0 14px}
-.seg{display:inline-flex; background:var(--soft); border-radius:12px; padding:4px; gap:2px}
-.seg button{border:0; background:none; padding:8px 14px; border-radius:9px; cursor:pointer; font-weight:600; font-size:14.5px; color:var(--muted); text-align:left; line-height:1.2}
-.seg button small{display:block; font:500 11px/1.2 var(--f-mono); letter-spacing:.04em; color:var(--muted); margin-top:2px}
-.seg button[aria-pressed="true"]{background:var(--card); color:var(--ink); box-shadow:0 1px 2px rgba(19,32,58,.08)}
-.cas{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
-.cas .lab{font-size:13px; color:var(--muted); margin-right:2px}
-.cas button{border:1px solid var(--line); background:var(--card); padding:6px 12px; border-radius:999px; cursor:pointer; font-size:13.5px; font-weight:500; color:var(--ink2); display:inline-flex; gap:6px; align-items:center}
-.cas button i{width:8px; height:8px; border-radius:50%; background:var(--muted)}
-.cas button[data-c="joint"] i{background:var(--joint)} .cas button[data-c="non"] i{background:var(--non)}
-.cas button[aria-pressed="true"]{border-color:var(--ink); color:var(--ink); font-weight:600}
-
-.resume{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:0 0 30px}
-.resume div{background:var(--card); padding:14px 16px}
-.resume dt{font:700 24px/1.1 var(--f-display); letter-spacing:-.02em; margin-bottom:4px}
-.resume dd{margin:0; font-size:13px; color:var(--muted); line-height:1.35}
-@media (max-width:760px){ .resume{grid-template-columns:repeat(2,minmax(0,1fr))} }
-
-/* ---------- Frise ---------- */
-.tl{list-style:none; margin:0; padding:0; position:relative}
-.mo{display:grid; grid-template-columns:140px 30px minmax(0,1fr); gap:0 6px; position:relative; padding-bottom:22px}
-.mo::before{content:""; position:absolute; left:calc(140px + 6px + 14px); top:0; bottom:0; width:2px; background:var(--rail)}
-.mo:last-child::before{bottom:auto; height:22px}
-.mo:first-child::before{top:14px}
-.when{padding-top:2px; text-align:right}
-.tile{display:inline-block; position:relative; background:var(--tile); color:var(--tile-ink); font:600 14px/1 var(--f-mono); letter-spacing:.01em; padding:9px 10px 9px; border-radius:6px; white-space:nowrap; overflow:hidden}
-.tile::after{content:""; position:absolute; left:0; right:0; top:50%; height:1px; background:color-mix(in srgb, var(--tile-ink) 18%, transparent)}
-.when .sub{display:block; font-size:12.5px; color:var(--muted); margin-top:6px; line-height:1.3}
-.dot{position:relative; z-index:1; width:14px; height:14px; border-radius:50%; background:var(--card); border:3px solid var(--ink); margin:10px 0 0 8px}
-.what{display:grid; gap:10px; min-width:0}
-.mo-note{display:flex; flex-wrap:wrap; gap:6px}
-@media (max-width:640px){
-  .mo{grid-template-columns:22px minmax(0,1fr); gap:0 8px}
-  .mo::before{left:6px}
-  .when{grid-column:2; text-align:left; display:flex; gap:10px; align-items:center; margin-bottom:8px; padding-top:0}
-  .when .sub{margin:0}
-  .dot{grid-column:1; grid-row:1; margin:8px 0 0 0}
-  .what{grid-column:2}
-}
-
-/* ---------- Cartes ---------- */
-.card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:13px 16px 14px; position:relative; min-width:0}
-.card::before{content:""; position:absolute; left:-1px; top:14px; bottom:14px; width:3px; border-radius:0 3px 3px 0; background:var(--ch)}
-.card-h{display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center; margin-bottom:6px}
-.canal{display:inline-flex; gap:6px; align-items:center; font:600 11.5px/1 var(--f-mono); letter-spacing:.05em; text-transform:uppercase; color:var(--ch)}
-.canal i{width:8px; height:8px; border-radius:2px; background:var(--ch)}
-.qui{font-size:13px; color:var(--muted)}
-.badges{margin-left:auto; display:flex; gap:6px; flex-wrap:wrap}
-.card h4{margin:0 0 4px; font:600 16px/1.35 var(--f-body)}
-.court{margin:0; font-size:14.5px; color:var(--ink2)}
-.chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:9px}
-.chip{font-size:12px; line-height:1.3; padding:3px 8px; border-radius:6px; border:1px dashed var(--rail); color:var(--muted)}
-.acts{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px}
-.tgl{border:1px solid var(--line); background:var(--paper); border-radius:8px; padding:5px 10px; font-size:13px; font-weight:600; cursor:pointer; color:var(--ink2); display:inline-flex; gap:6px; align-items:center}
-.tgl::after{content:""; width:6px; height:6px; border-right:1.6px solid currentColor; border-bottom:1.6px solid currentColor; transform:rotate(45deg) translateY(-2px); transition:transform .2s}
-.tgl[aria-expanded="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
-.tgl[aria-expanded="true"]::after{transform:rotate(-135deg) translateY(-1px)}
-.panel{margin-top:12px; border-top:1px solid var(--line); padding-top:12px; font-size:14.5px; color:var(--ink2)}
-.panel p{margin:0 0 8px} .panel p:last-child{margin-bottom:0}
-.panel ul{margin:0 0 8px; padding-left:18px} .panel li{margin:3px 0}
-.panel b{color:var(--ink)}
-.card.ghost{background:transparent; border-style:dashed}
-.card.ghost::before{opacity:.45}
-.card.removed h4{text-decoration:line-through; text-decoration-color:var(--del); color:var(--muted)}
-
-.verdict,.tag{font:600 11px/1 var(--f-mono); letter-spacing:.04em; text-transform:uppercase; padding:5px 7px; border-radius:5px; display:inline-flex; gap:5px; align-items:center; white-space:nowrap}
-.verdict::before{content:""; width:7px; height:7px; border-radius:50%; background:currentColor}
-.v-ok{color:var(--ok); background:color-mix(in srgb, var(--ok) 12%, transparent)}
-.v-adj{color:var(--adj); background:color-mix(in srgb, var(--adj) 14%, transparent)}
-.v-no{color:var(--no); background:color-mix(in srgb, var(--no) 12%, transparent)}
-.t-new{color:var(--new); background:color-mix(in srgb, var(--new) 12%, transparent)}
-.t-mod{color:var(--mod); background:color-mix(in srgb, var(--mod) 14%, transparent)}
-.t-same{color:var(--same); background:color-mix(in srgb, var(--same) 12%, transparent)}
-.t-del{color:var(--del); background:color-mix(in srgb, var(--del) 12%, transparent)}
-
-/* Voies */
-.lanes{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px}
-.lanes.one{grid-template-columns:minmax(0,1fr)}
-.lane{display:grid; gap:10px; align-content:start; min-width:0}
-.lane-h{font:600 11.5px/1 var(--f-mono); letter-spacing:.05em; text-transform:uppercase; display:flex; gap:7px; align-items:center; padding:2px 2px 0}
-.lane-h i{width:8px; height:8px; border-radius:50%}
-.lane.joint .lane-h{color:var(--joint)} .lane.joint .lane-h i{background:var(--joint)}
-.lane.non .lane-h{color:var(--non)} .lane.non .lane-h i{background:var(--non)}
-.lane-empty{border:1px dashed var(--rail); border-radius:12px; padding:12px 14px; font-size:13.5px; color:var(--muted)}
-@media (max-width:760px){ .lanes{grid-template-columns:minmax(0,1fr)} }
-
-/* ---------- Messages ---------- */
-.msg + .msg{margin-top:14px}
-.msg-h{font:600 11.5px/1.3 var(--f-mono); letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin-bottom:6px}
-.sms{max-width:440px}
-.sms .bub{background:var(--bubble); border-radius:16px 16px 16px 4px; padding:10px 13px; font-size:14.5px; line-height:1.5; color:var(--ink)}
-.sms .meta{font-size:12px; color:var(--muted); margin-top:5px}
-.mail{border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--card)}
-.mail dl{margin:0; padding:9px 13px; background:var(--soft); display:grid; grid-template-columns:auto 1fr; gap:2px 10px; font-size:13px}
-.mail dt{color:var(--muted)} .mail dd{margin:0; color:var(--ink); font-weight:500}
-.mail .body{padding:12px 13px; font-size:14.5px; line-height:1.55; color:var(--ink)}
-.script{border-left:3px solid var(--c-appel); padding:6px 0 6px 13px; font-size:14.5px; color:var(--ink); font-style:italic}
-.pagemsg{border:1px solid var(--line); border-radius:10px; padding:14px; background:var(--card)}
-.pagemsg strong{display:block; font:700 17px/1.3 var(--f-display); margin-bottom:6px; color:var(--ink)}
-.var{font:500 .86em/1 var(--f-mono); background:color-mix(in srgb, var(--c-crm) 13%, transparent); color:var(--c-crm); padding:1px 5px; border-radius:4px; white-space:nowrap; font-style:normal}
-.lnk{color:var(--c-sms); text-decoration:underline; text-underline-offset:2px}
-.msg .why{font-size:13px; color:var(--muted); margin-top:6px}
-
-/* Info-bulles */
-.term{border-bottom:1px dotted currentColor; cursor:help; position:relative}
-.term::after{content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 8px); transform:translateX(-50%); width:max-content; max-width:min(300px,80vw); background:var(--ink); color:var(--paper); font:400 12.5px/1.45 var(--f-body); padding:8px 10px; border-radius:8px; opacity:0; pointer-events:none; transition:opacity .15s; z-index:30; text-transform:none; letter-spacing:0; white-space:normal; text-align:left}
-.term:hover::after,.term:focus::after{opacity:1}
-.ref{font:600 11px/1 var(--f-mono); color:var(--c-sms); text-decoration:none; vertical-align:super; padding:0 1px}
-.ref:hover{text-decoration:underline}
-
-/* ---------- Sections du parcours proposé ---------- */
-.block{margin-top:44px}
-.block > h3{font:700 22px/1.2 var(--f-display); letter-spacing:-.015em; margin:0 0 6px}
-.block > p.lead{margin:0 0 16px; color:var(--ink2); max-width:66ch}
-.principles{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
-.principle{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px}
-.principle .k{font:700 30px/1 var(--f-display); letter-spacing:-.02em; color:var(--ink); margin-bottom:8px}
-.principle .k small{font:500 13px/1.3 var(--f-body); color:var(--muted); letter-spacing:0; display:block; margin-top:4px}
-.principle h4{margin:0 0 4px; font:600 16.5px/1.35 var(--f-body)}
-.principle p{margin:0; font-size:14.5px; color:var(--ink2)}
-@media (max-width:760px){ .principles{grid-template-columns:minmax(0,1fr)} }
-
-.changes{display:grid; gap:8px; counter-reset:ch}
-.change{display:grid; grid-template-columns:30px minmax(0,1fr) auto; gap:4px 12px; align-items:start; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px}
-.change::before{counter-increment:ch; content:counter(ch); font:600 13px/1 var(--f-mono); width:26px; height:26px; border-radius:6px; display:grid; place-items:center; background:var(--tile); color:var(--tile-ink)}
-.change h4{margin:2px 0 2px; font:600 15.5px/1.35 var(--f-body)}
-.change p{margin:0; font-size:14px; color:var(--ink2)}
-.effort{font:600 11px/1 var(--f-mono); letter-spacing:.04em; text-transform:uppercase; padding:5px 7px; border-radius:5px; white-space:nowrap; color:var(--muted); background:var(--soft)}
-.effort.e0{color:var(--ok); background:color-mix(in srgb, var(--ok) 12%, transparent)}
-.effort.e1{color:var(--c-sms); background:color-mix(in srgb, var(--c-sms) 12%, transparent)}
-.effort.e2{color:var(--adj); background:color-mix(in srgb, var(--adj) 14%, transparent)}
-@media (max-width:640px){ .change{grid-template-columns:26px minmax(0,1fr)} .change .effort{grid-column:2; justify-self:start} }
-
-.kpis{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden}
-.kpi{background:var(--card); padding:14px 16px}
-.kpi h4{margin:0 0 4px; font:600 15px/1.35 var(--f-body)}
-.kpi .now{font:600 12px/1.3 var(--f-mono); color:var(--muted); letter-spacing:.02em}
-.kpi p{margin:6px 0 0; font-size:14px; color:var(--ink2)}
-@media (max-width:760px){ .kpis{grid-template-columns:minmax(0,1fr)} }
-.abtest{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-top:12px}
-.abtest h4{margin:0 0 6px; font:600 16px/1.35 var(--f-body)}
-.abtest p{margin:0 0 8px; font-size:14.5px; color:var(--ink2)} .abtest p:last-child{margin:0}
-
-.sources{margin:0; padding:0; list-style:none; display:grid; gap:8px; counter-reset:src}
-.sources li{display:grid; grid-template-columns:34px minmax(0,1fr); gap:10px; font-size:13.5px; color:var(--ink2); scroll-margin-top:80px}
-.sources li::before{counter-increment:src; content:"[" counter(src) "]"; font:600 12px/1.6 var(--f-mono); color:var(--c-sms)}
-.sources li:target{background:color-mix(in srgb, var(--c-sms) 9%, transparent); border-radius:8px}
-.sources .fiab{font:600 10.5px/1 var(--f-mono); text-transform:uppercase; letter-spacing:.04em; padding:3px 5px; border-radius:4px; background:var(--soft); color:var(--muted); margin-left:4px; white-space:nowrap}
-.sources a{word-break:break-word}
-
-/* ---------- Comparer ---------- */
-.cmp{display:grid; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--line); gap:1px}
-.cmp-row{display:grid; grid-template-columns:170px repeat(3,minmax(0,1fr)); gap:1px}
-.cmp-row > div{background:var(--card); padding:12px 14px; font-size:14px; color:var(--ink2); min-width:0}
-.cmp-row.head > div{background:var(--soft); font:600 12px/1.3 var(--f-mono); letter-spacing:.04em; text-transform:uppercase; color:var(--muted)}
-.cmp-row .m{font-weight:600; color:var(--ink); font-size:14px}
-.cmp-row .m small{display:block; font:500 12px/1.3 var(--f-mono); color:var(--muted); margin-top:3px}
-.cmp-row .c-pro{background:color-mix(in srgb, var(--c-sms) 5%, var(--card))}
-.cmp-row .lbl{display:none}
-.cmp .nil{color:var(--muted); font-style:italic}
-@media (max-width:820px){
-  .cmp-row{grid-template-columns:minmax(0,1fr)}
-  .cmp-row.head{display:none}
-  .cmp-row .m{background:var(--soft)}
-  .cmp-row .lbl{display:block; font:600 11px/1.2 var(--f-mono); letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin-bottom:4px}
-}
-
-/* ---------- Pied ---------- */
-.foot{border-top:1px solid var(--line); padding-top:26px; padding-bottom:60px; font-size:13.5px; color:var(--muted)}
-.foot details{max-width:76ch}
-.foot summary{cursor:pointer; font-weight:600; color:var(--ink2)}
-.foot ul{padding-left:18px}
-
-@media (prefers-reduced-motion:reduce){
-  *{transition:none !important; animation:none !important}
-}
-
-/* ---------- Compléments ---------- */
-.msg .why{display:block}
-.why-d{margin-top:6px; font-size:13px; color:var(--muted)}
-.why-d summary{cursor:pointer; list-style:none; display:block}
-.why-d summary::-webkit-details-marker{display:none}
-.why-d summary b{color:var(--ink2); font-weight:600}
-.why-d summary .plus{font:600 11px/1 var(--f-mono); letter-spacing:.04em; text-transform:uppercase; color:var(--c-sms); margin-left:6px; white-space:nowrap}
-.why-d[open] summary .plus{color:var(--muted)}
-.why-d .more{margin-top:6px; padding:8px 10px; border-radius:8px; background:var(--soft); color:var(--ink2); font-size:13.5px}
-.goto{border:0; background:none; padding:0; margin-top:8px; font-size:13.5px; font-weight:600; color:var(--c-sms); cursor:pointer; text-decoration:underline; text-underline-offset:2px}
-.legal{background:color-mix(in srgb, var(--adj) 7%, var(--card)); border:1px solid color-mix(in srgb, var(--adj) 35%, var(--line)); border-radius:14px; padding:16px 18px}
-.legal h4{margin:0 0 8px; font:600 16px/1.35 var(--f-body)}
-.legal ul{margin:0; padding-left:18px; font-size:14.5px; color:var(--ink2)}
-.legal li{margin:5px 0}
-.legal p{margin:10px 0 0; font-size:13px; color:var(--muted)}
-.principle .acts{margin-top:10px}
-.cmp-intro{margin:0 0 16px; color:var(--ink2); max-width:66ch}
-.theme-btn{position:absolute; right:24px; top:44px; border:1px solid var(--line); background:var(--card); border-radius:999px; padding:6px 12px; font-size:13px; cursor:pointer; color:var(--ink2)}
-.top{position:relative}
-@media (max-width:640px){
-  .theme-btn{top:16px; right:16px}
-  .tabs .tab .lg{display:none}
-  .tabs .tab .sm{display:inline}
-  .tab{padding:8px 11px; font-size:14.5px}
-  .top{padding-top:56px}
-  .term::after{position:fixed; left:16px; right:16px; bottom:16px; top:auto; transform:none; width:auto; max-width:none; font-size:13.5px}
-}
-
+.tab[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--blue)}
 .tab .sm{display:none}
 
-/* ---------- À trancher ---------- */
-.block.first{margin-top:26px}
-.statut{font:600 11px/1 var(--f-mono); letter-spacing:.04em; text-transform:uppercase; padding:5px 7px; border-radius:5px; display:inline-flex; gap:5px; align-items:center; white-space:nowrap}
-.statut::before{content:""; width:7px; height:7px; border-radius:50%; background:currentColor}
-.st-trancher{color:var(--adj); background:color-mix(in srgb, var(--adj) 14%, transparent)}
-.st-accord{color:var(--ok); background:color-mix(in srgb, var(--ok) 12%, transparent)}
-.st-tranche{color:var(--same); background:color-mix(in srgb, var(--same) 12%, transparent)}
-.who{flex:0 0 auto; width:26px; height:26px; border-radius:50%; display:inline-grid; place-items:center; font:700 12.5px/1 var(--f-display); color:var(--card)}
-.w-n{background:var(--c-sms)} .w-r{background:var(--c-crm)} .w-t{background:var(--c-mail)}
-.voir{border:0; background:none; padding:0; font-size:13.5px; font-weight:600; color:var(--c-sms); cursor:pointer; text-decoration:underline; text-underline-offset:2px; text-align:left}
+/* Contenu */
+.vue{max-width:none; padding-top:40px; padding-bottom:24px; outline:none}
+.vue > *{max-width:1132px; margin-left:auto; margin-right:auto}
+.vue > .flow-wrap{max-width:1760px}
+.v-head{margin-bottom:26px}
+.v-head > p{max-width:760px}
+.v-head h2{font-weight:800; font-size:clamp(25px,3vw,32px); line-height:1.15; letter-spacing:-.02em; margin-bottom:10px}
+.v-head p{color:var(--muted); font-size:16px}
+.block{margin-top:64px}
+.block.first{margin-top:12px}
+.block h3{font-weight:700; font-size:22px; line-height:1.25; margin-bottom:8px}
+.block > .lead{color:var(--muted); max-width:72ch; margin-bottom:20px}
+.card{border:1px solid var(--line); border-radius:var(--r); padding:20px 22px; background:var(--bg)}
+.card h4{font-weight:700; font-size:16.5px; line-height:1.3; margin-bottom:8px}
+.grid2,.grid3,.grid4{display:grid; gap:14px}
+.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.k{font:800 28px/1.1 var(--f-display); letter-spacing:-.02em; color:var(--ink)}
+.ks{font-size:12.5px; color:var(--muted); margin:2px 0 12px}
 
-.decs{list-style:none; margin:0; padding:0; display:grid; gap:8px; counter-reset:dec}
-.dec{display:grid; grid-template-columns:30px minmax(0,1fr) auto; gap:4px 14px; align-items:start; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:13px 14px}
-.dec::before{counter-increment:dec; content:counter(dec); font:600 13px/1 var(--f-mono); width:26px; height:26px; border-radius:6px; display:grid; place-items:center; background:color-mix(in srgb, var(--adj) 18%, var(--card)); color:var(--ink)}
-.dec h4{margin:2px 0 3px; font:600 15.5px/1.35 var(--f-body)}
-.dec p{margin:0; font-size:14px; color:var(--ink2)}
-.dec-a{display:flex; flex-direction:column; gap:8px; align-items:flex-end; padding-top:2px}
-@media (max-width:640px){ .dec{grid-template-columns:26px minmax(0,1fr)} .dec-a{grid-column:2; flex-direction:row; align-items:center; justify-content:space-between} }
-.go{margin-top:12px; background:color-mix(in srgb, var(--ok) 6%, var(--card)); border:1px solid color-mix(in srgb, var(--ok) 30%, var(--line)); border-radius:14px; padding:14px 18px}
-.go h4{margin:0 0 10px; font:600 15.5px/1.35 var(--f-body)}
-.go ul{margin:0; padding:0; list-style:none; display:grid; gap:8px}
-.go li{display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; justify-content:space-between}
+/* Barre d'outils du schéma */
+.toolbar{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px}
+.seg{display:inline-flex; padding:4px; border:1px solid var(--line); border-radius:99px; background:var(--soft); gap:2px; max-width:100%}
+.seg button{border:0; background:none; border-radius:99px; padding:8px 16px; font-size:14px; font-weight:500; color:var(--muted); cursor:pointer; display:inline-flex; align-items:baseline; gap:8px; white-space:nowrap}
+.seg button small{font:400 10.5px/1 var(--f-mono); letter-spacing:.05em; text-transform:uppercase; color:var(--faint)}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--bg); color:var(--ink); box-shadow:0 1px 2px rgba(22,22,26,.08), 0 0 0 1px var(--line)}
+.seg button[aria-pressed="true"] small{color:var(--blue)}
+.zoom{display:inline-flex; align-items:center; gap:2px; border:1px solid var(--line); border-radius:99px; padding:3px}
+.zoom button{border:0; background:none; min-width:32px; height:30px; border-radius:99px; cursor:pointer; font-size:16px; color:var(--ink2)}
+.zoom button:hover{background:var(--soft2)}
+.zoom .fit{font-size:13px; font-weight:500; padding:0 12px; border-left:1px solid var(--line); border-radius:0 99px 99px 0}
+#zoom-v{font:400 11.5px/1 var(--f-mono); color:var(--muted); min-width:44px; text-align:center}
 
-.qas{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px}
-.qa{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px}
-.qa .q{margin:0 0 12px; display:flex; gap:10px; align-items:flex-start; font-size:14px; color:var(--ink2); line-height:1.4}
-.qa .q b{display:block; color:var(--ink); font-weight:600; font-size:13px}
-.qa .k{font:700 30px/1 var(--f-display); letter-spacing:-.02em; margin:0 0 6px; color:var(--ink)}
-.qa > p:last-child{margin:0; font-size:14px; color:var(--ink2)}
-@media (max-width:900px){ .qas{grid-template-columns:repeat(2,minmax(0,1fr))} }
-@media (max-width:640px){ .qas{grid-template-columns:minmax(0,1fr)} }
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-top:0; margin-bottom:18px}
+.stats div{border:1px solid var(--line); border-radius:14px; padding:14px 16px}
+.stats dt{font:800 24px/1.1 var(--f-display); letter-spacing:-.02em}
+.stats dd{margin:4px 0 0; font-size:13px; line-height:1.4; color:var(--muted)}
 
-.block > p.lead.src{font:500 12px/1.3 var(--f-mono); letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin-bottom:14px}
-.arbs{display:grid; gap:12px}
-.arb{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; position:relative; scroll-margin-top:76px}
-.arb::before{content:""; position:absolute; left:-1px; top:16px; bottom:16px; width:3px; border-radius:0 3px 3px 0; background:var(--adj)}
-.arb.s-accord::before{background:var(--ok)} .arb.s-tranche::before{background:var(--same)}
-.arb-h{display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center; margin-bottom:8px}
-.arb h4{margin:0 0 14px; font:700 19px/1.25 var(--f-display); letter-spacing:-.01em}
-.arb-b{display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:18px}
-.pos{display:grid; gap:12px; align-content:start}
-.pos .p{display:flex; gap:10px; align-items:flex-start}
-.pos .p b{font-size:13px; font-weight:600; color:var(--ink)}
-.pos .p p{margin:1px 0 0; font-size:14px; color:var(--ink2); line-height:1.45}
-.arb-d{border-left:1px solid var(--line); padding-left:18px}
-.arb-d .k{font:700 28px/1.05 var(--f-display); letter-spacing:-.02em; margin-bottom:8px}
-.arb-d .k small{display:block; font:500 12.5px/1.35 var(--f-body); letter-spacing:0; color:var(--muted); margin-top:4px}
-.arb-d p{margin:0; font-size:14.5px; color:var(--ink2)}
-.reco{margin-top:14px; background:var(--soft); border-radius:10px; padding:10px 14px}
-.reco b{display:block; font:600 11px/1.2 var(--f-mono); letter-spacing:.05em; text-transform:uppercase; color:var(--muted); margin-bottom:4px}
-.reco p{margin:0; font-size:14.5px; color:var(--ink); font-weight:500}
-.arb.flash{animation:flash 1.4s ease-out}
-@keyframes flash{0%{box-shadow:0 0 0 3px color-mix(in srgb, var(--focus) 45%, transparent)} 100%{box-shadow:0 0 0 3px transparent}}
-@media (max-width:760px){ .arb-b{grid-template-columns:minmax(0,1fr); gap:14px} .arb-d{border-left:0; padding-left:0; border-top:1px solid var(--line); padding-top:12px} .arb{padding:14px 16px} }
+.legend{display:flex; flex-wrap:wrap; align-items:center; gap:6px 16px; margin-bottom:12px; font-size:12.5px; color:var(--muted)}
+.lg-i{display:inline-flex; align-items:center; gap:6px}
+.lg-i svg{width:14px; height:14px; fill:none; stroke:var(--ink2); stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+.lg-sep{width:1px; height:14px; background:var(--line2)}
 
-.tbl{overflow-x:auto; margin:0 0 12px}
-.mini{width:100%; border-collapse:collapse; font-size:13.5px; font-variant-numeric:tabular-nums}
-.mini caption{text-align:left; font:600 11.5px/1.35 var(--f-mono); letter-spacing:.03em; text-transform:uppercase; color:var(--muted); padding-bottom:6px}
+/* Le schéma */
+.flow{position:relative; border:1px solid var(--line); border-radius:var(--r); overflow:auto; cursor:grab; background-color:var(--bg);
+  background-image:radial-gradient(circle, #d9d9e2 1px, transparent 1.2px); background-size:20px 20px; overscroll-behavior-x:contain}
+.flow.drag{cursor:grabbing; user-select:none}
+.flow.drag .node{cursor:grabbing}
+.flow-in{position:relative; transform-origin:0 0}
+.seg-t{position:absolute; top:0; padding:14px 14px 0; border-left:1px dashed var(--line2); pointer-events:none}
+.seg-t:first-child{border-left:0}
+.seg-t:nth-child(even){background:rgba(244,244,250,.55)}
+.seg-t b{display:block; font:400 11px/1.3 var(--f-mono); letter-spacing:.05em; text-transform:uppercase; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.seg-t span{display:block; font-size:12px; line-height:1.35; color:var(--muted); margin-top:3px; max-width:260px}
+.edges{position:absolute; inset:0; overflow:visible; pointer-events:none}
+.edges path{fill:none; stroke:#b8b8c6; stroke-width:1.5}
+.edges path.faible{stroke-dasharray:4 4}
+.edges marker path{fill:#b8b8c6; stroke:none}
+.el{position:absolute; transform:translate(-50%,-50%); max-width:104px; padding:2px 8px; border:1px solid var(--line); border-radius:99px; background:var(--bg);
+  font:400 10.5px/1.25 var(--f-mono); color:var(--muted); text-align:center; z-index:1; pointer-events:none}
+
+.node{position:absolute; display:flex; flex-direction:column; align-items:center; gap:8px; padding:0; border:0; background:none; text-align:center; z-index:2}
+button.node{cursor:pointer}
+.tile{position:relative; width:56px; height:56px; border-radius:15px; border:1px solid var(--line2); background:var(--bg); display:grid; place-items:center; box-shadow:var(--shadow); transition:transform .15s, box-shadow .15s, border-color .15s}
+.tile svg{width:24px; height:24px; fill:none; stroke:var(--ink); stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round}
+.nl{font-size:13px; line-height:1.3; font-weight:500; color:var(--ink); max-width:122px}
+.nm{display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:500; color:var(--blue); margin-top:-4px}
+.nm svg{width:12px; height:12px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+button.node:hover .tile{transform:translateY(-2px); border-color:#bdbdca; box-shadow:0 2px 4px rgba(22,22,26,.06), 0 10px 24px rgba(22,22,26,.08)}
+button.node[aria-pressed="true"] .tile{border-color:var(--blue); box-shadow:0 0 0 4px var(--blue-50), var(--shadow)}
+button.node[aria-pressed="true"] .tile svg{stroke:var(--blue)}
+.node.ghost .tile{border-style:dashed; background:transparent; box-shadow:none}
+.node.ghost .tile svg{stroke:var(--faint)}
+.node.ghost .nl{color:var(--muted)}
+.node.del{opacity:.55}
+.node.del .nl{text-decoration:line-through}
+.node.depart .tile{background:var(--ink); border-color:var(--ink)}
+.node.depart .tile svg{stroke:#fff; fill:#fff}
+.node.depart .nl,.node.si .nl{font-weight:600}
+.node.si .tile{width:42px; height:42px; margin:7px; border-radius:10px; transform:rotate(45deg); background:var(--soft)}
+.node.si .tile svg{transform:rotate(-45deg); width:20px; height:20px}
+.node.si .nl{margin-top:-6px}
+.node.fin .tile{background:var(--soft); box-shadow:none}
+.node.fin .tile svg{stroke:var(--muted)}
+.node.fin .nl{color:var(--muted)}
+.node.suite .tile{background:var(--blue-50); border-color:var(--blue-line); box-shadow:none}
+.node.suite .tile svg{stroke:var(--blue)}
+.node.suite .nl{color:var(--blue)}
+.node.suite:hover .nl{text-decoration:underline; text-underline-offset:3px}
+
+/* Marques : verdict de Roxane, changements du parcours proposé */
+.vd{position:absolute; top:-7px; right:-7px; width:20px; height:20px; border-radius:50%; display:grid; place-items:center; font:700 11px/1 var(--f-body); background:var(--bg); border:1px solid var(--line2); color:var(--ink)}
+.vd-ok{background:var(--ink); border-color:var(--ink); color:#fff}
+.vd-adj{border-color:var(--ink)}
+.vd-no{border-color:var(--red); color:var(--red)}
+.tg{position:absolute; top:-10px; left:50%; transform:translateX(-50%); padding:2px 7px; border-radius:99px; font:400 9.5px/1.3 var(--f-mono); letter-spacing:.04em; text-transform:uppercase; white-space:nowrap; background:var(--bg); border:1px solid var(--line2); color:var(--muted)}
+.tg-new{background:var(--blue); border-color:var(--blue); color:#fff}
+.tg-mod{border-color:var(--blue); color:var(--blue)}
+.tg-del{text-decoration:line-through}
+.legend .vd,.legend .tg,.libre .vd,.libre .tg{position:static; transform:none}
+
+.flow-hint{font-size:12.5px; color:var(--faint); margin:10px 2px 0}
+.libres{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:16px}
+.libres-h{font:400 11px/1 var(--f-mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-right:4px}
+.libre{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:99px; background:var(--bg); padding:7px 14px 7px 10px; font-size:13.5px; font-weight:500; cursor:pointer}
+.libre svg{width:16px; height:16px; fill:none; stroke:var(--ink); stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
+.libre:hover{border-color:#bdbdca}
+.libre[aria-pressed="true"]{border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-50)}
+
+/* Panneau de détail */
+.panel{position:fixed; top:0; right:0; bottom:0; width:min(480px,100vw); z-index:60; display:flex; flex-direction:column; background:var(--bg); border-left:1px solid var(--line);
+  box-shadow:-16px 0 48px rgba(22,22,26,.10); transform:translateX(100%); transition:transform .22s cubic-bezier(.2,.7,.2,1)}
+.panel[hidden]{display:none}
+.panel.on{transform:none}
+.pn-h{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px 14px 24px; border-bottom:1px solid var(--line)}
+.pn-eyebrow{margin:0; font:400 11px/1.4 var(--f-mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+.pn-x{flex:none; width:36px; height:36px; border-radius:10px; border:1px solid var(--line); background:var(--bg); display:grid; place-items:center; cursor:pointer}
+.pn-x:hover{background:var(--soft)}
+.pn-x svg{width:18px; height:18px; fill:none; stroke:var(--ink); stroke-width:1.8; stroke-linecap:round}
+.pn-b{flex:1; overflow-y:auto; padding:20px 24px 32px; overscroll-behavior:contain}
+.pn-f{display:flex; justify-content:space-between; gap:8px; padding:10px 16px; border-top:1px solid var(--line)}
+.pn-nav{border:0; background:none; padding:8px; font-size:13.5px; font-weight:500; color:var(--ink2); cursor:pointer; border-radius:8px}
+.pn-nav:hover:not(:disabled){background:var(--soft)}
+.pn-nav:disabled{opacity:.35; cursor:default}
+.pn-meta{display:flex; flex-wrap:wrap; align-items:center; gap:6px}
+.pn-canal{display:inline-flex; align-items:center; gap:6px; font:400 11px/1 var(--f-mono); letter-spacing:.06em; text-transform:uppercase; color:var(--ink); margin-right:6px}
+.pn-canal svg{width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+.pill{display:inline-block; padding:3px 10px; border-radius:99px; border:1px solid var(--line); font-size:12px; color:var(--muted); line-height:1.4}
+.vd-l-ok{background:var(--ink); border-color:var(--ink); color:#fff}
+.vd-l-adj{border-color:var(--ink); color:var(--ink)}
+.vd-l-no{border-color:var(--red); color:var(--red)}
+.tg-l-new{background:var(--blue); border-color:var(--blue); color:#fff}
+.tg-l-mod{border-color:var(--blue); color:var(--blue)}
+.tg-l-del{text-decoration:line-through}
+#pn-titre{font-weight:700; font-size:21px; line-height:1.28; margin:14px 0 4px}
+.pn-qui{font-size:13px; color:var(--muted)}
+.pn-court{font-size:15px; color:var(--ink2)}
+.pn-notes{list-style:none; margin:12px 0 0; padding:0; font-size:13.5px; color:var(--ink2)}
+.pn-notes li{position:relative; padding-left:16px; margin-bottom:6px}
+.pn-notes li::before{content:""; position:absolute; left:2px; top:.68em; width:6px; height:1.5px; background:var(--faint)}
+.pn-s{margin-top:24px; padding-top:16px; border-top:1px solid var(--line)}
+.pn-s h4{font:400 11px/1.4 var(--f-mono); letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-bottom:12px}
+.pn-d{font-size:14px; color:var(--ink2)}
+.pn-d p{margin-bottom:10px}
+.pn-d ul,.pn-d ol{padding-left:18px; margin:0 0 10px}
+.pn-goto{margin-top:22px; width:100%; border:1px solid var(--blue); background:var(--bg); color:var(--blue); border-radius:99px; padding:10px 16px; font-size:14px; font-weight:500; cursor:pointer}
+.pn-goto:hover{background:var(--blue-50)}
+
+/* Messages */
+.msg{margin-bottom:18px}
+.msg:last-child{margin-bottom:0}
+.msg-h{font-size:12.5px; color:var(--muted); margin-bottom:6px}
+.msg-meta{font-size:12px; color:var(--faint); margin:6px 0 0}
+.sms{background:var(--soft2); border-radius:18px 18px 18px 5px; padding:11px 14px; font-size:14.5px; line-height:1.5; color:var(--ink)}
+.mail{border:1px solid var(--line); border-radius:var(--r-s); overflow:hidden}
+.mail dl{margin:0; padding:10px 14px; background:var(--soft); border-bottom:1px solid var(--line); display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-size:13px}
+.mail dt{color:var(--muted)}
+.mail dd{margin:0; font-weight:500}
+.mail-b{padding:14px; font-size:14.5px; line-height:1.6}
+.script{border-left:2px solid var(--ink); padding:4px 0 4px 14px; font-size:14.5px; font-style:italic; color:var(--ink2)}
+.pagemsg{border:1px solid var(--line); border-radius:var(--r-s); padding:16px; font-size:14.5px}
+.pagemsg strong{display:block; font:700 17px/1.3 var(--f-display); margin-bottom:6px}
+.var{font:400 .84em/1 var(--f-mono); background:var(--blue-50); box-shadow:inset 0 0 0 1px var(--blue-line); color:var(--ink); padding:2px 5px; border-radius:5px; white-space:nowrap; font-style:normal}
+.lnk{color:var(--blue); text-decoration:underline; text-underline-offset:2px}
+.why{font-size:13px; color:var(--muted); margin:8px 0 0}
+details.why summary{cursor:pointer; list-style:none}
+details.why summary::-webkit-details-marker{display:none}
+.why b{color:var(--ink2)}
+.why .plus{font-weight:500; color:var(--blue); margin-left:6px; white-space:nowrap}
+.why .plus::after{content:" +"}
+details.why[open] .plus::after{content:" −"}
+.why .more{margin-top:8px; padding:10px 12px; border-radius:10px; background:var(--soft); color:var(--ink2); font-size:13.5px}
+
+/* Tableaux et renvois dans les textes */
+.tbl{overflow-x:auto; margin:4px 0 14px}
+.mini{width:100%; border-collapse:collapse; font-size:13px; font-variant-numeric:tabular-nums}
+.mini caption{text-align:left; font:400 10.5px/1.4 var(--f-mono); letter-spacing:.05em; text-transform:uppercase; color:var(--muted); padding-bottom:6px}
 .mini th,.mini td{padding:6px 8px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap}
 .mini th:first-child,.mini td:first-child{text-align:left; white-space:normal; padding-left:0}
-.mini th{font-weight:600; color:var(--muted); font-size:12.5px; vertical-align:bottom}
-.mini th small{font-weight:500}
-.mini tr.hl td{background:color-mix(in srgb, var(--adj) 10%, transparent); color:var(--ink); font-weight:600}
-.mini tr.sub td{font:600 11.5px/1.3 var(--f-mono); text-transform:uppercase; letter-spacing:.03em; color:var(--muted); padding-top:12px; text-align:left}
-.panel .ord{margin:0 0 8px; padding-left:20px}
+.mini th{font-weight:500; color:var(--muted); font-size:12px; vertical-align:bottom}
+.mini th small{font-weight:400}
+.mini tr.hl td{background:var(--blue-50); font-weight:600}
+.mini tr.sub td{font:400 10.5px/1.3 var(--f-mono); text-transform:uppercase; letter-spacing:.05em; color:var(--muted); padding-top:14px; text-align:left}
+.ord{margin:0 0 10px; padding-left:20px}
+.term{border-bottom:1px dotted currentColor; cursor:help; position:relative}
+.term::after{content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 8px); transform:translateX(-50%); width:max-content; max-width:min(300px,80vw); background:var(--ink); color:#fff; font:400 12.5px/1.45 var(--f-body); padding:8px 11px; border-radius:9px; opacity:0; pointer-events:none; transition:opacity .15s; z-index:70; white-space:normal; text-align:left; letter-spacing:0; text-transform:none}
+.term:hover::after,.term:focus::after{opacity:1}
+.ref{font:400 10.5px/1 var(--f-mono); color:var(--blue); text-decoration:none; vertical-align:super; padding:0 1px}
+.ref:hover{text-decoration:underline}
+
+/* Boutons texte */
+.tgl{margin-top:10px; border:0; background:none; padding:0; font-size:13.5px; font-weight:500; color:var(--blue); cursor:pointer}
+.tgl::after{content:" +"}
+.tgl[aria-expanded="true"]::after{content:" −"}
+.tgl-p{margin-top:10px; padding-top:12px; border-top:1px solid var(--line); font-size:14px; color:var(--ink2)}
+.lien{border:0; background:none; padding:0; font-size:13.5px; font-weight:500; color:var(--blue); cursor:pointer; text-align:left}
+.lien:hover{text-decoration:underline; text-underline-offset:3px}
+
+/* Parcours proposé : principes, changements, chiffres */
+.principle h4{margin-top:4px}
+.principle p{font-size:14px; color:var(--ink2)}
+.rows{list-style:none; margin:0; padding:0; border-top:1px solid var(--line)}
+.row{display:flex; justify-content:space-between; align-items:flex-start; gap:24px; padding:18px 0; border-bottom:1px solid var(--line)}
+.row h4{font-size:16px; margin-bottom:4px}
+.row p{font-size:14px; color:var(--muted); margin:0; max-width:80ch}
+.effort{flex:none; display:inline-block; padding:3px 9px; border-radius:99px; font:400 10px/1.4 var(--f-mono); letter-spacing:.05em; text-transform:uppercase; white-space:nowrap; border:1px solid var(--line2); color:var(--muted)}
+.effort.e1{background:var(--soft2); border-color:var(--soft2); color:var(--ink)}
+.effort.e2{border-color:var(--ink); color:var(--ink)}
+.kpi .now{font:700 19px/1.25 var(--f-display); margin-bottom:8px}
+.kpi p:last-child{font-size:14px; color:var(--muted); margin:0}
+.note-box{background:var(--soft); border-color:var(--soft); margin-top:14px}
+.note-box p,.note-box li{font-size:14.5px; color:var(--ink2)}
+.note-box ul{margin:0 0 10px; padding-left:18px}
+.note-box li{margin-bottom:8px}
+
+/* Comparer */
+.cmp{border-top:1px solid var(--line)}
+.cmp-row{display:grid; grid-template-columns:170px repeat(3,minmax(0,1fr)); gap:20px; padding:16px 0; border-bottom:1px solid var(--line); font-size:14px; color:var(--ink2)}
+.cmp-row.head{font:400 11px/1.4 var(--f-mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); padding:12px 0}
+.cmp-row .m{font-weight:600; color:var(--ink)}
+.cmp-row .m small{display:block; font-weight:400; font-size:12.5px; color:var(--muted); margin-top:2px}
+.cmp-row .c-pro{border-left:2px solid var(--blue); padding-left:14px}
+.cmp-row.head div:last-child{padding-left:16px}
+.cmp .lbl{display:none}
+.cmp .nil{color:var(--faint); font-style:italic}
+
+/* À trancher */
+.legend .statut{font-size:12px}
+.statut{display:inline-block; padding:3px 10px; border-radius:99px; font-size:12px; font-weight:500; line-height:1.4; border:1px solid var(--line2); color:var(--muted); white-space:nowrap}
+.st-trancher{border-color:var(--blue); color:var(--blue)}
+.st-accord{background:var(--soft2); border-color:var(--soft2); color:var(--ink2)}
+.st-tranche{background:var(--ink); border-color:var(--ink); color:#fff}
+.decs{list-style:none; counter-reset:dec; margin:0 0 18px; padding:0; border-top:1px solid var(--line)}
+.dec{counter-increment:dec; display:grid; grid-template-columns:36px minmax(0,1fr) auto; gap:16px; align-items:start; padding:16px 0; border-bottom:1px solid var(--line)}
+.dec::before{content:counter(dec, decimal-leading-zero); font:400 12px/1.9 var(--f-mono); color:var(--faint)}
+.dec h4{font-size:15.5px; margin-bottom:4px}
+.dec p{font-size:14px; color:var(--muted); margin:0}
+.dec-a{display:flex; flex-direction:column; align-items:flex-end; gap:8px}
+.go ul{list-style:none; margin:0; padding:0}
+.go li{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:8px 0; border-top:1px solid var(--line)}
+.go li:first-child{border-top:0}
+.who{flex:none; width:28px; height:28px; border-radius:50%; background:var(--soft2); display:grid; place-items:center; font:700 12px/1 var(--f-display); color:var(--ink)}
+.qa .q{display:flex; gap:10px; align-items:flex-start; font-size:14.5px; margin-bottom:14px}
+.qa p:last-child{font-size:14px; color:var(--ink2); margin:0}
+.arbs{display:grid; gap:14px}
+.arb{padding:22px 24px; scroll-margin-top:72px}
+.arb-h{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px}
+.arb h4{font-size:18px; margin-bottom:16px}
+.arb-b{display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:28px}
+.pos .p{display:flex; gap:12px; margin-bottom:14px}
+.pos .p p{font-size:14px; color:var(--ink2); margin:2px 0 0}
+.arb-d p{font-size:14px; color:var(--ink2)}
+.reco{margin-top:8px; padding:12px 16px; border-left:2px solid var(--blue); background:var(--soft); border-radius:0 var(--r-s) var(--r-s) 0}
+.reco b{display:block; font:400 10.5px/1.4 var(--f-mono); letter-spacing:.06em; text-transform:uppercase; color:var(--blue); margin-bottom:4px}
+.reco p{font-size:14.5px; margin:0}
+.flash{animation:flash 1.6s ease-out}
+@keyframes flash{0%{box-shadow:0 0 0 4px var(--blue-line)} 100%{box-shadow:0 0 0 4px transparent}}
+
+/* Pied de page */
+.foot{margin-top:80px; padding-top:24px; padding-bottom:56px; border-top:1px solid var(--line)}
+.foot details{border-bottom:1px solid var(--line)}
+.foot summary{cursor:pointer; padding:16px 0; font:600 16px/1.3 var(--f-display); list-style:none; display:flex; justify-content:space-between; align-items:center}
+.foot summary::-webkit-details-marker{display:none}
+.foot summary::after{content:"+"; font:400 20px/1 var(--f-body); color:var(--muted)}
+.foot details[open] summary::after{content:"−"}
+.foot details > ul,.foot details > p,.foot details > ol{font-size:14px; color:var(--ink2); max-width:90ch}
+.foot details > ul{padding-left:18px; margin:0 0 18px}
+.sources{padding-left:22px; margin:0 0 18px}
+.sources li{margin-bottom:10px; word-break:break-word; scroll-margin-top:72px; border-radius:6px}
+.sources a{font-size:12.5px; color:var(--muted)}
+.fiab{display:inline-block; font:400 10px/1.4 var(--f-mono); letter-spacing:.04em; text-transform:uppercase; padding:1px 7px; border:1px solid var(--line2); border-radius:99px; color:var(--muted); margin-left:4px}
+.sign{margin-top:24px; font:400 11.5px/1.5 var(--f-mono); color:var(--faint)}
+
+@media (max-width:1439px){
+  .vue > .flow-wrap{max-width:1132px}
+}
+@media (max-width:980px){
+  .top{grid-template-columns:1fr; gap:28px; padding-top:40px}
+  .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid3{grid-template-columns:1fr}
+  .arb-b{grid-template-columns:1fr; gap:8px}
+  .cmp .head{display:none}
+  .cmp-row{grid-template-columns:1fr; gap:10px}
+  .cmp-row .c-pro{border-left:0; padding-left:0}
+  .cmp .lbl{display:block; font:400 10.5px/1.4 var(--f-mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:2px}
+  .cmp .c-pro .lbl{color:var(--blue)}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  body{font-size:15px}
+  .tab .lg{display:none}
+  .tab .sm{display:inline}
+  .tabs{gap:0}
+  .tab{padding:14px 7px 12px; font-size:13.5px}
+  .vue{padding-top:28px}
+  .grid2,.grid4{grid-template-columns:1fr}
+  .seg{width:100%}
+  .seg button{flex:1; justify-content:center; padding:8px 10px; font-size:13px; flex-direction:column; align-items:center; gap:2px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats dt{font-size:21px}
+  .row{flex-direction:column; gap:10px}
+  .dec{grid-template-columns:28px minmax(0,1fr)}
+  .dec-a{grid-column:2; flex-direction:row; align-items:center; justify-content:space-between; width:100%}
+  .arb{padding:18px}
+  .pn-b{padding:18px 18px 28px}
+  .term::after{position:fixed; left:16px; right:16px; bottom:16px; top:auto; transform:none; width:auto; max-width:none; font-size:13.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none !important; animation:none !important}
+}
 
 </style>
 </head>
 <body>
 <header class="wrap top">
-  <button type="button" class="theme-btn" id="theme">Mode sombre</button>
-  <p class="eyebrow">Parcours de setting · CRMIA · octobre 2026</p>
-  <h1>Du formulaire<br>au rendez-vous</h1>
-  <div class="thesis">
-    <div>
-      <p class="big">Un lead qu'on a eu au téléphone avant son rendez-vous vient 8 fois sur 10. Un lead qu'on n'a jamais eu, moins d'une fois sur 2.</p>
-      <p class="small">C'est le fil des trois parcours de cette page : joindre le plus de leads possible avant le RDV, et ne pas perdre ceux qu'on ne joint pas.</p>
-    </div>
-    <div class="bars" aria-label="Venue au rendez-vous selon que le lead a été joint">
-      <div class="bar j"><span class="lbl">Lead <span class="term" tabindex="0" data-tip="Au moins un appel de setteuse décroché et d'au moins 30 secondes avant le RDV. 400 RDV sur 604.">joint</span> avant le RDV</span><span class="val">81 %</span><div class="track"><div class="fill" data-w="81"></div></div></div>
-      <div class="bar n"><span class="lbl">Lead jamais joint</span><span class="val">45 %</span><div class="track"><div class="fill" data-w="45"></div></div></div>
-      <p class="note">RDV pris par les leads eux-mêmes, du 01 au 22/10. Venue = honorés ÷ (honorés + no show). <span class="term" tabindex="0" data-tip="Les leads qui décrochent sont aussi souvent les plus motivés : une partie de l'écart tiendrait sans l'appel. Les essais publiés confirment pourtant l'effet propre d'un contact humain.">Corrélation, pas preuve</span>.</p>
-    </div>
+  <div class="top-txt">
+    <p class="eyebrow">Parcours de setting · CRMIA · octobre 2026</p>
+    <h1>Du formulaire au <span class="nw">rendez-vous</span></h1>
+    <p class="lead">Ce qui tourne aujourd'hui, ce que propose Roxane, et le parcours que je propose, étape par étape. Cliquez sur une étape pour lire son détail et ses messages.</p>
+  </div>
+  <div class="thesis" aria-label="Venue au rendez-vous selon que le lead a été joint">
+    <p class="thesis-h">Venue au RDV, du 01 au 22/10</p>
+    <div class="bar j"><span class="lbl">Lead <span class="term" tabindex="0" data-tip="Au moins un appel de setteuse décroché et d'au moins 30 secondes avant le RDV. 400 RDV sur 604.">joint</span> avant le RDV</span><span class="val">81 %</span><div class="track"><div class="fill" data-w="81"></div></div></div>
+    <div class="bar n"><span class="lbl">Lead jamais joint</span><span class="val">45 %</span><div class="track"><div class="fill" data-w="45"></div></div></div>
+    <p class="note">RDV pris par les leads eux-mêmes. <span class="term" tabindex="0" data-tip="Les leads qui décrochent sont aussi souvent les plus motivés : une partie de l'écart tiendrait sans l'appel. Les essais publiés confirment pourtant l'effet propre d'un contact humain.">Corrélation, pas preuve</span>.</p>
   </div>
 </header>
 
@@ -390,10 +395,24 @@ h1{font:800 clamp(34px,5.4vw,58px)/1.02 var(--f-display); letter-spacing:-.025em
   <div class="wrap"><div class="tabs" id="tabs" role="tablist"></div></div>
 </nav>
 
-<main class="wrap version" id="vue" role="tabpanel" tabindex="-1"></main>
+<main class="wrap vue" id="vue" role="tabpanel" tabindex="-1"></main>
+
+<aside class="panel" id="panel" aria-labelledby="pn-titre" hidden>
+  <div class="pn-h">
+    <p class="pn-eyebrow" id="pn-eyebrow"></p>
+    <button type="button" class="pn-x" id="pn-x" aria-label="Fermer le détail">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="pn-b" id="pn-b"></div>
+  <div class="pn-f">
+    <button type="button" class="pn-nav" id="pn-prev">← Étape précédente</button>
+    <button type="button" class="pn-nav" id="pn-next">Étape suivante →</button>
+  </div>
+</aside>
 
 <footer class="wrap foot">
-  <details>
+  <details id="methode">
     <summary>Méthode et limites</summary>
     <ul>
       <li>Données : CRMIA en production, en lecture seule, du 01 au 22/10/2026. Les appels Allô n'y sont enregistrés que depuis le 01/10.</li>
@@ -403,12 +422,17 @@ h1{font:800 clamp(34px,5.4vw,58px)/1.02 var(--f-display); letter-spacing:-.025em
       <li>Historique de juin à septembre : opportunités inter de GHL, avec une date de prise connue au jour près, et le résultat final après d'éventuels reports.</li>
       <li>L'écart entre leads joints et jamais joints est une corrélation : une partie tient à la motivation du lead.</li>
       <li>Trois semaines de données : les chiffres sont à refaire fin novembre, et le test du SMS d'une heure avant tranchera mieux que l'observation.</li>
-      <li>Recherche documentaire : surtout des essais sur des rendez-vous médicaux, les rendez-vous de vente étant peu étudiés. La fiabilité de chaque source est indiquée dans la partie 3.</li>
+      <li>Recherche documentaire : surtout des essais sur des rendez-vous médicaux, les rendez-vous de vente étant peu étudiés. La fiabilité de chaque source est indiquée dans la liste des sources.</li>
       <li>Trames de Roxane : bibliothèque V7 et synthèse « Process setting », reprises telles quelles, numéro de téléphone et lien Meet remplacés par des variables.</li>
       <li>Retours de Nizar et de Roxane du 23/10 : repris dans l'onglet « À trancher », avec les chiffres qui répondent à leurs questions.</li>
     </ul>
-    <p>Préparé par ATLAS le 23/10/2026, mis à jour le même jour avec les retours de l'équipe.</p>
   </details>
+  <details id="sources">
+    <summary>Sources</summary>
+    <p>La fiabilité est indiquée à côté de chaque source. La plupart des essais portent sur des rendez-vous médicaux : les rendez-vous de vente sont très peu étudiés.</p>
+    <ol class="sources" id="sources-liste"></ol>
+  </details>
+  <p class="sign">Préparé par ATLAS le 23/10/2026, mis à jour le même jour avec les retours de l'équipe.</p>
 </footer>
 
 <script>
@@ -556,44 +580,44 @@ auj: {
       ],
       moments:[
         {t:"T0", sub:"le lead choisit son créneau", note:["Au plus tôt le lendemain", "Demande après 18 h : le lendemain dès 14 h", "La nuit, avant 8 h : le jour même dès 14 h", "Jusqu'à 4 jours"], steps:[
-          {canal:"page", qui:"Formulaire", titre:"Page « Restez disponible, nous allons vous appeler »", court:"Annonce l'appel de confirmation, rappelle de regarder les indésirables, montre la vidéo de présentation.", msg:MSG_PAGE_AUJ,
+          {canal:"page", qui:"Formulaire", n:"Page « on va vous appeler »", titre:"Page « Restez disponible, nous allons vous appeler »", court:"Annonce l'appel de confirmation, rappelle de regarder les indésirables, montre la vidéo de présentation.", msg:MSG_PAGE_AUJ,
             detail:"<p>Titre en place depuis le 21/10. La date du RDV s'affiche au-dessus du titre.</p>"},
-          {canal:"mail", qui:"Gmail de la setteuse, automatique", titre:"Mail « Votre programme France IA »", court:"Part dès le formulaire, 26 secondes avant la réservation en médiane. 2 019 envois en octobre.", msg:MSG_PROGRAMME_AUJ,
+          {canal:"mail", qui:"Gmail de la setteuse, automatique", n:"Mail programme", titre:"Mail « Votre programme France IA »", court:"Part dès le formulaire, 26 secondes avant la réservation en médiane. 2 019 envois en octobre.", msg:MSG_PROGRAMME_AUJ,
             detail:"<p>724 des 749 leads qui ont pris RDV seuls en octobre l'ont reçu. Il n'annonce pas d'appel.</p>"},
-          {canal:"agenda", qui:"Agenda Google du closer", titre:"Invitation Google avec le lien Meet", court:"Le closer est tiré au sort parmi ceux qui sont libres ; Google envoie l'invitation au lead.",
+          {canal:"agenda", qui:"Agenda Google du closer", n:"Invitation Google Meet", titre:"Invitation Google avec le lien Meet", court:"Le closer est tiré au sort parmi ceux qui sont libres ; Google envoie l'invitation au lead.",
             detail:"<p>Créée par CRMIA dans l'agenda du closer, avec envoi des notifications Google au lead. L'annuler dans CRMIA retire l'événement et prévient le lead.</p>"},
-          {canal:"mail", qui:"Gmail du closer, automatique", titre:"Mail de confirmation", court:"Date, objet du RDV, lien Meet, consigne CPF si besoin, lien « Décaler » depuis le 22/10. 1 044 envois en octobre.", msg:MSG_CONFIRM_AUJ},
-          {canal:"crm", qui:"CRMIA et Slack", titre:"Carte « OPP à qualifier » et alerte Slack", court:"Le RDV arrive dans le Setting de la setteuse attribuée au contact."},
+          {canal:"mail", qui:"Gmail du closer, automatique", n:"Mail de confirmation", titre:"Mail de confirmation", court:"Date, objet du RDV, lien Meet, consigne CPF si besoin, lien « Décaler » depuis le 22/10. 1 044 envois en octobre.", msg:MSG_CONFIRM_AUJ},
+          {canal:"crm", qui:"CRMIA et Slack", n:"Carte CRMIA et alerte Slack", titre:"Carte « OPP à qualifier » et alerte Slack", court:"Le RDV arrive dans le Setting de la setteuse attribuée au contact."},
         ]},
         {t:"Avant le RDV", sub:"pas de rythme fixé", steps:[
-          {canal:"appel", qui:"Setteuse", titre:"Appels de qualification", court:"Ni délai ni nombre d'appels fixés. La carte reste « À traiter » le jour même ; cases Appelé 1x, 2x, 3x.", chips:["56 RDV n'ont reçu aucun appel de setteuse"],
+          {canal:"appel", qui:"Setteuse", n:"Appels de qualification", titre:"Appels de qualification", court:"Ni délai ni nombre d'appels fixés. La carte reste « À traiter » le jour même ; cases Appelé 1x, 2x, 3x.", chips:["56 RDV n'ont reçu aucun appel de setteuse"],
             detail:`<p>1er appel dans l'heure après la prise de RDV : <b>60 %</b> de décroché, contre 45 % au-delà.</p><p>Seuls 32 % des RDV sont pris en semaine entre 9 h et 18 h ; pour ceux-là, le premier appel arrive 2 h 40 après en médiane.</p>`},
-          {pour:"joint", canal:"crm", qui:"Setteuse", titre:"« Setté - RDV pris quali »", court:"Le lead est qualifié. Depuis le 08/10, un lead setté vient à 82 %, un non setté à 38 %."},
-          {pour:"non", canal:"crm", qui:"Personne", titre:"Rien ne part après un appel manqué", court:"Ni vocal prévu, ni SMS, ni mail. Le RDV reste maintenu tel quel.", ghost:true,
+          {pour:"joint", canal:"crm", qui:"Setteuse", n:"Setté - RDV pris quali", titre:"« Setté - RDV pris quali »", court:"Le lead est qualifié. Depuis le 08/10, un lead setté vient à 82 %, un non setté à 38 %."},
+          {pour:"non", canal:"crm", qui:"Personne", n:"Rien après un appel manqué", titre:"Rien ne part après un appel manqué", court:"Ni vocal prévu, ni SMS, ni mail. Le RDV reste maintenu tel quel.", ghost:true,
             detail:`<p>En octobre, 204 RDV dont le lead n'a jamais été ${JOINT} : 65 honorés, 82 no show, 8 ventes. Le lead jamais joint ${VENUE} à 45 %, contre 81 % pour un lead joint.</p>`},
         ]},
         {t:"J-1 · 18:00", sub:"la veille", steps:[
-          {canal:"sms", qui:"Allô, expéditeur « FranceIA »", titre:"SMS de la veille", court:"Rappelle l'heure et le closer. Pas de lien Meet, et le lead ne peut pas répondre.", chips:["Pas envoyé si le RDV a été pris la veille", "Pas de SMS de la veille pour un R2"], msg:MSG_SMS_VEILLE_AUJ,
+          {canal:"sms", qui:"Allô, expéditeur « FranceIA »", n:"SMS de la veille", titre:"SMS de la veille", court:"Rappelle l'heure et le closer. Pas de lien Meet, et le lead ne peut pas répondre.", chips:["Pas envoyé si le RDV a été pris la veille", "Pas de SMS de la veille pour un R2"], msg:MSG_SMS_VEILLE_AUJ,
             detail:"<p>1 038 SMS de rappel envoyés en octobre (veille et matin). CRMIA n'a pas de variable pour mettre le lien Meet dans un SMS.</p>"},
         ]},
         {t:"J · 08:00", sub:"le matin du RDV", steps:[
-          {canal:"sms", qui:"Allô, signé par la setteuse", titre:"SMS du matin", court:"Envoyé à tous les RDV, settés ou non. Aucun effet mesurable sur la venue.", chips:["Pas envoyé pour un RDV du lundi pris pendant le week-end"], msg:MSG_SMS_8H_AUJ,
+          {canal:"sms", qui:"Allô, signé par la setteuse", n:"SMS de 8 h", titre:"SMS du matin", court:"Envoyé à tous les RDV, settés ou non. Aucun effet mesurable sur la venue.", chips:["Pas envoyé pour un RDV du lundi pris pendant le week-end"], msg:MSG_SMS_8H_AUJ,
             detail:"<p>RDV depuis le 08/10 (mise en route de ce SMS) :</p><ul><li>settés : 81 % viennent avec le SMS (329 RDV), 89 % sans (44 RDV) ;</li><li>non settés : 34 % avec (106 RDV), 47 % sans (38 RDV).</li></ul><p>Les écarts ne sont pas significatifs, et les RDV sans SMS ne sont pas tirés au hasard.</p><p>Il est loin des RDV du soir : un lead jamais joint vient à 70 % le matin, 55 % l'après-midi, <b>37 %</b> à partir de 17 h.</p>"},
         ]},
         {t:"T0", sub:"heure du RDV", steps:[
-          {canal:"visio", qui:"Closer", titre:"Visio Google Meet", court:"Le lead rejoint par le lien du mail ou de l'invitation."},
+          {canal:"visio", qui:"Closer", n:"Visio Google Meet", titre:"Visio Google Meet", court:"Le lead rejoint par le lien du mail ou de l'invitation."},
         ]},
-        {t:"T+10 min", sub:"avant de déclarer l'absence", steps:[
-          {canal:"appel", qui:"Closer", titre:"No show contrôlé", court:"Pas de no show avant 10 minutes, et 2 appels Allô du closer exigés. En production depuis le 23/10.",
+        {t:"T+10 min", sub:"avant de déclarer l'absence", cond:"Lead absent", steps:[
+          {canal:"appel", qui:"Closer", n:"No show contrôlé", titre:"No show contrôlé", court:"Pas de no show avant 10 minutes, et 2 appels Allô du closer exigés. En production depuis le 23/10.",
             detail:"<p>Du 13 au 22/10 : 91 des 142 no show ont été déclarés avant 10 minutes (médiane 8 min 20). Un closer qui n'utilise pas Allô coche une case à la place des deux appels.</p>"},
         ]},
         {t:"Après", sub:"un no show", steps:[
-          {canal:"mail", qui:"Gmail du closer, automatique", titre:"Mail de no show avec lien de reprise", court:"196 envois en octobre. Il a fait revenir 2 leads sans appel.", msg:MSG_NOSHOW_AUJ},
-          {canal:"crm", qui:"CRMIA et Slack", titre:"Retour à la setteuse, alerte #new-no-show", court:"Carte « No show / annulé - à rappeler ». La setteuse rappelle le lendemain.",
+          {canal:"mail", qui:"Gmail du closer, automatique", n:"Mail de no show", titre:"Mail de no show avec lien de reprise", court:"196 envois en octobre. Il a fait revenir 2 leads sans appel.", msg:MSG_NOSHOW_AUJ},
+          {canal:"crm", qui:"CRMIA et Slack", n:"Retour à la setteuse", titre:"Retour à la setteuse, alerte #new-no-show", court:"Carte « No show / annulé - à rappeler ». La setteuse rappelle le lendemain.",
             detail:"<p>Sur 114 no show d'octobre : 15 ont repris un RDV dans les 48 h (13 %), dont 13 avaient été joints au téléphone. Parmi les 29 leads joints dans ces 48 h, 13 ont repris un RDV (45 %).</p>"},
         ]},
         {t:"À tout moment", sub:"annulation ou report", steps:[
-          {canal:"crm", qui:"CRMIA", titre:"Annuler ou décaler", court:"Annuler arrête les rappels, retire l'invitation Google et rend le R1 à la setteuse. Le lien « Décaler » des mails laisse le lead changer de créneau.",
+          {canal:"crm", qui:"CRMIA", n:"Annuler ou décaler", titre:"Annuler ou décaler", court:"Annuler arrête les rappels, retire l'invitation Google et rend le R1 à la setteuse. Le lien « Décaler » des mails laisse le lead changer de créneau.",
             detail:"<p>En octobre, aucun SMS de rappel n'est parti après une annulation (1 122 rappels annulés à temps).</p>"},
         ]},
       ]},
@@ -606,19 +630,19 @@ auj: {
       ],
       moments:[
         {t:"T0", sub:"demande de programme", steps:[
-          {canal:"crm", qui:"CRMIA et Slack", titre:"Attribution par rotation", court:"Le contact arrive chez une setteuse dans « Intéressé à appeler », avec une alerte #new-mql-à-appeler."},
-          {canal:"mail", qui:"Gmail de la setteuse, automatique", titre:"Mail « Votre programme France IA »", court:"Le lien du programme et une invitation à répondre. N'annonce pas d'appel.", msg:MSG_PROGRAMME_AUJ},
+          {canal:"crm", qui:"CRMIA et Slack", n:"Attribution à une setteuse", titre:"Attribution par rotation", court:"Le contact arrive chez une setteuse dans « Intéressé à appeler », avec une alerte #new-mql-à-appeler."},
+          {canal:"mail", qui:"Gmail de la setteuse, automatique", n:"Mail programme", titre:"Mail « Votre programme France IA »", court:"Le lien du programme et une invitation à répondre. N'annonce pas d'appel.", msg:MSG_PROGRAMME_AUJ},
         ]},
-        {t:"T+1 h", sub:"créneau choisi sans RDV confirmé", steps:[
-          {canal:"sms", qui:"Mail de la setteuse + SMS « FranceIA »", titre:"Relance « votre RDV n'est pas encore confirmé »", court:"Prévue depuis le 09/10 pour un lead qui a choisi un créneau sans finir. Aucun envoi réel observé en octobre.", ghost:true},
+        {t:"T+1 h", sub:"créneau choisi sans RDV confirmé", cote:true, cond:"Créneau sans RDV", steps:[
+          {canal:"sms", qui:"Mail de la setteuse + SMS « FranceIA »", n:"Relance « RDV non confirmé »", titre:"Relance « votre RDV n'est pas encore confirmé »", court:"Prévue depuis le 09/10 pour un lead qui a choisi un créneau sans finir. Aucun envoi réel observé en octobre.", ghost:true},
         ]},
         {t:"Ensuite", sub:"pas de délai fixé", steps:[
-          {canal:"appel", qui:"Setteuse", titre:"1er appel", court:"En semaine entre 9 h et 18 h : médiane 3 h 20, 12 % appelés dans l'heure. La nuit et le week-end : environ 16 h.",
+          {canal:"appel", qui:"Setteuse", n:"1er appel", titre:"1er appel", court:"En semaine entre 9 h et 18 h : médiane 3 h 20, 12 % appelés dans l'heure. La nuit et le week-end : environ 16 h.",
             detail:"<p>Arrivée des leads (01 au 21/10) : 33 % en semaine entre 9 h et 18 h, 22 % avant 9 h, 9 % entre 18 h et 21 h, 13 % après 21 h, 23 % le week-end.</p>"},
-          {canal:"appel", qui:"Setteuse", titre:"Rappels le lendemain", court:"Chaque appel coché renvoie le lead au lendemain. Pas de 2e appel prévu le jour même.",
+          {canal:"appel", qui:"Setteuse", n:"Rappels le lendemain", titre:"Rappels le lendemain", court:"Chaque appel coché renvoie le lead au lendemain. Pas de 2e appel prévu le jour même.",
             detail:"<p>2e appel après un 1er manqué, part des leads joints :</p><ul><li>moins de 15 min après : 37 % (146 appels) ;</li><li><b>15 min à 2 h après : 46 %</b> (69) ;</li><li>le même jour, plus de 2 h après : 29 % (94) ;</li><li>le lendemain ou plus tard : 19 % (351).</li></ul>"},
-          {pour:"joint", canal:"crm", qui:"Setteuse", titre:"Qualification, puis RDV posé par la setteuse", court:"Le lead reçoit l'invitation Google et le mail du closer, puis suit le parcours « RDV »."},
-          {pour:"non", canal:"crm", qui:"Setteuse", titre:"« Injoignable » après 3 appels, sans message", court:"227 des 308 leads jamais joints n'ont eu qu'1 ou 2 appels.",
+          {pour:"joint", canal:"crm", qui:"Setteuse", goto:"rdv", n:"Qualifié, RDV posé", titre:"Qualification, puis RDV posé par la setteuse", court:"Le lead reçoit l'invitation Google et le mail du closer, puis suit le parcours « RDV »."},
+          {pour:"non", canal:"crm", qui:"Setteuse", fin:"Injoignable", n:"3 appels, sans message", titre:"« Injoignable » après 3 appels, sans message", court:"227 des 308 leads jamais joints n'ont eu qu'1 ou 2 appels.",
             detail:"<p>619 leads sans RDV appelés depuis le 01/10. Les 2e et 3e appels ont joint 67 leads de plus que le 1er. Au-delà du 3e, 14 leads sur 40 ont fini par décrocher, et ils ont fait 4 des 11 ventes.</p>"},
         ]},
       ]},
@@ -639,39 +663,39 @@ roxane: {
       ],
       moments:[
         {t:"T0", sub:"le lead choisit son créneau", steps:[
-          {canal:"page", qui:"Formulaire", titre:"Page « RDV à confirmer par un appel »", verdict:"ok", court:"Existe déjà depuis le 21/10."},
-          {canal:"mail", qui:"Automatique, au nom du closer", titre:"Mail E : créneau, appel à venir, plaquette", verdict:"adj", court:"Annoncer l'appel : oui. Mais en complétant le mail de confirmation actuel, pas en ajoutant un 3e mail.", msg:ROX.mailE,
+          {canal:"page", qui:"Formulaire", n:"Page « RDV à confirmer »", titre:"Page « RDV à confirmer par un appel »", verdict:"ok", court:"Existe déjà depuis le 21/10."},
+          {canal:"mail", qui:"Automatique, au nom du closer", n:"Mail E, appel annoncé", titre:"Mail E : créneau, appel à venir, plaquette", verdict:"adj", court:"Annoncer l'appel : oui. Mais en complétant le mail de confirmation actuel, pas en ajoutant un 3e mail.", msg:ROX.mailE,
             detail:"<p>Le lead reçoit déjà deux mails en une minute (programme et confirmation). Le mail E n'a pas de lien Meet, alors que la confirmation actuelle l'a. Le programme part déjà, la plaquette est donc en double.</p><p>« Répondez avec vos créneaux » : personne n'est prévenu d'une réponse au mail. Le lien « Décaler » couvre ce besoin.</p>"},
         ]},
         {t:"Avant le RDV", sub:"3 tentatives", steps:[
-          {canal:"appel", qui:"Setteuse", titre:"3 appels, adaptés à la date du RDV", verdict:"ok", court:"Gardé par l'équipe (Nizar, 23/10). À revoir fin novembre : les leads joints au 4e appel ou plus viennent à 84 % et ont fait 8 ventes.",
+          {canal:"appel", qui:"Setteuse", n:"3 appels avant le RDV", titre:"3 appels, adaptés à la date du RDV", verdict:"ok", court:"Gardé par l'équipe (Nizar, 23/10). À revoir fin novembre : les leads joints au 4e appel ou plus viennent à 84 % et ont fait 8 ventes.",
             detail:"<p>RDV pris seuls en octobre, par appel où le lead a été joint pour la première fois : 1er appel 75 % de venue (250 RDV), 2e 86 % (79), 3e 94 % (42), 4e ou plus 84 % (29).</p>"},
-          {pour:"non", canal:"sms", qui:"Setteuse", titre:"1er appel manqué : vocal 1 et SMS 1", verdict:"adj", court:"Bonne idée, depuis la ligne de la setteuse. Texte trop long (plus de 400 caractères, 3 SMS) et sans la date du RDV.", msgs:[ROX.vocal1, ROX.sms1],
+          {pour:"non", canal:"sms", qui:"Setteuse", n:"Vocal 1 + SMS 1", titre:"1er appel manqué : vocal 1 et SMS 1", verdict:"adj", court:"Bonne idée, depuis la ligne de la setteuse. Texte trop long (plus de 400 caractères, 3 SMS) et sans la date du RDV.", msgs:[ROX.vocal1, ROX.sms1],
             detail:"<p>Le SMS 1 et le vocal 1 sont le même texte. À l'oral, il dure près d'une minute. « Notre organisme » sonne administratif ; la date du RDV dirait tout de suite pourquoi on appelle.</p>"},
-          {pour:"non", canal:"mail", qui:"Setteuse", titre:"2e appel manqué : vocal 2 et mail 1", verdict:"adj", court:"« J'ai tenté de vous joindre hier » ne colle pas si les appels ont lieu le même jour, ce qui est le meilleur moment.", msgs:[ROX.vocal2, ROX.mail1],
+          {pour:"non", canal:"mail", qui:"Setteuse", n:"Vocal 2 + mail 1", titre:"2e appel manqué : vocal 2 et mail 1", verdict:"adj", court:"« J'ai tenté de vous joindre hier » ne colle pas si les appels ont lieu le même jour, ce qui est le meilleur moment.", msgs:[ROX.vocal2, ROX.mail1],
             detail:"<p>Roxane le note elle-même. En octobre, un 2e appel passé 15 min à 2 h après le premier joint 46 % des leads, contre 19 % le lendemain.</p>"},
-          {pour:"joint", canal:"crm", qui:"Setteuse", titre:"Statut « Setté/qualifié »", verdict:"ok", court:"Existe : « Setté - RDV pris quali ». Utiliser le nom exact."},
-          {pour:"non", canal:"sms", qui:"Setteuse", titre:"3e appel manqué : « répondez OUI avant 18 h la veille »", verdict:"adj", court:"Oui, à tester, à deux conditions : le SMS part de la ligne Allô de la setteuse, pour que la réponse arrive, et les 3 appels sont vraiment faits avant. Les chiffres demandés par Nizar sont dans l'onglet « À trancher ».", msgs:[ROX.smsOui, ROX.mailOui],
+          {pour:"joint", canal:"crm", qui:"Setteuse", n:"Statut « Setté »", titre:"Statut « Setté/qualifié »", verdict:"ok", court:"Existe : « Setté - RDV pris quali ». Utiliser le nom exact."},
+          {pour:"non", canal:"sms", qui:"Setteuse", n:"SMS « répondez OUI »", titre:"3e appel manqué : « répondez OUI avant 18 h la veille »", verdict:"adj", court:"Oui, à tester, à deux conditions : le SMS part de la ligne Allô de la setteuse, pour que la réponse arrive, et les 3 appels sont vraiment faits avant. Les chiffres demandés par Nizar sont dans l'onglet « À trancher ».", msgs:[ROX.smsOui, ROX.mailOui],
             detail:`<ul><li>Envoyé automatiquement, le SMS partirait sous le nom « FranceIA », sans réponse possible ${R("twilio")}. Depuis la ligne Allô de la setteuse, la réponse lui arrive. Les réponses aux mails arrivent dans sa boîte Gmail.</li><li>Aujourd'hui, peu de leads reçoivent 3 appels avant 18 h la veille : 14 New RDV en 3 semaines auraient reçu ce SMS. Sans la colonne « Priorités », la règle touche peu de monde.</li><li>Ailleurs, 58 % des patients qui n'avaient pas confirmé sont venus quand même ${R("stephenson")}.</li><li>17 % des RDV sont pris trop tard pour 3 appels et une réponse avant 18 h la veille : ils restent maintenus.</li></ul>`},
         ]},
         {t:"J-1 · 18:00", sub:"la veille", steps:[
-          {canal:"sms", qui:"Automatique", titre:"SMS C avec le lien Google Meet", verdict:"adj", court:"Le lien Meet dans le SMS : oui. « Répondez LIEN » : impossible depuis l'expéditeur « FranceIA ».", msg:ROX.smsC,
+          {canal:"sms", qui:"Automatique", n:"SMS C, lien Meet", titre:"SMS C avec le lien Google Meet", verdict:"adj", court:"Le lien Meet dans le SMS : oui. « Répondez LIEN » : impossible depuis l'expéditeur « FranceIA ».", msg:ROX.smsC,
             detail:"<p>CRMIA ne sait pas encore mettre le lien Meet dans un SMS : petit développement. Le SMS s'allonge d'environ 40 caractères.</p>"},
-          {pour:"non", canal:"sms", qui:"Setteuse", titre:"18 h, pas de « OUI » : RDV annulé, SMS et mail d'annulation", verdict:"adj", court:"À tester sur 3 semaines, seulement pour les leads appelés 3 fois sans réponse. Étendue à tous les leads pas joints, elle mettrait en jeu 7 des 48 ventes des New RDV.", msgs:[ROX.smsAnnul, ROX.mailAnnul],
+          {pour:"non", canal:"sms", qui:"Setteuse", fin:"RDV annulé", si:"Pas de « OUI »", sinon:"« OUI » reçu", n:"Annulation, SMS + mail", titre:"18 h, pas de « OUI » : RDV annulé, SMS et mail d'annulation", verdict:"adj", court:"À tester sur 3 semaines, seulement pour les leads appelés 3 fois sans réponse. Étendue à tous les leads pas joints, elle mettrait en jeu 7 des 48 ventes des New RDV.", msgs:[ROX.smsAnnul, ROX.mailAnnul],
             detail:"<p>Version large (tous les leads pas joints à 18 h la veille), RDV du 01 au 19/10 : 117 New RDV touchés, 48 leads venus et 7 ventes, dont 5 de leads joints le jour même du RDV, après l'heure limite. Version à 3 appels : 11 RDV, 6 venus, 1 vente.</p><p>Le SMS et le mail d'annulation sont bien écrits : ils donnent le lien pour reprendre RDV. Il manque deux chiffres, que le test doit donner : combien d'annulés reprennent RDV, combien de créneaux libérés sont replacés.</p>"},
         ]},
-        {t:"J · 08:00", sub:"le matin du RDV", steps:[
-          {pour:"joint", canal:"sms", qui:"Automatique, signé par la setteuse", titre:"SMS D, seulement si le lead est setté", verdict:"ok", court:"Cohérent : aucun effet mesuré pour les non settés, et le texte sonne faux pour un lead à qui la setteuse n'a jamais parlé.", msg:ROX.smsD,
+        {t:"J · 08:00", sub:"le matin du RDV", si:"Le lead est setté ?", steps:[
+          {pour:"joint", canal:"sms", qui:"Automatique, signé par la setteuse", n:"SMS D de 8 h", titre:"SMS D, seulement si le lead est setté", verdict:"ok", court:"Cohérent : aucun effet mesuré pour les non settés, et le texte sonne faux pour un lead à qui la setteuse n'a jamais parlé.", msg:ROX.smsD,
             detail:"<p>Depuis le 08/10 : non settés 34 % de venue avec le SMS (106 RDV), 47 % sans (38 RDV). Écart non significatif. Le changement se résume à une condition à l'envoi.</p>"},
         ]},
         {t:"T0", sub:"heure du RDV", steps:[
-          {canal:"visio", qui:"Closer", titre:"Rien de prévu à l'heure du RDV", court:"La fiche ne traite ni le retard, ni le no show.", ghost:true},
+          {canal:"visio", qui:"Closer", n:"Rien de prévu à l'heure", titre:"Rien de prévu à l'heure du RDV", court:"La fiche ne traite ni le retard, ni le no show.", ghost:true},
         ]},
-        {t:"Après", sub:"un no show", steps:[
-          {canal:"crm", qui:"—", titre:"Rien de prévu après un no show", court:"Pas de rappel ni de message dans la fiche. Le mail de no show actuel continuerait de partir.", ghost:true},
+        {t:"Après", sub:"un no show", cond:"No show", steps:[
+          {canal:"crm", qui:"—", n:"Rien après un no show", titre:"Rien de prévu après un no show", court:"Pas de rappel ni de message dans la fiche. Le mail de no show actuel continuerait de partir.", ghost:true},
         ]},
         {t:"À tout moment", sub:"annulation", steps:[
-          {canal:"crm", qui:"CRMIA", titre:"Aucun rappel après une annulation", verdict:"ok", court:"Existe déjà : aucun SMS de rappel n'est parti après une annulation en octobre."},
+          {canal:"crm", qui:"CRMIA", n:"Aucun rappel après annulation", titre:"Aucun rappel après une annulation", verdict:"ok", court:"Existe déjà : aucun SMS de rappel n'est parti après une annulation en octobre."},
         ]},
       ]},
     mql:{
@@ -683,21 +707,21 @@ roxane: {
       ],
       moments:[
         {t:"T0", sub:"demande de programme", steps:[
-          {canal:"mail", qui:"Automatique, au nom de la setteuse", titre:"Mail A : brochure, appel annoncé, « répondez non »", verdict:"adj", court:"Annoncer l'appel : oui, dans le mail programme existant. La sortie « non » : écartée par Nizar et Tanguy le 23/10.", msg:ROX.mailA,
+          {canal:"mail", qui:"Automatique, au nom de la setteuse", n:"Mail A, brochure", titre:"Mail A : brochure, appel annoncé, « répondez non »", verdict:"adj", court:"Annoncer l'appel : oui, dans le mail programme existant. La sortie « non » : écartée par Nizar et Tanguy le 23/10.", msg:ROX.mailA,
             detail:"<p>Annoncer l'appel prépare le lead à décrocher. Le premier mail ne met pas en avant la possibilité de refuser ; un « non » reçu reste respecté, et la setteuse lit ses réponses avant d'appeler.</p>"},
-          {canal:"page", qui:"Formulaire", titre:"Option « MQL prioritaire » : case « Je veux être rappelé aujourd'hui »", verdict:"adj", court:"Précisée par Roxane le 23/10 : sur l'écran du calendrier, pour le lead qui ne trouve pas son créneau ou veut une réponse tout de suite. À tester, du lundi au vendredi de 8 h à 19 h seulement.",
+          {canal:"page", qui:"Formulaire", n:"Case « rappelé aujourd'hui »", titre:"Option « MQL prioritaire » : case « Je veux être rappelé aujourd'hui »", verdict:"adj", court:"Précisée par Roxane le 23/10 : sur l'écran du calendrier, pour le lead qui ne trouve pas son créneau ou veut une réponse tout de suite. À tester, du lundi au vendredi de 8 h à 19 h seulement.",
             detail:"<p>94 % des MQL du 01 au 19/10 ont vu le calendrier et sont repartis sans réserver : la case leur est posée au bon moment. Cochée, elle promet un rappel le jour même : à traiter comme un rappel convenu, en tête de la colonne « Priorités ». Aujourd'hui, en semaine, 64 % de ces leads sont appelés le jour même et 18 % jamais.</p><p>Affichée la nuit ou le week-end, elle promettrait un rappel qu'on ne tiendra pas. La case n'existe pas encore dans CRMIA : en test, compter les leads qui la cochent, ceux rappelés le jour même et leurs ventes.</p>"},
         ]},
         {t:"J1", sub:"1er appel", steps:[
-          {canal:"appel", qui:"Setteuse", titre:"1er appel", verdict:"adj", court:"Sans délai fixé. Le plus tôt possible : c'est là que le décroché est le meilleur."},
-          {pour:"non", canal:"sms", qui:"Setteuse", titre:"Vocal 1 et SMS 1", verdict:"adj", court:"Bonne idée, texte trop long (3 SMS).", msgs:[ROX.vocal1, ROX.sms1]},
-          {pour:"joint", canal:"mail", qui:"Automatique", titre:"Qualification, RDV posé, mail B", verdict:"ok", court:"Existe déjà : le mail du closer avec le lien Meet.", msg:ROX.mailB},
+          {canal:"appel", qui:"Setteuse", n:"1er appel", titre:"1er appel", verdict:"adj", court:"Sans délai fixé. Le plus tôt possible : c'est là que le décroché est le meilleur."},
+          {pour:"non", canal:"sms", qui:"Setteuse", n:"Vocal 1 + SMS 1", titre:"Vocal 1 et SMS 1", verdict:"adj", court:"Bonne idée, texte trop long (3 SMS).", msgs:[ROX.vocal1, ROX.sms1]},
+          {pour:"joint", canal:"mail", qui:"Automatique", goto:"rdv", n:"Qualifié, RDV posé, mail B", titre:"Qualification, RDV posé, mail B", verdict:"ok", court:"Existe déjà : le mail du closer avec le lien Meet.", msg:ROX.mailB},
         ]},
         {t:"J2", sub:"2e appel", steps:[
-          {pour:"non", canal:"appel", qui:"Setteuse", titre:"2e appel le lendemain, vocal 2 et mail 1", verdict:"adj", court:"Le 2e appel le jour même quand le timing s'y prête : 46 % joints 15 min à 2 h après, 19 % le lendemain. Roxane et Nizar sont d'accord le 23/10.", msgs:[ROX.vocal2, ROX.mail1]},
+          {pour:"non", canal:"appel", qui:"Setteuse", n:"2e appel, vocal 2 + mail 1", titre:"2e appel le lendemain, vocal 2 et mail 1", verdict:"adj", court:"Le 2e appel le jour même quand le timing s'y prête : 46 % joints 15 min à 2 h après, 19 % le lendemain. Roxane et Nizar sont d'accord le 23/10.", msgs:[ROX.vocal2, ROX.mail1]},
         ]},
         {t:"J3", sub:"3e appel et clôture", steps:[
-          {pour:"non", canal:"sms", qui:"Setteuse", titre:"3e appel, puis SMS 2 et mail 2 de clôture, « Injoignable »", verdict:"ok", court:"Oui : 3 appels, gardés par l'équipe le 23/10. La clôture gagnerait un lien pour reprendre RDV seul.", msgs:[ROX.sms2, ROX.mail2],
+          {pour:"non", canal:"sms", qui:"Setteuse", fin:"Injoignable", n:"3e appel, clôture SMS + mail", titre:"3e appel, puis SMS 2 et mail 2 de clôture, « Injoignable »", verdict:"ok", court:"Oui : 3 appels, gardés par l'équipe le 23/10. La clôture gagnerait un lien pour reprendre RDV seul.", msgs:[ROX.sms2, ROX.mail2],
             detail:"<p>Aujourd'hui, 74 % des leads jamais joints n'ont eu qu'1 ou 2 appels : 3 appels, c'est déjà mieux. À revoir fin novembre : 4 des 11 ventes de leads sans RDV sont venues de leads joints au 4e appel ou plus.</p>"},
         ]},
       ]},
@@ -718,61 +742,61 @@ propose: {
       ],
       moments:[
         {t:"T0", sub:"le lead choisit son créneau", steps:[
-          {canal:"page", qui:"Formulaire", tag:"same", titre:"Page « Restez disponible, nous allons vous appeler »", court:"Déjà en place. Elle prépare le lead à décrocher.", msg:MSG_PAGE_AUJ},
-          {canal:"agenda", qui:"Agenda Google du closer", tag:"same", titre:"Invitation Google avec le lien Meet", court:"Le RDV entre dans l'agenda du lead s'il l'accepte ; la setteuse le lui fera faire pendant l'appel.",
+          {canal:"page", qui:"Formulaire", tag:"same", n:"Page « on va vous appeler »", titre:"Page « Restez disponible, nous allons vous appeler »", court:"Déjà en place. Elle prépare le lead à décrocher.", msg:MSG_PAGE_AUJ},
+          {canal:"agenda", qui:"Agenda Google du closer", tag:"same", n:"Invitation Google Meet", titre:"Invitation Google avec le lien Meet", court:"Le RDV entre dans l'agenda du lead s'il l'accepte ; la setteuse le lui fera faire pendant l'appel.",
             detail:`<p>Aucun essai ne mesure l'invitation seule. Elle fait partie du dispositif de Penn Medicine (absences de 4,5 % à 3,9 % sur 1,36 million de visites) ${R("penn")}. Elle ne coûte rien et elle porte le lien Meet.</p>`},
-          {canal:"mail", qui:"Gmail du closer, automatique", tag:"mod", titre:"Mail de confirmation : l'appel annoncé, le créneau réservé", court:"Le même mail, avec l'appel de la setteuse et un « Décaler » présenté comme un service rendu à d'autres.", msg:PRO.confirm,
+          {canal:"mail", qui:"Gmail du closer, automatique", tag:"mod", n:"Mail de confirmation", titre:"Mail de confirmation : l'appel annoncé, le créneau réservé", court:"Le même mail, avec l'appel de la setteuse et un « Décaler » présenté comme un service rendu à d'autres.", msg:PRO.confirm,
             detail:`<p>Annoncer l'appel aide à décrocher, et c'est le décroché qui fait venir (81 % contre 45 %). Roxane le demande aussi ; le mettre dans ce mail évite un 3e mail en une minute.</p><p>Les deux tournures « réservé pour vous » et « d'autres attendent ce créneau » sont celles qui ont le mieux marché dans les essais ${R("sanders", "berliner", "milkman21")}.</p>`},
-          {canal:"mail", qui:"Gmail de la setteuse, automatique", tag:"same", titre:"Mail « Votre programme France IA »", court:"Part déjà au formulaire, avant la réservation. Rien à changer pour un RDV."},
+          {canal:"mail", qui:"Gmail de la setteuse, automatique", tag:"same", n:"Mail programme", titre:"Mail « Votre programme France IA »", court:"Part déjà au formulaire, avant la réservation. Rien à changer pour un RDV."},
         ]},
         {t:"Dans l'heure", sub:"objectif, aux heures d'appel en semaine", note:["Hors de ces plages : file du matin à 10 h, par ordre d'arrivée", "Ordre fixé par la colonne « Priorités » de CRMIA"], steps:[
-          {canal:"appel", qui:"Setteuse", tag:"mod", titre:"1er appel dans l'heure, le plus tôt possible", court:"Un objectif, pas une règle : les setteuses sont en freelance, environ 4 h par jour. Aujourd'hui 2 h 40 en médiane ; appelé dans l'heure, un lead décroche à 60 %, contre 45 %.",
+          {canal:"appel", qui:"Setteuse", tag:"mod", n:"1er appel dans l'heure", titre:"1er appel dans l'heure, le plus tôt possible", court:"Un objectif, pas une règle : les setteuses sont en freelance, environ 4 h par jour. Aujourd'hui 2 h 40 en médiane ; appelé dans l'heure, un lead décroche à 60 %, contre 45 %.",
             detail:`<p>En octobre, dans les 15 minutes : 70 % de décroché (20 cas seulement). Dans la vente, contacter en moins d'une heure rend la qualification environ 7 fois plus probable ${R("hbr")} ; entre 5 et 30 minutes, les chances sont divisées par 21 ${R("lrm")}.</p><p>Pour s'en approcher sans règle impossible à tenir (proposition de Nizar) : CRMIA attribue le lead à une setteuse en service, et fait remonter en tête de la colonne « Priorités » un lead toujours pas appelé au bout d'une heure.</p><p>Les plages horaires sont celles du démarchage téléphonique (voir « Point conformité »). Elles ne coûtent presque rien : en semaine, le décroché ne change presque pas selon l'heure (32 % à 35 % d'une tranche à l'autre). Du 01 au 22/10, 454 appels de setteuse sur 3 646 sont partis en semaine avant 10 h ou entre 13 h et 14 h : ceux-là seraient à déplacer.</p><p>35 % des leads arrivent la nuit et 23 % le week-end : la file du matin compte autant que la vitesse en journée.</p>`},
-          {pour:"joint", canal:"appel", qui:"Setteuse", tag:"mod", titre:"Il décroche : qualifier, puis faire noter le RDV", court:"Le lead accepte l'invitation pendant l'appel et dit d'où il se connectera.", msg:PRO.scriptRdv,
+          {pour:"joint", canal:"appel", qui:"Setteuse", tag:"mod", n:"Qualifier, faire noter le RDV", titre:"Il décroche : qualifier, puis faire noter le RDV", court:"Le lead accepte l'invitation pendant l'appel et dit d'où il se connectera.", msg:PRO.scriptRdv,
             detail:`<p>C'est le levier le plus fort : un lead joint vient à 81 %, un lead jamais joint à 45 %. Une partie de l'écart tient à la motivation (ceux qui décrochent sont aussi les plus intéressés), mais les essais confirment l'effet du contact humain : 13,6 % d'absences avec un appel du personnel, 17,3 % avec un automate, 23,1 % sans rien ${R("parikh")}.</p>`},
-          {pour:"joint", canal:"crm", qui:"Setteuse", tag:"same", titre:"« Setté - RDV pris quali »", court:"Plus d'appel de préparation ensuite : le lead setté reçoit seulement les deux rappels."},
-          {pour:"non", canal:"sms", qui:"Setteuse", tag:"new", titre:"Pas de réponse : vocal court et SMS depuis sa ligne", court:"Le lead voit qui l'appelle et peut répondre. Aujourd'hui, rien ne part après un appel manqué.", msgs:[PRO.vocalRdv, PRO.smsRdv],
+          {pour:"joint", canal:"crm", qui:"Setteuse", tag:"same", n:"Setté - RDV pris quali", titre:"« Setté - RDV pris quali »", court:"Plus d'appel de préparation ensuite : le lead setté reçoit seulement les deux rappels."},
+          {pour:"non", canal:"sms", qui:"Setteuse", tag:"new", n:"Vocal + SMS de la setteuse", titre:"Pas de réponse : vocal court et SMS depuis sa ligne", court:"Le lead voit qui l'appelle et peut répondre. Aujourd'hui, rien ne part après un appel manqué.", msgs:[PRO.vocalRdv, PRO.smsRdv],
             detail:`<p>Un vocal fait déjà mieux que pas de contact du tout ${R("teo")}. Le SMS depuis la ligne Allô de la setteuse rend son numéro reconnaissable pour le 2e appel, et la réponse arrive dans CRMIA.</p><p>Ce SMS part une seule fois, après le 1er appel manqué : la suite passe par les appels et par les deux rappels automatiques.</p>`},
         ]},
         {t:"1 à 2 h après", sub:"si l'heure le permet", steps:[
-          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", titre:"2e appel le jour même, quand l'heure le permet", court:"Pas systématique : un lead appelé la 1re fois après 16 h passe au lendemain. 15 min à 2 h après un 1er appel manqué : 46 % de leads joints ; le lendemain : 19 %.", chips:["CRMIA garde la fiche dans la liste du jour (à développer)"],
+          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"2e appel le jour même", titre:"2e appel le jour même, quand l'heure le permet", court:"Pas systématique : un lead appelé la 1re fois après 16 h passe au lendemain. 15 min à 2 h après un 1er appel manqué : 46 % de leads joints ; le lendemain : 19 %.", chips:["CRMIA garde la fiche dans la liste du jour (à développer)"],
             detail:`<p>Mesuré en octobre sur 660 deuxièmes appels. Velocify, sur 3,5 millions de leads, conseille la même fenêtre de 30 à 60 minutes ${R("velocify")}. Rappeler dans les 15 minutes fait moins bien (37 %) : le lead est encore occupé.</p><p>Aujourd'hui, CRMIA reporte la fiche au lendemain dès le 1er appel manqué, et elle sort de la liste du jour : c'est le point soulevé par Roxane.</p>`},
         ]},
         {t:"Jours suivants", sub:"jusqu'au matin du RDV", steps:[
-          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", titre:"3e appel, à un autre moment, avant 18 h la veille", court:"3 appels au plus, le plafond de CRMIA, gardé par l'équipe. Le dernier passe avant 18 h la veille, pour que l'annulation ne vise que des leads vraiment cherchés.",
+          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"3e appel, autre moment", titre:"3e appel, à un autre moment, avant 18 h la veille", court:"3 appels au plus, le plafond de CRMIA, gardé par l'équipe. Le dernier passe avant 18 h la veille, pour que l'annulation ne vise que des leads vraiment cherchés.",
             detail:`<p>Les leads joints au 3e appel viennent à 94 %. Changer d'heure d'un jour à l'autre : le lead qui ne décroche pas à 11 h décroche peut-être à 18 h.</p><p>Aujourd'hui, 3 New RDV sur 4 que la règle de 18 h viserait n'ont reçu qu'un appel, ou aucun. Avec 3 appels, on reste aussi sous la limite du démarchage téléphonique (4 sur 30 jours) ${R("demarchage")}.</p>`},
         ]},
         {t:"J-1 · 18:00", sub:"la veille", steps:[
-          {canal:"sms", qui:"Automatique, signé du closer", tag:"mod", titre:"SMS de la veille : confirmer ou décaler en un clic", court:"Un seul lien, vers une page « Je serai là / Décaler » qui montre aussi le lien Meet. Pas de réponse à lire à la main.", msg:PRO.smsVeille, chips:["Pas envoyé si le RDV a été pris la veille (inchangé)"],
+          {canal:"sms", qui:"Automatique, signé du closer", tag:"mod", n:"SMS veille, confirmer ou décaler", titre:"SMS de la veille : confirmer ou décaler en un clic", court:"Un seul lien, vers une page « Je serai là / Décaler » qui montre aussi le lien Meet. Pas de réponse à lire à la main.", msg:PRO.smsVeille, chips:["Pas envoyé si le RDV a été pris la veille (inchangé)"],
             detail:`<p>Deux rappels font mieux qu'un ${R("steiner", "robotham")}, et en recevoir souvent n'en use pas l'effet ${R("altmann")}.</p><p>Le clic « Je serai là » dit à la setteuse qui appeler en priorité le matin. Dans un pilote, 58 % des patients qui n'avaient pas confirmé sont venus quand même ${R("stephenson")} : ne pas avoir cliqué ne suffit pas pour annuler.</p><p>Le clic « Décaler » libère le créneau assez tôt pour qu'une setteuse y place un lead déjà qualifié.</p>`},
-          {pour:"non", canal:"sms", qui:"Setteuse, depuis sa ligne Allô", tag:"new", titre:"Pas joint après 3 appels : « répondez OUI », puis annulation à 18 h, en test", court:"La règle de Roxane, telle que l'écrit sa trame : seulement après 3 appels sans réponse. Le message d'annulation invite à reprendre RDV ; on ne rappelle pas ensuite.", msgs:[ROX.smsOui, ROX.smsAnnul, ROX.mailAnnul],
+          {pour:"non", canal:"sms", qui:"Setteuse, depuis sa ligne Allô", tag:"new", n:"« Répondez OUI », sinon annulé", titre:"Pas joint après 3 appels : « répondez OUI », puis annulation à 18 h, en test", court:"La règle de Roxane, telle que l'écrit sa trame : seulement après 3 appels sans réponse. Le message d'annulation invite à reprendre RDV ; on ne rappelle pas ensuite.", msgs:[ROX.smsOui, ROX.smsAnnul, ROX.mailAnnul],
             detail:`<p>Appliquée à tous les leads pas joints à 18 h la veille, la règle aurait annulé 197 New RDV sur 458 du 01 au 22/10, dont 147 n'avaient reçu qu'un appel, ou aucun : 7 des 48 ventes des New RDV en jeu. Après 3 appels sans réponse, elle ne touchait que 14 RDV (1 vente) ; elle comptera davantage quand les 3 appels seront faits pour tout le monde.</p><p>Le SMS part de la ligne Allô de la setteuse, pour que la réponse « OUI » lui arrive. Le test dure 3 semaines et mesure les reprises de RDV dans les 7 jours, les créneaux replacés par une setteuse et les ventes. Le détail est dans l'onglet « À trancher ».</p>`},
         ]},
         {t:"J · 08:00", sub:"le matin du RDV", steps:[
-          {canal:"sms", qui:"Automatique", tag:"del", titre:"SMS de 8 h", court:"Supprimé : aucun effet mesuré, et trop loin des RDV de l'après-midi et du soir. Remplacé par le SMS d'une heure avant.", ghost:true,
+          {canal:"sms", qui:"Automatique", tag:"del", n:"SMS de 8 h", titre:"SMS de 8 h", court:"Supprimé : aucun effet mesuré, et trop loin des RDV de l'après-midi et du soir. Remplacé par le SMS d'une heure avant.", ghost:true,
             detail:"<p>Depuis le 08/10, settés : 81 % de venue avec ce SMS, 89 % sans ; non settés : 34 % avec, 47 % sans. Aucun écart n'est significatif.</p>"},
         ]},
         {t:"T-1 h", sub:"une heure avant", steps:[
-          {canal:"sms", qui:"Automatique, signé du closer", tag:"new", titre:"SMS avec le lien Meet", court:"Le lien, là où le lead le cherche. Pour tous les RDV, joints ou non.", msg:PRO.smsH1,
+          {canal:"sms", qui:"Automatique, signé du closer", tag:"new", n:"SMS 1 h avant, lien Meet", titre:"SMS avec le lien Meet", court:"Le lien, là où le lead le cherche. Pour tous les RDV, joints ou non.", msg:PRO.smsH1,
             detail:`<p>Un lead jamais joint vient à 70 % quand le RDV est le matin, 55 % l'après-midi, <b>37 %</b> à partir de 17 h. Le SMS de 8 h arrive 9 heures avant un RDV de 17 h ; celui-ci arrive une heure avant. L'écart matin-soir peut avoir d'autres causes : d'où le test proposé plus bas.</p><p>CRMIA sait déjà envoyer un rappel « X minutes avant » (mode « délai » des réglages de calendrier). Il manque la variable du lien Meet.</p>`},
         ]},
         {t:"T0", sub:"heure du RDV", steps:[
-          {canal:"visio", qui:"Closer", tag:"same", titre:"Visio Google Meet", court:"Le lead rejoint par le lien du SMS, du mail ou de l'invitation."},
+          {canal:"visio", qui:"Closer", tag:"same", n:"Visio Google Meet", titre:"Visio Google Meet", court:"Le lead rejoint par le lien du SMS, du mail ou de l'invitation."},
         ]},
-        {t:"T+2 min", sub:"le lead n'est pas là", steps:[
-          {canal:"appel", qui:"Closer", tag:"mod", titre:"Appel tout de suite, SMS « je vous attends », 2e appel à T+6 min", court:"Les deux appels déjà exigés, passés tôt pour faire entrer le lead en retard plutôt que pour constater l'absence.", msg:PRO.smsCloserRetard,
+        {t:"T+2 min", sub:"le lead n'est pas là", cond:"Lead absent", steps:[
+          {canal:"appel", qui:"Closer", tag:"mod", n:"Appel + SMS « je vous attends »", titre:"Appel tout de suite, SMS « je vous attends », 2e appel à T+6 min", court:"Les deux appels déjà exigés, passés tôt pour faire entrer le lead en retard plutôt que pour constater l'absence.", msg:PRO.smsCloserRetard,
             detail:`<p>Les leads arrivent souvent avec quelques minutes de retard (remarque de Tanguy, 22/10). Le no show contrôlé exige déjà 2 appels avant 10 minutes ; on fixe seulement le moment : 2 et 6 minutes après le début.</p><p>Le SMS part de la ligne Allô du closer, le lead peut répondre « j'arrive ».</p>`},
         ]},
         {t:"T+10 min", sub:"absence confirmée", steps:[
-          {canal:"crm", qui:"Closer", tag:"same", titre:"No show contrôlé", court:"Règle du 23/10 inchangée : 10 minutes et 2 appels Allô avant de déclarer l'absence."},
+          {canal:"crm", qui:"Closer", tag:"same", n:"No show contrôlé", titre:"No show contrôlé", court:"Règle du 23/10 inchangée : 10 minutes et 2 appels Allô avant de déclarer l'absence."},
         ]},
         {t:"Après", sub:"un no show, dans l'heure", steps:[
-          {canal:"mail", qui:"Gmail du closer, automatique", tag:"same", titre:"Mail de no show avec lien de reprise", court:"Inchangé.", msg:MSG_NOSHOW_AUJ},
-          {canal:"appel", qui:"Setteuse", tag:"mod", titre:"La setteuse rappelle dans l'heure, pas le lendemain", court:"Elle propose le créneau libre le plus proche. Sans réponse : un SMS avec le lien de reprise.", msg:PRO.smsApresNs,
+          {canal:"mail", qui:"Gmail du closer, automatique", tag:"same", n:"Mail de no show", titre:"Mail de no show avec lien de reprise", court:"Inchangé.", msg:MSG_NOSHOW_AUJ},
+          {canal:"appel", qui:"Setteuse", tag:"mod", n:"La setteuse rappelle dans l'heure", titre:"La setteuse rappelle dans l'heure, pas le lendemain", court:"Elle propose le créneau libre le plus proche. Sans réponse : un SMS avec le lien de reprise.", msg:PRO.smsApresNs,
             detail:`<p>En octobre, 13 des 15 reprises de RDV après un no show sont passées par un appel. Parmi les leads joints dans les 48 h, 45 % ont repris un RDV. Le jour même, le lead se souvient du RDV manqué ; le lendemain, beaucoup moins.</p><p>Le créneau le plus proche : les RDV posés par l'équipe le jour même ont été honorés 9 fois sur 10.</p>`},
         ]},
         {t:"À tout moment", sub:"annulation ou report", steps:[
-          {canal:"crm", qui:"CRMIA", tag:"same", titre:"Annuler ou décaler", court:"Inchangé : rappels arrêtés, invitation Google retirée, R1 rendu à la setteuse."},
+          {canal:"crm", qui:"CRMIA", tag:"same", n:"Annuler ou décaler", titre:"Annuler ou décaler", court:"Inchangé : rappels arrêtés, invitation Google retirée, R1 rendu à la setteuse."},
         ]},
       ]},
     mql:{
@@ -784,27 +808,27 @@ propose: {
       ],
       moments:[
         {t:"T0", sub:"demande de programme", steps:[
-          {canal:"crm", qui:"CRMIA et Slack", tag:"same", titre:"Attribution par rotation", court:"Inchangée : la setteuse est connue dès le formulaire, son prénom signe tout ce qui suit."},
-          {canal:"mail", qui:"Gmail de la setteuse, automatique", tag:"mod", titre:"Mail programme : l'appel annoncé", court:"Le mail actuel, plus l'annonce de l'appel du mail A de Roxane. Sans la phrase « répondez non », écartée le 23/10.", msg:PRO.programme},
-          {canal:"page", qui:"Écran du calendrier", tag:"new", titre:"Case « Je veux être rappelé aujourd'hui », en test", court:"Pour le lead qui ne trouve pas son créneau ou veut une réponse tout de suite (Roxane). Du lundi au vendredi, de 8 h à 19 h ; cochée, la demande passe en tête de la colonne « Priorités ».",
+          {canal:"crm", qui:"CRMIA et Slack", tag:"same", n:"Attribution à une setteuse", titre:"Attribution par rotation", court:"Inchangée : la setteuse est connue dès le formulaire, son prénom signe tout ce qui suit."},
+          {canal:"mail", qui:"Gmail de la setteuse, automatique", tag:"mod", n:"Mail programme, appel annoncé", titre:"Mail programme : l'appel annoncé", court:"Le mail actuel, plus l'annonce de l'appel du mail A de Roxane. Sans la phrase « répondez non », écartée le 23/10.", msg:PRO.programme},
+          {canal:"page", qui:"Écran du calendrier", tag:"new", n:"Case « rappelé aujourd'hui »", titre:"Case « Je veux être rappelé aujourd'hui », en test", court:"Pour le lead qui ne trouve pas son créneau ou veut une réponse tout de suite (Roxane). Du lundi au vendredi, de 8 h à 19 h ; cochée, la demande passe en tête de la colonne « Priorités ».",
             detail:"<p>94 % des MQL du 01 au 19/10 sont passés par cet écran sans réserver. En semaine, 64 % de ceux-là sont appelés le jour même, 18 % jamais : la case dit lesquels ne doivent pas attendre. Le détail est dans l'onglet « À trancher ».</p>"},
         ]},
         {t:"Dans l'heure", sub:"objectif, aux heures d'appel en semaine", note:["Hors de ces plages : file du matin à 10 h, par ordre d'arrivée", "En journée, la demande la plus récente d'abord"], steps:[
-          {canal:"appel", qui:"Setteuse", tag:"mod", titre:"1er appel dans l'heure, le plus tôt possible", court:"Un objectif, pas une règle. Aujourd'hui 3 h 20 en médiane. En semaine, appelées dans l'heure : 6 ventes sur 52 demandes, contre 2 à 3 % au-delà.",
+          {canal:"appel", qui:"Setteuse", tag:"mod", n:"1er appel dans l'heure", titre:"1er appel dans l'heure, le plus tôt possible", court:"Un objectif, pas une règle. Aujourd'hui 3 h 20 en médiane. En semaine, appelées dans l'heure : 6 ventes sur 52 demandes, contre 2 à 3 % au-delà.",
             detail:`<p>Demandes du 01 au 19/10, en semaine de 9 h à 18 h : 6 ventes sur 52 appelées dans l'heure, 2 sur 108 entre 1 et 4 h, 3 sur 90 entre 4 et 24 h ; 54 sur 326 jamais appelées. Contacter en moins d'une heure rend la qualification environ 7 fois plus probable ${R("hbr")}, et le délai entre 5 et 30 minutes compte déjà ${R("lrm")}.</p><p>Les chances chutent pendant la 1re heure, puis bougent peu : en journée, la demande la plus récente passe d'abord. Une demande « rappelé aujourd'hui » (case du calendrier, en test) passe devant, comme un rappel convenu.</p>`},
-          {pour:"joint", canal:"appel", qui:"Setteuse", tag:"mod", titre:"Il décroche : qualifier, poser le RDV au plus proche", court:"Le RDV se pose pendant l'appel ; le lead accepte l'invitation en ligne. Il suit ensuite le parcours « RDV pris », côté lead joint.", msg:PRO.scriptMql, goto:"rdv"},
-          {pour:"non", canal:"sms", qui:"Setteuse", tag:"new", titre:"Pas de réponse : vocal court et SMS depuis sa ligne", court:"Aujourd'hui, rien ne part après un appel manqué.", msgs:[PRO.vocalMql, PRO.smsMql]},
+          {pour:"joint", canal:"appel", qui:"Setteuse", tag:"mod", n:"Qualifier, poser le RDV", titre:"Il décroche : qualifier, poser le RDV au plus proche", court:"Le RDV se pose pendant l'appel ; le lead accepte l'invitation en ligne. Il suit ensuite le parcours « RDV pris », côté lead joint.", msg:PRO.scriptMql, goto:"rdv"},
+          {pour:"non", canal:"sms", qui:"Setteuse", tag:"new", n:"Vocal + SMS de la setteuse", titre:"Pas de réponse : vocal court et SMS depuis sa ligne", court:"Aujourd'hui, rien ne part après un appel manqué.", msgs:[PRO.vocalMql, PRO.smsMql]},
         ]},
         {t:"1 à 2 h après", sub:"si l'heure le permet", steps:[
-          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", titre:"2e appel le jour même, quand l'heure le permet", court:"46 % de leads joints dans cette fenêtre, contre 19 % le lendemain. Roxane et Nizar sont d'accord, tant que ce n'est pas systématique.", chips:["CRMIA garde la fiche dans la liste du jour (à développer)"],
+          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"2e appel le jour même", titre:"2e appel le jour même, quand l'heure le permet", court:"46 % de leads joints dans cette fenêtre, contre 19 % le lendemain. Roxane et Nizar sont d'accord, tant que ce n'est pas systématique.", chips:["CRMIA garde la fiche dans la liste du jour (à développer)"],
             detail:`<p>Mesuré en octobre ; Velocify conseille la même fenêtre ${R("velocify")}. Une demande arrivée en fin d'après-midi passe au lendemain : le 2e appel se fait alors le matin.</p>`},
         ]},
         {t:"J+1", sub:"autre moment de la journée", steps:[
-          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", titre:"3e appel (ou 2e, si le premier jour n'en a permis qu'un)", court:"Le matin si les premiers étaient l'après-midi, et inversement."},
-          {pour:"non", canal:"mail", qui:"Gmail de la setteuse", tag:"new", titre:"Mail « j'ai essayé de vous joindre », avec un lien pour réserver seul", court:"Pour ceux qui ne décrochent jamais : une façon de reprendre la main sans attendre l'appel.", msg:PRO.mailJ1},
+          {pour:"non", canal:"appel", qui:"Setteuse", tag:"new", n:"3e appel, autre moment", titre:"3e appel (ou 2e, si le premier jour n'en a permis qu'un)", court:"Le matin si les premiers étaient l'après-midi, et inversement."},
+          {pour:"non", canal:"mail", qui:"Gmail de la setteuse", tag:"new", n:"Mail avec lien pour réserver", titre:"Mail « j'ai essayé de vous joindre », avec un lien pour réserver seul", court:"Pour ceux qui ne décrochent jamais : une façon de reprendre la main sans attendre l'appel.", msg:PRO.mailJ1},
         ]},
         {t:"Après le 3e", sub:"J+1 ou J+2, clôture", steps:[
-          {pour:"non", canal:"sms", qui:"Setteuse", tag:"mod", titre:"Clôture par SMS et mail, avec le lien pour revenir", court:"La clôture de Roxane, avec un lien de réservation. Puis « Injoignable », après 3 appels comme aujourd'hui.", msgs:[PRO.smsCloture, PRO.mailCloture],
+          {pour:"non", canal:"sms", qui:"Setteuse", tag:"mod", fin:"Injoignable", n:"Clôture SMS + mail", titre:"Clôture par SMS et mail, avec le lien pour revenir", court:"La clôture de Roxane, avec un lien de réservation. Puis « Injoignable », après 3 appels comme aujourd'hui.", msgs:[PRO.smsCloture, PRO.mailCloture],
             detail:`<p>Aujourd'hui, 74 % des leads jamais joints n'ont eu qu'1 ou 2 appels : faire vraiment les 3 compte plus que d'en ajouter un 4e. Velocify trouve 93 % des leads convertis joints au plus tard au 6e appel ${R("velocify")} ; l'équipe garde 3 appels, à revoir fin novembre avec les chiffres.</p>`},
         ]},
       ]},
@@ -1128,29 +1152,42 @@ const GO_DEV = ["colonne", "motif", "abc", "heure"];
 <script>
 /* Affichage du mini-site. Les données sont dans data.js. */
 
-const CANAUX = {
-  appel:{l:"Appel", c:"--c-appel"}, vocal:{l:"Vocal", c:"--c-appel"},
-  sms:{l:"SMS", c:"--c-sms"}, mail:{l:"Mail", c:"--c-mail"},
-  crm:{l:"CRMIA", c:"--c-crm"}, page:{l:"Page web", c:"--c-web"},
-  agenda:{l:"Agenda", c:"--c-web"}, visio:{l:"Visio", c:"--c-web"},
+const ICONS = {
+  appel:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  sms:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  crm:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 7v7M12 7v4M16 7v9"/>',
+  page:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M6 6.5h.01M9 6.5h.01"/>',
+  agenda:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  visio:'<path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
+  si:'<path d="M16 3h5v5M8 3H3v5"/><path d="M12 22v-8.3a4 4 0 0 0-1.17-2.88L3 3M15 9l6-6"/>',
+  depart:'<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
+  fin:'<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/>',
+  suite:'<path d="M5 12h14M12 5l7 7-7 7"/>',
 };
-const VERDICTS = {ok:"Je valide", adj:"À ajuster", no:"Déconseillé"};
-const TAGS = {new:"Nouveau", mod:"Modifié", same:"Inchangé", del:"Supprimé"};
-const PATHS = {rdv:{l:"RDV pris par le lead", s:"NEW RDV"}, mql:{l:"Demande sans RDV", s:"MQL"}};
-const CASES = {all:"Tous les cas", joint:"Lead joint", non:"Lead jamais joint"};
-const TABS = [
-  {id:"trancher", n:"!", l:"À trancher", c:"À trancher"},
-  {id:"auj", n:"1", l:"Aujourd'hui", c:"Aujourd'hui"},
-  {id:"roxane", n:"2", l:"Proposition de Roxane", c:"Roxane"},
-  {id:"propose", n:"3", l:"Parcours proposé", c:"Proposé"},
-  {id:"comparer", n:"⇄", l:"Comparer", c:"Comparer"},
-];
+const ico = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]}</svg>`;
 
-const state = {tab:"trancher", path:"rdv", cas:"all"};
+const CANAUX = {
+  appel:{l:"Appel", i:"appel"}, vocal:{l:"Vocal", i:"appel"}, sms:{l:"SMS", i:"sms"}, mail:{l:"Mail", i:"mail"},
+  crm:{l:"CRMIA", i:"crm"}, page:{l:"Page web", i:"page"}, agenda:{l:"Agenda", i:"agenda"}, visio:{l:"Visio", i:"visio"},
+};
+const VERDICTS = {ok:{l:"Je valide", g:"✓"}, adj:{l:"À ajuster", g:"~"}, no:{l:"Déconseillé", g:"✕"}};
+const TAGS = {new:"Nouveau", mod:"Modifié", same:"Inchangé", del:"Supprimé"};
+const PATHS = {rdv:{l:"RDV pris par le lead", s:"New RDV", depart:"Le lead prend RDV"}, mql:{l:"Demande sans RDV", s:"MQL", depart:"Le lead demande le programme"}};
+const LANES = {joint:"Si le lead décroche", non:"S'il ne décroche pas"};
+const TABS = [
+  {id:"trancher", l:"À trancher"},
+  {id:"auj", l:"Aujourd'hui"},
+  {id:"roxane", l:"Proposition de Roxane", c:"Roxane"},
+  {id:"propose", l:"Parcours proposé", c:"Proposé"},
+  {id:"comparer", l:"Comparer"},
+];
 const SANS_PARCOURS = ["comparer", "trancher"];
+const reduit = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const state = {tab:"trancher", path:"rdv", zoom:1, zoomAuto:true, sel:null};
 let uid = 0;
 const id = p => `${p}-${++uid}`;
-
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 
 /* Texte d'un message : liens [[...]], variables {{...}}, {...} et [...] mises en évidence. */
@@ -1164,161 +1201,341 @@ function fmt(txt){
 function renderMsg(m){
   let h = "";
   if (m.type === "sms"){
-    const n = m.corps.length;
-    h = `<div class="msg-h">SMS · ${esc(m.de || "")}</div><div class="sms"><div class="bub">${fmt(m.corps)}</div><div class="meta">≈ ${n} caractères, variables non remplies</div></div>`;
+    h = `<p class="msg-h">SMS · ${esc(m.de || "")}</p><div class="sms">${fmt(m.corps)}</div><p class="msg-meta">≈ ${m.corps.length} caractères, variables non remplies</p>`;
   } else if (m.type === "mail"){
-    h = `<div class="mail"><dl><dt>De</dt><dd>${esc(m.de || "")}</dd><dt>Objet</dt><dd>${esc(m.objet || "")}</dd></dl><div class="body">${fmt(m.corps)}</div></div>`;
+    h = `<div class="mail"><dl><dt>De</dt><dd>${esc(m.de || "")}</dd><dt>Objet</dt><dd>${esc(m.objet || "")}</dd></dl><div class="mail-b">${fmt(m.corps)}</div></div>`;
   } else if (m.type === "script"){
-    h = `<div class="msg-h">${esc(m.label || "Ce que dit la setteuse")}</div><div class="script">${fmt(m.corps)}</div>`;
+    h = `<p class="msg-h">${esc(m.label || "Ce que dit la setteuse")}</p><div class="script">${fmt(m.corps)}</div>`;
   } else if (m.type === "page"){
-    h = `<div class="msg-h">Ce que voit le lead</div><div class="pagemsg"><strong>${esc(m.titre)}</strong>${fmt(m.corps)}</div>`;
+    h = `<p class="msg-h">Ce que voit le lead</p><div class="pagemsg"><strong>${esc(m.titre)}</strong>${fmt(m.corps)}</div>`;
   }
   if (m.why){
     h += m.more
-      ? `<details class="why-d"><summary><b>Pourquoi ce texte :</b> ${m.why}<span class="plus">Le détail</span></summary><div class="more">${m.more}</div></details>`
+      ? `<details class="why"><summary><b>Pourquoi ce texte :</b> ${m.why} <span class="plus">Le détail</span></summary><div class="more">${m.more}</div></details>`
       : `<p class="why"><b>Pourquoi ce texte :</b> ${m.why}</p>`;
   }
   return `<div class="msg">${h}</div>`;
 }
 
-function toggle(label, body, extraCls = ""){
+function toggle(label, body){
   const pid = id("p");
   return {
-    btn:`<button type="button" class="tgl ${extraCls}" aria-expanded="false" aria-controls="${pid}">${label}</button>`,
-    panel:`<div class="panel" id="${pid}" hidden>${body}</div>`,
+    btn:`<button type="button" class="tgl" aria-expanded="false" aria-controls="${pid}">${label}</button>`,
+    panel:`<div class="tgl-p" id="${pid}" hidden>${body}</div>`,
   };
 }
 
-function renderStep(s, v){
-  const ca = CANAUX[s.canal] || CANAUX.crm;
-  const cls = ["card"];
-  if (s.ghost) cls.push("ghost");
-  if (s.tag === "del") cls.push("removed");
-  const badges = [
-    s.verdict ? `<span class="verdict v-${s.verdict}">${VERDICTS[s.verdict]}</span>` : "",
-    s.tag ? `<span class="tag t-${s.tag}">${TAGS[s.tag]}</span>` : "",
-  ].join("");
-  const msgs = s.msgs || (s.msg ? [s.msg] : []);
-  const tgls = [];
-  if (msgs.length) tgls.push(toggle(msgs.length > 1 ? `Voir les ${msgs.length} messages` : (msgs[0].type === "script" ? "Voir le texte" : "Voir le message"), msgs.map(renderMsg).join("")));
-  if (s.detail) tgls.push(toggle(v.detailLabel, s.detail));
-  const chips = (s.chips || []).map(c => `<span class="chip">${c}</span>`).join("");
-  return `<article class="${cls.join(" ")}" style="--ch:var(${ca.c})">
-    <div class="card-h"><span class="canal"><i></i>${ca.l}</span><span class="qui">${esc(s.qui || "")}</span>${badges ? `<span class="badges">${badges}</span>` : ""}</div>
-    <h4>${s.titre}</h4>
-    <p class="court">${s.court}</p>
-    ${chips ? `<div class="chips">${chips}</div>` : ""}
-    ${tgls.length ? `<div class="acts">${tgls.map(t => t.btn).join("")}</div>${tgls.map(t => t.panel).join("")}` : ""}
-    ${s.goto ? `<button type="button" class="goto" data-goto="${s.goto}">Voir la suite dans le parcours « ${PATHS[s.goto].l} »</button>` : ""}
-  </article>`;
+/* ------------------------------------------------------------------ */
+/* Le schéma : placement des étapes en colonnes (le temps) et en       */
+/* rangées (0 = le lead décroche, 1 = tous les leads, 2 = il ne        */
+/* décroche pas, 3 = sortie d'une branche).                            */
+/* ------------------------------------------------------------------ */
+const G = {colW:140, rowH:136, padX:20, top:76, tile:56};
+const msgsOf = s => s.msgs || (s.msg ? [s.msg] : []);
+
+function layout(vk, pk){
+  const moments = VERSIONS[vk].paths[pk].moments;
+  const nodes = [], edges = [], segs = [], libres = [];
+  const add = n => { n.k = "n" + nodes.length; nodes.push(n); return n.k; };
+  const link = (tails, to, label) => tails.forEach(t => edges.push({from:t.k, to, label: label || t.label}));
+  let tails = {main:[{k:add({kind:"depart", col:0, row:1, label:PATHS[pk].depart})}], joint:[], non:[]};
+  let split = false, col = 1;
+
+  const step = (s, m, c, row, from, label) => {
+    const k = add({kind:"step", col:c, row, s, m, label:s.n});
+    link(from, k, s.si || label);
+    return k;
+  };
+  const lanes = (m, c0) => {
+    let end = c0;
+    for (const L of ["joint", "non"]){
+      let c = c0;
+      for (const s of m.steps.filter(x => x.pour === L)){
+        if (s.fin && s.sinon){
+          /* Sortie de branche : l'étape part sur une rangée à part, la branche continue. */
+          const r = L === "non" ? 3 : -1;
+          const k = step(s, m, c + 1, r, tails[L]);
+          edges.push({from:k, to:add({kind:"fin", col:c + 2, row:r, label:s.fin})});
+          tails[L] = tails[L].map(t => ({k:t.k, label:s.sinon}));
+          c += 3; continue;
+        }
+        const k = step(s, m, c, L === "joint" ? 0 : 2, tails[L]);
+        c++;
+        if (s.fin){ edges.push({from:k, to:add({kind:"fin", col:c, row:L === "joint" ? 0 : 2, label:s.fin})}); c++; tails[L] = []; }
+        else if (s.goto){ edges.push({from:k, to:add({kind:"suite", col:c, row:L === "joint" ? 0 : 2, label:`Suite : parcours « ${PATHS[s.goto].l} »`, goto:s.goto})}); c++; tails[L] = []; }
+        else tails[L] = [{k}];
+      }
+      end = Math.max(end, c);
+    }
+    return end;
+  };
+  const mains = (m, c, from) => {
+    let first = true;
+    for (const s of m.steps.filter(x => !x.pour || x.pour === "all")){
+      const k = step(s, m, c++, 1, from, first ? m.cond : undefined);
+      from = [{k}]; first = false;
+    }
+    tails.main = from;
+    return c;
+  };
+
+  for (const m of moments){
+    if (m.t === "À tout moment"){ libres.push(...m.steps.map(s => ({s, m}))); continue; }
+    const aMain = m.steps.some(x => !x.pour || x.pour === "all");
+    const aLane = m.steps.some(x => x.pour === "joint" || x.pour === "non");
+    let c = col;
+    if (m.cote){
+      for (const s of m.steps) step(s, m, c++, 0, tails.main);
+    } else if (!split){
+      if (aMain) c = mains(m, c, tails.main);
+      if (aLane){
+        const k = add({kind:"si", col:c++, row:1, label:m.si || "Le lead décroche ?"});
+        link(tails.main, k);
+        tails = {main:[], joint:[{k, label:"Oui"}], non:[{k, label:"Non"}]};
+        split = true;
+        c = lanes(m, c);
+      }
+    } else {
+      if (aLane) c = lanes(m, c);
+      if (aMain){
+        c = mains(m, c, [...tails.joint, ...tails.non]);
+        tails.joint = []; tails.non = []; split = false;
+      }
+    }
+    segs.push({m, start:col, end:c});
+    col = c;
+  }
+  const rows = nodes.map(n => n.row);
+  return {nodes, edges, segs, libres, cols:col, rmin:Math.min(0, ...rows), rmax:Math.max(2, ...rows)};
 }
 
-function renderMoment(m, v){
-  const pour = s => s.pour || "all";
-  const all = m.steps.filter(s => pour(s) === "all");
-  let joint = m.steps.filter(s => pour(s) === "joint");
-  let non = m.steps.filter(s => pour(s) === "non");
-  if (state.cas === "joint") non = [];
-  if (state.cas === "non") joint = [];
-  if (!all.length && !joint.length && !non.length) return "";
-  const lane = (k, steps, label) => `<div class="lane ${k}"><div class="lane-h"><i></i>${label}</div>${steps.map(s => renderStep(s, v)).join("")}</div>`;
-  let lanes = "";
-  if (joint.length || non.length){
-    const parts = [];
-    if (joint.length) parts.push(lane("joint", joint, "Si le lead décroche"));
-    if (non.length) parts.push(lane("non", non, "S'il ne décroche pas"));
-    lanes = `<div class="lanes ${parts.length === 1 ? "one" : ""}">${parts.join("")}</div>`;
+function nodePos(n, L){
+  return {x:G.padX + n.col * G.colW, y:G.top + (n.row - L.rmin) * G.rowH};
+}
+
+function edgePath(a, b, na, nb){
+  const h = G.tile / 2;
+  const x1 = a.x + G.colW / 2 + h, y1 = a.y + h;
+  const x2 = b.x + G.colW / 2 - h - 4, y2 = b.y + h;
+  if (y1 === y2) return {d:`M${x1} ${y1}H${x2}`, lx:(x1 + x2) / 2, ly:y1};
+  const span = x2 - x1, bend = Math.min(span, 84), droit = span - bend;
+  if (na.row === 1 || na.kind === "si" || nb.row === 3 || nb.row === -1){
+    /* Embranchement : la courbe part de la source, puis file sur la rangée. */
+    const g = {d:`M${x1} ${y1}C${x1 + bend / 2} ${y1} ${x1 + bend / 2} ${y2} ${x1 + bend} ${y2}H${x2}`};
+    return droit >= 80 ? {...g, lx:x1 + bend + droit / 2, ly:y2} : {...g, lx:x1 + bend / 2, ly:(y1 + y2) / 2};
   }
-  const notes = (m.note || []).map(n => `<span class="chip">${n}</span>`).join("");
-  return `<li class="mo">
-    <div class="when"><span class="tile">${esc(m.t)}</span><span class="sub">${esc(m.sub || "")}</span></div>
-    <span class="dot" aria-hidden="true"></span>
-    <div class="what">${notes ? `<div class="mo-note">${notes}</div>` : ""}${all.map(s => renderStep(s, v)).join("")}${lanes}</div>
-  </li>`;
+  /* Retour vers les étapes communes : la courbe arrive près de la cible. */
+  const g = {d:`M${x1} ${y1}H${x2 - bend}C${x2 - bend / 2} ${y1} ${x2 - bend / 2} ${y2} ${x2} ${y2}`};
+  return droit >= 80 ? {...g, lx:x1 + droit / 2, ly:y1} : {...g, lx:x2 - bend / 2, ly:(y1 + y2) / 2};
+}
+
+function badgeOf(s){
+  if (s.verdict) return `<span class="vd vd-${s.verdict}" title="${VERDICTS[s.verdict].l}">${VERDICTS[s.verdict].g}</span>`;
+  if (s.tag && s.tag !== "same") return `<span class="tg tg-${s.tag}">${TAGS[s.tag]}</span>`;
+  return "";
+}
+
+function renderNode(n, L){
+  const p = nodePos(n, L);
+  const st = `left:${p.x}px;top:${p.y}px;width:${G.colW}px`;
+  if (n.kind === "step"){
+    const s = n.s, ca = CANAUX[s.canal] || CANAUX.crm, nb = msgsOf(s).length;
+    const cls = ["node"];
+    if (s.ghost) cls.push("ghost");
+    if (s.tag === "del") cls.push("del");
+    const mm = nb ? `<span class="nm">${ico("mail")}${nb > 1 ? `${nb} messages` : "1 message"}</span>` : "";
+    return `<button type="button" class="${cls.join(" ")}" data-k="${n.k}" style="${st}" aria-pressed="${state.sel === n.k}" aria-label="${esc(n.m.t + " : " + s.titre.replace(/<[^>]+>/g, ""))}">
+      <span class="tile">${ico(ca.i)}${badgeOf(s)}</span><span class="nl">${esc(n.label)}</span>${mm}</button>`;
+  }
+  if (n.kind === "suite"){
+    return `<button type="button" class="node suite" data-goto="${n.goto}" style="${st}"><span class="tile">${ico("suite")}</span><span class="nl">${esc(n.label)}</span></button>`;
+  }
+  return `<div class="node ${n.kind}" style="${st}"><span class="tile">${ico(n.kind)}</span><span class="nl">${esc(n.label)}</span></div>`;
+}
+
+function renderFlow(vk){
+  const L = layout(vk, state.path);
+  const W = G.padX * 2 + L.cols * G.colW, H = G.top + (L.rmax - L.rmin + 1) * G.rowH - 10;
+  if (state.zoomAuto){
+    const dispo = Math.min(document.documentElement.clientWidth - (innerWidth <= 640 ? 32 : 48), innerWidth < 1440 ? 1132 : 1760) - 2;
+    state.zoom = innerWidth <= 640 ? 0.8 : Math.max(0.8, Math.min(1, Math.floor(dispo / W * 100) / 100));
+  }
+  const byK = Object.fromEntries(L.nodes.map(n => [n.k, n]));
+  let paths = "", labels = "";
+  for (const e of L.edges){
+    const na = byK[e.from], nb = byK[e.to];
+    const g = edgePath(nodePos(na, L), nodePos(nb, L), na, nb);
+    const faible = nb.kind === "step" && (nb.s.ghost || nb.s.tag === "del");
+    paths += `<path d="${g.d}" class="${faible ? "faible" : ""}" marker-end="url(#fl)"/>`;
+    if (e.label) labels += `<span class="el" style="left:${g.lx}px;top:${g.ly}px">${esc(e.label)}</span>`;
+  }
+  const segs = L.segs.map(sg => {
+    const x = G.padX + sg.start * G.colW;
+    return `<div class="seg-t" style="left:${x}px;width:${(sg.end - sg.start) * G.colW}px;height:${H}px"><b>${esc(sg.m.t)}</b><span>${esc(sg.m.sub || "")}</span></div>`;
+  }).join("");
+  state.ordre = [...L.nodes.filter(n => n.kind === "step").sort((a, b) => a.col - b.col || a.row - b.row).map(n => n.k), ...L.libres.map((_, i) => "l" + i)];
+  state.noeuds = Object.fromEntries([...L.nodes.filter(n => n.kind === "step").map(n => [n.k, n]), ...L.libres.map((l, i) => ["l" + i, {k:"l" + i, s:l.s, m:l.m}])]);
+  const libres = L.libres.length ? `<div class="libres"><span class="libres-h">À tout moment</span>${L.libres.map((l, i) => `<button type="button" class="libre" data-k="l${i}" aria-pressed="${state.sel === "l" + i}">${ico((CANAUX[l.s.canal] || CANAUX.crm).i)}<span>${esc(l.s.n)}</span>${badgeOf(l.s)}</button>`).join("")}</div>` : "";
+  return `<div class="flow-wrap">
+    <div class="flow" id="flow" tabindex="-1" style="--z:${state.zoom}">
+      <div class="flow-sizer" style="width:${W * state.zoom}px;height:${H * state.zoom}px">
+        <div class="flow-in" style="width:${W}px;height:${H}px;transform:scale(${state.zoom})">
+          ${segs}
+          <svg class="edges" width="${W}" height="${H}" aria-hidden="true"><defs><marker id="fl" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z"/></marker></defs>${paths}</svg>
+          ${labels}
+          ${L.nodes.map(n => renderNode(n, L)).join("")}
+        </div>
+      </div>
+    </div>
+    <p class="flow-hint">Faites glisser le schéma pour le parcourir. Cliquez sur une étape pour lire son détail et ses messages.</p>
+    ${libres}
+  </div>`;
 }
 
 function legend(vk){
-  const can = [["appel","Appel ou vocal"],["sms","SMS"],["mail","Mail"],["crm","CRMIA, Slack"],["page","Page, agenda, visio"]]
-    .map(([k,l]) => `<span><i style="background:var(${CANAUX[k].c})"></i>${l}</span>`).join("");
+  const can = [["appel","Appel"],["sms","SMS"],["mail","Mail"],["crm","CRMIA"],["page","Page web"],["agenda","Agenda"],["visio","Visio"]]
+    .map(([k,l]) => `<span class="lg-i">${ico(CANAUX[k].i)}${l}</span>`).join("");
   let extra = "";
-  if (vk === "roxane") extra = Object.entries(VERDICTS).map(([k,l]) => `<span class="verdict v-${k}">${l}</span>`).join("");
-  if (vk === "propose") extra = Object.entries(TAGS).map(([k,l]) => `<span class="tag t-${k}">${l}</span>`).join("");
-  return `<div class="legend">${can}${extra}</div>`;
+  if (vk === "roxane") extra = Object.entries(VERDICTS).filter(([k]) => k !== "no").map(([k,v]) => `<span class="lg-i"><span class="vd vd-${k}">${v.g}</span>${v.l}</span>`).join("");
+  if (vk === "propose") extra = ["new", "mod", "del"].map(k => `<span class="lg-i"><span class="tg tg-${k}">${TAGS[k]}</span></span>`).join("") + `<span class="lg-i muted">Sans marque : inchangé</span>`;
+  return `<div class="legend">${can}${extra ? `<span class="lg-sep"></span>${extra}` : ""}</div>`;
 }
 
-function controls(){
+function toolbar(){
   const seg = Object.entries(PATHS).map(([k,p]) => `<button type="button" data-path="${k}" aria-pressed="${state.path === k}">${p.l}<small>${p.s}</small></button>`).join("");
-  const cas = Object.entries(CASES).map(([k,l]) => `<button type="button" data-c="${k}" aria-pressed="${state.cas === k}">${k !== "all" ? "<i></i>" : ""}${l}</button>`).join("");
-  return `<div class="controls"><div class="seg" role="group" aria-label="Parcours">${seg}</div><div class="cas" role="group" aria-label="Cas affiché"><span class="lab">Afficher :</span>${cas}</div></div>`;
+  return `<div class="toolbar">
+    <div class="seg" role="group" aria-label="Parcours">${seg}</div>
+    <div class="zoom" role="group" aria-label="Zoom du schéma">
+      <button type="button" data-zoom="-1" aria-label="Dézoomer">−</button><span id="zoom-v">${Math.round(state.zoom * 100)} %</span><button type="button" data-zoom="1" aria-label="Zoomer">+</button><button type="button" data-zoom="fit" class="fit">Vue d'ensemble</button>
+    </div>
+  </div>`;
 }
 
 function renderVersion(vk){
   const v = VERSIONS[vk];
   const p = v.paths[state.path];
-  const resume = `<dl class="resume">${p.resume.map(r => `<div><dt>${r.n}</dt><dd>${r.l}</dd></div>`).join("")}</dl>`;
-  const tl = `<ol class="tl">${p.moments.map(m => renderMoment(m, v)).join("")}</ol>`;
-  const head = `<div class="v-head"><div><h2>${v.titre}</h2><p>${v.intro}</p>${legend(vk)}</div></div>`;
-  if (vk !== "propose") return head + controls() + resume + tl;
-  return head + principes() + `<div class="block"><h3>Le parcours, moment par moment</h3><p class="lead">Choisissez le parcours et le cas. Chaque étape a une justification courte ; le bouton « Pourquoi » ouvre les chiffres et les sources.</p></div>` + controls() + resume + tl + extras();
+  const head = `<div class="v-head"><h2>${v.titre}</h2><p>${v.intro}</p></div>`;
+  const stats = `<dl class="stats">${p.resume.map(r => `<div><dt>${r.n}</dt><dd>${r.l}</dd></div>`).join("")}</dl>`;
+  const schema = renderFlow(vk); /* fixe le zoom avant d'afficher sa valeur */
+  const flow = head + toolbar() + stats + legend(vk) + schema;
+  return vk === "propose" ? flow + principes() + extras() : flow;
 }
 
+/* ------------------------------------------------------------------ */
+/* Le panneau de détail                                                 */
+/* ------------------------------------------------------------------ */
+function panelHtml(n){
+  const s = n.s, m = n.m, v = VERSIONS[state.tab], ca = CANAUX[s.canal] || CANAUX.crm;
+  const marque = s.verdict ? `<span class="pill vd-l vd-l-${s.verdict}">${VERDICTS[s.verdict].l}</span>` : s.tag ? `<span class="pill tg-l tg-l-${s.tag}">${TAGS[s.tag]}</span>` : "";
+  const lane = s.pour && LANES[s.pour] ? `<span class="pill">${LANES[s.pour]}</span>` : "";
+  const msgs = msgsOf(s);
+  const notes = [...(s.chips || []), ...(m.note || [])];
+  return `<div class="pn-meta"><span class="pn-canal">${ico(ca.i)}${ca.l}</span>${lane}${marque}</div>
+    <h3 id="pn-titre">${s.titre}</h3>
+    <p class="pn-qui">${esc(s.qui || "")}</p>
+    <p class="pn-court">${s.court}</p>
+    ${notes.length ? `<ul class="pn-notes">${notes.map(x => `<li>${x}</li>`).join("")}</ul>` : ""}
+    ${msgs.length ? `<section class="pn-s"><h4>${msgs.length > 1 ? `Les ${msgs.length} messages` : msgs[0].type === "script" ? "Le texte" : "Le message"}</h4>${msgs.map(renderMsg).join("")}</section>` : ""}
+    ${s.detail ? `<section class="pn-s pn-d"><h4>${v.detailLabel}</h4>${s.detail}</section>` : ""}
+    ${s.goto ? `<button type="button" class="pn-goto" data-goto="${s.goto}">Voir la suite : parcours « ${PATHS[s.goto].l} » →</button>` : ""}`;
+}
+
+function openPanel(k, focus){
+  const n = state.noeuds && state.noeuds[k];
+  if (!n) return;
+  state.sel = k;
+  const panel = document.getElementById("panel");
+  document.getElementById("pn-eyebrow").textContent = `${n.m.t}${n.m.sub ? " · " + n.m.sub : ""}`;
+  document.getElementById("pn-b").innerHTML = panelHtml(n);
+  document.getElementById("pn-b").scrollTop = 0;
+  const i = state.ordre.indexOf(k);
+  document.getElementById("pn-prev").disabled = i <= 0;
+  document.getElementById("pn-next").disabled = i >= state.ordre.length - 1;
+  panel.hidden = false;
+  requestAnimationFrame(() => panel.classList.add("on"));
+  document.body.classList.add("pn-ouvert");
+  document.querySelectorAll("[data-k]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.k === k)));
+  const el = document.querySelector(`.node[data-k="${k}"]`);
+  if (el) el.scrollIntoView({behavior: reduit() ? "auto" : "smooth", block:"nearest", inline:"center"});
+  if (focus) document.getElementById("pn-x").focus({preventScroll:true});
+}
+
+function closePanel(sansFocus){
+  const panel = document.getElementById("panel");
+  if (panel.hidden) return;
+  const k = state.sel;
+  state.sel = null;
+  panel.classList.remove("on");
+  document.body.classList.remove("pn-ouvert");
+  setTimeout(() => { if (!state.sel) panel.hidden = true; }, reduit() ? 0 : 220);
+  document.querySelectorAll("[data-k]").forEach(b => b.setAttribute("aria-pressed", "false"));
+  const el = !sansFocus && document.querySelector(`[data-k="${k}"]`);
+  if (el) el.focus({preventScroll:true});
+}
+
+/* ------------------------------------------------------------------ */
+/* Blocs du parcours proposé                                            */
+/* ------------------------------------------------------------------ */
 function principes(){
   const cards = PRINCIPES.map(pr => {
     const t = toggle("Pourquoi", pr.d);
-    return `<div class="principle"><div class="k">${pr.k}<small>${pr.ks}</small></div><h4>${pr.h}</h4><p>${pr.p}</p><div class="acts">${t.btn}</div>${t.panel}</div>`;
+    return `<div class="card principle"><div class="k">${pr.k}</div><p class="ks">${pr.ks}</p><h4>${pr.h}</h4><p>${pr.p}</p>${t.btn}${t.panel}</div>`;
   }).join("");
-  return `<div class="block" style="margin-top:24px"><h3>Quatre principes</h3><p class="lead">Tout le parcours en découle. Les chiffres viennent de CRMIA (octobre) ; les numéros entre crochets renvoient aux études, en bas de page.</p><div class="principles">${cards}</div></div>`;
+  return `<section class="block"><h3>Quatre principes</h3><p class="lead">Tout le parcours en découle. Les chiffres viennent de CRMIA (octobre) ; les numéros entre crochets renvoient aux sources, en bas de page.</p><div class="grid4">${cards}</div></section>`;
 }
 
+function effortPill(c, l){ return `<span class="effort ${c}">${l}</span>`; }
+
 function extras(){
-  const ch = CHANGEMENTS.map(c => `<div class="change"><div><h4>${c.h}</h4><p>${c.p}</p></div><span class="effort ${c.c}">${c.e}</span></div>`).join("");
-  const kp = KPIS.map(k => `<div class="kpi"><h4>${k.h}</h4><div class="now">${k.now}</div><p>${k.p}</p></div>`).join("");
-  const src = SOURCES.map((s, i) => `<li id="src-${i + 1}"><span>${esc(s.t)} <span class="fiab">${s.f}</span><br><a href="${s.u}" target="_blank" rel="noopener">${esc(s.u)}</a></span></li>`).join("");
+  const ch = CHANGEMENTS.map(c => `<li class="row"><div><h4>${c.h}</h4><p>${c.p}</p></div>${effortPill(c.c, c.e)}</li>`).join("");
+  const kp = KPIS.map(k => `<div class="card kpi"><h4>${k.h}</h4><p class="now">${k.now}</p><p>${k.p}</p></div>`).join("");
   return `
-  <div class="block"><h3>Ce qui change dans CRMIA</h3><p class="lead">Dans l'ordre où je le ferais. Les quatre premiers ne demandent aucun développement ; Fathom attend seulement le go.</p><div class="changes">${ch}</div></div>
-  <div class="block"><h3>Les chiffres à suivre chaque semaine</h3><p class="lead">Pour savoir si le parcours marche, sans attendre la fin du mois.</p><div class="kpis">${kp}</div>
-    <div class="abtest"><h4>Un test à lancer : SMS d'une heure avant contre SMS de 8 h</h4>
+  <section class="block"><h3>Ce qui change dans CRMIA</h3><p class="lead">Dans l'ordre où je le ferais. Les quatre premiers ne demandent aucun développement ; Fathom attend seulement le go.</p><ul class="rows">${ch}</ul></section>
+  <section class="block"><h3>Les chiffres à suivre chaque semaine</h3><p class="lead">Pour savoir si le parcours marche, sans attendre la fin du mois.</p><div class="grid3">${kp}</div>
+    <div class="card note-box"><h4>Un test à lancer : SMS d'une heure avant contre SMS de 8 h</h4>
       <p>Aucune étude ne compare un rappel une heure avant et un rappel le matin. On peut le mesurer chez nous : pendant 4 semaines, une semaine avec le SMS de 8 h, une semaine avec celui d'une heure avant, en alternant (environ 800 RDV). C'est un réglage à changer le lundi, rien de plus.</p>
       <p>On compare la venue de tous les leads et celle des leads jamais joints, la plus sensible. À ce volume, on ne verra qu'un écart d'environ 9 points ou plus : un petit écart restera invisible. Si le SMS d'une heure avant ne fait pas moins bien, on le garde, parce qu'il porte le lien.</p></div>
-  </div>
-  <div class="block"><h3>Point conformité, à valider avant de lancer</h3>
-    <div class="legal"><h4>Ce qui encadre les appels et les SMS</h4><ul>
+  </section>
+  <section class="block"><h3>Point conformité, à valider avant de lancer</h3>
+    <div class="card note-box"><ul>
       <li><b>Démarchage téléphonique.</b> Depuis le 11/08/2026, il faut le consentement préalable de la personne. Les appels restent limités du lundi au vendredi, de 10 h à 13 h et de 14 h à 20 h, et à 4 par personne sur 30 jours ${R("demarchage")}. Le parcours reste en dessous, avec 3 appels, et en suit les plages.</li>
       <li><b>La question à trancher :</b> un lead qui vient de demander le programme, ou de prendre RDV, et que l'on rappelle à ce sujet, est-il « démarché » ? Si la réponse est non, plafond et plages ne s'appliquent pas à ces appels : un 4e appel resterait possible si les chiffres de fin novembre le justifient ${R("velocify")}.</li>
       <li><b>CPF.</b> Le Code du travail interdit à part le démarchage des titulaires d'un compte CPF (<a href="https://code.travail.gouv.fr/code-du-travail/l6323-8-1" target="_blank" rel="noopener">article L6323-8-1</a>). À relire pour les leads qui financent par le CPF, surtout pour les messages qui en parlent.</li>
       <li><b>SMS.</b> Les rappels d'un RDV que la personne a pris sont des messages de service : la charte des opérateurs, qui limite les SMS publicitaires à 8 h-21 h 30 du lundi au samedi, ne les vise pas ${R("af2m")}. Le SMS après un appel manqué est à classer avec la conformité.</li>
-    </ul><p>Ces points viennent de sources secondaires (presse juridique, documentation d'opérateur) : le site de la DGCCRF n'a pas pu être consulté. À faire confirmer avant de changer le rythme des appels.</p></div>
-  </div>
-  <div class="block"><h3>Sources</h3><p class="lead">La fiabilité est indiquée à côté de chaque source. La plupart des essais portent sur des rendez-vous médicaux : les rendez-vous de vente sont très peu étudiés.</p><ol class="sources">${src}</ol></div>`;
+    </ul><p class="muted">Ces points viennent de sources secondaires (presse juridique, documentation d'opérateur) : le site de la DGCCRF n'a pas pu être consulté. À faire confirmer avant de changer le rythme des appels.</p></div>
+  </section>`;
 }
 
 function renderCompare(){
-  const head = `<div class="cmp-row head"><div>Moment</div><div>1 · Aujourd'hui</div><div>2 · Roxane</div><div>3 · Proposé</div></div>`;
+  const head = `<div class="cmp-row head"><div>Moment</div><div>Aujourd'hui</div><div>Roxane</div><div>Proposé</div></div>`;
   const rows = COMPARE.map(r => `<div class="cmp-row"><div class="m">${r.m}<small>${r.s}</small></div><div><span class="lbl">Aujourd'hui</span>${r.auj}</div><div><span class="lbl">Roxane</span>${r.rox}</div><div class="c-pro"><span class="lbl">Proposé</span>${r.pro}</div></div>`).join("");
-  return `<div class="v-head"><div><h2>Les trois parcours côte à côte</h2><p class="cmp-intro">Une ligne par moment du parcours. Pour le détail et les justifications, ouvrez l'onglet de chaque version.</p></div></div><div class="cmp">${head}${rows}</div>`;
+  return `<div class="v-head"><h2>Les trois parcours côte à côte</h2><p>Une ligne par moment du parcours. Pour le détail et les messages, ouvrez l'onglet de chaque version.</p></div><div class="cmp">${head}${rows}</div>`;
 }
 
-/* Onglet « À trancher » : retours de Nizar et de Roxane, feuille de décision, réponses des données. */
+/* ------------------------------------------------------------------ */
+/* Onglet « À trancher » : retours de Nizar et de Roxane, feuille de    */
+/* décision, réponses des données.                                      */
+/* ------------------------------------------------------------------ */
 const ARB_ITEMS = Object.fromEntries(ARB_THEMES.flatMap(t => t.items).map(it => [it.id, it]));
-const PERSONNES = {Nizar:"w-n", Roxane:"w-r", Tanguy:"w-t"};
 
 function effortChip(e){
   const ef = EFFORTS[e];
-  return ef ? `<span class="effort ${ef.c}">${ef.l}</span>` : "";
+  return ef ? effortPill(ef.c, ef.l) : "";
 }
+const avatar = qui => `<span class="who" aria-hidden="true">${qui[0]}</span>`;
 
 function renderArb(it){
-  const pos = (it.pos || []).map(p => `<div class="p"><span class="who ${PERSONNES[p.qui] || ""}" aria-hidden="true">${p.qui[0]}</span><div><b>${p.qui}</b><p>${p.t}</p></div></div>`).join("");
+  const pos = (it.pos || []).map(p => `<div class="p">${avatar(p.qui)}<div><b>${p.qui}</b><p>${p.t}</p></div></div>`).join("");
   const t = it.detail ? toggle("Les chiffres", it.detail) : null;
-  return `<article class="arb s-${it.s}" id="arb-${it.id}">
+  return `<article class="card arb" id="arb-${it.id}">
     <div class="arb-h"><span class="statut st-${it.s}">${STATUTS[it.s]}</span>${effortChip(it.e)}</div>
     <h4>${it.h}</h4>
     <div class="arb-b">
       <div class="pos">${pos}</div>
-      <div class="arb-d">${it.k ? `<div class="k">${it.k}<small>${it.kl}</small></div>` : ""}<p>${it.data}</p></div>
+      <div class="arb-d">${it.k ? `<div class="k">${it.k}</div><p class="ks">${it.kl}</p>` : ""}<p>${it.data}</p></div>
     </div>
     <div class="reco"><b>Ma recommandation</b><p>${it.reco}</p></div>
-    ${t ? `<div class="acts">${t.btn}</div>${t.panel}` : ""}
+    ${t ? `${t.btn}${t.panel}` : ""}
   </article>`;
 }
 
@@ -1326,26 +1543,65 @@ function renderArbitrages(){
   const all = ARB_THEMES.flatMap(t => t.items);
   const n = k => all.filter(it => it.s === k).length;
   const compte = Object.keys(STATUTS).map(k => `<span class="statut st-${k}">${n(k)} · ${STATUTS[k]}</span>`).join("");
-  const head = `<div class="v-head"><div><h2>Ce qu'il reste à trancher</h2><p>Nizar et Roxane ont répondu le 23/10 sur les six points du setting, puis Roxane a précisé la case « MQL prioritaire » après les questions de Tanguy. Pour chacun : leurs positions, ce que répondent les données de CRMIA, et ma recommandation. Les parcours des onglets 2 et 3 sont mis à jour en conséquence.</p><div class="legend">${compte}</div></div></div>`;
-  const decs = DECISIONS.map(k => ARB_ITEMS[k]).map(it => `<li class="dec"><div><h4>${it.h}</h4><p>${it.reco}</p></div><div class="dec-a">${effortChip(it.e)}<button type="button" class="voir" data-arb="${it.id}">Le détail</button></div></li>`).join("");
-  const go = GO_DEV.map(k => ARB_ITEMS[k]).map(it => `<li><button type="button" class="voir" data-arb="${it.id}">${it.h}</button>${effortChip(it.e)}</li>`).join("");
-  const feuille = `<div class="block first"><h3>La feuille de décision</h3><p class="lead">Les ${DECISIONS.length} points qui attendent Tanguy, dans l'ordre où je les trancherais. Chaque ligne renvoie à son détail, plus bas.</p>
+  const head = `<div class="v-head"><h2>Ce qu'il reste à trancher</h2><p>Nizar et Roxane ont répondu le 23/10 sur les six points du setting, puis Roxane a précisé la case « MQL prioritaire » après les questions de Tanguy. Pour chacun : leurs positions, ce que répondent les données de CRMIA, et ma recommandation. Les parcours des onglets Roxane et Proposé sont mis à jour en conséquence.</p><div class="legend">${compte}</div></div>`;
+  const decs = DECISIONS.map(k => ARB_ITEMS[k]).map(it => `<li class="dec"><div><h4>${it.h}</h4><p>${it.reco}</p></div><div class="dec-a">${effortChip(it.e)}<button type="button" class="lien" data-arb="${it.id}">Le détail</button></div></li>`).join("");
+  const go = GO_DEV.map(k => ARB_ITEMS[k]).map(it => `<li><button type="button" class="lien" data-arb="${it.id}">${it.h}</button>${effortChip(it.e)}</li>`).join("");
+  const feuille = `<section class="block first"><h3>La feuille de décision</h3><p class="lead">Les ${DECISIONS.length} points qui attendent Tanguy, dans l'ordre où je les trancherais. Chaque ligne renvoie à son détail, plus bas.</p>
     <ol class="decs">${decs}</ol>
-    <div class="go"><h4>D'accord tous les deux : il ne manque que le go pour CRMIA</h4><ul>${go}</ul></div></div>`;
-  const qa = QUESTIONS.map(q => `<div class="qa"><p class="q"><span class="who ${PERSONNES[q.qui]}" aria-hidden="true">${q.qui[0]}</span><span><b>${q.qui}</b> « ${q.q} »</span></p><div class="k">${q.k}</div><p>${q.r}</p></div>`).join("");
-  const questions = `<div class="block"><h3>Les questions posées, et ce que répondent les données</h3><p class="lead">New RDV : les RDV pris par les leads eux-mêmes, du 01 au 22/10. Les ventes ne comptent que les RDV jusqu'au 19/10, pour leur laisser le temps d'arriver. Préqualifié : lead setté par la setteuse dans CRMIA.</p><div class="qas">${qa}</div></div>`;
-  const themes = ARB_THEMES.map(t => `<div class="block"><h3>${t.h}</h3><p class="lead src">${t.src}</p><div class="arbs">${t.items.map(renderArb).join("")}</div></div>`).join("");
+    <div class="card go"><h4>D'accord tous les deux : il ne manque que le go pour CRMIA</h4><ul>${go}</ul></div></section>`;
+  const qa = QUESTIONS.map(q => `<div class="card qa"><p class="q">${avatar(q.qui)}<span><b>${q.qui}</b> « ${q.q} »</span></p><div class="k">${q.k}</div><p>${q.r}</p></div>`).join("");
+  const questions = `<section class="block"><h3>Les questions posées, et ce que répondent les données</h3><p class="lead">New RDV : les RDV pris par les leads eux-mêmes, du 01 au 22/10. Les ventes ne comptent que les RDV jusqu'au 19/10, pour leur laisser le temps d'arriver. Préqualifié : lead setté par la setteuse dans CRMIA.</p><div class="grid2">${qa}</div></section>`;
+  const themes = ARB_THEMES.map(t => `<section class="block"><h3>${t.h}</h3><p class="lead src">${t.src}</p><div class="arbs">${t.items.map(renderArb).join("")}</div></section>`).join("");
   return head + feuille + questions + themes;
 }
 
+/* ------------------------------------------------------------------ */
 function render(){
   document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", String(t.dataset.tab === state.tab)));
+  closePanel(true);
+  state.sel = null;
   const main = document.getElementById("vue");
   uid = 0;
   main.innerHTML = state.tab === "comparer" ? renderCompare() : state.tab === "trancher" ? renderArbitrages() : renderVersion(state.tab);
   main.setAttribute("aria-labelledby", `tab-${state.tab}`);
   const hash = state.tab + (!SANS_PARCOURS.includes(state.tab) && state.path === "mql" ? "-mql" : "");
   if (location.hash.slice(1) !== hash) history.replaceState(null, "", "#" + hash);
+  if (!SANS_PARCOURS.includes(state.tab)) panFlow();
+}
+
+function setZoom(z){
+  const f = document.getElementById("flow");
+  if (!f) return;
+  const cx = (f.scrollLeft + f.clientWidth / 2) / state.zoom;
+  state.zoomAuto = false;
+  state.zoom = Math.max(0.35, Math.min(1.3, Math.round(z * 100) / 100));
+  const inner = f.querySelector(".flow-in"), sizer = f.querySelector(".flow-sizer");
+  inner.style.transform = `scale(${state.zoom})`;
+  sizer.style.width = parseFloat(inner.style.width) * state.zoom + "px";
+  sizer.style.height = parseFloat(inner.style.height) * state.zoom + "px";
+  f.scrollLeft = cx * state.zoom - f.clientWidth / 2;
+  document.getElementById("zoom-v").textContent = `${Math.round(state.zoom * 100)} %`;
+}
+
+/* Faire glisser le schéma à la souris, comme dans n8n. */
+function panFlow(){
+  const f = document.getElementById("flow");
+  if (!f) return;
+  let x0 = null, s0 = 0, y0 = 0, t0 = 0, bouge = false;
+  f.addEventListener("pointerdown", e => {
+    if (e.pointerType !== "mouse" || e.button !== 0) return;
+    x0 = e.clientX; y0 = e.clientY; s0 = f.scrollLeft; t0 = f.scrollTop; bouge = false;
+  });
+  f.addEventListener("pointermove", e => {
+    if (x0 === null) return;
+    const dx = e.clientX - x0, dy = e.clientY - y0;
+    if (!bouge && Math.abs(dx) + Math.abs(dy) > 5){ bouge = true; f.classList.add("drag"); f.setPointerCapture(e.pointerId); }
+    if (bouge){ f.scrollLeft = s0 - dx; f.scrollTop = t0 - dy; }
+  });
+  const fin = () => { x0 = null; f.classList.remove("drag"); };
+  f.addEventListener("pointerup", fin);
+  f.addEventListener("pointercancel", fin);
+  f.addEventListener("click", e => { if (bouge){ e.stopPropagation(); e.preventDefault(); bouge = false; } }, true);
 }
 
 function readHash(){
@@ -1357,7 +1613,8 @@ function readHash(){
 
 function init(){
   document.getElementById("tabs").innerHTML = TABS.map(t =>
-    `<button type="button" role="tab" class="tab" id="tab-${t.id}" data-tab="${t.id}" aria-controls="vue" aria-selected="false"><span class="n">${t.n}</span><span class="lg">${t.l}</span><span class="sm">${t.c}</span></button>`).join("");
+    `<button type="button" role="tab" class="tab" id="tab-${t.id}" data-tab="${t.id}" aria-controls="vue" aria-selected="false"><span class="lg">${t.l}</span><span class="sm">${t.c || t.l}</span></button>`).join("");
+  document.getElementById("sources-liste").innerHTML = SOURCES.map((s, i) => `<li id="src-${i + 1}"><span>${esc(s.t)} <span class="fiab">${s.f}</span><br><a href="${s.u}" target="_blank" rel="noopener">${esc(s.u)}</a></span></li>`).join("");
   readHash();
   render();
 
@@ -1373,12 +1630,42 @@ function init(){
     const n = TABS[(i + (e.key === "ArrowRight" ? 1 : TABS.length - 1)) % TABS.length];
     state.tab = n.id; render(); document.getElementById(`tab-${n.id}`).focus();
   });
-  document.getElementById("vue").addEventListener("click", e => {
+
+  const clic = e => {
+    const r = e.target.closest(".ref");
+    if (r){
+      e.preventDefault();
+      closePanel(true);
+      document.getElementById("sources").open = true;
+      const cible = document.querySelector(r.getAttribute("href"));
+      cible.scrollIntoView({behavior: reduit() ? "auto" : "smooth", block:"center"});
+      cible.classList.remove("flash"); void cible.offsetWidth; cible.classList.add("flash");
+      return true;
+    }
     const t = e.target.closest(".tgl");
     if (t){
       const open = t.getAttribute("aria-expanded") !== "true";
       t.setAttribute("aria-expanded", String(open));
       document.getElementById(t.getAttribute("aria-controls")).hidden = !open;
+      return true;
+    }
+    const g = e.target.closest("[data-goto]");
+    if (g){
+      state.path = g.dataset.goto; render();
+      document.querySelector(".toolbar").scrollIntoView({behavior: reduit() ? "auto" : "smooth", block:"start"});
+      return true;
+    }
+    return false;
+  };
+  document.getElementById("vue").addEventListener("click", e => {
+    if (clic(e)) return;
+    const k = e.target.closest("[data-k]");
+    if (k){ state.sel === k.dataset.k ? closePanel() : openPanel(k.dataset.k, e.detail === 0); return; }
+    const z = e.target.closest("[data-zoom]");
+    if (z){
+      const f = document.getElementById("flow");
+      if (z.dataset.zoom === "fit") setZoom((f.clientWidth - 8) / parseFloat(f.querySelector(".flow-in").style.width));
+      else setZoom(state.zoom + Number(z.dataset.zoom) * 0.15);
       return;
     }
     const a = e.target.closest("[data-arb]");
@@ -1386,31 +1673,24 @@ function init(){
       const card = document.getElementById(`arb-${a.dataset.arb}`);
       const tg = card.querySelector(".tgl");
       if (tg && tg.getAttribute("aria-expanded") !== "true") tg.click();
-      card.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
+      card.scrollIntoView({behavior: reduit() ? "auto" : "smooth", block: "start"});
       card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash");
       return;
     }
     const p = e.target.closest("[data-path]");
-    if (p){ state.path = p.dataset.path; render(); return; }
-    const c = e.target.closest(".cas [data-c]");
-    if (c){ state.cas = c.dataset.c; render(); return; }
-    const g = e.target.closest(".goto");
-    if (g){
-      state.path = g.dataset.goto; state.cas = "joint"; render();
-      document.querySelector(".controls").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
-    }
+    if (p){ state.path = p.dataset.path; render(); }
+  });
+  document.getElementById("panel").addEventListener("click", e => { clic(e); });
+  document.getElementById("pn-x").addEventListener("click", () => closePanel());
+  const pas = d => { const i = state.ordre.indexOf(state.sel); const k = state.ordre[i + d]; if (k) openPanel(k); };
+  document.getElementById("pn-prev").addEventListener("click", () => pas(-1));
+  document.getElementById("pn-next").addEventListener("click", () => pas(1));
+  document.addEventListener("keydown", e => {
+    if (document.getElementById("panel").hidden) return;
+    if (e.key === "Escape") closePanel();
+    else if (!e.target.closest("input, textarea") && (e.key === "ArrowRight" || e.key === "ArrowLeft") && e.target.closest("#panel")) pas(e.key === "ArrowRight" ? 1 : -1);
   });
   window.addEventListener("hashchange", () => { readHash(); render(); });
-
-  const tb = document.getElementById("theme");
-  tb.addEventListener("click", () => {
-    const dark = document.documentElement.dataset.theme
-      ? document.documentElement.dataset.theme === "dark"
-      : matchMedia("(prefers-color-scheme: dark)").matches;
-    document.documentElement.dataset.theme = dark ? "light" : "dark";
-    tb.textContent = dark ? "Mode sombre" : "Mode clair";
-  });
-  tb.textContent = matchMedia("(prefers-color-scheme: dark)").matches ? "Mode clair" : "Mode sombre";
 
   requestAnimationFrame(() => document.querySelectorAll(".bar .fill").forEach(f => f.style.width = f.dataset.w + "%"));
 }
