@@ -51,6 +51,9 @@ h1{font-weight:800; font-size:clamp(34px,5vw,54px); line-height:1.04; letter-spa
 .fill{height:100%; width:0; border-radius:99px; background:var(--blue); transition:width .9s cubic-bezier(.2,.7,.2,1)}
 .bar.n .fill{background:#a3a3ae}
 .thesis .note{font-size:12.5px; color:var(--muted); margin:2px 0 0}
+.coro{display:grid; grid-template-columns:auto minmax(0,1fr); gap:12px; align-items:baseline; border-top:1px solid var(--line); padding-top:14px; margin:2px 0 12px}
+.coro .val{font:800 26px/1 var(--f-display); letter-spacing:-.02em}
+.coro p{font-size:14px; color:var(--ink2); margin:0}
 
 /* Onglets */
 .tabs-bar{position:sticky; top:0; z-index:40; background:rgba(255,255,255,.94); backdrop-filter:saturate(1.4) blur(10px); -webkit-backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--line)}
@@ -385,11 +388,12 @@ details.why[open] .plus::after{content:" −"}
     <h1>Du formulaire au <span class="nw">rendez-vous</span></h1>
     <p class="lead">Ce qui tourne aujourd'hui, ce que proposent Roxane et Tanguy, et le parcours que je propose, étape par étape. Cliquez sur une étape pour lire son détail et ses messages.</p>
   </div>
-  <div class="thesis" aria-label="Venue au rendez-vous selon que le lead a été joint">
-    <p class="thesis-h">Venue au RDV, du 01 au 22/10</p>
-    <div class="bar j"><span class="lbl">Lead <span class="term" tabindex="0" data-tip="Au moins un appel de setteuse décroché et d'au moins 30 secondes avant le RDV. 400 RDV sur 604.">joint</span> avant le RDV</span><span class="val">81 %</span><div class="track"><div class="fill" data-w="81"></div></div></div>
-    <div class="bar n"><span class="lbl">Lead jamais joint</span><span class="val">45 %</span><div class="track"><div class="fill" data-w="45"></div></div></div>
-    <p class="note">RDV pris par les leads eux-mêmes. <span class="term" tabindex="0" data-tip="Les leads qui décrochent sont aussi souvent les plus motivés : une partie de l'écart tiendrait sans l'appel. Les essais publiés confirment pourtant l'effet propre d'un contact humain.">Corrélation, pas preuve</span>.</p>
+  <div class="thesis" aria-label="No show au R1 selon que le lead a été setté avant le RDV">
+    <p class="thesis-h">No show au R1, du 12 au 26/10</p>
+    <div class="bar j"><span class="lbl">Lead <span class="term" tabindex="0" data-tip="La setteuse l'a passé en « Setté - RDV pris quali » avant l'heure du RDV, d'après l'historique des étapes de CRMIA. 273 RDV sur 419.">setté</span> avant le RDV</span><span class="val">19 %</span><div class="track"><div class="fill" data-w="19"></div></div></div>
+    <div class="bar n"><span class="lbl">Lead jamais setté</span><span class="val">69 %</span><div class="track"><div class="fill" data-w="69"></div></div></div>
+    <div class="coro"><span class="val">66 %</span><p>des <span class="term" tabindex="0" data-tip="101 no show sur 152. Les leads jamais settés font 146 des 419 RDV honorés ou manqués.">no show</span> viennent de leads jamais settés, qui ne font que 35 % des RDV.</p></div>
+    <p class="note">R1 pris par les leads eux-mêmes ; les annulés sont à part. <span class="term" tabindex="0" data-tip="Les leads qui acceptent le setting sont souvent aussi les plus motivés : une partie de l'écart tiendrait sans lui. Les essais publiés confirment pourtant l'effet propre d'un contact humain.">Corrélation, pas preuve</span>.</p>
   </div>
 </header>
 
@@ -422,6 +426,7 @@ details.why[open] .plus::after{content:" −"}
       <li>Ajout du 27/10 (v9) : onglet « Proposition de Tanguy », son schéma du jour transcrit tel quel. Le même jour (v10), à sa demande, le message vocal rejoint le premier appel, les messages sont écrits à partir des trames de Roxane et du parcours proposé, le mail programme reste le même pour tous et un SMS à la réservation annonce l'appel, et la fin du parcours (visio, appels du closer, no show) est reprise du parcours proposé.</li>
       <li>Le même jour (v11), à sa demande : les trois cas de son schéma deviennent des boutons au-dessus du schéma, et chacun a son parcours. Puis (v12) un RDV pris après 16 h la veille, ou le jour même, est confirmé tout de suite, sans annoncer d'appel ni d'annulation.</li>
       <li>Unification du 27/10 (v13), à sa demande : le cas « la veille à 15 h 30 » rejoint celui du RDV pris 4 jours avant. Un seul appel avec message vocal, quand la setteuse peut ; à 16 h la veille, CRMIA demande seul de confirmer par un lien, à tout RDV sans setting. Le lien remplace la réponse « OUI » : d'après la documentation d'Allô, un SMS automatique part de l'expéditeur « FranceIA », qui ne peut pas recevoir de réponse. Code de CRMIA relu le même jour, en lecture seule.</li>
+      <li>Encart du haut mis à jour le 27/10 (v14), à la demande de Tanguy : taux de no show au R1 selon que le lead a été setté ou non. RDV du 12 au 26/10 du calendrier Formation inter, pris par les leads eux-mêmes depuis le 01/10 : 419 honorés ou no show ; 146 annulés et 14 sans résultat saisi sont mis de côté. « Setté » : passé en « Setté - RDV pris quali » avant l'heure du RDV, d'après l'historique des étapes de CRMIA. Sur tout octobre (476 RDV du 02 au 26/10) : 18 % contre 68 %, et 65 % des no show. Mesuré par l'appel décroché (« joint ») au lieu du setting, l'écart est plus faible : 25 % contre 59 % du 12 au 26/10. Le reste de la page garde les chiffres du 01 au 22/10.</li>
       <li>Données : CRMIA en production, en lecture seule, du 01 au 22/10/2026. Les appels Allô n'y sont enregistrés que depuis le 01/10.</li>
       <li>« Joint » : au moins un appel de setteuse décroché et d'au moins 30 secondes avant le RDV. Allô marque « répondu » des appels de 0 à 5 secondes (renvois, répondeurs), d'où le seuil.</li>
       <li>« Venue » : RDV honorés ÷ (honorés + no show). Les annulations sont comptées à part.</li>
@@ -439,7 +444,7 @@ details.why[open] .plus::after{content:" −"}
     <p>La fiabilité est indiquée à côté de chaque source. La plupart des essais portent sur des rendez-vous médicaux : les rendez-vous de vente sont très peu étudiés.</p>
     <ol class="sources" id="sources-liste"></ol>
   </details>
-  <p class="sign">Préparé par ATLAS le 23/10/2026, mis à jour le même jour avec les retours de l'équipe, puis le 27/10 avec les décisions de Tanguy (v7), allégé le même jour (v8), complété de sa proposition (v9), de ses messages (v10) et de ses cas (v11, v12), puis unifié (v13).</p>
+  <p class="sign">Préparé par ATLAS le 23/10/2026, mis à jour le même jour avec les retours de l'équipe, puis le 27/10 avec les décisions de Tanguy (v7), allégé le même jour (v8), complété de sa proposition (v9), de ses messages (v10) et de ses cas (v11, v12), puis unifié (v13) ; encart du haut à jour au 26/10 (v14).</p>
 </footer>
 
 <script>
