@@ -420,7 +420,7 @@ details.why[open] .plus::after{content:" −"}
       <li>Mise à jour du 27/10 (v7) : R1 du calendrier Formation inter de CRMIA du 28/09 au 27/10, en lecture seule. Un créneau libéré est « repris » quand un autre RDV, créé après l'annulation, occupe la même plage chez le même closer.</li>
       <li>Allègement du 27/10 (v8) : à la demande de Tanguy, le mail de confirmation et le SMS de la veille sortent du parcours proposé. Pas de nouvelle donnée.</li>
       <li>Ajout du 27/10 (v9) : onglet « Proposition de Tanguy », son schéma du jour transcrit tel quel. Le même jour (v10), à sa demande, le message vocal rejoint le premier appel, les messages sont écrits à partir des trames de Roxane et du parcours proposé, le mail programme reste le même pour tous et un SMS à la réservation annonce l'appel, et la fin du parcours (visio, appels du closer, no show) est reprise du parcours proposé.</li>
-      <li>Le même jour (v11), à sa demande : les trois cas de son schéma deviennent des boutons au-dessus du schéma, et chacun a son parcours.</li>
+      <li>Le même jour (v11), à sa demande : les trois cas de son schéma deviennent des boutons au-dessus du schéma, et chacun a son parcours. Puis (v12) un RDV pris après 16 h la veille, ou le jour même, est confirmé tout de suite, sans annoncer d'appel ni d'annulation.</li>
       <li>Données : CRMIA en production, en lecture seule, du 01 au 22/10/2026. Les appels Allô n'y sont enregistrés que depuis le 01/10.</li>
       <li>« Joint » : au moins un appel de setteuse décroché et d'au moins 30 secondes avant le RDV. Allô marque « répondu » des appels de 0 à 5 secondes (renvois, répondeurs), d'où le seuil.</li>
       <li>« Venue » : RDV honorés ÷ (honorés + no show). Les annulations sont comptées à part.</li>
@@ -577,6 +577,13 @@ const TAN = {
   smsRappel: {type:"sms", de:"Expéditeur « FranceIA » · aucune réponse attendue", corps:"Bonjour {prénom}, je vous attends à {heure} pour notre échange en visio : {lien Meet}\nÀ tout à l'heure,\n{prénom closer}, France IA",
     why:"Le lien, avant le rendez-vous, et rien d'autre à lire : le SMS d'une heure avant du parcours proposé, envoyé deux heures avant comme le prévoit Tanguy.",
     more:"Le lien Meet dans le SMS, c'était aussi le SMS C de Roxane. Son « répondez LIEN » n'est pas repris : impossible depuis l'expéditeur « FranceIA ». CRMIA sait déjà envoyer un rappel « X minutes avant » (mode « délai » des réglages de calendrier) ; il lui manque la variable du lien Meet."},
+  pageConfirm: {type:"page", titre:"Votre rendez-vous est confirmé.",
+    corps:"Votre invitation vous est envoyée par e-mail, avec le lien de la visioconférence. Vous le recevez aussi par SMS. Pensez à vérifier vos courriers indésirables.\n\n(au-dessus du titre : la date du RDV ; en dessous : la vidéo de présentation)",
+    why:"La page actuelle, sans l'annonce de l'appel : un RDV pris tard est confirmé tout de suite (Tanguy, 27/10).",
+    more:"Seuls le titre et le paragraphe sur l'appel changent. La page qui suit la réservation doit donc dépendre de l'heure du RDV : petit développement."},
+  smsConfirmDirect: {type:"sms", de:"Expéditeur « FranceIA » · signé par le closer", corps:"Bonjour {prénom}, votre rendez-vous du {jour} à {heure} avec {prénom closer} est confirmé, en visio : {lien Meet}\n((financement CPF|Pour utiliser votre CPF, installez et activez avant le rendez-vous l'application Identité Numérique de La Poste. C'est un prérequis. Tuto : {lien du tuto}))\nVous venez de recevoir le programme par mail (pensez à vérifier vos spams).\n{prénom closer}, France IA",
+    why:"Pour un RDV pris tard, on n'aura pas forcément le temps de joindre le lead : on lui confirme tout de suite, sans annoncer d'appel ni d'annulation (Tanguy, 27/10). Il reçoit par écrit ce que l'appel lui aurait donné : la date, le lien et, pour le CPF, l'Identité Numérique.",
+    more:"Le texte reprend le SMS de confirmation des autres cas, et la phrase de Tanguy sur le programme et les spams. Il remplace le SMS « je vais essayer de vous appeler », qui annoncerait un appel qu'on n'aura peut-être pas le temps de passer. Même développement que ce SMS-là : CRMIA n'a pas de règle SMS à la réservation, et le texte dépend ici de l'heure du RDV."},
   noshow: {...MSG_NOSHOW_AUJ,
     why:"Le mail de no show actuel, gardé tel quel dans le parcours proposé : ce qui s'est passé, et le lien pour reprendre RDV.",
     more:"196 envois en octobre ; il a fait revenir 2 leads sans appel. Roxane ne prévoyait rien après un no show : il continue de partir."},
@@ -789,7 +796,7 @@ roxane: {
 /* Son schéma du 27/10, un parcours par cas. Les messages (TAN) sont écrits à sa demande, à partir des trames de Roxane et du parcours proposé. */
 tanguy: {
   num:"4", nom:"Proposition de Tanguy", titre:"Ce que propose Tanguy",
-  intro:"Son schéma du 27/10, transcrit tel quel. Les boutons au-dessus du schéma montrent ses trois cas : le RDV pris 4 jours avant (le meilleur des cas), pris la veille à 15 h 30 (le pire), et pris après 16 h la veille ou le jour même. Il porte sur les RDV pris par le lead, pas sur les demandes sans RDV. À sa demande, les messages sont écrits à partir des trames de Roxane et du parcours proposé : chacun dit d'où il vient. Le mail programme reste le même pour tous : il part avant qu'on sache si le lead prendra RDV. À qui en prend un, un SMS dit que le programme est arrivé et que la setteuse va appeler. La fin du parcours, de la visio au rappel après un no show, reprend le parcours proposé.",
+  intro:"Son schéma du 27/10, transcrit tel quel. Les boutons au-dessus du schéma montrent ses trois cas : le RDV pris 4 jours avant (le meilleur des cas), pris la veille à 15 h 30 (le pire), et pris après 16 h la veille ou le jour même. Dans ce dernier cas, le RDV est confirmé tout de suite, sans annoncer d'appel ni d'annulation : on n'aura pas forcément le temps de joindre le lead (Tanguy, 27/10). Il porte sur les RDV pris par le lead, pas sur les demandes sans RDV. À sa demande, les messages sont écrits à partir des trames de Roxane et du parcours proposé : chacun dit d'où il vient. Le mail programme reste le même pour tous : il part avant qu'on sache si le lead prendra RDV. À qui en prend un, un SMS dit que le programme est arrivé et que la setteuse va appeler. La fin du parcours, de la visio au rappel après un no show, reprend le parcours proposé.",
   detailLabel:"À noter",
   paths:{
     rdv:{
@@ -833,17 +840,22 @@ tanguy: {
     tard:{
       l:"Après 16 h la veille", s:"Ou le jour même", depart:"Le lead prend RDV",
       resume:[
-        {n:"16 h", l:"passé la veille, ou le jour même : trop tard pour le SMS « répondez OUI »"},
-        {n:"0", l:"message vocal ou SMS après les appels : des tentatives d'appel seulement"},
+        {n:"1", l:"SMS dès la réservation : le RDV est confirmé, avec le lien"},
+        {n:"0", l:"annonce d'appel ou d'annulation : on n'aura pas forcément le temps de joindre le lead"},
         {n:"2 h", l:"avant le RDV : SMS de rappel avec le lien"},
       ],
       moments:[
-        {...TAN_T0, sub:"après 16 h la veille, ou le jour même"},
-        {t:"Les appels", sub:"de la setteuse, jusqu'au RDV", si:"Il répond ?", oui:"Répond", non:"Ne répond pas", steps:[
-          {canal:"appel", qui:"Setteuse", n:"Tentatives d'appel", titre:"Des tentatives d'appel, sans message vocal", court:"Sans message vocal ni autre message après les appels. Le schéma ne dit pas combien de tentatives, ni jusqu'à quand. Le SMS de la réservation part quand même : il annonce l'appel."},
+        {t:"T0", sub:"après 16 h la veille, ou le jour même", steps:[
+          {canal:"page", qui:"Formulaire", n:"Page « RDV confirmé »", titre:"Page « Votre rendez-vous est confirmé »", court:"La page actuelle, sans l'annonce de l'appel.", msg:TAN.pageConfirm, chips:["Petit développement : la page dépend de l'heure du RDV"]},
+          TAN_T0.steps[1], /* mail programme, le même pour tous */
+          {canal:"sms", qui:"CRMIA, automatique, signé du closer", n:"SMS « RDV confirmé »", titre:"SMS à la réservation : votre rendez-vous est confirmé", court:"Le RDV est confirmé tout de suite, avec le lien. Ni appel annoncé, ni annulation possible.", msg:TAN.smsConfirmDirect, chips:["Petit développement : CRMIA n'a pas de règle SMS à la réservation, et le texte dépend de l'heure du RDV"]},
+          TAN_T0.steps[3], /* invitation Meet */
+        ]},
+        {t:"Les appels", sub:"si la setteuse a le temps", si:"Il répond ?", oui:"Répond", non:"Ne répond pas", steps:[
+          {canal:"appel", qui:"Setteuse", n:"Tentatives d'appel", titre:"Des tentatives d'appel si on a le temps, sans message vocal", court:"Pour qualifier le lead avant le RDV. Le RDV ne dépend pas de l'appel : il est déjà confirmé. Sans message vocal ni autre message. Le schéma ne dit pas combien de tentatives."},
           {pour:"joint", canal:"appel", qui:"Setteuse", n:"Setting", titre:"Setting", court:"Dès que le lead répond à l'une des tentatives. Ensuite, le SMS de rappel 2 h avant."},
         ]},
-        TAN_RAPPEL("Après le setting, et aussi quand le lead n'a jamais répondu : son RDV est maintenu, puisqu'aucun SMS n'a annoncé d'annulation. Le schéma ne dit pas si ce SMS part dans ce cas ; je l'ai laissé, parce que c'est lui qui donne le lien. À confirmer."),
+        TAN_RAPPEL("Pour tout RDV : il a été confirmé dès la réservation, que le lead ait répondu à l'appel ou non."),
         ...TAN_FIN,
       ]},
   }},
