@@ -89,6 +89,7 @@ h1{font-weight:800; font-size:clamp(34px,5vw,54px); line-height:1.04; letter-spa
 .toolbar{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px}
 .seg{display:inline-flex; padding:4px; border:1px solid var(--line); border-radius:99px; background:var(--soft); gap:2px; max-width:100%}
 .seg button{border:0; background:none; border-radius:99px; padding:8px 16px; font-size:14px; font-weight:500; color:var(--muted); cursor:pointer; display:inline-flex; align-items:baseline; gap:8px; white-space:nowrap}
+.seg.n4 button{flex-direction:column; align-items:flex-start; gap:4px; padding:8px 18px}
 .seg button small{font:400 10.5px/1 var(--f-mono); letter-spacing:.05em; text-transform:uppercase; color:var(--faint)}
 .seg button:hover{color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--bg); color:var(--ink); box-shadow:0 1px 2px rgba(22,22,26,.08), 0 0 0 1px var(--line)}
@@ -174,6 +175,31 @@ button.node[aria-pressed="true"] .tile svg{stroke:var(--blue)}
 .libre svg{width:16px; height:16px; fill:none; stroke:var(--ink); stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
 .libre:hover{border-color:#bdbdca}
 .libre[aria-pressed="true"]{border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-50)}
+
+/* Scripts finaux (onglet de Tanguy) */
+.pn-note{font-size:13.5px; color:var(--ink2); margin-bottom:12px}
+.pn-rox .sms{background:var(--soft)}
+.pn-final textarea{display:block; width:100%; min-height:210px; resize:vertical; border:1px solid var(--line2); border-radius:var(--r-s); padding:12px 14px; font:400 14.5px/1.55 var(--f-body); color:var(--ink); background:var(--bg)}
+.pn-final textarea:focus-visible{outline:2px solid var(--blue); outline-offset:1px; border-color:var(--blue)}
+.final-aide{font-size:13px; color:var(--muted)}
+.final-act{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+.btn-f{border:1px solid var(--line2); background:var(--bg); border-radius:99px; padding:8px 14px; font-size:13.5px; font-weight:500; cursor:pointer}
+.btn-f:hover{border-color:#bdbdca; background:var(--soft)}
+.btn-f.pri{background:var(--blue); border-color:var(--blue); color:#fff}
+.btn-f.pri:hover{background:#3466dc; border-color:#3466dc}
+.btn-f:disabled{opacity:.5; cursor:default}
+.final-st{font-size:12.5px; color:var(--muted); margin:10px 0 0}
+.final-st.mod{color:var(--ink2); font-weight:500}
+.final-st.err{color:var(--red)}
+.txt-list{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr)); gap:8px}
+.txt-i{width:100%; display:flex; align-items:center; gap:12px; text-align:left; border:1px solid var(--line); border-radius:14px; background:var(--bg); padding:12px 14px; cursor:pointer}
+.txt-i:hover{border-color:#bdbdca}
+.txt-i svg{flex:none; width:18px; height:18px; fill:none; stroke:var(--ink); stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
+.txt-i .t{flex:1; min-width:0; font-size:14px; font-weight:500; line-height:1.35}
+.txt-i small{display:block; margin-top:2px; font-size:12.5px; font-weight:400; color:var(--muted)}
+.txt-st{flex:none; font:400 11px/1.3 var(--f-mono); letter-spacing:.05em; text-transform:uppercase; color:var(--faint); white-space:nowrap}
+.txt-st.ok{color:var(--blue)}
+.txt-st.mod{color:var(--ink)}
 
 /* Panneau de détail */
 .panel{position:fixed; top:0; right:0; bottom:0; width:min(480px,100vw); z-index:60; display:flex; flex-direction:column; background:var(--bg); border-left:1px solid var(--line);
@@ -366,6 +392,8 @@ details.why[open] .plus::after{content:" −"}
   .grid2,.grid4{grid-template-columns:1fr}
   .seg{width:100%}
   .seg button{flex:1; justify-content:center; padding:8px 10px; font-size:13px; flex-direction:column; align-items:center; gap:2px; white-space:normal; text-align:center}
+  .seg.n4{display:grid; grid-template-columns:1fr 1fr; border-radius:18px}
+  .seg.n4 button{align-items:center; border-radius:14px}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .stats dt{font-size:21px}
   .row{flex-direction:column; gap:10px}
@@ -427,6 +455,7 @@ details.why[open] .plus::after{content:" −"}
       <li>Le même jour (v11), à sa demande : les trois cas de son schéma deviennent des boutons au-dessus du schéma, et chacun a son parcours. Puis (v12) un RDV pris après 16 h la veille, ou le jour même, est confirmé tout de suite, sans annoncer d'appel ni d'annulation.</li>
       <li>Unification du 27/10 (v13), à sa demande : le cas « la veille à 15 h 30 » rejoint celui du RDV pris 4 jours avant. Un seul appel avec message vocal, quand la setteuse peut ; à 16 h la veille, CRMIA demande seul de confirmer par un lien, à tout RDV sans setting. Le lien remplace la réponse « OUI » : d'après la documentation d'Allô, un SMS automatique part de l'expéditeur « FranceIA », qui ne peut pas recevoir de réponse. Code de CRMIA relu le même jour, en lecture seule.</li>
       <li>Encart du haut mis à jour le 27/10 (v14), à la demande de Tanguy : taux de no show au R1 selon que le lead a été setté ou non. RDV du 12 au 26/10 du calendrier Formation inter, pris par les leads eux-mêmes depuis le 01/10 : 419 honorés ou no show ; 146 annulés et 14 sans résultat saisi sont mis de côté. « Setté » : passé en « Setté - RDV pris quali » avant l'heure du RDV, d'après l'historique des étapes de CRMIA. Sur tout octobre (476 RDV du 02 au 26/10) : 18 % contre 68 %, et 65 % des no show. Mesuré par l'appel décroché (« joint ») au lieu du setting, l'écart est plus faible : 25 % contre 59 % du 12 au 26/10. Le reste de la page garde les chiffres du 01 au 22/10.</li>
+      <li>Améliorations de Tanguy du 27/10 (v15), à sa demande : le SMS de la réservation n'annonce plus le SMS de 16 h ; deux appels quand le RDV est pris plus de 24 h avant, un seul quand il est pris pour dans moins de 24 h ; le lead confirme en répondant OUI ou NON, et un SMS lui confirme le RDV ; un délai réglable par chaque closer avant un nouveau RDV ; un SMS « je vais vous appeler » et un parcours pour la demande sans RDV ; à chaque SMS, vocal et script, ma proposition, la trame de Roxane et un champ « Script final ». Les scripts finaux sont enregistrés dans une base de France IA, avec chaque version, et visibles par tous ceux qui ont le lien. Répartition des RDV par cas : R1 du calendrier Formation inter pris par les leads eux-mêmes depuis le 01/10, RDV jusqu'au 27/10 (730).</li>
       <li>Données : CRMIA en production, en lecture seule, du 01 au 22/10/2026. Les appels Allô n'y sont enregistrés que depuis le 01/10.</li>
       <li>« Joint » : au moins un appel de setteuse décroché et d'au moins 30 secondes avant le RDV. Allô marque « répondu » des appels de 0 à 5 secondes (renvois, répondeurs), d'où le seuil.</li>
       <li>« Venue » : RDV honorés ÷ (honorés + no show). Les annulations sont comptées à part.</li>
@@ -444,7 +473,7 @@ details.why[open] .plus::after{content:" −"}
     <p>La fiabilité est indiquée à côté de chaque source. La plupart des essais portent sur des rendez-vous médicaux : les rendez-vous de vente sont très peu étudiés.</p>
     <ol class="sources" id="sources-liste"></ol>
   </details>
-  <p class="sign">Préparé par ATLAS le 23/10/2026, mis à jour le même jour avec les retours de l'équipe, puis le 27/10 avec les décisions de Tanguy (v7), allégé le même jour (v8), complété de sa proposition (v9), de ses messages (v10) et de ses cas (v11, v12), puis unifié (v13) ; encart du haut à jour au 26/10 (v14).</p>
+  <p class="sign">Préparé par ATLAS le 23/10/2026, mis à jour le même jour avec les retours de l'équipe, puis le 27/10 avec les décisions de Tanguy (v7), allégé le même jour (v8), complété de sa proposition (v9), de ses messages (v10) et de ses cas (v11, v12), puis unifié (v13) ; encart du haut à jour au 26/10 (v14) ; améliorations de Tanguy et scripts finaux de Roxane (v15).</p>
 </footer>
 
 <script>
@@ -561,31 +590,34 @@ const PRO = {
     more:"La clôture de Roxane, en un seul message au lieu d'un SMS et d'un mail. Le lien est le lien personnel qui existe déjà pour la relance « créneau choisi sans RDV »."},
 };
 
-/* Messages de la proposition de Tanguy. Écrits le 27/10 à sa demande, à partir des trames de Roxane et du parcours proposé : chacun dit d'où il vient. */
+/* Messages de la proposition de Tanguy. Écrits le 27/10 à sa demande, à partir des trames de Roxane et du parcours proposé : chacun dit d'où il vient.
+   Repris le même jour avec ses huit améliorations (v15) : réponse OUI ou NON, SMS après un OUI, SMS et parcours pour la demande sans RDV, délai du closer. */
 const TAN = {
   programme: {...MSG_PROGRAMME_AUJ,
     why:"Le mail actuel, inchangé. Il part dès le formulaire, avant la réservation : à ce moment, on ne sait pas encore si le lead prendra RDV. Il reste donc le même pour tous, sans explication (Tanguy, 27/10).",
-    more:"Le parcours proposé y ajoutait « je vous appelle », et le mail A de Roxane « un membre de notre équipe va vous appeler ». Ici, c'est le SMS de la réservation qui annonce l'appel, et seulement à qui a pris RDV."},
-  smsResa: {type:"sms", de:"Expéditeur « FranceIA » · signé par la setteuse", corps:"Bonjour {prénom}, c'est {prénom setteuse} de France IA. Vous venez de recevoir le programme par mail (pensez à vérifier vos spams). Je vais essayer de vous appeler avant votre rendez-vous du {jour} à {heure}, afin de vous orienter vers le meilleur expert IA pour votre entretien. Si nous ne nous parlons pas d'ici là, un SMS vous demandera la veille à 16 h de confirmer votre présence.",
-    why:"L'idée de Tanguy (27/10) : à qui a pris RDV, un SMS qui dit où est le programme, et que l'appel arrive. La dernière phrase vient de l'unification : le lead sait dès la réservation qu'on lui demandera de confirmer, et une annulation ne le prend pas par surprise.",
-    more:`Il prend la place du mail de confirmation du closer, qui part aujourd'hui à la réservation et que Tanguy a retiré le 27/10. Petit développement : les règles SMS des calendriers de CRMIA partent avant le RDV (à une heure donnée, ou X minutes avant), aucune à la réservation. Il part de l'expéditeur « FranceIA », comme les SMS automatiques d'aujourd'hui : les opérateurs français bloquent les SMS automatiques envoyés depuis un numéro mobile ${R("allo")}.`},
+    more:"Le parcours proposé y ajoutait « je vous appelle », et le mail A de Roxane « un membre de notre équipe va vous appeler ». Ici, ce sont les SMS qui annoncent l'appel : celui de la réservation, ou celui de la demande sans RDV."},
+  smsResa: {type:"sms", de:"Expéditeur « FranceIA » · signé par la setteuse", corps:"Bonjour {prénom}, c'est {prénom setteuse} de France IA. Vous venez de recevoir le programme par mail (pensez à vérifier vos spams). Je vais essayer de vous appeler avant votre rendez-vous du {jour} à {heure}, afin de vous orienter vers le meilleur expert IA pour votre entretien.",
+    why:"L'idée de Tanguy (27/10) : à qui a pris RDV, un SMS qui dit où est le programme, et que l'appel arrive.",
+    more:`La phrase qui annonçait le SMS de 16 h est retirée à la demande de Tanguy (27/10) : c'est le SMS de 16 h qui donne lui-même l'heure limite. Il prend la place du mail de confirmation du closer, qui part aujourd'hui à la réservation et que Tanguy a retiré le 27/10. Petit développement : les règles SMS des calendriers de CRMIA partent avant le RDV (à une heure donnée, ou X minutes avant), aucune à la réservation. Il part de l'expéditeur « FranceIA », comme les SMS automatiques d'aujourd'hui : les opérateurs français bloquent les SMS automatiques envoyés depuis un numéro mobile ${R("allo")}.`},
   vocal: {type:"script", label:"Message vocal, s'il ne répond pas", corps:"« Bonjour {prénom}, c'est {prénom setteuse}, de France IA. Je vous appelle pour préparer votre rendez-vous du {jour} à {heure} : quelques minutes pour vous orienter vers le meilleur expert IA pour votre entretien. Rappelez-moi à ce numéro dès que vous avez un instant. Bonne journée ! »",
     why:"Le vocal 1 de Roxane, raccourci : qui appelle, pour quel rendez-vous, et rappelez-moi.",
-    more:"Il garde l'idée de Roxane, la « préorientation », dans les mots du SMS de la réservation : orienter vers le bon expert. Il ajoute la date du RDV, qui dit tout de suite pourquoi on appelle, et laisse « notre organisme », qui sonne administratif. Pas de SMS en plus, contrairement à Roxane : le vocal suffit, et s'il reste sans réponse, le SMS de 16 h prend le relais."},
-  smsOui: {type:"sms", de:"Expéditeur « FranceIA » · envoyé par CRMIA, signé de la setteuse", corps:"Bonjour {prénom}, c'est {prénom setteuse} de France IA. Merci de confirmer avant 18 h votre rendez-vous de demain à {heure} : {lien de confirmation}\nSans confirmation, il sera annulé à 18 h pour libérer le créneau. Une question ? Appelez-moi au {numéro setteuse}.",
-    why:"Le SMS « répondez OUI » de Roxane, envoyé à 16 h comme le prévoit Tanguy, à tout RDV qui n'a pas eu de setting. Il ne dit plus « je n'ai pas pu vous joindre » : avec un seul appel, passé quand la setteuse peut, elle n'a peut-être pas appelé.",
-    more:`Le lead confirme par un lien, et non plus en répondant OUI. Un SMS envoyé automatiquement ne peut pas recevoir de réponse : les opérateurs français bloquent les SMS automatiques depuis un numéro mobile, il part donc de l'expéditeur « FranceIA », qui ne reçoit pas de réponse ${R("allo", "twilio")}. Un numéro court accepterait les réponses, mais Allô compte 2 à 4 mois pour le mettre en place ${R("allo")}. CRMIA sait déjà mettre un lien personnel dans un SMS : celui de la relance d'un créneau non confirmé (09/10). Le 22/10, Tanguy a écarté le lien « Décaler » des SMS ; ici, le lien est la seule façon de répondre. C'est aussi la forme de l'essai sur 161 587 rendez-vous : un lien pour confirmer ou annuler, et « d'autres attendent ce créneau », ont fait passer les absences de 21,1 % à 14,2 % ${R("berliner")}. Ce qui est écrit est fait : sans confirmation à 18 h, le RDV est annulé (Tanguy, 27/10).`},
-  pageOui: {type:"page", titre:"Confirmez votre rendez-vous de demain.",
-    corps:"(en haut : l'heure du RDV et le prénom du closer)\n\nDeux boutons : « Je confirme » et « Je ne pourrai pas venir ».\n\nAprès « Je confirme » : « Merci, c'est confirmé. Votre lien pour la visio : {lien Meet} »\n((financement CPF|Pour utiliser votre CPF, installez et activez avant le rendez-vous l'application Identité Numérique de La Poste. C'est un prérequis. Tuto : {lien du tuto}))\nPensez à lire le programme reçu par mail.\n\nAprès « Je ne pourrai pas venir » : le RDV est annulé, et le créneau rouvert sans attendre 18 h.",
-    why:"Elle remplace le SMS de confirmation du schéma, avec le même contenu : la date, le lien et, pour le CPF, l'Identité Numérique. Un SMS de moins. Le NON du parcours proposé devient le bouton « Je ne pourrai pas venir ».",
-    more:"Ni compte ni mot de passe : le lien est personnel. Pour le lead jamais joint, c'est le seul rappel écrit de l'Identité Numérique, la veille, quand il peut encore la préparer. Il retrouve le lien de la visio dans l'invitation, et dans le SMS de 2 h avant."},
-  smsAnnul: {type:"sms", de:"Expéditeur « FranceIA » · envoyé par CRMIA à 18 h, signé de la setteuse", corps:"Bonjour {prénom}, sans confirmation de votre part, votre rendez-vous de demain à {heure} est annulé, comme prévu, pour libérer le créneau. Si votre projet tient toujours, appelez-moi au {numéro setteuse} : je vous propose un autre créneau.\n{prénom setteuse}, France IA",
+    more:"Il garde l'idée de Roxane, la « préorientation », dans les mots du SMS de la réservation : orienter vers le bon expert. Il ajoute la date du RDV, qui dit tout de suite pourquoi on appelle, et laisse « notre organisme », qui sonne administratif. Un seul vocal, au 1er appel : le 2e appel part sans message, et le SMS de 16 h prend le relais. Pas de SMS en plus, contrairement à Roxane."},
+  smsOui: {type:"sms", de:"Ligne Allô de la setteuse · réponse possible", corps:"Bonjour {prénom}, c'est {prénom setteuse} de France IA. Pouvez-vous confirmer votre rendez-vous de demain à {heure} avec {prénom closer} ? Répondez OUI pour le confirmer, ou NON pour l'annuler. Sans réponse avant 18 h, il sera annulé pour libérer le créneau.",
+    why:"Ce que demande Tanguy (27/10) : le lead confirme en répondant OUI ou NON, pas par un bouton. Le SMS dit le rendez-vous, la question, et ce qui se passe sans réponse.",
+    more:`Pour que la réponse arrive, il part de la ligne Allô de la setteuse. Envoyé automatiquement, il partirait de l'expéditeur « FranceIA », qui ne peut pas recevoir de réponse, et les opérateurs français bloquent les SMS automatiques envoyés depuis un numéro mobile ${R("allo", "twilio")}. La setteuse l'envoie donc elle-même à 16 h, depuis Allô, aux RDV du lendemain que CRMIA lui liste, texte prêt. Un numéro court permettrait de l'envoyer automatiquement et de recevoir les réponses, mais Allô compte 2 à 4 mois pour le mettre en place ${R("allo")}.</p><p>C'est la forme du SMS de Roxane, avec le NON en plus. Dans un essai sur 161 587 rendez-vous, un SMS qui permettait de confirmer ou d'annuler, en disant que d'autres attendaient le créneau, a fait passer les absences de 21,1 % à 14,2 % ${R("berliner")}. Ce qui est écrit est fait : sans réponse à 18 h, le RDV est annulé (Tanguy, 27/10).`},
+  smsConfirme: {type:"sms", de:"Expéditeur « FranceIA » · envoyé par CRMIA, signé de la setteuse", corps:"Merci {prénom}, c'est confirmé : rendez-vous demain à {heure} avec {prénom closer}, en visio. Vous recevrez le lien par SMS 2 h avant.\n((financement CPF|Pour utiliser votre CPF, installez et activez avant le rendez-vous l'application Identité Numérique de La Poste. C'est un prérequis. Tuto : {lien du tuto}))\n{prénom setteuse}, France IA",
+    why:"Ce que demande Tanguy (27/10) : un SMS « RDV confirmé demain à telle heure » quand le lead confirme par texto. Pour le CPF, il rappelle aussi l'Identité Numérique à préparer.",
+    more:"CRMIA l'envoie dès qu'il lit le OUI. Il peut partir de l'expéditeur « FranceIA » : aucune réponse n'est attendue. Pour un lead jamais joint, c'est le seul rappel écrit de l'Identité Numérique, la veille, quand il peut encore la préparer. Le lien de la visio n'y est pas : il est dans l'invitation, et dans le SMS de 2 h avant. Tant que CRMIA ne lit pas les réponses, la setteuse l'envoie à la main, depuis sa ligne."},
+  smsNon: {type:"sms", de:"Expéditeur « FranceIA » · envoyé par CRMIA, signé de la setteuse", corps:"C'est noté {prénom}, votre rendez-vous de demain à {heure} est annulé. Si vous voulez en reprendre un, appelez-moi au {numéro setteuse}.\n{prénom setteuse}, France IA",
+    why:"Une ligne pour dire que c'est fait, et la porte ouverte. Ensuite, plus d'appel.",
+    more:"Le créneau est rouvert aussitôt, sans attendre 18 h : un autre lead peut le prendre. Le parcours proposé a le même SMS, en plus court. Si le lead dit ne plus être intéressé, la setteuse pose « Ne pas contacter » sur sa fiche."},
+  smsAnnul: {type:"sms", de:"Expéditeur « FranceIA » · envoyé par CRMIA à 18 h, signé de la setteuse", corps:"Bonjour {prénom}, sans réponse de votre part, votre rendez-vous de demain à {heure} est annulé, comme prévu, pour libérer le créneau. Si votre projet tient toujours, appelez-moi au {numéro setteuse} : je vous propose un autre créneau.\n{prénom setteuse}, France IA",
     why:"Le SMS d'annulation de Roxane, en plus court : ce qui s'est passé, et la porte ouverte. Au même moment, l'invitation Google est retirée, ce qui prévient aussi le lead.",
     more:"« Répondez à ce SMS » ne marche pas depuis l'expéditeur « FranceIA » : le lead appelle la ligne de la setteuse, dont les SMS automatiques de CRMIA connaissent déjà le numéro. Roxane envoyait un SMS et un mail ; le schéma de Tanguy garde le SMS. Pas de lien de réservation dans un SMS (écarté le 22/10). Ensuite, on ne rappelle pas (règle de Roxane)."},
   pageResa: {type:"page", titre:"Restez disponible. Nous allons essayer de vous appeler pour préparer le rendez-vous.",
-    corps:"Cet appel sert à préparer votre visioconférence : nous faisons le point sur votre projet, pour que l'échange vous soit vraiment utile. Si nous ne nous parlons pas d'ici là, vous recevrez la veille à 16 h un SMS pour confirmer votre présence.\n\nVotre invitation vous est envoyée par e-mail, avec le lien de la visioconférence. Pensez à vérifier vos courriers indésirables.\n\n(au-dessus du titre : la date du RDV ; en dessous : la vidéo de présentation)",
-    why:"La page actuelle, ajustée à l'unification : l'appel n'est plus garanti, et la confirmation par SMS est annoncée dès la réservation.",
-    more:"Deux changements : « essayer de vous appeler … préparer », au lieu de « vous appeler pour confirmer », et la phrase sur le SMS de la veille. Le reste ne bouge pas."},
+    corps:"Cet appel sert à préparer votre visioconférence : nous faisons le point sur votre projet, pour que l'échange vous soit vraiment utile.\n\nVotre invitation vous est envoyée par e-mail, avec le lien de la visioconférence. Pensez à vérifier vos courriers indésirables.\n\n(au-dessus du titre : la date du RDV ; en dessous : la vidéo de présentation)",
+    why:"La page actuelle, ajustée : l'appel n'est plus garanti.",
+    more:"Un seul changement : « essayer de vous appeler … préparer », au lieu de « vous appeler pour confirmer ». La phrase sur le SMS de la veille est retirée, comme dans le SMS de la réservation (Tanguy, 27/10). Le reste ne bouge pas."},
   smsRappel: {type:"sms", de:"Expéditeur « FranceIA » · aucune réponse attendue", corps:"Bonjour {prénom}, je vous attends à {heure} pour notre échange en visio : {lien Meet}\nÀ tout à l'heure,\n{prénom closer}, France IA",
     why:"Le lien, avant le rendez-vous, et rien d'autre à lire : le SMS d'une heure avant du parcours proposé, envoyé deux heures avant comme le prévoit Tanguy.",
     more:"Le lien Meet dans le SMS, c'était aussi le SMS C de Roxane. Son « répondez LIEN » n'est pas repris : impossible depuis l'expéditeur « FranceIA ». CRMIA sait déjà envoyer un rappel « X minutes avant » (mode « délai » des réglages de calendrier) ; il lui manque la variable du lien Meet."},
@@ -599,24 +631,48 @@ const TAN = {
   noshow: {...MSG_NOSHOW_AUJ,
     why:"Le mail de no show actuel, gardé tel quel dans le parcours proposé : ce qui s'est passé, et le lien pour reprendre RDV.",
     more:"196 envois en octobre ; il a fait revenir 2 leads sans appel. Roxane ne prévoyait rien après un no show : il continue de partir."},
+  smsMql: {type:"sms", de:"Expéditeur « FranceIA » · envoyé par CRMIA, signé de la setteuse", corps:"Bonjour {prénom}, c'est {prénom setteuse} de France IA. Vous venez de recevoir le programme par mail (pensez à vérifier vos spams). Je vais vous appeler {aujourd'hui, demain ou lundi} pour répondre à vos questions et vous orienter vers la formation la plus adaptée.",
+    why:"Ce que demande Tanguy (27/10) : un SMS « on va vous appeler », même quand le lead ne prend pas RDV. C'est le SMS de la réservation, sans le rendez-vous.",
+    more:"Il ne peut pas partir avec le mail programme : à ce moment-là, on ne sait pas encore si le lead va réserver (le mail part 26 secondes avant la réservation, en médiane). Ma proposition : 30 minutes après la demande, si aucun RDV n'a été pris, entre 9 h et 20 h ; une demande du soir ou de la nuit le reçoit à 9 h. Le jour annoncé suit les jours où les setteuses appellent : « lundi » pour une demande du week-end. Le lead qui a choisi un créneau sans finir a déjà sa relance « votre RDV n'est pas encore confirmé » (prévue le 09/10, aucun envoi vu en octobre) : à trancher, l'une ou l'autre."},
+  vocalMql: {type:"script", label:"Message vocal, s'il ne répond pas", corps:"« Bonjour {prénom}, c'est {prénom setteuse}, de France IA. Je vous appelle au sujet du programme que vous avez demandé : quelques minutes pour répondre à vos questions et vous orienter vers la formation la plus adaptée. Rappelez-moi à ce numéro dès que vous avez un instant. Bonne journée ! »",
+    why:"Le même vocal que pour un RDV, sans le rendez-vous : qui appelle, pourquoi, et rappelez-moi.",
+    more:"Il reprend le vocal 1 de Roxane, raccourci, avec les mots du SMS que le lead a reçu : répondre à ses questions, l'orienter. Un seul vocal, au 1er appel : les suivants partent sans message, comme pour un RDV."},
+  delai: {type:"page", vu:"Ce que voit le closer, dans « Mes disponibilités »", titre:"Délai avant un nouveau rendez-vous",
+    corps:"Un lead peut réserver un de vos créneaux jusqu'à [3 h ▾] avant son début.\n(choix : 1 h, 2 h, 3 h, 6 h, 12 h ou 24 h)\n\nPlus ce délai est court, plus vos créneaux libérés à la dernière minute ont de chances d'être repris. Un rendez-vous annulé le matin pour l'après-midi ne se remplit que si un lead peut encore le réserver.",
+    why:"Ce que demande Tanguy (27/10) : chaque closer dit combien de temps avant il veut être prévenu d'un nouveau RDV, et le texte d'aide dit pourquoi un délai court est le meilleur choix.",
+    more:"Ma proposition : 3 h par défaut, le délai retenu par Tanguy le 27/10 pour la réservation du jour même. CRMIA a déjà un préavis de réservation, réglé par calendrier : ce réglage le précise closer par closer, à côté de la « Durée des R1 » ajoutée le 26/10."},
 };
 
-/* Le début et la fin des deux cas de Tanguy, qui ne changent pas d'un cas à l'autre. */
+/* Le début du parcours, commun aux trois cas où le lead prend RDV. */
 const TAN_T0 = {t:"T0", sub:"le lead prend RDV", steps:[
-  {canal:"page", qui:"Formulaire", n:"Page « on va essayer de vous appeler »", titre:"Page « Restez disponible, nous allons essayer de vous appeler »", court:"La page en place depuis le 21/10, à deux phrases près : l'appel n'est plus garanti, et le SMS de la veille est annoncé.", msg:TAN.pageResa},
+  {canal:"page", qui:"Formulaire", n:"Page « on va essayer de vous appeler »", titre:"Page « Restez disponible, nous allons essayer de vous appeler »", court:"La page en place depuis le 21/10, à une phrase près : l'appel n'est plus garanti.", msg:TAN.pageResa},
   {canal:"mail", qui:"Gmail de la setteuse, automatique", n:"Mail programme, le même pour tous", titre:"Mail « Votre programme France IA », le même pour tous", court:"Le mail actuel, inchangé. Il part dès le formulaire, 26 secondes avant la réservation en médiane : on ne sait pas encore si le lead prendra RDV.", msg:TAN.programme},
-  {canal:"sms", qui:"CRMIA, automatique, signé de la setteuse", n:"SMS « programme reçu, je vais vous appeler »", titre:"SMS à la réservation : le programme est dans vos mails, je vais vous appeler", court:"Seulement à qui a pris RDV. Il dit où est le programme (spams compris), annonce l'appel de la setteuse et, à défaut, le SMS de la veille pour confirmer.", msg:TAN.smsResa, chips:["Petit développement : CRMIA n'a pas de règle SMS à la réservation"]},
+  {canal:"sms", qui:"CRMIA, automatique, signé de la setteuse", n:"SMS « programme reçu, je vais vous appeler »", titre:"SMS à la réservation : le programme est dans vos mails, je vais vous appeler", court:"Seulement à qui a pris RDV. Il dit où est le programme (spams compris), et annonce l'appel de la setteuse.", msg:TAN.smsResa, chips:["Petit développement : CRMIA n'a pas de règle SMS à la réservation"],
+    final:"sms-reservation", nf:"SMS à la réservation", rox:[ROX.mailE], roxNote:"Le plus proche chez Roxane : son mail E, envoyé à la réservation, qui annonce l'appel."},
   {canal:"agenda", qui:"Agenda Google du closer", n:"Invitation Meet", titre:"Invitation Google Meet", court:"Déjà en place : CRMIA la crée dans l'agenda du closer, et Google l'envoie au lead."},
 ]};
+/* La veille, pour tout RDV pris au plus tard à 16 h la veille et sans setting. Tanguy, 27/10 : le lead répond OUI ou NON, pas de bouton. */
 const TAN_J1 = {t:"J-1 · 16:00 → 18:00", sub:"la veille", steps:[
-  {pour:"non", canal:"sms", qui:"CRMIA, automatique, signé de la setteuse", n:"SMS la veille à 16 h", titre:"SMS la veille à 16 h : « confirmez avant 18 h, sinon on annule »", court:"Il part seul, à tout RDV qui n'a pas eu de setting, que la setteuse ait appelé ou non. Le lead confirme d'un clic sur le lien. S'il ne confirme pas, annulation à 18 h.", msg:TAN.smsOui, chips:["Développement : CRMIA l'envoie seul, et seulement aux RDV pas encore confirmés", "Le lead confirme par un lien : un SMS automatique ne peut pas recevoir de réponse"],
-    detail:`<p>Ce que l'unification demande à CRMIA (code relu le 27/10, rien n'est développé) :</p><ul><li><b>Un état « présence confirmée » sur le RDV.</b> Aujourd'hui, tout RDV pris est « À venir » : rien ne distingue un RDV confirmé d'un RDV en attente. Le RDV est confirmé par le setting, par le lien, ou d'office s'il est pris après 16 h la veille. « Non confirmé » désigne déjà, dans CRMIA, le créneau choisi dans le formulaire sans réservation : il faut un autre mot.</li><li><b>Le SMS de 16 h et la page du lien.</b> Les règles SMS des calendriers partent à tous les RDV, sans condition : celle-ci ne part qu'aux RDV pas encore confirmés.</li><li><b>L'annulation à 18 h</b>, avec le motif « Non confirmé » : invitation retirée, créneau rouvert. À trancher : l'étape « R1 No show / annulé - à rappeler » remettrait le lead dans les appels, alors qu'on ne le rappelle pas.</li><li><b>Un filet</b> : une setteuse qui oublie de saisir le setting ferait annuler un lead joint. CRMIA importe déjà les appels Allô : un appel décroché de plus de 30 secondes peut valoir confirmation.</li><li><b>Couper ce qui ferait doublon</b> : le SMS actuel de la veille, et le mail de confirmation du closer à la réservation.</li></ul>`},
-  {pour:"non", canal:"sms", qui:"CRMIA, automatique", fin:"RDV annulé", si:"Pas de confirmation", sinon:"Confirme", n:"Annulation à 18 h, SMS + invitation", titre:"18 h, sans confirmation : SMS d'annulation, et invitation annulée", court:"CRMIA annule seul le RDV, rouvre le créneau, et prévient le lead : un SMS, et l'annulation de l'invitation qu'il a reçue par mail.", msg:TAN.smsAnnul, chips:["Développement : l'annulation automatique à 18 h, avec le motif « Non confirmé »"]},
-  {pour:"non", canal:"page", qui:"Lien du SMS de 16 h", n:"Page « je confirme »", titre:"Page de confirmation, à la place du SMS de confirmation", court:"Un clic suffit : la page confirme le RDV et donne ce que l'appel aurait donné. Ensuite, le SMS de rappel 2 h avant.", msg:TAN.pageOui, chips:["Développement : la page et son lien personnel"]},
+  {pour:"non", canal:"sms", qui:"La setteuse, depuis sa ligne Allô", n:"SMS de 16 h : OUI ou NON", titre:"SMS la veille à 16 h : « répondez OUI ou NON »", court:"À tout RDV qui n'a pas eu de setting, que la setteuse ait joint le lead ou non. Il répond OUI pour confirmer, NON pour annuler. Sans réponse à 18 h, le RDV est annulé.", msg:TAN.smsOui,
+    final:"sms-16h", nf:"SMS de 16 h, « répondez OUI ou NON »", rox:[ROX.smsOui, ROX.mailOui], roxNote:"Son SMS « répondez OUI », et le mail qui le doublait.",
+    chips:["Envoyé par la setteuse depuis sa ligne Allô : un SMS automatique ne peut pas recevoir de réponse", "RDV du lundi : SMS le vendredi à 16 h, « lundi » au lieu de « demain », réponse jusqu'au dimanche 18 h (à confirmer)"],
+    detail:`<p>Ce que cela demande à CRMIA (code relu le 27/10, rien n'est développé) :</p><ul><li><b>Un état « présence confirmée » sur le RDV.</b> Aujourd'hui, tout RDV pris est « À venir » : rien ne distingue un RDV confirmé d'un RDV en attente. Le RDV est confirmé par le setting, par un OUI, ou d'office s'il est pris après 16 h la veille. « Non confirmé » désigne déjà, dans CRMIA, le créneau choisi dans le formulaire sans réservation : il faut un autre mot.</li><li><b>La liste de 16 h.</b> CRMIA montre à chaque setteuse les RDV du lendemain sans setting, avec le texte prêt à copier dans Allô. Envoyé automatiquement depuis sa ligne, le SMS serait bloqué par les opérateurs ${R("allo")}.</li><li><b>Lire OUI et NON.</b> CRMIA reçoit déjà les SMS arrivés sur les lignes Allô : il lui reste à reconnaître OUI et NON, à confirmer ou annuler le RDV, et à envoyer le SMS qui suit. Une autre réponse (« appelez-moi à 17 h ») reste à la setteuse.</li><li><b>L'annulation à 18 h</b>, avec le motif « Sans réponse » : invitation retirée, créneau rouvert. À trancher : l'étape « R1 No show / annulé - à rappeler » remettrait le lead dans les appels, alors qu'on ne le rappelle pas.</li><li><b>Un filet</b> : une setteuse qui oublie de saisir le setting ferait annuler un lead joint. CRMIA importe déjà les appels Allô : un appel décroché de plus de 30 secondes peut valoir confirmation.</li><li><b>Couper ce qui ferait doublon</b> : le SMS actuel de la veille, et le mail de confirmation du closer à la réservation.</li></ul><p>Plus tard, un numéro court permettrait d'envoyer ce SMS automatiquement et d'en recevoir les réponses : Allô compte 2 à 4 mois de mise en place ${R("allo")}.</p>`},
+  {pour:"non", canal:"sms", qui:"CRMIA, automatique, signé de la setteuse", fin:"RDV annulé, créneau rouvert", si:"NON", sinon:"OUI, ou rien", n:"NON : RDV annulé", titre:"NON : CRMIA annule le RDV, et le dit en une ligne", court:"Le créneau est rouvert tout de suite, sans attendre 18 h. Plus d'appel ni de message.", msg:TAN.smsNon, chips:["Développement : lire le NON, annuler le RDV, envoyer ce SMS"],
+    final:"sms-non", nf:"SMS après un NON", roxNote:"Roxane ne prévoyait pas de réponse NON : sa trame ne demandait que OUI."},
+  {pour:"non", canal:"sms", qui:"CRMIA, automatique à 18 h, signé de la setteuse", fin:"RDV annulé", si:"Rien à 18 h", sinon:"OUI", n:"Rien à 18 h : annulé", titre:"18 h, sans réponse : SMS d'annulation, et invitation annulée", court:"CRMIA annule seul le RDV, rouvre le créneau, et prévient le lead : un SMS, et l'annulation de l'invitation qu'il a reçue par mail.", msg:TAN.smsAnnul, chips:["Développement : l'annulation automatique à 18 h, avec le motif « Sans réponse »"],
+    final:"sms-annulation-18h", nf:"SMS d'annulation à 18 h", rox:[ROX.smsAnnul, ROX.mailAnnul], roxNote:"Son SMS d'annulation, et le mail qui le doublait."},
+  {pour:"non", canal:"sms", qui:"CRMIA, automatique, signé de la setteuse", n:"OUI : SMS « RDV confirmé »", titre:"OUI : un SMS « rendez-vous confirmé demain à telle heure »", court:"Dès que CRMIA lit le OUI. Il redonne l'heure, le closer et, pour le CPF, l'Identité Numérique à préparer. Ensuite, le SMS de rappel 2 h avant.", msg:TAN.smsConfirme, chips:["Développement : lire le OUI, confirmer le RDV, envoyer ce SMS"],
+    final:"sms-oui-confirme", nf:"SMS après un OUI", roxNote:"Roxane ne prévoyait rien après un OUI : le RDV restait tel quel."},
 ]};
 const TAN_RAPPEL = court => ({t:"T-2 h", sub:"deux heures avant", steps:[
-  {canal:"sms", qui:"Automatique, signé du closer", n:"SMS de rappel 2 h avant", titre:"SMS de rappel 2 h avant", court, msg:TAN.smsRappel},
+  {canal:"sms", qui:"Automatique, signé du closer", n:"SMS de rappel 2 h avant", titre:"SMS de rappel 2 h avant", court, msg:TAN.smsRappel,
+    final:"sms-rappel-2h", nf:"SMS de rappel 2 h avant", rox:[ROX.smsC], roxNote:"Le plus proche chez Roxane : son SMS C, envoyé la veille à 18 h avec le lien Meet."},
 ]});
+/* Le réglage du closer (Tanguy, 27/10), commun aux trois cas où le lead prend RDV. */
+const TAN_DELAI = {t:"À tout moment", sub:"réglage du closer", steps:[
+  {canal:"agenda", qui:"Le closer, dans « Mes disponibilités » de CRMIA", n:"Délai avant un nouveau RDV", titre:"Réglage du closer : combien de temps avant il veut être prévenu d'un nouveau RDV", court:"Chaque closer choisit le délai minimum entre la réservation et le RDV. Le texte d'aide l'explique : moins de temps, c'est le mieux pour remplir les RDV annulés à la dernière minute.", msg:TAN.delai, chips:["Développement : un réglage par closer, que le formulaire de réservation respecte"],
+    detail:"<p>Aujourd'hui, la règle est la même pour tous, écrite dans le code le 08/10 : un lead réserve au plus tôt le lendemain (dès 14 h s'il réserve après 18 h). Tanguy a tranché le 27/10 pour rouvrir le jour même, 3 h à l'avance : ce réglage le décline closer par closer.</p><p>Un créneau libéré le jour même ne se remplit que si un lead peut encore le réserver : du 28/09 au 27/10, 2 des 57 créneaux de R1 libérés par une annulation le jour même ont été repris.</p><p>Un RDV pris avec un délai court passe dans le cas « Après 16 h la veille, ou le jour même » : il est confirmé tout de suite, avec le lien.</p>"},
+]};
 const TAN_FIN = [
   {t:"T0", sub:"heure du RDV", steps:[
     {canal:"visio", qui:"Closer", n:"Visio Google Meet", titre:"Visio Google Meet", court:"Le lead rejoint par le lien du SMS de rappel ou de l'invitation."},
@@ -803,50 +859,116 @@ roxane: {
   }},
 
 /* ===================== 4. PROPOSITION DE TANGUY ===================== */
-/* Son schéma du 27/10, unifié à sa demande le même jour : deux cas, un parcours chacun. Les messages (TAN) sont écrits à sa demande, à partir des trames de Roxane et du parcours proposé. */
+/* Son schéma du 27/10, unifié puis repris le même jour avec ses huit améliorations (v15). Les messages (TAN) sont écrits à sa demande, à partir des trames de Roxane et du parcours proposé.
+   Chaque SMS, vocal et script porte une clé « final » : le champ « Script final » de Roxane, à côté de sa trame la plus proche (rox). */
 tanguy: {
   num:"4", nom:"Proposition de Tanguy", titre:"Ce que propose Tanguy",
-  intro:"Son schéma du 27/10, unifié à sa demande le même jour : le RDV ne dépend plus du nombre d'appels que la setteuse a eu le temps de passer. Deux cas, deux boutons au-dessus du schéma. RDV pris avant 16 h la veille, 4 jours avant comme à 15 h 30 la veille : la setteuse appelle une fois, avec un message vocal, quand elle peut ; à 16 h la veille, CRMIA demande seul au lead de confirmer d'un clic, si le setting ne l'a pas déjà fait, et annule à 18 h sans confirmation. RDV pris après 16 h la veille, ou le jour même : il est confirmé tout de suite, sans annoncer d'appel ni d'annulation (Tanguy, 27/10). Il porte sur les RDV pris par le lead, pas sur les demandes sans RDV. Les messages sont écrits à partir des trames de Roxane et du parcours proposé : chacun dit d'où il vient. Le mail programme reste le même pour tous : il part avant qu'on sache si le lead prendra RDV. La fin du parcours, de la visio au rappel après un no show, reprend le parcours proposé.",
+  intro:"Son schéma du 27/10, unifié puis repris le même jour avec ses huit améliorations. Quatre cas, quatre boutons au-dessus du schéma : selon le moment où le lead prend RDV, ou s'il n'en prend pas.<br><br><b>Plus de 24 h avant :</b> deux appels avant 16 h la veille, un message vocal au premier. <b>Moins de 24 h avant, au plus tard 16 h la veille :</b> un seul appel, et CRMIA dit pourquoi à la setteuse. Dans ces deux cas, sans setting, la setteuse envoie à 16 h la veille un SMS « répondez OUI ou NON », depuis sa ligne Allô. OUI : un SMS confirme le RDV. NON, ou rien à 18 h : le RDV est annulé et le créneau rouvert. <b>Après 16 h la veille, ou le jour même :</b> le RDV est confirmé tout de suite. <b>Sans RDV :</b> un SMS annonce l'appel, puis trois appels au plus. Chaque closer règle aussi le délai minimum avant un nouveau RDV (sous le schéma, « À tout moment »).<br><br><b>Pour Roxane :</b> chaque SMS, message vocal et script a un champ « Script final », à côté de ma proposition et de sa trame. La liste est sous le schéma. Le texte enregistré est visible par tous ceux qui ont le lien de cette page. Rien n'est encore développé dans CRMIA.",
   detailLabel:"À noter",
   paths:{
     rdv:{
-      l:"Avant 16 h la veille", s:"4 jours avant comme à 15 h 30 la veille",
+      l:"Plus de 24 h avant", s:"RDV pris par le lead",
       resume:[
-        {n:"1", l:"appel, avec un message vocal, quand la setteuse peut : plus d'appel 2 à caser"},
-        {n:"16 h", l:"la veille : CRMIA demande seul de confirmer d'un clic, à tout RDV sans setting"},
-        {n:"18 h", l:"sans confirmation : RDV annulé, créneau rouvert"},
+        {n:"88 %", l:"des RDV pris par les leads depuis le 01/10 l'ont été plus de 24 h avant (639 sur 730)"},
+        {n:"2", l:"appels avant 16 h la veille : un message vocal au 1er, le 2e une à deux heures après"},
+        {n:"16 h", l:"la veille, sans setting : SMS de la setteuse, « répondez OUI ou NON »"},
+        {n:"18 h", l:"sans réponse : RDV annulé, créneau rouvert"},
         {n:"2 h", l:"avant le RDV : SMS de rappel avec le lien, pour tout RDV confirmé"},
       ],
       moments:[
-        {...TAN_T0, sub:"le lead prend RDV, au plus tard la veille à 16 h"},
-        {t:"L'appel", sub:"quand la setteuse peut, avant 16 h la veille", si:"Il répond ?", oui:"Répond ou rappelle", non:"Ne répond pas", steps:[
-          {canal:"appel", qui:"Setteuse", n:"Un appel + message vocal", titre:"Un seul appel, et un message vocal s'il ne répond pas", court:"Quand elle peut, les RDV les plus proches d'abord. Il répond, ou rappelle après le vocal : setting. Sinon, pas d'appel 2 à caser : le SMS de 16 h prend le relais.", msg:TAN.vocal},
-          {pour:"joint", canal:"appel", qui:"Setteuse", n:"Setting", titre:"Setting : le RDV est confirmé", court:"Dès que le lead répond, à l'appel ou en rappelant après le vocal. Le setting confirme le RDV : pas de SMS à 16 h. Ensuite, le SMS de rappel 2 h avant."},
+        {...TAN_T0, sub:"plus de 24 h avant le RDV"},
+        {t:"Les appels", sub:"avant 16 h la veille", si:"Il répond ?", oui:"Répond ou rappelle", non:"Ne répond pas", steps:[
+          {canal:"appel", qui:"Setteuse", n:"1er appel + message vocal", titre:"1er appel, et un message vocal s'il ne répond pas", court:"Quand elle peut, les RDV les plus proches d'abord. Il répond, ou rappelle après le vocal : setting.", msg:TAN.vocal,
+            final:"vocal-rdv", nf:"Message vocal du 1er appel, RDV pris", rox:[ROX.vocal1, ROX.sms1], roxNote:"Son vocal 1, et le SMS 1 qui le doublait."},
+          {pour:"non", canal:"appel", qui:"Setteuse", n:"2e appel, sans vocal", titre:"2e appel, une à deux heures après, sans message vocal", court:"Le 2e appel qui manquait (Tanguy, 27/10). Une à deux heures après le premier : 46 % des leads sont joints dans cette fenêtre, contre 19 % le lendemain. Sans message : le vocal du 1er appel a tout dit.", chips:["CRMIA garde la fiche dans la liste du jour (à développer)"],
+            detail:`<p>Mesuré en octobre sur 660 deuxièmes appels ; Velocify conseille la même fenêtre de 30 à 60 minutes ${R("velocify")}. Un 1er appel passé en fin de journée renvoie le 2e au lendemain, toujours avant 16 h la veille du RDV.</p><p>Aujourd'hui, CRMIA reporte la fiche au lendemain dès le 1er appel manqué : elle sort de la liste du jour.</p>`},
+          {pour:"non", vers:"joint", si:"Répond", sinon:"Ne répond pas"},
+        ]},
+        {t:"Setting", sub:"dès qu'il répond", steps:[
+          {pour:"joint", canal:"appel", qui:"Setteuse", n:"Setting", titre:"Setting : le RDV est confirmé", court:"Dès que le lead répond, à l'un des deux appels ou en rappelant après le vocal. Le setting confirme le RDV : pas de SMS à 16 h. Ensuite, le SMS de rappel 2 h avant."},
         ]},
         TAN_J1,
-        TAN_RAPPEL("Pour tout RDV confirmé : par le setting, ou par le lien du SMS de 16 h."),
+        TAN_RAPPEL("Pour tout RDV confirmé : par le setting, ou par un OUI au SMS de 16 h."),
         ...TAN_FIN,
+        TAN_DELAI,
+      ]},
+    court:{
+      l:"Moins de 24 h avant", s:"Au plus tard 16 h la veille", depart:"Le lead prend RDV",
+      resume:[
+        {n:"4 %", l:"des RDV pris par les leads depuis le 01/10 : moins de 24 h avant, au plus tard 16 h la veille (26 sur 730)"},
+        {n:"1", l:"seul appel, avec un message vocal ; CRMIA dit à la setteuse pourquoi"},
+        {n:"16 h", l:"la veille, sans setting : le même SMS « répondez OUI ou NON »"},
+        {n:"18 h", l:"sans réponse : RDV annulé, créneau rouvert"},
+      ],
+      moments:[
+        {...TAN_T0, sub:"moins de 24 h avant, au plus tard 16 h la veille"},
+        {t:"L'appel", sub:"un seul, avant 16 h la veille", si:"Il répond ?", oui:"Répond ou rappelle", non:"Ne répond pas", steps:[
+          {canal:"appel", qui:"Setteuse", n:"Un seul appel + vocal", titre:"Un seul appel, et un message vocal s'il ne répond pas", court:"Le RDV est trop proche pour plusieurs appels : un seul, au plus tôt (Tanguy, 27/10). CRMIA l'explique à la setteuse sur la carte du RDV.", msg:TAN.vocal,
+            chips:["Sur la carte de CRMIA, une seule case d'appel, et la phrase « Le rendez-vous a été pris pour dans moins de 24 h »", "Petit développement : la carte dépend du délai entre la réservation et le RDV"],
+            final:"vocal-rdv", nf:"Message vocal du 1er appel, RDV pris", rox:[ROX.vocal1, ROX.sms1], roxNote:"Son vocal 1, et le SMS 1 qui le doublait."},
+          {pour:"joint", canal:"appel", qui:"Setteuse", n:"Setting", titre:"Setting : le RDV est confirmé", court:"Dès que le lead répond, ou rappelle après le vocal. Pas de SMS à 16 h. Ensuite, le SMS de rappel 2 h avant."},
+        ]},
+        TAN_J1,
+        TAN_RAPPEL("Pour tout RDV confirmé : par le setting, ou par un OUI au SMS de 16 h."),
+        ...TAN_FIN,
+        TAN_DELAI,
       ]},
     tard:{
       l:"Après 16 h la veille", s:"Ou le jour même", depart:"Le lead prend RDV",
       resume:[
+        {n:"9 %", l:"des RDV pris par les leads depuis le 01/10 : après 16 h la veille, nuit comprise (65 sur 730)"},
         {n:"1", l:"SMS dès la réservation : le RDV est confirmé, avec le lien"},
-        {n:"0", l:"annonce d'appel ou d'annulation : on n'aura pas forcément le temps de joindre le lead"},
+        {n:"1", l:"appel si la setteuse a le temps, sans message vocal"},
         {n:"2 h", l:"avant le RDV : SMS de rappel avec le lien"},
       ],
       moments:[
         {t:"T0", sub:"après 16 h la veille, ou le jour même", steps:[
           {canal:"page", qui:"Formulaire", n:"Page « RDV confirmé »", titre:"Page « Votre rendez-vous est confirmé »", court:"La page actuelle, sans l'annonce de l'appel.", msg:TAN.pageConfirm, chips:["Petit développement : la page dépend de l'heure du RDV"]},
           TAN_T0.steps[1], /* mail programme, le même pour tous */
-          {canal:"sms", qui:"CRMIA, automatique, signé du closer", n:"SMS « RDV confirmé »", titre:"SMS à la réservation : votre rendez-vous est confirmé", court:"Le RDV est confirmé tout de suite, avec le lien. Ni appel annoncé, ni annulation possible.", msg:TAN.smsConfirmDirect, chips:["Petit développement : CRMIA n'a pas de règle SMS à la réservation, et le texte dépend de l'heure du RDV"]},
+          {canal:"sms", qui:"CRMIA, automatique, signé du closer", n:"SMS « RDV confirmé »", titre:"SMS à la réservation : votre rendez-vous est confirmé", court:"Le RDV est confirmé tout de suite, avec le lien. Ni appel annoncé, ni annulation possible.", msg:TAN.smsConfirmDirect, chips:["Petit développement : CRMIA n'a pas de règle SMS à la réservation, et le texte dépend de l'heure du RDV"],
+            final:"sms-confirme-direct", nf:"SMS « RDV confirmé », RDV pris tard", rox:[ROX.mailB], roxNote:"Le plus proche chez Roxane : son mail B, qui confirme le RDV une fois posé."},
           TAN_T0.steps[3], /* invitation Meet */
         ]},
-        {t:"Les appels", sub:"si la setteuse a le temps", si:"Il répond ?", oui:"Répond", non:"Ne répond pas", steps:[
-          {canal:"appel", qui:"Setteuse", n:"Tentatives d'appel", titre:"Des tentatives d'appel si on a le temps, sans message vocal", court:"Pour qualifier le lead avant le RDV. Le RDV ne dépend pas de l'appel : il est déjà confirmé. Sans message vocal ni autre message. Le schéma ne dit pas combien de tentatives."},
-          {pour:"joint", canal:"appel", qui:"Setteuse", n:"Setting", titre:"Setting", court:"Dès que le lead répond à l'une des tentatives. Ensuite, le SMS de rappel 2 h avant."},
+        {t:"L'appel", sub:"si la setteuse a le temps", si:"Il répond ?", oui:"Répond", non:"Ne répond pas", steps:[
+          {canal:"appel", qui:"Setteuse", n:"Un appel, sans vocal", titre:"Un seul appel si on a le temps, sans message vocal", court:"Pour qualifier le lead avant le RDV. Un seul : le RDV a été pris pour dans moins de 24 h (Tanguy, 27/10), et il est déjà confirmé. Sans message vocal ni autre message.", chips:["Sur la carte de CRMIA : « Le rendez-vous a été pris pour dans moins de 24 h »"]},
+          {pour:"joint", canal:"appel", qui:"Setteuse", n:"Setting", titre:"Setting", court:"Dès que le lead répond. Ensuite, le SMS de rappel 2 h avant."},
         ]},
         TAN_RAPPEL("Pour tout RDV : il a été confirmé dès la réservation, que le lead ait répondu à l'appel ou non."),
         ...TAN_FIN,
+        TAN_DELAI,
+      ]},
+    mql:{
+      l:"Sans RDV", s:"Le lead reste MQL",
+      resume:[
+        {n:"94 %", l:"des MQL du 01 au 19/10 ont vu le calendrier et sont repartis sans réserver (911 sur 969)"},
+        {n:"30 min", l:"après la demande, toujours sans RDV : SMS « je vais vous appeler », de 9 h à 20 h"},
+        {n:"3", l:"appels au plus : un vocal au 1er, le 2e une à deux heures après, le 3e le lendemain"},
+        {n:"1", l:"mail de clôture avec le lien pour revenir, puis « Injoignable »"},
+      ],
+      moments:[
+        {t:"T0", sub:"demande de programme", steps:[
+          {canal:"crm", qui:"CRMIA et Slack", n:"Attribution à une setteuse", titre:"Attribution par rotation", court:"Comme aujourd'hui : la setteuse est connue dès le formulaire, son prénom signe tout ce qui suit."},
+          TAN_T0.steps[1], /* mail programme, le même pour tous */
+        ]},
+        {t:"T+30 min", sub:"toujours sans RDV", steps:[
+          {canal:"sms", qui:"CRMIA, automatique, signé de la setteuse", n:"SMS « je vais vous appeler »", titre:"SMS « je vais vous appeler », même sans RDV", court:"Ce que demande Tanguy (27/10). Il part 30 minutes après la demande si le lead n'a pas pris RDV, entre 9 h et 20 h ; une demande de la nuit le reçoit à 9 h.", msg:TAN.smsMql, chips:["Développement : une règle SMS « toujours pas de RDV 30 minutes après la demande »"],
+            final:"sms-mql", nf:"SMS « je vais vous appeler », sans RDV", rox:[ROX.mailA], roxNote:"Le plus proche chez Roxane : son mail A, qui annonçait l'appel."},
+        ]},
+        {t:"Les appels", sub:"le jour même, puis le lendemain", si:"Il répond ?", oui:"Répond ou rappelle", non:"Ne répond pas", steps:[
+          {canal:"appel", qui:"Setteuse", n:"1er appel + message vocal", titre:"1er appel, le plus tôt possible, et un message vocal s'il ne répond pas", court:"Dans l'heure si possible : en semaine, 6 des 52 demandes appelées dans l'heure ont fini en vente, contre 2 à 3 % au-delà.", msg:TAN.vocalMql,
+            final:"vocal-mql", nf:"Message vocal du 1er appel, sans RDV", rox:[ROX.vocal1, ROX.sms1], roxNote:"Son vocal 1, et le SMS 1 qui le doublait."},
+          {pour:"non", canal:"appel", qui:"Setteuse", n:"2e appel", titre:"2e appel, une à deux heures après, sans message", court:"46 % des leads sont joints dans cette fenêtre, contre 19 % le lendemain. Une demande arrivée en fin de journée passe au lendemain matin.", chips:["CRMIA garde la fiche dans la liste du jour (à développer)"]},
+          {pour:"non", vers:"joint", si:"Répond", sinon:"Ne répond pas"},
+          {pour:"non", canal:"appel", qui:"Setteuse", n:"3e et dernier appel", titre:"3e et dernier appel, le lendemain, à un autre moment", court:"Le matin si les premiers étaient l'après-midi, et inversement. Sans message. Après, on n'appelle plus.",
+            detail:"<p>3 appels, gardés par l'équipe le 23/10, à revoir fin novembre : aujourd'hui, 74 % des leads jamais joints n'ont eu qu'1 ou 2 appels, et 4 des 11 ventes de leads sans RDV sont venues de leads joints au 4e appel ou plus.</p>"},
+          {pour:"non", vers:"joint", si:"Répond", sinon:"Ne répond pas"},
+        ]},
+        {t:"Ensuite", sub:"joint, ou après 3 appels", steps:[
+          {pour:"joint", canal:"appel", qui:"Setteuse", fin:"RDV posé et confirmé", n:"Qualifié, RDV posé", titre:"Il répond : qualifier, puis poser le RDV pendant l'appel", court:"La grille de qualification de CRMIA, puis le RDV au plus proche. Posé de vive voix, il est confirmé : pas de SMS à 16 h. Ensuite, l'invitation Google et le SMS de rappel 2 h avant.", msg:PRO.scriptMql,
+            final:"script-rdv-mql", nf:"Script : poser le RDV", rox:[ROX.mailB], roxNote:"Roxane n'a pas de script pour poser le RDV : son mail B le confirme ensuite par écrit."},
+          {pour:"non", canal:"mail", qui:"Setteuse", fin:"Injoignable", n:"Mail de clôture", titre:"Après 3 appels : un seul mail de clôture, avec le lien pour revenir", court:"Puis « Injoignable », et plus aucun appel. Roxane envoyait un SMS et un mail.", msg:PRO.mailCloture,
+            final:"mail-cloture-mql", nf:"Mail de clôture, sans RDV", rox:[ROX.sms2, ROX.mail2], roxNote:"Son SMS 2 et son mail 2 de clôture."},
+        ]},
       ]},
   }},
 
@@ -1390,7 +1512,7 @@ function renderMsg(m){
   } else if (m.type === "script"){
     h = `<p class="msg-h">${esc(m.label || "Ce que dit la setteuse")}</p><div class="script">${fmt(m.corps)}</div>`;
   } else if (m.type === "page"){
-    h = `<p class="msg-h">Ce que voit le lead</p><div class="pagemsg"><strong>${esc(m.titre)}</strong>${fmt(m.corps)}</div>`;
+    h = `<p class="msg-h">${esc(m.vu || "Ce que voit le lead")}</p><div class="pagemsg"><strong>${esc(m.titre)}</strong>${fmt(m.corps)}</div>`;
   }
   if (m.why){
     h += m.more
@@ -1606,12 +1728,12 @@ function legend(vk){
 
 function toolbar(vk){
   const v = VERSIONS[vk];
-  const seg = Object.keys({...PATHS, ...v.paths}).filter(k => v.paths[k]).map(k => {
+  const seg = Object.keys(v.paths).map(k => {
     const p = chemin(vk, k);
     return `<button type="button" data-path="${k}" aria-pressed="${state.path === k}">${p.l}<small>${p.s}</small></button>`;
   }).join("");
   return `<div class="toolbar">
-    <div class="seg" role="group" aria-label="Parcours">${seg}</div>
+    <div class="seg${Object.keys(v.paths).length > 2 ? " n4" : ""}" role="group" aria-label="Parcours">${seg}</div>
     <div class="zoom" role="group" aria-label="Zoom du schéma">
       <button type="button" data-zoom="-1" aria-label="Dézoomer">−</button><span id="zoom-v">${Math.round(state.zoom * 100)} %</span><button type="button" data-zoom="1" aria-label="Zoomer">+</button><button type="button" data-zoom="fit" class="fit">Vue d'ensemble</button>
     </div>
@@ -1626,7 +1748,7 @@ function renderVersion(vk){
   const stats = `<dl class="stats">${p.resume.map(r => `<div><dt>${r.n}</dt><dd>${r.l}</dd></div>`).join("")}</dl>`;
   const schema = renderFlow(vk); /* fixe le zoom avant d'afficher sa valeur */
   const flow = head + toolbar(vk) + stats + legend(vk) + schema;
-  return vk === "propose" ? flow + principes() + extras() : flow;
+  return vk === "propose" ? flow + principes() + extras() : vk === "tanguy" ? flow + textes() : flow;
 }
 
 /* ------------------------------------------------------------------ */
@@ -1643,9 +1765,157 @@ function panelHtml(n){
     <p class="pn-qui">${esc(s.qui || "")}</p>
     <p class="pn-court">${s.court}</p>
     ${notes.length ? `<ul class="pn-notes">${notes.map(x => `<li>${x}</li>`).join("")}</ul>` : ""}
-    ${msgs.length ? `<section class="pn-s"><h4>${msgs.length > 1 ? `Les ${msgs.length} messages` : msgs[0].type === "script" ? "Le texte" : "Le message"}</h4>${msgs.map(renderMsg).join("")}</section>` : ""}
+    ${msgs.length ? `<section class="pn-s"><h4>${s.final ? "Ma proposition" : msgs.length > 1 ? `Les ${msgs.length} messages` : msgs[0].type === "script" ? "Le texte" : "Le message"}</h4>${msgs.map(renderMsg).join("")}</section>` : ""}
+    ${s.final ? blocRoxane(s) + blocFinal(s) : ""}
     ${s.detail ? `<section class="pn-s pn-d"><h4>${v.detailLabel}</h4>${s.detail}</section>` : ""}
     ${s.goto ? `<button type="button" class="pn-goto" data-goto="${s.goto}">Voir la suite : parcours « ${PATHS[s.goto].l} » →</button>` : ""}`;
+}
+
+/* ------------------------------------------------------------------ */
+/* Scripts finaux de Roxane (onglet de Tanguy). Enregistrés pour tous   */
+/* ceux qui ont le lien, sans compte (Tanguy, 27/10 : « pas besoin de   */
+/* protection »), avec l'historique des versions.                       */
+/* ------------------------------------------------------------------ */
+const FINAL_API = "https://mhaeeketoyexbbtgotzi.supabase.co/functions/v1/maquette-scripts";
+const FINAL_PAGE = "parcours-setting";
+const FINAL_LS = "parcours-setting:brouillon:";
+const FINALS = {};     /* dernière version enregistrée, par clé */
+const BROUILLONS = {}; /* texte tapé, pas encore enregistré */
+let finalEtat = "chargement", envoi = false;
+
+const quand = iso => {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("fr-FR", {day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit", hour12:false, timeZone:"Europe/Paris"})
+    .formatToParts(new Date(iso)).map(x => [x.type, x.value]));
+  return `le ${p.day}/${p.month} à ${p.hour} h ${p.minute}`;
+};
+const enregistre = cle => FINALS[cle] ? FINALS[cle].texte : "";
+const modifie = cle => BROUILLONS[cle] !== undefined && BROUILLONS[cle] !== enregistre(cle);
+
+function statutFinal(cle){
+  if (modifie(cle)) return {c:"mod", t:"Modifié, pas encore enregistré."};
+  const f = FINALS[cle];
+  if (f) return {c:"", t:`Enregistré ${quand(f.cree_le)}${f.versions > 1 ? ` · ${f.versions} versions gardées` : ""}.`};
+  if (finalEtat === "chargement") return {c:"", t:"Chargement des textes enregistrés…"};
+  if (finalEtat === "erreur") return {c:"err", t:"Les textes enregistrés n'ont pas pu être chargés. Vous pouvez écrire quand même : le texte reste sur cet appareil jusqu'à ce qu'il soit enregistré."};
+  return {c:"", t:"Pas encore de script final."};
+}
+
+/* Met à jour la ligne d'état du champ ouvert, et la liste des textes. */
+function majFinal(cle, st){
+  const el = document.getElementById("final-st"), ta = document.getElementById("final-txt");
+  if (el && ta && ta.dataset.cle === cle){
+    const s = st || statutFinal(cle);
+    el.textContent = s.t;
+    el.className = "final-st" + (s.c ? " " + s.c : "");
+  }
+  const li = document.getElementById("txt-list");
+  if (li) li.innerHTML = textesItems();
+}
+
+function brouillon(cle, txt){
+  BROUILLONS[cle] = txt;
+  try { localStorage.setItem(FINAL_LS + cle, txt); } catch (e) {}
+}
+function oublier(cle){
+  delete BROUILLONS[cle];
+  try { localStorage.removeItem(FINAL_LS + cle); } catch (e) {}
+}
+
+function chargerFinals(){
+  try {
+    for (let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if (k && k.startsWith(FINAL_LS)) BROUILLONS[k.slice(FINAL_LS.length)] = localStorage.getItem(k);
+    }
+  } catch (e) {}
+  fetch(`${FINAL_API}?page=${FINAL_PAGE}`)
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(d => { Object.assign(FINALS, d.scripts || {}); finalEtat = "ok"; })
+    .catch(() => { finalEtat = "erreur"; })
+    .finally(() => {
+      for (const cle of Object.keys(BROUILLONS)) if (finalEtat === "ok" && !modifie(cle)) oublier(cle);
+      const ta = document.getElementById("final-txt");
+      if (ta && BROUILLONS[ta.dataset.cle] === undefined) ta.value = enregistre(ta.dataset.cle);
+      majFinal(ta ? ta.dataset.cle : "");
+    });
+}
+
+function enregistrer(){
+  const ta = document.getElementById("final-txt");
+  if (!ta || envoi) return;
+  const cle = ta.dataset.cle, texte = ta.value;
+  if (!modifie(cle) && (FINALS[cle] || !texte.trim())){
+    majFinal(cle, {c:"", t:FINALS[cle] ? "Rien de nouveau à enregistrer : ce texte est déjà enregistré." : "Écrivez d'abord le texte, ou partez de l'un des deux textes ci-dessus."});
+    return;
+  }
+  envoi = true;
+  const bouton = () => document.querySelector('[data-final="enregistrer"]');
+  if (bouton()) bouton().disabled = true;
+  majFinal(cle, {c:"", t:"Enregistrement…"});
+  fetch(FINAL_API, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({page:FINAL_PAGE, cle, texte})})
+    .then(r => r.json().catch(() => ({})).then(d => r.ok ? d : Promise.reject(d.erreur || `erreur ${r.status}`)))
+    .then(d => {
+      FINALS[cle] = {texte:d.texte, cree_le:d.cree_le, versions:FINALS[cle] ? FINALS[cle].versions + 1 : 1};
+      if (BROUILLONS[cle] === undefined || BROUILLONS[cle] === d.texte) oublier(cle);
+      majFinal(cle);
+    })
+    .catch(err => majFinal(cle, {c:"err", t:`Pas enregistré (${typeof err === "string" ? err : "réseau indisponible"}). Le texte reste sur cet appareil : réessayez.`}))
+    .finally(() => { envoi = false; if (bouton()) bouton().disabled = false; });
+}
+
+/* Texte brut d'un message, pour partir d'une proposition : les passages conditionnels restent signalés. */
+const brut = (m, objet) => {
+  const c = (m.corps || "").replace(COND, (x, cond, t) => `[Seulement si ${cond} : ${t}]`);
+  return objet && m.type === "mail" && m.objet && !m.objet.startsWith("(") ? `Objet : ${m.objet}\n\n${c}` : c;
+};
+function partir(source){
+  const ta = document.getElementById("final-txt"), n = state.noeuds && state.noeuds[state.sel];
+  if (!ta || !n) return;
+  const s = n.s, mien = msgsOf(s)[0];
+  const m = source === "rox" ? ((s.rox || []).find(x => x.type === mien.type) || (s.rox || [])[0]) : mien;
+  if (!m) return;
+  const txt = brut(m, mien.type === "mail");
+  if (ta.value.trim() && ta.value !== txt && !confirm("Remplacer le texte en cours ?")) return;
+  ta.value = txt;
+  brouillon(ta.dataset.cle, txt);
+  majFinal(ta.dataset.cle);
+  ta.focus();
+}
+
+function blocRoxane(s){
+  const rox = s.rox || [];
+  const note = s.roxNote ? `<p class="pn-note">${s.roxNote}</p>` : rox.length ? "" : `<p class="pn-note">Pas d'étape semblable dans sa trame.</p>`;
+  return `<section class="pn-s pn-rox"><h4>Ce qu'avait Roxane</h4>${note}${rox.map(renderMsg).join("")}</section>`;
+}
+function blocFinal(s){
+  const cle = s.final, val = BROUILLONS[cle] !== undefined ? BROUILLONS[cle] : enregistre(cle), st = statutFinal(cle);
+  return `<section class="pn-s pn-final"><h4 id="final-h">Script final</h4>
+    <p class="final-aide">Le texte qui partira vraiment. Il s'enregistre pour tous ceux qui ont le lien de cette page, et chaque version est gardée.</p>
+    <textarea id="final-txt" data-cle="${cle}" aria-labelledby="final-h" aria-describedby="final-st" rows="9" placeholder="Écrivez ici le texte final, ou partez de l'un des deux textes ci-dessus.">${esc(val)}</textarea>
+    <div class="final-act"><button type="button" class="btn-f pri" data-final="enregistrer">Enregistrer</button><button type="button" class="btn-f" data-final="moi">Partir de ma proposition</button>${(s.rox || []).length ? `<button type="button" class="btn-f" data-final="rox">Partir de la trame de Roxane</button>` : ""}</div>
+    <p class="final-st${st.c ? " " + st.c : ""}" id="final-st" role="status" aria-live="polite">${st.t}</p></section>`;
+}
+
+/* La liste des textes, sous le schéma : chacun ouvre son étape. */
+function textesListe(){
+  const items = new Map();
+  for (const [pk, p] of Object.entries(VERSIONS.tanguy.paths))
+    for (const m of p.moments) for (const s of m.steps){
+      if (!s.final) continue;
+      if (!items.has(s.final)) items.set(s.final, {pk, s, cas:[]});
+      const it = items.get(s.final);
+      if (!it.cas.includes(pk)) it.cas.push(pk);
+    }
+  return [...items.values()];
+}
+function textesItems(){
+  return textesListe().map(({pk, s, cas}) => {
+    const st = modifie(s.final) ? ["mod", "Brouillon"] : enregistre(s.final).trim() ? ["ok", "Écrit"] : finalEtat === "chargement" ? ["", "…"] : ["", "À écrire"];
+    return `<li><button type="button" class="txt-i" data-texte="${s.final}" data-chemin="${pk}">${ico((CANAUX[s.canal] || CANAUX.crm).i)}<span class="t">${esc(s.nf || s.n)}<small>${esc(cas.map(c => chemin("tanguy", c).l).join(" · "))}</small></span><span class="txt-st ${st[0]}">${st[1]}</span></button></li>`;
+  }).join("");
+}
+function textes(){
+  return `<section class="block"><h3>Les textes, un par un</h3><p class="lead">Pour Roxane : chaque SMS, message vocal et script du parcours. Ouvrez-en un pour comparer ma proposition et sa trame, puis écrire le texte final.</p><ul class="txt-list" id="txt-list">${textesItems()}</ul></section>`;
 }
 
 function openPanel(k, focus){
@@ -1829,6 +2099,7 @@ function init(){
   document.getElementById("sources-liste").innerHTML = SOURCES.map((s, i) => `<li id="src-${i + 1}"><span>${esc(s.t)} <span class="fiab">${s.f}</span><br><a href="${s.u}" target="_blank" rel="noopener">${esc(s.u)}</a></span></li>`).join("");
   readHash();
   render();
+  chargerFinals();
 
   document.getElementById("tabs").addEventListener("click", e => {
     const b = e.target.closest(".tab"); if (!b) return;
@@ -1871,6 +2142,13 @@ function init(){
   };
   document.getElementById("vue").addEventListener("click", e => {
     if (clic(e)) return;
+    const tx = e.target.closest("[data-texte]");
+    if (tx){
+      if (state.path !== tx.dataset.chemin){ state.path = tx.dataset.chemin; render(); }
+      const nk = Object.keys(state.noeuds).find(x => state.noeuds[x].s.final === tx.dataset.texte);
+      if (nk) openPanel(nk, true);
+      return;
+    }
     const k = e.target.closest("[data-k]");
     if (k){ state.sel === k.dataset.k ? closePanel() : openPanel(k.dataset.k, e.detail === 0); return; }
     const z = e.target.closest("[data-zoom]");
@@ -1892,17 +2170,30 @@ function init(){
     const p = e.target.closest("[data-path]");
     if (p){ state.path = p.dataset.path; render(); }
   });
-  document.getElementById("panel").addEventListener("click", e => { clic(e); });
+  document.getElementById("panel").addEventListener("click", e => {
+    if (clic(e)) return;
+    const f = e.target.closest("[data-final]");
+    if (f) f.dataset.final === "enregistrer" ? enregistrer() : partir(f.dataset.final);
+  });
+  document.getElementById("panel").addEventListener("input", e => {
+    if (e.target.id !== "final-txt") return;
+    brouillon(e.target.dataset.cle, e.target.value);
+    majFinal(e.target.dataset.cle);
+  });
   document.getElementById("pn-x").addEventListener("click", () => closePanel());
   const pas = d => { const i = state.ordre.indexOf(state.sel); const k = state.ordre[i + d]; if (k) openPanel(k); };
   document.getElementById("pn-prev").addEventListener("click", () => pas(-1));
   document.getElementById("pn-next").addEventListener("click", () => pas(1));
   document.addEventListener("keydown", e => {
     if (document.getElementById("panel").hidden) return;
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey) && e.target.id === "final-txt"){ e.preventDefault(); enregistrer(); return; }
     if (e.key === "Escape") closePanel();
     else if (!e.target.closest("input, textarea") && (e.key === "ArrowRight" || e.key === "ArrowLeft") && e.target.closest("#panel")) pas(e.key === "ArrowRight" ? 1 : -1);
   });
   window.addEventListener("hashchange", () => { readHash(); render(); });
+  window.addEventListener("beforeunload", e => {
+    if (Object.keys(BROUILLONS).some(modifie)){ e.preventDefault(); e.returnValue = ""; }
+  });
 
   requestAnimationFrame(() => document.querySelectorAll(".bar .fill").forEach(f => f.style.width = f.dataset.w + "%"));
 }
