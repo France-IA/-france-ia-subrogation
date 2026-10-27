@@ -383,7 +383,7 @@ details.why[open] .plus::after{content:" −"}
   <div class="top-txt">
     <p class="eyebrow">Parcours de setting · CRMIA · octobre 2026</p>
     <h1>Du formulaire au <span class="nw">rendez-vous</span></h1>
-    <p class="lead">Ce qui tourne aujourd'hui, ce que propose Roxane, et le parcours que je propose, étape par étape. Cliquez sur une étape pour lire son détail et ses messages.</p>
+    <p class="lead">Ce qui tourne aujourd'hui, ce que proposent Roxane et Tanguy, et le parcours que je propose, étape par étape. Cliquez sur une étape pour lire son détail et ses messages.</p>
   </div>
   <div class="thesis" aria-label="Venue au rendez-vous selon que le lead a été joint">
     <p class="thesis-h">Venue au RDV, du 01 au 22/10</p>
@@ -419,6 +419,7 @@ details.why[open] .plus::after{content:" −"}
     <ul>
       <li>Mise à jour du 27/10 (v7) : R1 du calendrier Formation inter de CRMIA du 28/09 au 27/10, en lecture seule. Un créneau libéré est « repris » quand un autre RDV, créé après l'annulation, occupe la même plage chez le même closer.</li>
       <li>Allègement du 27/10 (v8) : à la demande de Tanguy, le mail de confirmation et le SMS de la veille sortent du parcours proposé. Pas de nouvelle donnée.</li>
+      <li>Ajout du 27/10 (v9) : onglet « Proposition de Tanguy », son schéma du jour transcrit tel quel, sans avis ni chiffre ajouté.</li>
       <li>Données : CRMIA en production, en lecture seule, du 01 au 22/10/2026. Les appels Allô n'y sont enregistrés que depuis le 01/10.</li>
       <li>« Joint » : au moins un appel de setteuse décroché et d'au moins 30 secondes avant le RDV. Allô marque « répondu » des appels de 0 à 5 secondes (renvois, répondeurs), d'où le seuil.</li>
       <li>« Venue » : RDV honorés ÷ (honorés + no show). Les annulations sont comptées à part.</li>
@@ -436,7 +437,7 @@ details.why[open] .plus::after{content:" −"}
     <p>La fiabilité est indiquée à côté de chaque source. La plupart des essais portent sur des rendez-vous médicaux : les rendez-vous de vente sont très peu étudiés.</p>
     <ol class="sources" id="sources-liste"></ol>
   </details>
-  <p class="sign">Préparé par ATLAS le 23/10/2026, mis à jour le même jour avec les retours de l'équipe, puis le 27/10 avec les décisions de Tanguy (v7), et allégé le même jour (v8).</p>
+  <p class="sign">Préparé par ATLAS le 23/10/2026, mis à jour le même jour avec les retours de l'équipe, puis le 27/10 avec les décisions de Tanguy (v7), allégé le même jour (v8) et complété de sa proposition (v9).</p>
 </footer>
 
 <script>
@@ -553,7 +554,7 @@ const PRO = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Les trois versions                                                   */
+/* Les quatre versions                                                  */
 /* ------------------------------------------------------------------ */
 const VERSIONS = {
 
@@ -715,6 +716,51 @@ roxane: {
         {t:"J3", sub:"3e appel et clôture", steps:[
           {pour:"non", canal:"sms", qui:"Setteuse", fin:"Injoignable", n:"3e appel, clôture SMS + mail", titre:"3e appel, puis SMS 2 et mail 2 de clôture, « Injoignable »", verdict:"ok", court:"Oui : 3 appels, gardés par l'équipe le 23/10. La clôture gagnerait un lien pour reprendre RDV seul.", msgs:[ROX.sms2, ROX.mail2],
             detail:"<p>Aujourd'hui, 74 % des leads jamais joints n'ont eu qu'1 ou 2 appels : 3 appels, c'est déjà mieux. À revoir fin novembre : 4 des 11 ventes de leads sans RDV sont venues de leads joints au 4e appel ou plus.</p>"},
+        ]},
+      ]},
+  }},
+
+/* ===================== 4. PROPOSITION DE TANGUY ===================== */
+/* Son schéma du 27/10, repris tel quel : aucun texte de message, aucun avis. */
+tanguy: {
+  num:"4", nom:"Proposition de Tanguy", titre:"Ce que propose Tanguy",
+  intro:"Son schéma du 27/10, transcrit tel quel, sans avis de ma part. Il déroule le meilleur des cas, un RDV pris 4 jours avant ; les deux cas où le RDV est pris plus tard sont sous le schéma. Il porte sur les RDV pris par le lead, pas sur les demandes sans RDV, et ne donne pas encore le texte des messages : seule la page, déjà en place, montre le sien.",
+  detailLabel:"À noter",
+  cas:[
+    {k:"15 h 30", ks:"la veille", h:"Dans le pire des cas : RDV pris à 15 h 30 la veille", p:"Idem, mais un seul appel, puis le SMS « confirmez ou on annule »."},
+    {k:"Après 16 h", ks:"la veille, ou le jour même", h:"RDV pris après 16 h la veille, ou le jour même", p:"Des tentatives d'appel, sans vocal ni autre message."},
+  ],
+  paths:{
+    rdv:{
+      resume:[
+        {n:"4 j", l:"avant le RDV : le meilleur des cas, celui du schéma"},
+        {n:"2", l:"appels et un message vocal, avant tout SMS"},
+        {n:"16 h", l:"la veille, si le lead n'a jamais répondu : SMS « confirmez avant 18 h ou on annule »"},
+        {n:"2 h", l:"avant le RDV : SMS de rappel, après le setting ou la confirmation"},
+      ],
+      moments:[
+        {t:"T0", sub:"le lead prend RDV", steps:[
+          {canal:"page", qui:"Formulaire", n:"Page « on va vous appeler »", titre:"Page « Restez disponible, nous allons vous appeler »", court:"Déjà en place depuis le 21/10.", msg:MSG_PAGE_AUJ},
+          {canal:"mail", qui:"Non précisé sur le schéma", n:"Mail programme + « on va vous rappeler »", titre:"Mail programme, avec « on va vous rappeler »", court:"Le mail programme, qui annonce en plus l'appel."},
+          {canal:"agenda", qui:"Agenda Google du closer", n:"Invitation Meet", titre:"Invitation Google Meet", court:"Déjà en place : CRMIA la crée dans l'agenda du closer, et Google l'envoie au lead."},
+        ]},
+        {t:"Les appels", sub:"de la setteuse, avant le SMS de la veille", si:"Il répond ?", oui:"Répond", non:"Ne répond pas", steps:[
+          {canal:"appel", qui:"Setteuse", n:"Appel 1", titre:"Appel 1", court:"Il répond : setting. Il ne répond pas : message vocal."},
+          {pour:"non", canal:"vocal", qui:"Setteuse", n:"Message vocal", titre:"Message vocal", court:"Laissé quand le lead ne répond pas à l'appel 1. Il rappelle : setting. Il ne répond pas : appel 2."},
+          {pour:"non", vers:"joint", si:"Rappelle", sinon:"Ne répond pas"},
+          {pour:"non", canal:"appel", qui:"Setteuse", n:"Appel 2", titre:"Appel 2", court:"Il répond : setting. Il ne répond pas : SMS la veille à 16 h."},
+          {pour:"non", vers:"joint", si:"Répond", sinon:"Ne répond pas"},
+        ]},
+        {t:"Il répond", sub:"à l'appel 1, au vocal ou à l'appel 2", steps:[
+          {pour:"joint", canal:"appel", qui:"Setteuse", n:"Setting", titre:"Setting", court:"Dès que le lead répond : à l'appel 1, en rappelant après le message vocal, ou à l'appel 2. Ensuite, le SMS de rappel 2 h avant."},
+        ]},
+        {t:"J-1 · 16:00 → 18:00", sub:"la veille", steps:[
+          {pour:"non", canal:"sms", qui:"Non précisé sur le schéma", n:"SMS la veille à 16 h", titre:"SMS la veille à 16 h : « confirmez avant 18 h ou on annule »", court:"Pour le lead qui n'a répondu ni à l'appel 1, ni au message vocal, ni à l'appel 2. Il confirme : SMS de confirmation. Sinon, annulation à 18 h."},
+          {pour:"non", canal:"sms", qui:"Non précisé sur le schéma", fin:"RDV annulé", si:"Pas de confirmation", sinon:"Confirme", n:"SMS d'annulation à 18 h + invitation annulée", titre:"18 h, sans confirmation : SMS d'annulation, et invitation annulée", court:"Le lead reçoit un SMS d'annulation, et l'invitation qu'il a reçue par mail est annulée."},
+          {pour:"non", canal:"sms", qui:"Non précisé sur le schéma", n:"SMS de confirmation", titre:"SMS de confirmation", court:"Quand le lead confirme, après le SMS de 16 h. Ensuite, le SMS de rappel 2 h avant."},
+        ]},
+        {t:"T-2 h", sub:"deux heures avant", steps:[
+          {canal:"sms", qui:"Non précisé sur le schéma", n:"SMS de rappel 2 h avant", titre:"SMS de rappel 2 h avant", court:"Pour tout RDV maintenu : après le setting, ou après la confirmation par SMS."},
         ]},
       ]},
   }},
@@ -1225,6 +1271,7 @@ const TABS = [
   {id:"auj", l:"Aujourd'hui"},
   {id:"roxane", l:"Proposition de Roxane", c:"Roxane"},
   {id:"propose", l:"Parcours proposé", c:"Proposé"},
+  {id:"tanguy", l:"Proposition de Tanguy", c:"Tanguy"},
   {id:"comparer", l:"Comparer"},
 ];
 const SANS_PARCOURS = ["comparer", "trancher"];
@@ -1288,9 +1335,10 @@ function layout(vk, pk){
   const moments = VERSIONS[vk].paths[pk].moments;
   const nodes = [], edges = [], segs = [], libres = [];
   const add = n => { n.k = "n" + nodes.length; nodes.push(n); return n.k; };
-  const link = (tails, to, label) => tails.forEach(t => edges.push({from:t.k, to, label: label || t.label}));
+  const link = (tails, to, label) => tails.forEach(t => edges.push({from:t.k, to, label: label || t.label, pres:t.pres}));
   let tails = {main:[{k:add({kind:"depart", col:0, row:1, label:PATHS[pk].depart})}], joint:[], non:[]};
   let split = false, col = 1;
+  const attente = {joint:[], non:[]}; /* liens qui rejoindront la prochaine étape de l'autre branche */
 
   const step = (s, m, c, row, from, label) => {
     const k = add({kind:"step", col:c, row, s, m, label:s.n});
@@ -1302,6 +1350,13 @@ function layout(vk, pk){
     for (const L of ["joint", "non"]){
       let c = c0;
       for (const s of m.steps.filter(x => x.pour === L)){
+        if (s.vers){
+          /* Rejoindre l'autre branche : sa prochaine étape recevra ce lien, et cette branche continue
+             après une colonne laissée libre pour les deux étiquettes. */
+          attente[s.vers].push(...tails[L].map(t => ({k:t.k, label:s.si, pres:true})));
+          tails[L] = tails[L].map(t => ({k:t.k, label:s.sinon}));
+          c++; continue;
+        }
         if (s.fin && s.sinon){
           /* Sortie de branche : l'étape part sur une rangée à part, la branche continue. */
           const r = L === "non" ? 3 : -1;
@@ -1310,7 +1365,8 @@ function layout(vk, pk){
           tails[L] = tails[L].map(t => ({k:t.k, label:s.sinon}));
           c += 3; continue;
         }
-        const k = step(s, m, c, L === "joint" ? 0 : 2, tails[L]);
+        const from = attente[L].length ? [...tails[L].map(t => ({...t, pres:true})), ...attente[L].splice(0)] : tails[L];
+        const k = step(s, m, c, L === "joint" ? 0 : 2, from);
         c++;
         if (s.fin){ edges.push({from:k, to:add({kind:"fin", col:c, row:L === "joint" ? 0 : 2, label:s.fin})}); c++; tails[L] = []; }
         else if (s.goto){ edges.push({from:k, to:add({kind:"suite", col:c, row:L === "joint" ? 0 : 2, label:`Suite : parcours « ${PATHS[s.goto].l} »`, goto:s.goto})}); c++; tails[L] = []; }
@@ -1342,7 +1398,7 @@ function layout(vk, pk){
       if (aLane){
         const k = add({kind:"si", col:c++, row:1, label:m.si || "Le lead décroche ?"});
         link(tails.main, k);
-        tails = {main:[], joint:[{k, label:"Oui"}], non:[{k, label:"Non"}]};
+        tails = {main:[], joint:[{k, label:m.oui || "Oui"}], non:[{k, label:m.non || "Non"}]};
         split = true;
         c = lanes(m, c);
       }
@@ -1364,12 +1420,16 @@ function nodePos(n, L){
   return {x:G.padX + n.col * G.colW, y:G.top + (n.row - L.rmin) * G.rowH};
 }
 
-function edgePath(a, b, na, nb){
+function edgePath(a, b, na, nb, pres){
   const h = G.tile / 2;
   const x1 = a.x + G.colW / 2 + h, y1 = a.y + h;
   const x2 = b.x + G.colW / 2 - h - 4, y2 = b.y + h;
   if (y1 === y2) return {d:`M${x1} ${y1}H${x2}`, lx:(x1 + x2) / 2, ly:y1};
   const span = x2 - x1, bend = Math.min(span, 84), droit = span - bend;
+  if (pres){
+    /* Plusieurs liens rejoignent la même étape : chacun monte aussitôt, et son étiquette reste près de sa source. */
+    return {d:`M${x1} ${y1}C${x1 + bend / 2} ${y1} ${x1 + bend / 2} ${y2} ${x1 + bend} ${y2}H${x2}`, lx:x1 + bend / 2, ly:(y1 + y2) / 2};
+  }
   if ((nb.row === 3 || nb.row === -1) && na.kind === "step" && na.row !== 1){
     /* Sortie de branche : on file sur la branche, et l'on descend près de la sortie, pour que deux sorties voisines ne se croisent pas. */
     return {d:`M${x1} ${y1}H${x2 - bend}C${x2 - bend / 2} ${y1} ${x2 - bend / 2} ${y2} ${x2} ${y2}`, lx:x2 - bend / 2, ly:(y1 + y2) / 2};
@@ -1419,7 +1479,7 @@ function renderFlow(vk){
   let paths = "", labels = "";
   for (const e of L.edges){
     const na = byK[e.from], nb = byK[e.to];
-    const g = edgePath(nodePos(na, L), nodePos(nb, L), na, nb);
+    const g = edgePath(nodePos(na, L), nodePos(nb, L), na, nb, e.pres);
     const faible = nb.kind === "step" && (nb.s.ghost || nb.s.tag === "del");
     paths += `<path d="${g.d}" class="${faible ? "faible" : ""}" marker-end="url(#fl)"/>`;
     if (e.label) labels += `<span class="el" style="left:${g.lx}px;top:${g.ly}px">${esc(e.label)}</span>`;
@@ -1456,8 +1516,8 @@ function legend(vk){
   return `<div class="legend">${can}${extra ? `<span class="lg-sep"></span>${extra}` : ""}</div>`;
 }
 
-function toolbar(){
-  const seg = Object.entries(PATHS).map(([k,p]) => `<button type="button" data-path="${k}" aria-pressed="${state.path === k}">${p.l}<small>${p.s}</small></button>`).join("");
+function toolbar(vk){
+  const seg = Object.entries(PATHS).filter(([k]) => VERSIONS[vk].paths[k]).map(([k,p]) => `<button type="button" data-path="${k}" aria-pressed="${state.path === k}">${p.l}<small>${p.s}</small></button>`).join("");
   return `<div class="toolbar">
     <div class="seg" role="group" aria-label="Parcours">${seg}</div>
     <div class="zoom" role="group" aria-label="Zoom du schéma">
@@ -1468,12 +1528,13 @@ function toolbar(){
 
 function renderVersion(vk){
   const v = VERSIONS[vk];
+  if (!v.paths[state.path]) state.path = "rdv";
   const p = v.paths[state.path];
   const head = `<div class="v-head"><h2>${v.titre}</h2><p>${v.intro}</p></div>`;
   const stats = `<dl class="stats">${p.resume.map(r => `<div><dt>${r.n}</dt><dd>${r.l}</dd></div>`).join("")}</dl>`;
   const schema = renderFlow(vk); /* fixe le zoom avant d'afficher sa valeur */
-  const flow = head + toolbar() + stats + legend(vk) + schema;
-  return vk === "propose" ? flow + principes() + extras() : flow;
+  const flow = head + toolbar(vk) + stats + legend(vk) + schema;
+  return vk === "propose" ? flow + principes() + extras() : flow + autresCas(v);
 }
 
 /* ------------------------------------------------------------------ */
@@ -1537,6 +1598,12 @@ function principes(){
     return `<div class="card principle"><div class="k">${pr.k}</div><p class="ks">${pr.ks}</p><h4>${pr.h}</h4><p>${pr.p}</p>${t.btn}${t.panel}</div>`;
   }).join("");
   return `<section class="block"><h3>Quatre principes</h3><p class="lead">Tout le parcours en découle. Les chiffres viennent de CRMIA (octobre) ; les numéros entre crochets renvoient aux sources, en bas de page.</p><div class="grid4">${cards}</div></section>`;
+}
+
+function autresCas(v){
+  if (!v.cas) return "";
+  const cards = v.cas.map(c => `<div class="card principle"><div class="k">${c.k}</div><p class="ks">${c.ks}</p><h4>${c.h}</h4><p>${c.p}</p></div>`).join("");
+  return `<section class="block"><h3>Quand le RDV est pris plus tard</h3><p class="lead">Le schéma déroule le meilleur des cas, un RDV pris 4 jours avant. Tanguy prévoit deux autres cas.</p><div class="grid2">${cards}</div></section>`;
 }
 
 function effortPill(c, l){ return `<span class="effort ${c}">${l}</span>`; }
