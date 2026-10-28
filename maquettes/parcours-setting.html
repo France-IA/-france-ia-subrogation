@@ -100,16 +100,6 @@ h1{font-weight:800; font-size:clamp(34px,5vw,54px); line-height:1.04; letter-spa
 .zoom .fit{font-size:13px; font-weight:500; padding:0 12px; border-left:1px solid var(--line); border-radius:0 99px 99px 0}
 #zoom-v{font:400 11.5px/1 var(--f-mono); color:var(--muted); min-width:44px; text-align:center}
 
-.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-top:0; margin-bottom:18px}
-.stats div{border:1px solid var(--line); border-radius:14px; padding:14px 16px}
-.stats dt{font:800 24px/1.1 var(--f-display); letter-spacing:-.02em}
-.stats dd{margin:4px 0 0; font-size:13px; line-height:1.4; color:var(--muted)}
-
-.legend{display:flex; flex-wrap:wrap; align-items:center; gap:6px 16px; margin-bottom:12px; font-size:12.5px; color:var(--muted)}
-.lg-i{display:inline-flex; align-items:center; gap:6px}
-.lg-i svg{width:14px; height:14px; fill:none; stroke:var(--ink2); stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
-.lg-sep{width:1px; height:14px; background:var(--line2)}
-
 /* Le schéma */
 .flow{position:relative; border:1px solid var(--line); border-radius:var(--r); overflow:auto; cursor:grab; background-color:var(--bg);
   background-image:radial-gradient(circle, #d9d9e2 1px, transparent 1.2px); background-size:20px 20px; overscroll-behavior-x:contain}
@@ -143,7 +133,6 @@ button.node[aria-pressed="true"] .tile svg{stroke:var(--blue)}
 .node.bout .tile{background:var(--soft); border-color:var(--line); box-shadow:none}
 .node.bout .tile svg{stroke:var(--muted)}
 .node.bout .nl{color:var(--muted)}
-.lg-bout{width:14px; height:14px; border-radius:4px; background:var(--soft); border:1px solid var(--line2)}
 .pill-bout{background:var(--soft)}
 .node.depart .tile{background:var(--ink); border-color:var(--ink)}
 .node.depart .tile svg{stroke:#fff; fill:#fff}
@@ -168,7 +157,7 @@ button.node[aria-pressed="true"] .tile svg{stroke:var(--blue)}
 .tg-new{background:var(--blue); border-color:var(--blue); color:#fff}
 .tg-mod{border-color:var(--blue); color:var(--blue)}
 .tg-del{text-decoration:line-through}
-.legend .vd,.legend .tg,.libre .vd,.libre .tg{position:static; transform:none}
+.libre .vd,.libre .tg{position:static; transform:none}
 
 .flow-hint{font-size:12.5px; color:var(--faint); margin:10px 2px 0}
 .libres{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:16px}
@@ -330,8 +319,6 @@ details.why[open] .plus::after{content:" −"}
   .seg button{flex:1; justify-content:center; padding:8px 10px; font-size:13px; flex-direction:column; align-items:center; gap:2px; white-space:normal; text-align:center}
   .seg.n4{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border-radius:18px}
   .seg.n4 button{align-items:center; border-radius:14px}
-  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .stats dt{font-size:21px}
   .pn-b{padding:18px 18px 28px}
   .term::after{position:fixed; left:16px; right:16px; bottom:16px; top:auto; transform:none; width:auto; max-width:none; font-size:13.5px}
 }
@@ -619,12 +606,6 @@ auj: {
   detailLabel:"Chiffres",
   paths:{
     rdv:{
-      resume:[
-        {n:"2 h 40", l:"délai médian du 1er appel, pour un RDV pris en semaine entre 9 h et 18 h"},
-        {n:"2 sur 3", l:`leads ${JOINT} avant leur RDV`},
-        {n:"4", l:"messages automatiques avant le RDV, quel que soit le lead"},
-        {n:"13 %", l:"des no show reprennent un RDV dans les 48 h"},
-      ],
       moments:[
         {t:"T0", sub:"le lead choisit son créneau", note:["Au plus tôt le lendemain", "Demande après 18 h : le lendemain dès 14 h", "La nuit, avant 8 h : le jour même dès 14 h", "Jusqu'à 4 jours"], steps:[
           {canal:"page", qui:"Formulaire", n:"Page « on va vous appeler »", titre:"Page « Restez disponible, nous allons vous appeler »", court:"Annonce l'appel de confirmation, rappelle de regarder les indésirables, montre la vidéo de présentation.", msg:MSG_PAGE_AUJ,
@@ -669,12 +650,6 @@ auj: {
         ]},
       ]},
     mql:{
-      resume:[
-        {n:"3 h 20", l:"délai médian du 1er appel, pour une demande arrivée en semaine entre 9 h et 18 h"},
-        {n:"0", l:"appel en moins de 5 minutes sur ces demandes"},
-        {n:"74 %", l:"des leads jamais joints n'ont eu qu'1 ou 2 appels"},
-        {n:"0", l:"message après un appel manqué"},
-      ],
       moments:[
         {t:"T0", sub:"demande de programme", steps:[
           {canal:"crm", qui:"CRMIA et Slack", n:"Attribution à une setteuse", titre:"Attribution par rotation", court:"Le contact arrive chez une setteuse dans « Intéressé à appeler », avec une alerte #new-mql-à-appeler."},
@@ -705,13 +680,6 @@ tanguy: {
   paths:{
     rdv:{
       l:"Avant 16 h la veille", s:"RDV pris par le lead",
-      resume:[
-        {n:"91 %", l:"des RDV pris par les leads depuis le 01/10 l'ont été au plus tard 16 h la veille (665 sur 730)"},
-        {n:"1 à 3", l:"appels avant 16 h la veille : 3 si le RDV a été pris plus de 24 h avant, 1 seul sinon"},
-        {n:"16 h", l:"la veille, sans setting : SMS de la setteuse, « répondez OUI ou NON »"},
-        {n:"18 h", l:"sans réponse : RDV annulé, créneau rouvert"},
-        {n:"2 h", l:"avant le RDV : SMS de rappel avec le lien, pour tout RDV confirmé"},
-      ],
       moments:[
         {...TAN_T0, sub:"au plus tard 16 h la veille"},
         {t:"Les appels", sub:"avant 16 h la veille", si:"Il répond ?", oui:"Répond ou rappelle", non:"Ne répond pas", steps:[
@@ -739,12 +707,6 @@ tanguy: {
       ]},
     tard:{
       l:"Après 16 h la veille", s:"Ou le jour même", depart:"Le lead prend RDV",
-      resume:[
-        {n:"9 %", l:"des RDV pris par les leads depuis le 01/10 : après 16 h la veille, nuit comprise (65 sur 730)"},
-        {n:"1", l:"SMS dès la réservation : le RDV est confirmé, avec le lien"},
-        {n:"1", l:"appel si la setteuse a le temps, sans message vocal"},
-        {n:"2 h", l:"avant le RDV : SMS de rappel avec le lien"},
-      ],
       moments:[
         {t:"T0", sub:"après 16 h la veille, ou le jour même", steps:[
           {canal:"page", qui:"Formulaire", n:"Page « RDV confirmé »", titre:"Page « Votre rendez-vous est confirmé »", court:"La page actuelle, sans l'annonce de l'appel.", msg:TAN.pageConfirm, chips:["Petit développement : la page dépend de l'heure du RDV"]},
@@ -763,12 +725,6 @@ tanguy: {
       ]},
     mql:{
       l:"Sans RDV", s:"Le lead reste MQL",
-      resume:[
-        {n:"94 %", l:"des MQL du 01 au 19/10 ont vu le calendrier et sont repartis sans réserver (911 sur 969)"},
-        {n:"30 min", l:"après la demande, toujours sans RDV : SMS « je vais vous appeler », de 9 h à 20 h"},
-        {n:"3", l:"appels au plus : un vocal au 1er, le 2e une à deux heures après, le 3e le lendemain"},
-        {n:"1", l:"mail de clôture avec le lien pour revenir, puis « Injoignable »"},
-      ],
       moments:[
         {t:"T0", sub:"demande de programme", steps:[
           {canal:"crm", qui:"CRMIA et Slack", n:"Attribution à une setteuse", titre:"Attribution par rotation", court:"Comme aujourd'hui : la setteuse est connue dès le formulaire, son prénom signe tout ce qui suit."},
@@ -1061,16 +1017,6 @@ function renderFlow(vk){
   </div>`;
 }
 
-function legend(vk){
-  const can = [["appel","Appel"],["sms","SMS"],["mail","Mail"],["crm","CRMIA"],["page","Page web"],["agenda","Agenda"],["visio","Visio"]]
-    .map(([k,l]) => `<span class="lg-i">${ico(CANAUX[k].i)}${l}</span>`).join("");
-  let extra = "";
-  if (vk === "roxane") extra = Object.entries(VERDICTS).filter(([k]) => k !== "no").map(([k,v]) => `<span class="lg-i"><span class="vd vd-${k}">${v.g}</span>${v.l}</span>`).join("");
-  if (vk === "propose") extra = ["new", "mod", "del"].map(k => `<span class="lg-i"><span class="tg tg-${k}">${TAGS[k]}</span></span>`).join("") + `<span class="lg-i muted">Sans marque : inchangé</span>`;
-  const bout = `<span class="lg-i"><span class="lg-bout"></span>Fin de la branche</span>`;
-  return `<div class="legend">${can}${bout}${extra ? `<span class="lg-sep"></span>${extra}` : ""}</div>`;
-}
-
 function toolbar(vk){
   const v = VERSIONS[vk];
   const seg = Object.keys(v.paths).map(k => {
@@ -1088,11 +1034,9 @@ function toolbar(vk){
 function renderVersion(vk){
   const v = VERSIONS[vk];
   if (!v.paths[state.path]) state.path = "rdv";
-  const p = v.paths[state.path];
   const head = v.intro ? `<div class="v-head"><h2>${v.titre}</h2><p>${v.intro}</p></div>` : "";
-  const stats = `<dl class="stats">${p.resume.map(r => `<div><dt>${r.n}</dt><dd>${r.l}</dd></div>`).join("")}</dl>`;
   const schema = renderFlow(vk); /* fixe le zoom avant d'afficher sa valeur */
-  const flow = head + toolbar(vk) + stats + legend(vk) + schema;
+  const flow = head + toolbar(vk) + schema;
   return vk === "tanguy" ? flow + textes() : flow;
 }
 
