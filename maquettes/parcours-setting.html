@@ -468,14 +468,14 @@ const TAN = {
     more:"196 envois en octobre ; il a fait revenir 2 leads sans appel. Roxane ne prévoyait rien après un no show : il continue de partir."},
   smsMql: {type:"sms", de:"Expéditeur « FranceIA » · envoyé par CRMIA, signé de la setteuse", corps:"Bonjour {prénom}, c'est {prénom setteuse} de France IA. Vous venez de recevoir le programme par mail (pensez à vérifier vos spams). Je vais vous appeler {aujourd'hui, demain ou lundi} pour répondre à vos questions et vous orienter vers la formation la plus adaptée.",
     why:"Ce que demande Tanguy (27/10) : un SMS « on va vous appeler », même quand le lead ne prend pas RDV. C'est le SMS de la réservation, sans le rendez-vous.",
-    more:"Il ne peut pas partir avec le mail programme : à ce moment-là, on ne sait pas encore si le lead va réserver (le mail part 26 secondes avant la réservation, en médiane). Ma proposition : 30 minutes après la demande, si aucun RDV n'a été pris, entre 9 h et 20 h ; une demande du soir ou de la nuit le reçoit à 9 h. Le jour annoncé suit les jours où les setteuses appellent : « lundi » pour une demande du week-end. Le lead qui a choisi un créneau sans finir a déjà sa relance « votre RDV n'est pas encore confirmé » (prévue le 09/10, aucun envoi vu en octobre) : à trancher, l'une ou l'autre."},
+    more:"Tanguy, 28/10 : 2 minutes après la demande, si aucun RDV n'a été pris, entre 9 h et 20 h ; une demande du soir ou de la nuit le reçoit à 9 h. Le jour annoncé suit les jours où les setteuses appellent : « lundi » pour une demande du week-end. Depuis le 01/10, sur 1 005 RDV pris par le lead lui-même, 828 l'ont été dans les 2 minutes qui suivent sa demande (52 secondes en médiane). 163 l'ont été entre 2 et 30 minutes : ces leads recevront ce SMS, puis celui de la réservation. Il remplace la relance « votre RDV n'est pas encore confirmé », écrite le 09/10 mais jamais mise en production."},
   vocalMql: {type:"script", label:"Message vocal, s'il ne répond pas", corps:"« Bonjour {prénom}, c'est {prénom setteuse}, de France IA. Je vous appelle au sujet du programme que vous avez demandé : quelques minutes pour répondre à vos questions et vous orienter vers la formation la plus adaptée. Rappelez-moi à ce numéro dès que vous avez un instant. Bonne journée ! »",
     why:"Le même vocal que pour un RDV, sans le rendez-vous : qui appelle, pourquoi, et rappelez-moi.",
     more:"Il reprend le vocal 1 de Roxane, raccourci, avec les mots du SMS que le lead a reçu : répondre à ses questions, l'orienter. Un seul vocal, au 1er appel : les suivants partent sans message."},
   delai: {type:"page", vu:"Ce que voit le closer, dans « Mes disponibilités »", titre:"Délai avant un nouveau rendez-vous",
     corps:"Un lead peut réserver un de vos créneaux jusqu'à [3 h ▾] avant son début.\n(choix : 1 h, 2 h, 3 h, 6 h, 12 h ou 24 h)\n\nPlus ce délai est court, plus vos créneaux libérés à la dernière minute ont de chances d'être repris. Un rendez-vous annulé le matin pour l'après-midi ne se remplit que si un lead peut encore le réserver.",
     why:"Ce que demande Tanguy (27/10) : chaque closer dit combien de temps avant il veut être prévenu d'un nouveau RDV, et le texte d'aide dit pourquoi un délai court est le meilleur choix.",
-    more:"Ma proposition : 3 h par défaut, le délai retenu par Tanguy le 27/10 pour la réservation du jour même. CRMIA a déjà un préavis de réservation, réglé par calendrier : ce réglage le précise closer par closer, à côté de la « Durée des R1 » ajoutée le 26/10."},
+    more:"3 h par défaut, au choix de 1 à 24 h : validé par Tanguy le 28/10. C'est le délai qu'il avait retenu le 27/10 pour la réservation du jour même. CRMIA a déjà un préavis de réservation, réglé par calendrier : ce réglage le précise closer par closer, à côté de la « Durée des R1 » ajoutée le 26/10."},
 };
 
 /* Le début du parcours, commun aux cas où le lead prend RDV. */
@@ -591,8 +591,8 @@ tanguy: {
           {canal:"crm", qui:"CRMIA et Slack", n:"Attribution à une setteuse", titre:"Attribution par rotation", court:"Comme aujourd'hui : la setteuse est connue dès le formulaire, son prénom signe tout ce qui suit."},
           TAN_T0.steps[1], /* mail programme, le même pour tous */
         ]},
-        {t:"T+30 min", sub:"toujours sans RDV", steps:[
-          {canal:"sms", qui:"CRMIA, automatique, signé de la setteuse", n:"SMS « je vais vous appeler »", titre:"SMS « je vais vous appeler », même sans RDV", court:"Ce que demande Tanguy (27/10). Il part 30 minutes après la demande si le lead n'a pas pris RDV, entre 9 h et 20 h ; une demande de la nuit le reçoit à 9 h.", msg:TAN.smsMql, chips:["Développement : une règle SMS « toujours pas de RDV 30 minutes après la demande »"],
+        {t:"T+2 min", sub:"toujours sans RDV", steps:[
+          {canal:"sms", qui:"CRMIA, automatique, signé de la setteuse", n:"SMS « je vais vous appeler »", titre:"SMS « je vais vous appeler », même sans RDV", court:"Ce que demande Tanguy (27/10). Il part 2 minutes après la demande (Tanguy, 28/10) si le lead n'a pas pris RDV, entre 9 h et 20 h ; une demande de la nuit le reçoit à 9 h.", msg:TAN.smsMql, chips:["Développement : une règle SMS « toujours pas de RDV 2 minutes après la demande »"],
             final:"sms-mql", nf:"SMS « je vais vous appeler », sans RDV", rox:[ROX.mailA], roxNote:"Le plus proche chez Roxane : son mail A, qui annonçait l'appel."},
         ]},
         {t:"Les appels", sub:"le jour même, puis le lendemain", si:"Il répond ?", oui:"Répond ou rappelle", non:"Ne répond pas", steps:[
