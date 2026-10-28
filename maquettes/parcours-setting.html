@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Parcours de setting</title>
-<meta name="description" content="Le parcours d'un lead, du formulaire au rendez-vous : la proposition de Tanguy, et ce qui existe aujourd'hui dans CRMIA, avec les messages et leurs justifications.">
+<meta name="description" content="Le parcours de setting proposé par Tanguy, du formulaire au rendez-vous, avec ses messages et leurs scripts finaux.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fragment+Mono&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
   color-scheme:light;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%; scroll-padding-top:64px}
+html{-webkit-text-size-adjust:100%; scroll-padding-top:16px}
 body{margin:0; background:var(--bg); color:var(--ink); font:400 15.5px/1.6 var(--f-body); -webkit-font-smoothing:antialiased}
 h1,h2,h3,h4{font-family:var(--f-display); color:var(--ink); margin:0; letter-spacing:-.01em}
 p{margin:0 0 10px}
@@ -34,35 +34,8 @@ button{font:inherit; color:inherit}
 .wrap{max-width:1180px; margin:0 auto; padding:0 24px}
 .muted{color:var(--muted)}
 
-/* En-tête */
-.top{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:56px; align-items:end; padding-top:56px; padding-bottom:40px}
-.eyebrow{font:400 11.5px/1.4 var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:18px; display:flex; align-items:center; gap:10px}
-.eyebrow::before{content:""; width:8px; height:8px; border-radius:2px; background:var(--blue)}
-.nw{white-space:nowrap}
-h1{font-weight:800; font-size:clamp(34px,5vw,54px); line-height:1.04; letter-spacing:-.025em; margin-bottom:18px}
-.top .lead{font-size:17px; color:var(--muted); max-width:58ch; margin:0}
-.thesis{border:1px solid var(--line); border-radius:var(--r); padding:22px 22px 18px; background:var(--bg)}
-.thesis-h{font:400 11px/1.4 var(--f-mono); letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-bottom:14px}
-.bar{display:grid; grid-template-columns:1fr auto; align-items:baseline; gap:4px 12px; margin-bottom:14px}
-.bar .lbl{font-size:14px; color:var(--ink2)}
-.bar .val{font:800 26px/1 var(--f-display); letter-spacing:-.02em}
-.bar.n .val{color:var(--muted)}
-.track{grid-column:1/-1; height:8px; border-radius:99px; background:var(--soft2); overflow:hidden}
-.fill{height:100%; width:0; border-radius:99px; background:var(--blue); transition:width .9s cubic-bezier(.2,.7,.2,1)}
-.bar.n .fill{background:#a3a3ae}
-.thesis .note{font-size:12.5px; color:var(--muted); margin:2px 0 0}
-.coro{display:grid; grid-template-columns:auto minmax(0,1fr); gap:12px; align-items:baseline; border-top:1px solid var(--line); padding-top:14px; margin:2px 0 12px}
-.coro .val{font:800 26px/1 var(--f-display); letter-spacing:-.02em}
-.coro p{font-size:14px; color:var(--ink2); margin:0}
-
-/* Onglets */
-.tabs-bar{position:sticky; top:0; z-index:40; background:rgba(255,255,255,.94); backdrop-filter:saturate(1.4) blur(10px); -webkit-backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--line)}
-.tabs{display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; margin:0 -8px}
-.tabs::-webkit-scrollbar{display:none}
-.tab{border:0; background:none; padding:15px 10px 13px; font-size:14.5px; font-weight:500; color:var(--muted); border-bottom:2px solid transparent; cursor:pointer; white-space:nowrap}
-.tab:hover{color:var(--ink)}
-.tab[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--blue)}
-.tab .sm{display:none}
+/* Titre de la page, pour les lecteurs d'écran seulement */
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
 
 /* Contenu */
 .vue{max-width:none; padding-top:40px; padding-bottom:24px; outline:none}
@@ -283,9 +256,6 @@ details.why[open] .plus::after{content:" −"}
 .mini tr.hl td{background:var(--blue-50); font-weight:600}
 .mini tr.sub td{font:400 10.5px/1.3 var(--f-mono); text-transform:uppercase; letter-spacing:.05em; color:var(--muted); padding-top:14px; text-align:left}
 .ord{margin:0 0 10px; padding-left:20px}
-.term{border-bottom:1px dotted currentColor; cursor:help; position:relative}
-.term::after{content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 8px); transform:translateX(-50%); width:max-content; max-width:min(300px,80vw); background:var(--ink); color:#fff; font:400 12.5px/1.45 var(--f-body); padding:8px 11px; border-radius:9px; opacity:0; pointer-events:none; transition:opacity .15s; z-index:70; white-space:normal; text-align:left; letter-spacing:0; text-transform:none}
-.term:hover::after,.term:focus::after{opacity:1}
 .ref{font:400 10.5px/1 var(--f-mono); color:var(--blue); vertical-align:super; padding:0 1px}
 .ref a{color:inherit; text-decoration:none}
 .ref a:hover{text-decoration:underline}
@@ -302,17 +272,12 @@ details.why[open] .plus::after{content:" −"}
   .vue > .flow-wrap{max-width:1132px}
 }
 @media (max-width:980px){
-  .top{grid-template-columns:1fr; gap:28px; padding-top:40px}
   .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}
   .grid3{grid-template-columns:1fr}
 }
 @media (max-width:640px){
   .wrap{padding:0 16px}
   body{font-size:15px}
-  .tab .lg{display:none}
-  .tab .sm{display:inline}
-  .tabs{gap:0}
-  .tab{padding:14px 7px 12px; font-size:13.5px}
   .vue{padding-top:28px}
   .grid2,.grid4{grid-template-columns:1fr}
   .seg{width:100%}
@@ -320,7 +285,6 @@ details.why[open] .plus::after{content:" −"}
   .seg.n4{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border-radius:18px}
   .seg.n4 button{align-items:center; border-radius:14px}
   .pn-b{padding:18px 18px 28px}
-  .term::after{position:fixed; left:16px; right:16px; bottom:16px; top:auto; transform:none; width:auto; max-width:none; font-size:13.5px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition:none !important; animation:none !important}
@@ -329,26 +293,9 @@ details.why[open] .plus::after{content:" −"}
 </style>
 </head>
 <body>
-<header class="wrap top">
-  <div class="top-txt">
-    <p class="eyebrow">Parcours de setting · CRMIA · octobre 2026</p>
-    <h1>Du formulaire au <span class="nw">rendez-vous</span></h1>
-    <p class="lead">Le parcours que propose Tanguy, et ce qui tourne aujourd'hui, étape par étape. Cliquez sur une étape pour lire son détail et ses messages : Roxane y écrit les textes finaux.</p>
-  </div>
-  <div class="thesis" aria-label="No show au R1 selon que le lead a été setté avant le RDV">
-    <p class="thesis-h">No show au R1, du 12 au 26/10</p>
-    <div class="bar j"><span class="lbl">Lead <span class="term" tabindex="0" data-tip="La setteuse l'a passé en « Setté - RDV pris quali » avant l'heure du RDV, d'après l'historique des étapes de CRMIA. 273 RDV sur 419.">setté</span> avant le RDV</span><span class="val">19 %</span><div class="track"><div class="fill" data-w="19"></div></div></div>
-    <div class="bar n"><span class="lbl">Lead jamais setté</span><span class="val">69 %</span><div class="track"><div class="fill" data-w="69"></div></div></div>
-    <div class="coro"><span class="val">66 %</span><p>des <span class="term" tabindex="0" data-tip="101 no show sur 152. Les leads jamais settés font 146 des 419 RDV honorés ou manqués.">no show</span> viennent de leads jamais settés, qui ne font que 35 % des RDV.</p></div>
-    <p class="note">R1 pris par les leads eux-mêmes ; les annulés sont à part. <span class="term" tabindex="0" data-tip="Les leads qui acceptent le setting sont souvent aussi les plus motivés : une partie de l'écart tiendrait sans lui. Les essais publiés confirment pourtant l'effet propre d'un contact humain.">Corrélation, pas preuve</span>.</p>
-  </div>
-</header>
+<h1 class="sr-only">Parcours de setting</h1>
 
-<nav class="tabs-bar" aria-label="Parties">
-  <div class="wrap"><div class="tabs" id="tabs" role="tablist"></div></div>
-</nav>
-
-<main class="wrap vue" id="vue" role="tabpanel" tabindex="-1"></main>
+<main class="wrap vue" id="vue" tabindex="-1"></main>
 
 <aside class="panel" id="panel" aria-labelledby="pn-titre" hidden>
   <div class="pn-h">
@@ -395,9 +342,6 @@ const SOURCES = [
 const SRC_INDEX = Object.fromEntries(SOURCES.map((s, i) => [s.k, i + 1]));
 /* Une source : lien direct vers le document (la liste des sources a quitté la page le 28/10). */
 const R = (...keys) => `<span class="ref">[${keys.map((k, i) => { const s = SOURCES[SRC_INDEX[k] - 1]; return `<a href="${s.u}" target="_blank" rel="noopener" title="${(s.t + " · " + s.f).replace(/"/g, "&quot;")}">source${keys.length > 1 ? " " + (i + 1) : ""}</a>`; }).join(", ")}]</span>`;
-const T = (mot, tip) => `<span class="term" tabindex="0" data-tip="${tip}">${mot}</span>`;
-const JOINT = T("joint", "Au moins un appel de setteuse décroché et d'au moins 30 secondes avant le RDV.");
-const VENUE = T("vient", "Honorés ÷ (honorés + no show). Les RDV annulés sont comptés à part.");
 
 /* ------------------------------------------------------------------ */
 /* Messages réutilisés                                                  */
@@ -405,20 +349,8 @@ const VENUE = T("vient", "Honorés ÷ (honorés + no show). Les RDV annulés son
 const MSG_PROGRAMME_AUJ = {type:"mail", de:"{prénom setteuse}, depuis sa boîte Gmail", objet:"Votre programme France IA",
   corps:"Bonjour {prénom},\n\nMerci pour votre intérêt pour les formations France IA. Vous pourrez [[retrouver le programme ici]].\n\nVous pouvez répondre directement à cet email si vous avez une question.\n\nÀ bientôt,\n{prénom setteuse}\nFrance IA"};
 
-const MSG_CONFIRM_AUJ = {type:"mail", de:"{prénom closer}, depuis sa boîte Gmail", objet:"Rappel pour votre rendez-vous avec France IA",
-  corps:"Bonjour {prénom},\n\nJe vous écris pour vous confirmer notre rendez-vous le {date} à {heure}. Nous ferons le point en visio sur vos objectifs et votre usage actuel de l'IA pour comprendre quel accompagnement serait le plus adapté.\n\nVoilà à nouveau le lien Google Meet : {lien Meet}\n\n((financement CPF|Si vous envisagez d'utiliser votre CPF, vous devez installer et paramétrer l'application mobile Identité Numérique de La Poste. C'est un prérequis. Voilà le lien de téléchargement :\nApp Store : {lien App Store}\nPlay Store : {lien Play Store}))\n\nUn empêchement ? Décalez votre rendez-vous ici : {lien Décaler}\n\nÀ très vite,\n{prénom closer} - France IA"};
-
-const MSG_PAGE_AUJ = {type:"page", titre:"Restez disponible. Nous allons vous appeler pour confirmer le rendez-vous.",
-  corps:"Cet appel sert à préparer votre visioconférence : nous faisons le point sur votre projet, pour que l'échange vous soit vraiment utile.\n\nVotre invitation vous est envoyée par e-mail, avec le lien de la visioconférence. Pensez à vérifier vos courriers indésirables.\n\n(au-dessus du titre : la date du RDV ; en dessous : la vidéo de présentation)"};
-
 const MSG_NOSHOW_AUJ = {type:"mail", de:"{prénom closer}, depuis sa boîte Gmail", objet:"Votre rendez-vous France IA",
   corps:"Bonjour {prénom},\n\nNous avions rendez-vous {aujourd'hui ou date} pour échanger sur votre projet de formation en IA, mais nous n'avons pas réussi à vous avoir.\n\nSi vous souhaitez toujours avancer sur votre projet, vous pouvez choisir directement un nouveau créneau ici : {lien de reprise}\n\nSi votre projet ou vos disponibilités ont changé, aucun souci : vous pouvez simplement nous répondre à cet email pour nous le signaler.\n\nÀ bientôt,\n{prénom closer} - France IA"};
-
-const MSG_SMS_VEILLE_AUJ = {type:"sms", de:"Expéditeur « FranceIA » · réponse impossible",
-  corps:"Bonjour {{prenom}},\n\nPetit rappel pour votre échange avec {{prenom_closer}} de France IA prévu demain à {{heure}} en visio.\n\nTout le nécessaire vous a été envoyé par mail.\n\n((financement CPF|Si vous envisagez un financement CPF, préparez votre Identité Numérique La Poste avant le RDV : elle sera nécessaire à votre demande.\n\nTuto : {{lien_tuto}}))\n\nA demain,\nL'équipe France IA"};
-
-const MSG_SMS_8H_AUJ = {type:"sms", de:"Expéditeur « FranceIA » · signé par la setteuse",
-  corps:"Bonjour {{prenom}},\n\nC'est {{prenom_setter}} de France IA, j'espère que vous allez bien !\n\nJe tenais à vous souhaiter un excellent rendez-vous en visio avec {{prenom_closer}} à {{heure}}.\n\nVous avez reçu tous les éléments par mail : pensez à bien vérifier vos spams si vous ne les trouvez pas. Si vous avez la moindre question, n'hésitez pas à me contacter directement à ce numéro : {{numero_setter_allo}}\n\nBelle journée,\n\n{{prenom_setter}} France IA"};
 
 /* Trames de Roxane (bibliothèque V7). Le numéro de téléphone et le lien Meet d'exemple sont remplacés par des variables. */
 const ROX = {
@@ -595,80 +527,9 @@ const TAN_FIN = [
 ];
 
 /* ------------------------------------------------------------------ */
-/* Les versions : la proposition de Tanguy, et ce qui tourne aujourd'hui */
+/* La version affichée : la proposition de Tanguy (« Aujourd'hui » a quitté la page le 28/10) */
 /* ------------------------------------------------------------------ */
 const VERSIONS = {
-
-/* ===================== 1. AUJOURD'HUI ===================== */
-auj: {
-  num:"1", nom:"Aujourd'hui", titre:"Ce qui tourne dans CRMIA aujourd'hui",
-  intro:"Vérifié dans le code et dans la base de production au 23/10. Les chiffres portent sur les RDV et les leads du 01 au 22 octobre.",
-  detailLabel:"Chiffres",
-  paths:{
-    rdv:{
-      moments:[
-        {t:"T0", sub:"le lead choisit son créneau", note:["Au plus tôt le lendemain", "Demande après 18 h : le lendemain dès 14 h", "La nuit, avant 8 h : le jour même dès 14 h", "Jusqu'à 4 jours"], steps:[
-          {canal:"page", qui:"Formulaire", n:"Page « on va vous appeler »", titre:"Page « Restez disponible, nous allons vous appeler »", court:"Annonce l'appel de confirmation, rappelle de regarder les indésirables, montre la vidéo de présentation.", msg:MSG_PAGE_AUJ,
-            detail:"<p>Titre en place depuis le 21/10. La date du RDV s'affiche au-dessus du titre.</p>"},
-          {canal:"mail", qui:"Gmail de la setteuse, automatique", n:"Mail programme", titre:"Mail « Votre programme France IA »", court:"Part dès le formulaire, 26 secondes avant la réservation en médiane. 2 019 envois en octobre.", msg:MSG_PROGRAMME_AUJ,
-            detail:"<p>724 des 749 leads qui ont pris RDV seuls en octobre l'ont reçu. Il n'annonce pas d'appel.</p>"},
-          {canal:"agenda", qui:"Agenda Google du closer", n:"Invitation Google Meet", titre:"Invitation Google avec le lien Meet", court:"Le closer est tiré au sort parmi ceux qui sont libres ; Google envoie l'invitation au lead.",
-            detail:"<p>Créée par CRMIA dans l'agenda du closer, avec envoi des notifications Google au lead. L'annuler dans CRMIA retire l'événement et prévient le lead.</p>"},
-          {canal:"mail", qui:"Gmail du closer, automatique", n:"Mail de confirmation", titre:"Mail de confirmation", court:"Date, objet du RDV, lien Meet, consigne CPF si besoin, lien « Décaler » depuis le 22/10. 1 044 envois en octobre.", msg:MSG_CONFIRM_AUJ},
-          {canal:"crm", qui:"CRMIA et Slack", n:"Carte CRMIA et alerte Slack", titre:"Carte « OPP à qualifier » et alerte Slack", court:"Le RDV arrive dans le Setting de la setteuse attribuée au contact."},
-        ]},
-        {t:"Avant le RDV", sub:"pas de rythme fixé", steps:[
-          {canal:"appel", qui:"Setteuse", n:"Appels de qualification", titre:"Appels de qualification", court:"Ni délai ni nombre d'appels fixés. La carte reste « À traiter » le jour même ; cases Appelé 1x, 2x, 3x.", chips:["56 RDV n'ont reçu aucun appel de setteuse"],
-            detail:`<p>1er appel dans l'heure après la prise de RDV : <b>60 %</b> de décroché, contre 45 % au-delà.</p><p>Seuls 32 % des RDV sont pris en semaine entre 9 h et 18 h ; pour ceux-là, le premier appel arrive 2 h 40 après en médiane.</p>`},
-          {pour:"joint", canal:"crm", qui:"Setteuse", n:"Setté - RDV pris quali", titre:"« Setté - RDV pris quali »", court:"Le lead est qualifié. Depuis le 08/10, un lead setté vient à 82 %, un non setté à 38 %."},
-          {pour:"non", canal:"crm", qui:"Personne", n:"Rien après un appel manqué", titre:"Rien ne part après un appel manqué", court:"Ni vocal prévu, ni SMS, ni mail. Le RDV reste maintenu tel quel.", ghost:true,
-            detail:`<p>En octobre, 204 RDV dont le lead n'a jamais été ${JOINT} : 65 honorés, 82 no show, 8 ventes. Le lead jamais joint ${VENUE} à 45 %, contre 81 % pour un lead joint.</p>`},
-        ]},
-        {t:"J-1 · 18:00", sub:"la veille", steps:[
-          {canal:"sms", qui:"Allô, expéditeur « FranceIA »", n:"SMS de la veille", titre:"SMS de la veille", court:"Rappelle l'heure et le closer. Pas de lien Meet, et le lead ne peut pas répondre.", chips:["Pas envoyé si le RDV a été pris la veille", "Pas de SMS de la veille pour un R2"], msg:MSG_SMS_VEILLE_AUJ,
-            detail:"<p>1 038 SMS de rappel envoyés en octobre (veille et matin). CRMIA n'a pas de variable pour mettre le lien Meet dans un SMS.</p>"},
-        ]},
-        {t:"J · 08:00", sub:"le matin du RDV", steps:[
-          {canal:"sms", qui:"Allô, signé par la setteuse", n:"SMS de 8 h", titre:"SMS du matin", court:"Envoyé à tous les RDV, settés ou non. Aucun effet mesurable sur la venue.", chips:["Pas envoyé pour un RDV du lundi pris pendant le week-end"], msg:MSG_SMS_8H_AUJ,
-            detail:"<p>RDV depuis le 08/10 (mise en route de ce SMS) :</p><ul><li>settés : 81 % viennent avec le SMS (329 RDV), 89 % sans (44 RDV) ;</li><li>non settés : 34 % avec (106 RDV), 47 % sans (38 RDV).</li></ul><p>Les écarts ne sont pas significatifs, et les RDV sans SMS ne sont pas tirés au hasard.</p><p>Il est loin des RDV du soir : un lead jamais joint vient à 70 % le matin, 55 % l'après-midi, <b>37 %</b> à partir de 17 h.</p>"},
-        ]},
-        {t:"T0", sub:"heure du RDV", steps:[
-          {canal:"visio", qui:"Closer", n:"Visio Google Meet", titre:"Visio Google Meet", court:"Le lead rejoint par le lien du mail ou de l'invitation."},
-        ]},
-        {t:"T+10 min", sub:"avant de déclarer l'absence", cond:"Lead absent", steps:[
-          {canal:"appel", qui:"Closer", n:"No show contrôlé", titre:"No show contrôlé", court:"Pas de no show avant 10 minutes, et 2 appels Allô du closer exigés. En production depuis le 23/10.",
-            detail:"<p>Du 13 au 22/10 : 91 des 142 no show ont été déclarés avant 10 minutes (médiane 8 min 20). Un closer qui n'utilise pas Allô coche une case à la place des deux appels.</p>"},
-        ]},
-        {t:"Après", sub:"un no show", steps:[
-          {canal:"mail", qui:"Gmail du closer, automatique", n:"Mail de no show", titre:"Mail de no show avec lien de reprise", court:"196 envois en octobre. Il a fait revenir 2 leads sans appel.", msg:MSG_NOSHOW_AUJ},
-          {canal:"crm", qui:"CRMIA et Slack", n:"Retour à la setteuse", titre:"Retour à la setteuse, alerte #new-no-show", court:"Carte « No show / annulé - à rappeler ». La setteuse rappelle le lendemain.",
-            detail:"<p>Sur 114 no show d'octobre : 15 ont repris un RDV dans les 48 h (13 %), dont 13 avaient été joints au téléphone. Parmi les 29 leads joints dans ces 48 h, 13 ont repris un RDV (45 %).</p>"},
-        ]},
-        {t:"À tout moment", sub:"annulation ou report", steps:[
-          {canal:"crm", qui:"CRMIA", n:"Annuler ou décaler", titre:"Annuler ou décaler", court:"Annuler arrête les rappels, retire l'invitation Google et rend le R1 à la setteuse. Le lien « Décaler » des mails laisse le lead changer de créneau.",
-            detail:"<p>En octobre, aucun SMS de rappel n'est parti après une annulation (1 122 rappels annulés à temps).</p>"},
-        ]},
-      ]},
-    mql:{
-      moments:[
-        {t:"T0", sub:"demande de programme", steps:[
-          {canal:"crm", qui:"CRMIA et Slack", n:"Attribution à une setteuse", titre:"Attribution par rotation", court:"Le contact arrive chez une setteuse dans « Intéressé à appeler », avec une alerte #new-mql-à-appeler."},
-          {canal:"mail", qui:"Gmail de la setteuse, automatique", n:"Mail programme", titre:"Mail « Votre programme France IA »", court:"Le lien du programme et une invitation à répondre. N'annonce pas d'appel.", msg:MSG_PROGRAMME_AUJ},
-        ]},
-        {t:"T+1 h", sub:"créneau choisi sans RDV confirmé", cote:true, cond:"Créneau sans RDV", steps:[
-          {canal:"sms", qui:"Mail de la setteuse + SMS « FranceIA »", n:"Relance « RDV non confirmé »", titre:"Relance « votre RDV n'est pas encore confirmé »", court:"Prévue depuis le 09/10 pour un lead qui a choisi un créneau sans finir. Aucun envoi réel observé en octobre.", ghost:true},
-        ]},
-        {t:"Ensuite", sub:"pas de délai fixé", steps:[
-          {canal:"appel", qui:"Setteuse", n:"1er appel", titre:"1er appel", court:"En semaine entre 9 h et 18 h : médiane 3 h 20, 12 % appelés dans l'heure. La nuit et le week-end : environ 16 h.",
-            detail:"<p>Arrivée des leads (01 au 21/10) : 33 % en semaine entre 9 h et 18 h, 22 % avant 9 h, 9 % entre 18 h et 21 h, 13 % après 21 h, 23 % le week-end.</p>"},
-          {canal:"appel", qui:"Setteuse", n:"Rappels le lendemain", titre:"Rappels le lendemain", court:"Chaque appel coché renvoie le lead au lendemain. Pas de 2e appel prévu le jour même.",
-            detail:"<p>2e appel après un 1er manqué, part des leads joints :</p><ul><li>moins de 15 min après : 37 % (146 appels) ;</li><li><b>15 min à 2 h après : 46 %</b> (69) ;</li><li>le même jour, plus de 2 h après : 29 % (94) ;</li><li>le lendemain ou plus tard : 19 % (351).</li></ul>"},
-          {pour:"joint", canal:"crm", qui:"Setteuse", goto:"rdv", n:"Qualifié, RDV posé", titre:"Qualification, puis RDV posé par la setteuse", court:"Le lead reçoit l'invitation Google et le mail du closer, puis suit le parcours « RDV »."},
-          {pour:"non", canal:"crm", qui:"Setteuse", fin:"Injoignable", n:"Injoignable après 3 appels", titre:"« Injoignable » après 3 appels, sans message", court:"227 des 308 leads jamais joints n'ont eu qu'1 ou 2 appels.",
-            detail:"<p>619 leads sans RDV appelés depuis le 01/10. Les 2e et 3e appels ont joint 67 leads de plus que le 1er. Au-delà du 3e, 14 leads sur 40 ont fini par décrocher, et ils ont fait 4 des 11 ventes.</p>"},
-        ]},
-      ]},
-  }},
 
 /* ===================== PROPOSITION DE TANGUY ===================== */
 /* Son schéma du 27/10, repris avec ses améliorations du 27/10 (v15) et du 28/10 (v16). Les messages (TAN) sont écrits à sa demande, à partir des trames de Roxane.
@@ -781,10 +642,6 @@ const VERDICTS = {ok:{l:"Je valide", g:"✓"}, adj:{l:"À ajuster", g:"~"}, no:{
 const TAGS = {new:"Nouveau", mod:"Modifié", same:"Inchangé", del:"Supprimé"};
 const PATHS = {rdv:{l:"RDV pris par le lead", s:"New RDV", depart:"Le lead prend RDV"}, mql:{l:"Demande sans RDV", s:"MQL", depart:"Le lead demande le programme"}};
 const LANES = {joint:"Si le lead décroche", non:"S'il ne décroche pas"};
-const TABS = [
-  {id:"tanguy", l:"Proposition de Tanguy", c:"Tanguy"},
-  {id:"auj", l:"Aujourd'hui"},
-];
 const reduit = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const state = {tab:"tanguy", path:"rdv", zoom:1, zoomAuto:true, sel:null};
@@ -1037,7 +894,7 @@ function renderVersion(vk){
   const head = v.intro ? `<div class="v-head"><h2>${v.titre}</h2><p>${v.intro}</p></div>` : "";
   const schema = renderFlow(vk); /* fixe le zoom avant d'afficher sa valeur */
   const flow = head + toolbar(vk) + schema;
-  return vk === "tanguy" ? flow + textes() : flow;
+  return flow + textes();
 }
 
 /* ------------------------------------------------------------------ */
@@ -1252,13 +1109,11 @@ function closePanel(sansFocus){
 
 /* ------------------------------------------------------------------ */
 function render(){
-  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", String(t.dataset.tab === state.tab)));
   closePanel(true);
   state.sel = null;
   const main = document.getElementById("vue");
   uid = 0;
   main.innerHTML = renderVersion(state.tab);
-  main.setAttribute("aria-labelledby", `tab-${state.tab}`);
   const hash = state.tab + (state.path !== "rdv" ? "-" + state.path : "");
   if (location.hash.slice(1) !== hash) history.replaceState(null, "", "#" + hash);
   panFlow();
@@ -1300,31 +1155,14 @@ function panFlow(){
 }
 
 function readHash(){
-  const h = location.hash.slice(1);
-  const [tab, path] = h.split("-");
-  if (TABS.some(t => t.id === tab)) state.tab = tab;
-  state.path = path || "rdv";
+  /* #tanguy-mql. Un ancien lien vers « Aujourd'hui » (#auj…) ouvre la proposition de Tanguy. */
+  state.path = location.hash.slice(1).split("-")[1] || "rdv";
 }
 
 function init(){
-  document.getElementById("tabs").innerHTML = TABS.map(t =>
-    `<button type="button" role="tab" class="tab" id="tab-${t.id}" data-tab="${t.id}" aria-controls="vue" aria-selected="false"><span class="lg">${t.l}</span><span class="sm">${t.c || t.l}</span></button>`).join("");
   readHash();
   render();
   chargerFinals();
-
-  document.getElementById("tabs").addEventListener("click", e => {
-    const b = e.target.closest(".tab"); if (!b) return;
-    state.tab = b.dataset.tab; render();
-    const bar = document.querySelector(".tabs-bar");
-    if (bar.getBoundingClientRect().top <= 0) window.scrollTo({top: bar.offsetTop, behavior: "auto"});
-  });
-  document.getElementById("tabs").addEventListener("keydown", e => {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-    const i = TABS.findIndex(t => t.id === state.tab);
-    const n = TABS[(i + (e.key === "ArrowRight" ? 1 : TABS.length - 1)) % TABS.length];
-    state.tab = n.id; render(); document.getElementById(`tab-${n.id}`).focus();
-  });
 
   const clic = e => {
     const t = e.target.closest(".tgl");
@@ -1391,8 +1229,6 @@ function init(){
   window.addEventListener("beforeunload", e => {
     if (Object.keys(BROUILLONS).some(modifie)){ e.preventDefault(); e.returnValue = ""; }
   });
-
-  requestAnimationFrame(() => document.querySelectorAll(".bar .fill").forEach(f => f.style.width = f.dataset.w + "%"));
 }
 
 document.addEventListener("DOMContentLoaded", init);
